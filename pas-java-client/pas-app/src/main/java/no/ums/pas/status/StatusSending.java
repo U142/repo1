@@ -12,7 +12,6 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.laf.ULookAndFeel;
-import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.ws.WSCancelSending;
 import no.ums.pas.core.ws.WSCancelSending.ICallback;
@@ -79,7 +78,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -396,7 +394,7 @@ public class StatusSending {
                     ccfound.l_unknown += cctemp.l_unknown;
 
                 } else { //new ccode, make new
-                    LBAHISTCC newcc = null;
+                    LBAHISTCC newcc;
                     try {
                         newcc = (LBAHISTCC) cctemp.clone();
                         cclist.add(newcc);
@@ -731,7 +729,7 @@ public class StatusSending {
 	public int get_num_dynfiles() { return _n_num_dynfiles; }
 	public boolean isMarkedAsCancelled() { return _b_marked_as_cancelled; }
 	
-	public boolean isSimulation() { return (get_dynacall()==2 ? true : false); }
+	public boolean isSimulation() { return (get_dynacall() == 2); }
 	
 	public void set_lba_sendingstatus(int n) { _n_lba_sendingstatus = n; }
 	public int get_lba_sendingstatus() { return _n_lba_sendingstatus; }
@@ -770,7 +768,7 @@ public class StatusSending {
 			break;
 		case 4: //lba
 		case 5: //tas
-			b_ret = (m_lba!=null ? m_lba.HasFinalStatus() : false);
+			b_ret = (m_lba != null && m_lba.HasFinalStatus());
 			break;
 		}
 		return b_ret;
@@ -882,7 +880,7 @@ public class StatusSending {
 					}
 					catch(Exception err)
 					{
-						
+					    log.warn("Failed to reset all overlays", err);
 					}
 					m_filter_status_by_operator = operator;
 					log.debug("Filter by operator " + m_filter_status_by_operator);
@@ -995,7 +993,7 @@ public class StatusSending {
 			}
 			catch(Exception e)
 			{
-				
+			    log.warn("Failed to update ui", e);
 			}
 			try
 			{
@@ -1003,13 +1001,15 @@ public class StatusSending {
 			}
 			catch(Exception e)
 			{
-				
+				log.warn("Failed to update cell ui", e);
 			}
 			try
 			{
 				pnl_pa.updateUI();
 			}
-			catch(Exception e){}
+			catch(Exception e){
+                log.warn("Failed to update pnl ui", e);
+            }
 			
 			/*
 			try
@@ -1147,24 +1147,22 @@ public class StatusSending {
 			{
 				if(_lba_languages!=null)
 				{
-					for(int i=0; i < _lba_languages.size(); i++)
-					{
-						LBALanguageMenuItem item = new LBALanguageMenuItem(_lba_languages.get(i));
-						if(!hash_menuitems.containsKey(_lba_languages.get(i).getLTextpk()))
-						{
-							item.addActionListener(this);
-							item.setActionCommand("act_lbalanguage_selected");
-							//item.setToolTipText(_lba_languages.get(i).getSzText());
-							item.setToolTipText(StatusPanel.createMessageContentTooltipHtml(_lba_languages.get(i), get_group()));
-							m_pop_lbalanguages.add(item);
-							hash_menuitems.put(_lba_languages.get(i).getLTextpk(), item);
-						}
-					}
+                    for (LBALanguage _lba_language : _lba_languages) {
+                        LBALanguageMenuItem item = new LBALanguageMenuItem(_lba_language);
+                        if (!hash_menuitems.containsKey(_lba_language.getLTextpk())) {
+                            item.addActionListener(this);
+                            item.setActionCommand("act_lbalanguage_selected");
+                            //item.setToolTipText(_lba_languages.get(i).getSzText());
+                            item.setToolTipText(StatusPanel.createMessageContentTooltipHtml(_lba_language, get_group()));
+                            m_pop_lbalanguages.add(item);
+                            hash_menuitems.put(_lba_language.getLTextpk(), item);
+                        }
+                    }
 				}
 			}
 			catch(Exception e)
 			{
-				
+				log.warn("Failed to set lba languages", e);
 			}
 		}
 
@@ -1286,15 +1284,14 @@ public class StatusSending {
 			//m_btn_cancel_lba_sending.getRootPane().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, Boolean.TRUE);
 			//m_btn_confirm_lba_sending.putClientProperty(SubstanceLookAndFeel.BORDER_ANIMATION_KIND, b);
 			//m_btn_confirm_lba_sending.putClientProperty(SubstanceLookAndFeel.BUTTON_OPEN_SIDE_PROPERTY, SubstanceLookAndFeel.Side.LEFT);
-			m_btn_cancel_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, new Boolean(b));
-			m_btn_confirm_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, new Boolean(b));
+			m_btn_cancel_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
+			m_btn_confirm_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
 		}
 		
 		private boolean beforeConfirmOrCancelLba(boolean confirm)
 		{
 			boolean ret = false;
 			List<LBASEND> notprepared = new ArrayList<LBASEND>();
-			List<LBASEND> prepared = new ArrayList<LBASEND>();
 			StringBuilder sbnot = new StringBuilder();
 			StringBuilder sbprepared = new StringBuilder();
 			StringBuilder sbtotal = new StringBuilder();
@@ -1310,13 +1307,12 @@ public class StatusSending {
 					if(lbasend.NotYetPrepared())
 					{
 						notprepared.add(lbasend);
-						sbnot.append("-" + lbasend.sz_operator);
+                        sbnot.append("-").append(lbasend.sz_operator);
 						sbnot.append("<br>");
 					}
 					else if(lbasend.IsPrepared())
 					{
-						prepared.add(lbasend);
-						sbprepared.append("-" + lbasend.sz_operator);
+                        sbprepared.append("-").append(lbasend.sz_operator);
 						sbprepared.append("<br>");
 					}
 				}
@@ -1330,20 +1326,8 @@ public class StatusSending {
                 sbtotal.append(Localization.l("common_are_you_sure"));
 				sbtotal.append("<br><br></b>");
 				sbtotal.append("</html>");
-				if(notprepared.size()>0)
-				{
-                    if(JOptionPane.showConfirmDialog(this, sbtotal.toString(), Localization.l("common_are_you_sure"),
-												JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION)
-					{
-						ret = true;
-					}
-					else
-					{
-						ret = false;
-					}
-				}
-				else
-					ret = true;
+                ret = notprepared.size() <= 0 ||
+                        JOptionPane.showConfirmDialog(this, sbtotal.toString(), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
 			}
 			return ret;
 		}
@@ -1372,32 +1356,32 @@ public class StatusSending {
 			}
 			else if("act_show_layers_gsm".equals(e.getActionCommand()))
 			{
+                // Disable the current GSM overlay, if present
+                PAS.get_pas().get_mappane().removeTileOverlay("GSM");
                 final JCheckBox chk = (JCheckBox) e.getSource();
                 if (chk.isSelected()) {
                     for (LBASEND lbasend : m_lba_by_operator) {
                         if (lbasend.l_operator == m_filter_status_by_operator) {
                             log.debug("Loading GSM overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
-                                PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheGsmCoverage(lbasend.sz_jobid)));
+                            PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheGsmCoverage(lbasend.sz_jobid)));
                             break;
                         }
                     }
-                } else {
-                    PAS.get_pas().get_mappane().removeTileOverlay("GSM");
                 }
-			}
+            }
 			else if("act_show_layers_umts".equals(e.getActionCommand()))
 			{
+                // Disable the current UMTS overlay, if present
+                PAS.get_pas().get_mappane().removeTileOverlay("UMTS");
                 final JCheckBox chk = (JCheckBox) e.getSource();
                 if (chk.isSelected()) {
                     for (LBASEND lbasend : m_lba_by_operator) {
                         if (lbasend.l_operator == m_filter_status_by_operator) {
-                            log.debug("Loading GSM overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
+                            log.debug("Loading UMTS overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
                             PAS.get_pas().get_mappane().putTileOverlay("UMTS", new TileLookupImpl(new TileCacheUmtsCoverage(lbasend.sz_jobid)));
                             break;
                         }
                     }
-                } else {
-                    PAS.get_pas().get_mappane().removeTileOverlay("UMTS");
                 }
             }
 			else if("act_lbalanguage_selected".equals(e.getActionCommand()))
@@ -1411,7 +1395,7 @@ public class StatusSending {
 					clip.setContents(text, text);
 				}
 				catch(Exception err){
-					
+					log.warn("Failed to select lba language", err);
 				}
 
 			}
@@ -1563,7 +1547,7 @@ public class StatusSending {
 		@Override
 		public void init() {
 			
-			Object[] obj = { new Integer(1000),new String("Sent ok"), new String("92293390")};
+			Object[] obj = {1000, "Sent ok", "92293390"};
 			m_resend_status.insert_row(obj, -1);
 			//m_resend_status.start_search();
 			//m_resend_status.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -1724,7 +1708,7 @@ public class StatusSending {
 			//m_progress.setValue(get_maxalloc());
 		}
 		public void set_maxalloc(int n) {
-			m_lbl_setmaxalloc.setText(new Integer(n).toString());
+			m_lbl_setmaxalloc.setText(Integer.toString(n));
 		}
 		@Override
 		public void componentResized(ComponentEvent e) {
@@ -1759,7 +1743,7 @@ public class StatusSending {
 			m_progress.setPreferredSize(new Dimension(250, 22));
 			
 			m_txt_name.setText(get_sendingname());
-			m_txt_refno.setText(new Integer(get_refno()).toString());
+			m_txt_refno.setText(Integer.toString(get_refno()));
 			m_txt_created.setText(TextFormat.format_date(get_createdate()) + " " + TextFormat.format_time(get_createtime(), 4));
 			m_txt_sched.setText(TextFormat.format_date(get_scheddate()) + " " + TextFormat.format_time(get_schedtime(), 4));
 			m_txt_type.setText(TextFormat.get_sendingtype(get_sendingtype()));
@@ -1772,8 +1756,6 @@ public class StatusSending {
 			case 1:
 				m_txt_actionprofile.setText(get_actionprofilename());
 				m_txt_actionprofile.setForeground(Color.blue);
-				Font use = m_txt_actionprofile.getFont();
-				use = use.deriveFont(Font.ROMAN_BASELINE);
 				m_txt_actionprofile.addMouseListener(new MouseAdapter() {
 					public void mousePressed(MouseEvent e)
 					{
@@ -1953,7 +1935,7 @@ public class StatusSending {
 			}
 			catch(Exception e)
 			{
-				
+				log.warn("Failed to update ui", e);
 			}
 			
 			// Sjekker om brukeren har rettigheter for å sende
@@ -1964,9 +1946,9 @@ public class StatusSending {
 			
 			
 			
-			m_lbl_resendrefno.setVisible((get_resendrefno()>0 ? true : false));
-			m_txt_resendrefno.setVisible((get_resendrefno()>0 ? true : false));
-			m_txt_resendrefno.setText(new Integer(get_resendrefno()).toString());
+			m_lbl_resendrefno.setVisible((get_resendrefno() > 0));
+			m_txt_resendrefno.setVisible((get_resendrefno() > 0));
+			m_txt_resendrefno.setText(Integer.toString(get_resendrefno()));
 				
 			m_txt_status.setText(TextFormat.get_statustext_from_code(get_sendingstatus(), get_altjmp(), isMarkedAsCancelled()));
 			m_txt_queuestatus.setText("");
@@ -1974,15 +1956,15 @@ public class StatusSending {
 			if(get_type() == 2) { // SMS
 				int part = 1;
 				if(no.ums.pas.ums.tools.Utils.get_gsmsize(get_statussending().get_sms_message_text())>160)
-					part = (int)Math.ceil((double)(no.ums.pas.ums.tools.Utils.get_gsmsize(get_statussending().get_sms_message_text())/(double)(160-8)));
+					part = (int)Math.ceil(no.ums.pas.ums.tools.Utils.get_gsmsize(get_statussending().get_sms_message_text())/(double)(160-8));
  
-				m_txt_sms_recipients.setText(new Integer(part).toString());
-				m_txt_sms_total.setText(new Integer((get_totitem() * part)).toString());
+				m_txt_sms_recipients.setText(Integer.toString(part));
+				m_txt_sms_total.setText(Integer.toString((get_totitem() * part)));
 			}
 			
-			m_txt_items.setText(new Integer(get_totitem()).toString());
-			m_txt_proc.setText(new Integer(get_proc()).toString());
-			m_txt_alloc.setText(new Integer(get_alloc()).toString());
+			m_txt_items.setText(Integer.toString(get_totitem()));
+			m_txt_proc.setText(Integer.toString(get_proc()));
+			m_txt_alloc.setText(Integer.toString(get_alloc()));
 			if(get_oadc().trim().length() < 1)
 				m_txt_oadc.setText(Localization.l("main_status_oadc_hidden"));
 			else
@@ -2009,6 +1991,7 @@ public class StatusSending {
 				}
 				catch(Exception e)
 				{
+                    log.warn("Failed to iterate over municipals", e);
 				}
 				str += ")";
 				m_txt_type.setText(str);
@@ -2021,10 +2004,10 @@ public class StatusSending {
 			//m_progress.setValue(get_maxalloc());
 			//m_progress.setMaximum(PAS.get_pas().get_userinfo().get_default_dept().get_maxalloc());
 			for(int i=0;i<PAS.get_pas().get_userinfo().get_departments().size();++i) {
-				if(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).get_deptpk() == get_deptpk())
-					m_progress.setMaximum(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).get_maxalloc());
+				if(PAS.get_pas().get_userinfo().get_departments().get(i).get_deptpk() == get_deptpk())
+					m_progress.setMaximum(PAS.get_pas().get_userinfo().get_departments().get(i).get_maxalloc());
 			}
-			m_txt_maxalloc.setText(new Integer(get_maxalloc()).toString());
+			m_txt_maxalloc.setText(Integer.toString(get_maxalloc()));
 			m_voice_progress.setMinimum(0);
 			m_voice_progress.setMaximum(get_totitem());
 			m_voice_progress.setValue(get_proc());
@@ -2206,10 +2189,7 @@ public class StatusSending {
 			add(m_lbl_sched, m_gridconst);
 			set_gridconst(text_1_x, get_panel(), 6, 1);
 			add(m_txt_sched, m_gridconst);
-			if(get_sendingtype()== SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-				;
-			}
-			else {
+			if(get_sendingtype()!= SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
 				set_gridconst(0, inc_panels(), text_1_x, 1);
 				add(m_lbl_actionprofile, m_gridconst);
 				set_gridconst(text_1_x, get_panel(), 6, 1);
@@ -2470,17 +2450,13 @@ public class StatusSending {
 			default:
 			{
 				String sz_operator = "";
-				Iterator<LBASEND> en = m_lba_by_operator.iterator();
-				while(en.hasNext())
-				{
-					LBASEND temp = en.next();
-					if(temp.l_operator==m_filter_status_by_operator)
-					{
-						sz_operator = temp.sz_operator;
-						m_txt_expires_ts.setText(TextFormat.format_datetime(temp.l_expires_ts));
-						break;
-					}
-				}
+                for (LBASEND temp : m_lba_by_operator) {
+                    if (temp.l_operator == m_filter_status_by_operator) {
+                        sz_operator = temp.sz_operator;
+                        m_txt_expires_ts.setText(TextFormat.format_datetime(temp.l_expires_ts));
+                        break;
+                    }
+                }
 				m_txt_operator.setText(sz_operator);
 			}
 				break;
@@ -2532,14 +2508,12 @@ public class StatusSending {
 				setNeedAttention(false);
 			}*/
 			int n_one_or_more_operators_ready = 0;
-			for(int i=0; i < m_lba_by_operator.size(); i++)
-			{
-				if(m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION ||
-					m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
-				{
-					++n_one_or_more_operators_ready;
-				}
-			}
+            for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
+                if (aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION ||
+                        aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE) {
+                    ++n_one_or_more_operators_ready;
+                }
+            }
 			pnl_icon.ShowConfirmAndCancel(m_lba.IsPrepared());
 			setNeedAttention(m_lba.IsPrepared());
 			/*if(n_one_or_more_operators_ready<=0)
@@ -2553,22 +2527,18 @@ public class StatusSending {
 			{
 				int n_operators_ready_for_confirmation = 0;
 				String sz_operators = "";
-				for(int i=0; i < m_lba_by_operator.size(); i++)
-				{
-					//list up all operators ready for confirmation
-					sz_operators += "<b>";
-					if(m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION || m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
-					{
-                        sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + Localization.l("common_ready") + "<br>";
-						n_total_items += (m_lba_by_operator.get(i).n_items > 0 ? m_lba_by_operator.get(i).n_items : 0);
-					}
-					else if(m_lba_by_operator.get(i).n_status < LBASEND.LBASTATUS_PREPARED_CELLVISION) {
-                        sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + Localization.l("common_not_ready") + "<br>";
-                    }
-					else if(m_lba_by_operator.get(i).n_status > LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
-						sz_operators += m_lba_by_operator.get(i).sz_operator + " - (" + LBASEND.LBASTATUSTEXT(m_lba_by_operator.get(i).n_status)+ ")<br>";
-					sz_operators += "</b>";
-				}
+                for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
+                    //list up all operators ready for confirmation
+                    sz_operators += "<b>";
+                    if (aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION || aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE) {
+                        sz_operators += aM_lba_by_operator.sz_operator + " - " + Localization.l("common_ready") + "<br>";
+                        n_total_items += (aM_lba_by_operator.n_items > 0 ? aM_lba_by_operator.n_items : 0);
+                    } else if (aM_lba_by_operator.n_status < LBASEND.LBASTATUS_PREPARED_CELLVISION) {
+                        sz_operators += aM_lba_by_operator.sz_operator + " - " + Localization.l("common_not_ready") + "<br>";
+                    } else if (aM_lba_by_operator.n_status > LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
+                        sz_operators += aM_lba_by_operator.sz_operator + " - (" + LBASEND.LBASTATUSTEXT(aM_lba_by_operator.n_status) + ")<br>";
+                    sz_operators += "</b>";
+                }
 				String sz_sendtext = "Unknown";
 				switch(getLBA().f_simulation)
 				{
@@ -2607,24 +2577,13 @@ public class StatusSending {
 		public void setNeedAttention(final boolean b)
 		{
 			get_uipanel().b_need_attention = b;
-			try
-			{
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-						//get_uipanel().setBackground(b ? Color.red : Color.black);
-						//PAS.get_pas().get_eastcontent().get_statuspanel().setBackground(b ? Color.red : Color.black);
-						//PAS.get_pas().get_eastcontent().get_statuspanel().putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
-						//PAS.get_pas().get_eastcontent().get_statuspanel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
-						get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
-						get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
-					}
-				});
-			}
-			catch(Exception e)
-			{
-				
-			}
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run()
+                {
+                    get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
+                    get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
+                }
+            });
 		}
 
 		public void init() {
