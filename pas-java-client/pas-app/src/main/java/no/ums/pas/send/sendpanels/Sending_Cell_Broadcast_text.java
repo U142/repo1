@@ -263,11 +263,36 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 									{
 									public static final long serialVersionUID = 1;
 										public void setSelectionInterval(int index0, int index1) {
-											if (isSelectedIndex(index0))
+											if (isSelectedIndex(index0)) {
 												super.removeSelectionInterval(index0, index1);
-											else
-												super.addSelectionInterval(index0, index1);
 											}
+											else
+											{
+												boolean defaultSelected = false;
+												
+												CCode cc = (CCode)m_lst_cc.getModel().getElementAt(index0);
+												
+												if(cc.getNCCode() == -1) {
+													defaultSelected = true;
+												}
+												
+												Object[] ccs = m_lst_cc.getSelectedValues();
+												for(int i=0;i<ccs.length;i++) {
+													if(((CCode)ccs[i]).getNCCode() == -1) {
+														defaultSelected = true;
+													}
+														
+												}
+												if(!defaultSelected) {
+													super.addSelectionInterval(index0, index1);
+												}
+												else {
+													super.removeSelectionInterval(0, m_lst_cc.getModel().getSize()-1);
+													super.addSelectionInterval(index0, index1);
+												}
+												
+											}
+										}
 									}
 		);
 		m_lst_cc.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
