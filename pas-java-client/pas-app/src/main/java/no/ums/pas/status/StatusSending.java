@@ -162,7 +162,12 @@ public class StatusSending {
 		return m_lbl_sendingname;
 	}
 	public JLabel getProcessedAndTotalLabel() {
-		m_lbl_processed_and_total.setText(get_proc() + " / " + get_totitem());
+		if(_n_type == 4) { // LBA
+			m_lbl_processed_and_total.setText(get_lba_processed() + " / " + get_lba_items());
+		}
+		else {
+			m_lbl_processed_and_total.setText(get_proc() + " / " + get_totitem());
+		}
 		return m_lbl_processed_and_total;
 	}
 	public JLabel getCompletionPercentLabel() {

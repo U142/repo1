@@ -293,7 +293,7 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 	public StatusItemObject(String [] sz_values)
 	{
 		super(sz_values[5], sz_values[6], sz_values[7], sz_values[8], sz_values[12], "" /*mobile*/, 
-			  new Double(sz_values[3]).doubleValue(), new Double(sz_values[4]).doubleValue(), 0, -1, 0, "S", 1, 1, Integer.parseInt(sz_values[21]));
+			  new Double(sz_values[3]).doubleValue(), new Double(sz_values[4]).doubleValue(), 0, -1, 0, "S", 1, 1, sz_values[21]!=null?Integer.parseInt(sz_values[21]):0);
 		m_n_refno	= new Integer(sz_values[0]).intValue();
 		m_n_item	= new Integer(sz_values[1]).intValue();
 		m_sz_adrpk	= sz_values[2];
