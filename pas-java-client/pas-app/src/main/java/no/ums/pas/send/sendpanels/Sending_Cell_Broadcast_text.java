@@ -262,7 +262,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_lst_cc.setSelectionModel(new DefaultListSelectionModel()
 									{
 									public static final long serialVersionUID = 1;
-										public void setSelectionInterval(int index0, int index1) {
+										public void select(int index0, int index1) {
 											if (isSelectedIndex(index0)) {
 												super.removeSelectionInterval(index0, index1);
 											}
@@ -292,6 +292,13 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 												}
 												
 											}
+										}
+										public void setSelectionInterval(int index0, int index1) {
+											select(index0, index1);
+										}
+										@Override
+										public void addSelectionInterval(int index0, int index1) {
+											select(index0, index1);
 										}
 									}
 		);
