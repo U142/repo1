@@ -445,12 +445,16 @@ public class StatusSending {
 			{
 				m_lba_progress.setIndeterminate(false);
 				m_lba_progress.setMinimum(0);
-				m_lba_progress.setMaximum((m_filter_status_by_operator==-1 ? 100 : (int)(100.0f/m_lba_by_operator.size())));
+				
+				m_lba_progress.setMaximum(100);
 				float percentTotal = 0;
 				for(LBASEND ls : m_lba_by_operator)
 				{
-					float fTmp = (ls.n_proc + ls.getCancelled())*1.0f/(ls.n_items*m_lba_by_operator.size());
-					percentTotal += fTmp;
+					if(m_filter_status_by_operator==ls.l_operator || m_filter_status_by_operator==-1)
+					{
+						float fTmp = (ls.n_proc + ls.getCancelled())*1.0f/(ls.n_items* (m_filter_status_by_operator==-1 ? m_lba_by_operator.size() : 1));
+						percentTotal += fTmp;
+					}
 				}
 				m_lba_progress.setValue((int)(percentTotal*100));
 				//m_lba_progress.setMaximum(m_lba.n_items);
