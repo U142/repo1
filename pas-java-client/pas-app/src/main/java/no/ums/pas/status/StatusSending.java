@@ -226,11 +226,7 @@ public class StatusSending {
 					}
 					else {
 						n_lba_percent += 0;
-					}
-					if(n_lba_percent == 100) {
-						System.out.println("Percent: " + n_lba_percent);
-					}
-					
+					}					
 				}
 			}
 			else
