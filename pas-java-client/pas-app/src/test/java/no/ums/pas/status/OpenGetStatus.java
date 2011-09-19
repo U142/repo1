@@ -6,7 +6,7 @@ import no.ums.ws.common.UDATAFILTER;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.UPASLOGON;
 
-public class TestGetStatus {
+public class OpenGetStatus {
 	public static void main(String[] args) {
 		PasApplication pasApp = PasApplication.init("http://localhost:8080/WS/");
 		ULOGONINFO logoninfo = new ULOGONINFO();
