@@ -194,13 +194,14 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		else
 			m_voice_total_progress.setStringPainted(true);
 		
-		m_lbl_proc_and_total.setText(m_n_voice_proc + m_n_lba_proc + " / " + m_n_voice_items + m_n_lba_items);
+		m_lbl_proc_and_total.setText(m_n_voice_proc + " / " + m_n_voice_items);
 	}
 	
 	public void updateLBAStatistics()
 	{
 		if(m_lbasend_total==null)
 			return;
+		
 		m_n_lba_items = m_lbasend_total.n_items;
 		m_n_lba_proc = m_lbasend_total.n_proc;
 		m_lba_total_progress.setMinimum(0);
@@ -216,6 +217,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_txt_lba_expired.setText(Integer.toString(m_lbasend_total.getExpired()));
 		get_lbatab().UpdateData(m_lbasend_total);
 		//if(m_lbasend_total.n_items < 0)
+		m_lbasend_total.send_ts.size();
 		if(m_lbasend_total.n_status<LBASEND.LBASTATUS_SENDING && !m_lbasend_total.HasFailedStatus() && !m_lbasend_total.HasFinalStatus())
 		{
 			m_lba_total_progress.setIndeterminate(true);
