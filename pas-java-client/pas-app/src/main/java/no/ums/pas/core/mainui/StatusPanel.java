@@ -217,7 +217,6 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_txt_lba_expired.setText(Integer.toString(m_lbasend_total.getExpired()));
 		get_lbatab().UpdateData(m_lbasend_total);
 		//if(m_lbasend_total.n_items < 0)
-		m_lbasend_total.send_ts.size();
 		if(m_lbasend_total.n_status<LBASEND.LBASTATUS_SENDING && !m_lbasend_total.HasFailedStatus() && !m_lbasend_total.HasFinalStatus())
 		{
 			m_lba_total_progress.setIndeterminate(true);

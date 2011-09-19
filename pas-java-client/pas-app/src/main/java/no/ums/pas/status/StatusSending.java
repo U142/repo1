@@ -449,8 +449,17 @@ public class StatusSending {
 			{
 				m_lba_progress.setIndeterminate(false);
 				m_lba_progress.setMinimum(0);
-				m_lba_progress.setMaximum(m_lba.n_items);
-				m_lba_progress.setValue(m_lba.n_proc + m_lba.getCancelled());
+				m_lba_progress.setMaximum(100);
+				float percentTotal = 0;
+				for(LBASEND ls : m_lba_by_operator)
+				{
+					float fTmp = (ls.n_proc + ls.getCancelled())*1.0f/(ls.n_items*m_lba_by_operator.size());
+					percentTotal += fTmp;
+				}
+				m_lba_progress.setValue((int)(percentTotal*100));
+				//m_lba_progress.setMaximum(m_lba.n_items);
+				
+				//m_lba_progress.setValue(m_lba.n_proc + m_lba.getCancelled());
 				m_lba_progress.setStringPainted(true);
 			}
 			//m_lba_progress.setString(m_lba_progress.getString());
@@ -543,7 +552,10 @@ public class StatusSending {
 		}
 		try
 		{
-			pnl_cell.init();
+			if(pnl_cell!=null)
+			{
+				pnl_cell.init();
+			}
 		}
 		catch(Exception e)
 		{
