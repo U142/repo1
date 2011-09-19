@@ -1175,7 +1175,7 @@ public class SendController implements ActionListener {
 									p.set_projectpk(res.getProjectpk());
 									PAS.pasplugin.onOpenProject(p, -1);
 									PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true /*init*/);
-									if(get_activesending()!=null)
+									if(get_activesending()!=null && get_activesending().get_sendwindow()!=null)
 										get_activesending().get_sendwindow().close();
 								}							
 							}

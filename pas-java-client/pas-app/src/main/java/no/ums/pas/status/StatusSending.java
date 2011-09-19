@@ -542,7 +542,7 @@ public class StatusSending {
 			else if(m_lba.f_simulation==1) {
                 pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + Localization.l("main_sending_simulated") + "]" + sz_time_used)); //JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Simulated) -- JobID " + m_lba.sz_jobid));
             }
-			else {
+			else if(m_lba.f_simulation==0) {
                 pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + Localization.l("main_sending_live") + "]" + sz_time_used));// JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Live sending) -- JobID " + m_lba.sz_jobid));
             }
 		}
@@ -1814,9 +1814,12 @@ public class StatusSending {
 			{
 				if(get_type()==4 || get_type()==5) //new type. LBA=4, voice=1, sms=2
 				{
-					pnl_cell.setVisible(true);
-					pnl_voice.setVisible(false);
-					m_btn_kill.setVisible(false);
+					if(pnl_cell!=null)
+						pnl_cell.setVisible(true);
+					if(pnl_voice!=null)
+						pnl_voice.setVisible(false);
+					if(m_btn_kill!=null)
+						m_btn_kill.setVisible(false);
 				}
 				else
 				{
