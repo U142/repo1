@@ -552,6 +552,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 						m_tab.setTabComponentAt(idxOfNewTab, sending.getTotalSendingnameLabel());
 						m_tab.setIconAt(idxOfNewTab, icoUse);
 					}
+					StatusPanel.this.revalidate();
+					sending.get_uipanel().revalidate();
 		            m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { Localization.l("main_status_filter") + ":", icoUse, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
 				}
 			});
