@@ -98,6 +98,9 @@ public class StatusSending {
 	{
 		m_lba_by_operator.add(lba);
 	}
+	public int getNumberOfOperators() {
+		return m_lba_by_operator.size();
+	}
 	
 	public float get_percentage() {
 		float percent = 0;
@@ -121,8 +124,18 @@ public class StatusSending {
 		case 4: // LBA
 			if(m_lba != null && (this.m_lba.n_status == LBASEND.LBASTATUS_CANCELLED || this.m_lba.n_status == LBASEND.LBASTATUS_FINISHED || this.m_lba.n_status > 42000 || this.m_lba.n_status == -1))
 				percent = 100.0f;
-			else if(m_lba != null)
-				percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			else if(m_lba != null) {
+				//float[] f_percent = new float[m_lba_by_operator.size()];
+				for(int i=0;i<m_lba_by_operator.size();i++) {
+					if(m_lba_by_operator.get(i).n_items > 0) {
+						percent += ((m_lba_by_operator.get(i).n_cancelled + m_lba_by_operator.get(i).n_proc) * 100.0f / m_lba_by_operator.get(i).n_items) / m_lba_by_operator.size();
+					}
+					else {
+						percent += 0;
+					}
+				}
+				//percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			}
 			else
 				percent = 0;
 			break;
@@ -205,8 +218,17 @@ public class StatusSending {
 				(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT)) ||
 				(((get_addresstypes() & SendController.SENDTO_TAS_SMS) == SendController.SENDTO_TAS_SMS)))
 		{
-			if(get_lba_items()>0)
-				n_lba_percent = get_lba_processed()*100.0f / get_lba_items();
+			if(get_lba_items()>0) {
+				n_lba_percent = 0;
+				for(int i=0;i<m_lba_by_operator.size();i++) {
+					if(m_lba_by_operator.get(i).n_items > 0) {
+						n_lba_percent += ((m_lba_by_operator.get(i).n_cancelled + m_lba_by_operator.get(i).n_proc) * 100.0f / m_lba_by_operator.get(i).n_items) / m_lba_by_operator.size();
+					}
+					else {
+						n_lba_percent += 0;
+					}					
+				}
+			}
 			else
 			{
 				if(m_lba.HasFinalStatus())
