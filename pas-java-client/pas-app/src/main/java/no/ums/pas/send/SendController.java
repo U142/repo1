@@ -1106,14 +1106,22 @@ public class SendController implements ActionListener {
 				{
 					boolean answer = false;
 					if(PAS.get_pas().get_statuscontroller().get_sendinglist().size() > 0) {
-						answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), false).getAnswer(res);
-						//JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
-                        
+						if(PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow() != null) {
+							answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), false).getAnswer(res);
+						}
+						else {
+							answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), false).getAnswer(res);
+						}
 						openStatus(res);
 					}
 					else {
 						
-						answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), true).getAnswer(res);
+						if(PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow() != null) {
+							answer = new SendingResultsView(PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow(), true).getAnswer(res);
+						}
+						else {
+							answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), true).getAnswer(res);
+						}
 
                         if(b_openstatus_question && answer)
                         {

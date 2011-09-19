@@ -28,7 +28,7 @@ public class SendingResultsView extends JDialog {
 	private ISendingResultsUpdate callback;
 	private SendingResultsController controller;
 	
-	public SendingResultsView(Frame owner, boolean bStatusNotOpened) {
+	public SendingResultsView(Component owner, boolean bStatusNotOpened) {
 		initComponents();
 		controller = new SendingResultsController();
 		sendingResultsModel1.setStatusNotOpened(bStatusNotOpened);
