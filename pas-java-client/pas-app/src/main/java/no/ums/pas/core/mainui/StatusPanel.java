@@ -194,7 +194,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		else
 			m_voice_total_progress.setStringPainted(true);
 		
-		m_lbl_proc_and_total.setText(m_n_voice_proc + m_n_lba_proc + " / " + m_n_voice_items + m_n_lba_items);
+		m_lbl_proc_and_total.setText((m_n_voice_proc + m_n_lba_proc) + " / " + (m_n_voice_items + m_n_lba_items));
 	}
 	
 	public void updateLBAStatistics()
