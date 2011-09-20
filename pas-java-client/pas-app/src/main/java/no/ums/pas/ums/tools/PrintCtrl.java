@@ -114,7 +114,7 @@ public class PrintCtrl implements Printable, Pageable {
 	public int getNumberOfPages() {
 		current_mode = PRINTMODE.PAGECOUNT;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-		format = PrinterJob.getPrinterJob().getPageFormat(pras);
+		format = getPageFormat(0);//PrinterJob.getPrinterJob().getPageFormat(pras);
 		int pageno = 0;
 		boolean b = true;
 		while(b)
@@ -325,19 +325,27 @@ public class PrintCtrl implements Printable, Pageable {
 	        	g2d.drawLine(0, 0, pagewidth, 0);
 	        	int line = 0;
 	        	totalItemsToPrint = is.get_table().getRowCount();
-    			System.out.println("TransY = " + g2d.getTransform().getTranslateY());
+    			//System.out.println("TransY = " + g2d.getTransform().getTranslateY());
     			int sizePrLine = 15;
     			int sizeHeader = (int)200;//(g2d.getTransform().getTranslateY() - pageFormat.getImageableHeight());
     			int sizeRemaining = (int)(pageFormat.getImageableHeight() - sizeHeader);
     			int linesRemaining = (int)Math.floor(sizeRemaining / sizePrLine);
     			
+    			System.out.println("Page " + pageIndex + " Starting at index = " + linesRemaining * pageIndex + " / " + totalItemsToPrint);
+    			
 	        	if(linesRemaining * pageIndex>=totalItemsToPrint)
+	        	{
+                    g2d.drawString(Localization.l("common_page") + " " + (pageIndex + 1) + " "+ Localization.l("common_x_of_y") + " " + numPages, 0, 30);
+	        		//System.out.println("PrintJob - No more pages");
 	        		return NO_SUCH_PAGE;
+	        	}
 	        	for(int i=linesRemaining * pageIndex;i<is.get_table().getRowCount();++i) {
 	        		//if(line == pagelines) {// Page is full
-	        		if(line>=linesRemaining)
+	        		if(line>=linesRemaining ||
+	        				(linesRemaining * pageIndex + line)>=totalItemsToPrint)
 	        		{
-                        g2d.drawString(Localization.l("common_page") + " " + (pageIndex + 1) + " "+ Localization.l("common_x_of_y") + " " + numPages, 0, 30);//((int)is.get_table().getRowCount()/pagelines), 0, line*10+30);
+                        g2d.drawString(Localization.l("common_page") + " " + (pageIndex + 1) + " "+ Localization.l("common_x_of_y") + " " + numPages, 0, 30);
+                        //System.out.println("PrintJob - pageIndex=" + pageIndex + " ");
 	        			return PAGE_EXISTS;
 	        		}
 	        		int currentY = (int)(g2d.getTransform().getTranslateY());
@@ -394,6 +402,8 @@ public class PrintCtrl implements Printable, Pageable {
 	        	g2d.translate(0, PAS.get_pas().get_mapsize().getHeight()+5);
 	        }
 			//g2d.setTransform(originalTransform);
+	        System.out.println("PrintJob - Final page");
+            g2d.drawString(Localization.l("common_page") + " " + (pageIndex + 1) + " "+ Localization.l("common_x_of_y") + " " + numPages, 0, 30);
 	        return(PAGE_EXISTS);
 	    }
     }
