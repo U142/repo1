@@ -559,6 +559,7 @@ public class MapFrame extends JPanel implements ActionListener {
         if (ViewOptions.TOGGLE_SEARCHPOINTS.isSelected() && get_pinpointll() != null) {
             try {
                 MapPoint p = new MapPoint(get_navigation(), get_pinpointll());
+
                 g.drawImage(get_icon_pinpoint().getImage(), p.get_x() - get_icon_pinpoint().getIconWidth() / 2, p.get_y() - get_icon_pinpoint().getIconHeight() / 2, get_icon_pinpoint().getIconWidth(), get_icon_pinpoint().getIconHeight(), this);
             } catch (Exception e) {
                 log.warn("Failed to draw pinpoint", e);
@@ -1011,8 +1012,10 @@ public class MapFrame extends JPanel implements ActionListener {
         if ("act_set_active_shape".equals(e.getActionCommand())) {
             set_active_shape((ShapeStruct) e.getSource());
         } else if ("act_add_polypoint".equals(e.getActionCommand())) {
-            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
-
+        	
+            LonLat ll = getZoomLookup().getLonLat(mapModel.getTopLeft(), get_current_mousepos().x, get_current_mousepos().y);
+            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+            //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
             try {
                 get_active_shape().typecast_polygon().add_coor(p.get_lon(), p.get_lat());
             } catch (Exception err) {

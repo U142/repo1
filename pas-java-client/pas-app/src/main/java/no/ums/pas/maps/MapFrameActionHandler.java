@@ -5,6 +5,7 @@ package no.ums.pas.maps;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.LonLat;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
@@ -385,7 +386,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			case OBJECT_MOVE:
 				try {
 					if(get_mappane().get_current_object()!=null) {
-						MapPoint mp = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));					
+						//MapPoint mp = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			            MapPoint mp = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						get_mappane().get_current_object().set_pos(new Point(e.getX(), e.getY()), mp);
 					}
 				} catch(Exception err) {
@@ -447,7 +450,10 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			return false;
 		//intersects.clear();
 		intersects = new ArrayList<MapPointLL>();
-		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
+		//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
+        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), m_dim_cursorpos.width, m_dim_cursorpos.height);
+        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+
 		//log.debug("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
 		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
 		//List<ShapeStruct> list = PAS.get_pas().get_userinfo().get_current_department().get_restriction_shapes();
@@ -671,6 +677,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			do_snap(e);
 		} else {
 			MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+	        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+	        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+
 			m_dim_cursorpos.width = e.getX();
 			m_dim_cursorpos.height = e.getY();
 			addAction("act_mousemove", p);//new Point(e.getX(), e.getY()));
@@ -699,12 +708,17 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	}
 	private void check_snap(MouseEvent e) {
 		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 		addAction("act_check_mousesnap", p);
 	}
 	
 	private void do_snap(MouseEvent e) {
 		try {
 			MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+	        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+	        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+
 //			ActionEvent action = null;
 			//if(e.getClass().getName().equals("SnapMouseEvent")) {
 			//if(e instanceof Send.SnapMouseEvent) {
@@ -761,7 +775,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			case SENDING_ELLIPSE:
 				if(get_isdragging()) {
 					try {
-						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_ellipse_corner", p);
 					} catch(Exception err) {
 						log.debug(err.getMessage());
@@ -773,7 +789,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			case SENDING_ELLIPSE_POLYGON:
 				if(get_isdragging()) {
 					try {
-						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_polygon_ellipse_corner", p);
 						if(get_isdragging())
 						{
@@ -834,9 +852,15 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					set_isdragging(true); //m_b_isdragging = true;
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
-					addAction("act_search_houses", new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY())).get_mappointll());//new Dimension(e.getX(), e.getY()));
+				{
+			        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+					addAction("act_search_houses", p);
 					//PAS.get_pas().get_statuscontroller().search_houses(new Dimension(e.getX(), e.getY()));
+				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY) {
+			        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1))
 					{
@@ -862,7 +886,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
-					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+					//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_OUTSIDE, -1))
 					{
 						addAction("act_add_polypoint", p);
@@ -888,7 +914,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE) {
 					try {
-						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_ellipse_center", p);
 						set_isdragging(true);
 					} catch(Exception err) {
@@ -900,7 +928,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON)
 				{
 					try {
-						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+				        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_polygon_ellipse_corner", p);
 						addAction("act_set_polygon_ellipse_center", p);
 						set_isdragging(true);
@@ -925,7 +955,11 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get(0).get_lon(), get_mappane().get_mouseoverhouse().get(0).get_lat()));
 					}
 					else 
-						p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+					{
+						//p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+				        p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+					}
 					/*if(m_houseeditordlg==null)
 						m_houseeditordlg = new HouseEditorDlg(PAS.get_pas(), PAS.get_pas(), p, get_mappane().get_mouseoverhouse());
 					else {
@@ -938,7 +972,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE) {
 					MapPoint p;
 					if(get_mappane().get_active_shape() != null) {
-						p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						//p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+				        p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						get_mappane().get_active_shape().set_epicentre(p);
 					}
 					get_mappane().set_prev_mode();
@@ -960,6 +996,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
 						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+			        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+			        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					addAction("act_mouse_rightclick", p);
 					//ActionEvent action = new ActionEvent(p, ActionEvent.ACTION_PERFORMED, "act_mouse_rightclick");
 					//PAS.get_pas().get_sendcontroller().actionPerformed(action);					
