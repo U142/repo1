@@ -113,7 +113,7 @@ public class PrintCtrl implements Printable, Pageable {
 	@Override
 	public int getNumberOfPages() {
 		current_mode = PRINTMODE.PAGECOUNT;
-		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		//PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		format = getPageFormat(0);//PrinterJob.getPrinterJob().getPageFormat(pras);
 		int pageno = 0;
 		boolean b = true;
