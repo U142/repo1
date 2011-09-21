@@ -21,11 +21,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {comp scrollPane1::l::458:x:1, seq t {par l {comp lblPostCode::::137:x:1, comp lblCountry::l::137:x:1, comp lblRegion::l::137:x:1, comp lblAddress::t::137:x:1}, space :::p, par l {seq l {comp txtPostCode:::p:56:p, space :::p, comp txtPlace::::253:x:1}, seq t {comp txtAddress::::260:x, space :::p, comp txtNumber:::p:49:p:1}, comp txtRegion::t::316:x:1, comp cbxCountry::l:p:159:p}}, comp btnSearch::t:p:124:p}, space :::p}}</string> 
+        <string>par l {seq {space :::p, par l {comp scrollPane1::l::450:x:1, seq t {par l {comp lblPostCode::::133:x:1, comp lblCountry::l::133:x:1, comp lblRegion::l::133:x:1, comp lblAddress::t::133:x:1}, space :::p, par l {seq l {comp txtPostCode:::p:56:p, space :::p, comp txtPlace::::249:x:1}, seq t {comp txtAddress::::256:x, space :::p, comp txtNumber:::p:49:p:1}, comp txtRegion::t::312:x:1, comp cbxCountry::l:p:159:p}}, comp btnSearch::t:p:124:p}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par b {comp lblAddress::b:p::p, comp txtAddress::b:p::p, comp txtNumber::b:p::p}, space :::p, par b {comp txtPlace::b:p::p, comp lblPostCode::b:p::p, comp txtPostCode::b:p::p}, space :::p, par b {comp txtRegion::b:p::p, comp lblRegion::b:p::p}, space :::p, par b {comp lblCountry::b:p::p, comp cbxCountry::b:p::p}, space :p:13:p, comp btnSearch:::p::p, space s:::p, comp scrollPane1::::117:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par b {comp lblAddress::b:p::p, comp txtAddress::b:p::p, comp txtNumber::b:p::p}, space :::p, par b {comp txtPlace:1:b:p::p, comp lblPostCode::b:p::p, comp txtPostCode:1:b:p::p}, space :::p, par b {comp txtRegion::b:p::p, comp lblRegion::b:p::p}, space :::p, par b {comp lblCountry::b:p::p, comp cbxCountry::b:p::p}, space :p:13:p, comp btnSearch:::p::p, space s:::p, comp scrollPane1::::108:x, space :::p}}</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -88,7 +88,7 @@
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JTextField</string> 
+        <string>no.ums.pas.ums.tools.StdIntegerArea</string> 
         <void property="name"> 
          <string>txtPostCode</string> 
         </void> 

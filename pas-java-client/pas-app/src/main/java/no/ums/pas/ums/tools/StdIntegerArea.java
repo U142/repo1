@@ -19,6 +19,12 @@ public class StdIntegerArea extends StdTextArea {
 	protected Double minValue = null;
 	protected Double maxValue = null;
 
+	public StdIntegerArea()
+	{
+		super("", false, 0);
+		setType(INTEGER);
+	}
+	
 	public StdIntegerArea(String sz_text, boolean b_heading, int n_width, int n_type) {
 		super(sz_text, b_heading, n_width);
 		setType(n_type);
