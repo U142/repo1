@@ -741,7 +741,6 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		
 		public synchronized void mousePressed(java.awt.event.MouseEvent e) { }
 		public synchronized void mouseReleased(java.awt.event.MouseEvent e) {
-			System.out.println("Point før switch: " + e.getPoint().x + "," + e.getPoint().y);
 			int idx = m_tbl.rowAtPoint(e.getPoint());
 			int idxcol = m_tbl.columnAtPoint(e.getPoint());
 			setSelected(idx, idxcol);
@@ -752,8 +751,6 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 					if(e.getClickCount()==1 || m_n_selectedcolumn == 3 || m_n_selectedcolumn == 4) // Dette er litt jalla, men må nesten ha det for at den skal få med seg despoklikkingen til Randi (altså ikke hoppe over til double click)
 					{
 						if(m_n_selectedindex>=0) {
-							//PAS.get_pas().add_event("mouseClicked " + m_n_selectedcolumn);
-							System.out.println("Point i switch: " + e.getPoint().x + "," + e.getPoint().y);
 							onMouseLClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
 						}
 					}
