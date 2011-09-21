@@ -218,7 +218,16 @@ namespace com.ums.PAS.Address.gab
                 r.Close();
                 response.Close();
             }
-            catch (Exception)
+            catch (WebException e)
+            {
+                HttpWebResponse wr = (HttpWebResponse)e.Response;
+                UGabSearchResultList list = new UGabSearchResultList();
+                //list.sz_errortext = xmldata_utf8;
+                //list.sz_exceptiontext = e.Message;
+                list.setError(e.Message, wr.StatusDescription);
+                return list;
+            }
+            catch (Exception e)
             {
                 throw;
             }
