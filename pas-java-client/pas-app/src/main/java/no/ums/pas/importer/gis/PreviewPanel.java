@@ -43,7 +43,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	private SendObject m_sendobject;
 	private ActionListener m_callbackframe;
 	
-	public PreviewPanel(SendObject so, boolean b_results_only, ActionListener callbackframe) {
+	public PreviewPanel(SendObject so, boolean b_results_only, ActionListener callbackframe, String encoding) {
 		super();
 		m_sendobject = so;
 		m_callbackframe = callbackframe;
@@ -51,7 +51,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			String [] sz_columns = new String[] { "No", "Municipal", "Street ID", "House", "Letter", "Namefilter1", "Namefilter2", "Name", "Phone", "Mobile", "Postcode", "Place", "", "Hit(%)", "Longitude", "Latitude" };
 			int [] n_col_width = new int [] { 20, 30, 30, 20, 10, 60, 60, 60, 30, 30, 20, 30, 16, 16, 20, 20 };
 			if(m_resultpanel == null)
-				m_resultpanel = new GISResultPanel(this, so.get_sendproperties().typecast_gis().get_gislist(), sz_columns, n_col_width, new Dimension(600, 300));
+				m_resultpanel = new GISResultPanel(this, so.get_sendproperties().typecast_gis().get_gislist(), sz_columns, n_col_width, new Dimension(600, 300), encoding);
 			m_resultpanel.fill(so.get_sendproperties().typecast_gis().get_gislist(), false);
 			addComponentListener(this);
 			m_tab = new JTabbedPane();

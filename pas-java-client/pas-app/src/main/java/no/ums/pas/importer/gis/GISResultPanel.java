@@ -67,12 +67,24 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 	public static final long serialVersionUID = 1;
 	GISList m_gislist;
 	GISFile m_gisfile;
+	private String m_encoding = "ISO-8859-15";
 	protected GISList get_gislist() { return m_gislist; }
 	int [] m_n_width;
 	int [] m_n_namefilter = new int[2];
 	int n_col_object = 7;
 	int n_col_include = 12;
 	boolean m_b_run_hittest = true;
+	
+	public GISResultPanel(PreviewPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim, String encoding) {
+		super(parent, new GISPercentColouredCellRenderer());
+		m_encoding = encoding;
+		m_gislist = gislist;
+		m_sz_cols = sz_columns;
+		m_n_width = n_col_width;
+		m_n_namefilter[0] = -1;
+		m_n_namefilter[1] = -1;
+		init();
+	}
 	
 	public GISResultPanel(PreviewPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim) {
 		super(parent, new GISPercentColouredCellRenderer());
@@ -196,14 +208,14 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 						try
 						{
 							Object [] line = new Object[] {n_recordcount, house.get_municipal(), house.get_streetid(), house.get_houseno(),
-															house.get_letter(), house.get_name1(), house.get_name2(), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
+															house.get_letter(), new String(house.get_name1().getBytes(),m_encoding), new String(house.get_name2().getBytes(), m_encoding), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
 															inhabitant.get_postno(), inhabitant.get_postarea(), b_include, hit, inhabitant.get_lon(), inhabitant.get_lat()};
 							inhabitant.set_included(b_include);
 							m_panel.insert_row(line, 0);
 						}
 						catch(Exception e)
 						{
-							
+
 						}
 					}
 				}

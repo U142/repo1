@@ -12,8 +12,8 @@ public class OpenGetStatus {
 		ULOGONINFO logoninfo = new ULOGONINFO();
 		logoninfo.setOnetimekey(pasApp.getPaswsSoap().getOneTimeKey());
 		logoninfo.setSzCompid("ums");
-		logoninfo.setSzUserid("ssa");
-		logoninfo.setSzPassword(Utils.encrypt("sa123,1"));
+		logoninfo.setSzUserid("rwtest");
+		logoninfo.setSzPassword(Utils.encrypt("wilhelmsen123"));
 		UPASLOGON logon = pasApp.getPaswsSoap().pasLogon(logoninfo);
 		logoninfo.setSessionid(logon.getSessionid());
 		logoninfo.setLDeptpk(logon.getDepartments().getUDEPARTMENT().get(0).getLDeptpk());
