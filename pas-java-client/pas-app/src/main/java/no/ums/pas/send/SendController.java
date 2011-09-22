@@ -1116,7 +1116,7 @@ public class SendController implements ActionListener {
 					}
 					else {
 						
-						if(PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow() != null) {
+						if(PAS.get_pas().get_sendcontroller().get_activesending() != null) {
 							answer = new SendingResultsView(PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow(), true).getAnswer(res);
 						}
 						else {

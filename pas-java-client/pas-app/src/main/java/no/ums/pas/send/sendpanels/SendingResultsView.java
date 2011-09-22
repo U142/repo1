@@ -103,6 +103,7 @@ public class SendingResultsView extends JDialog {
 		setTitle(bundle.getString("quicksend_dlg_results"));
 		setModal(true);
 		setResizable(false);
+		setAlwaysOnTop(true);
 		Container contentPane = getContentPane();
 
 		//---- btnYes ----
