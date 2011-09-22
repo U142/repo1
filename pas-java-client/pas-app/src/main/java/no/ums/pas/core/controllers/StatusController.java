@@ -472,7 +472,7 @@ public class StatusController extends Controller implements ActionListener {
 
 		m_statuscodes = new StatusCodeList();
 		m_houses = new Houses(false);
-		m_items = new StatusItemList(m_houses.new LonLatComparator());
+		m_items = new StatusItemList(m_houses.new StatusComparator());
 	}
 
 	public synchronized void status_update() {

@@ -6,6 +6,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.tools.Timeout;
 
 import javax.annotation.Nonnull;
@@ -67,6 +68,30 @@ public class Houses {
 	
 	public boolean is_housesready() { return m_b_housesready; }
 	
+	public class StatusComparator implements Comparator<Object>
+	{
+		public final int compare ( Object a, Object b ) /*objects of type StatusItemObject*/
+		{
+            if (a == b) {
+                return 0;
+            }
+            else if (a == null) {
+                return 1;
+            }
+            else if (b == null) {
+                return -1;
+            }
+            StatusItemObject obj1 = (StatusItemObject)a;
+            StatusItemObject obj2 = (StatusItemObject)b;
+            return ComparisonChain
+            		.start()
+            		.compare(obj1.get_lat(), obj2.get_lat())
+            		.compare(obj1.get_lon(), obj2.get_lon())
+            		.compare(obj1.get_refno() + "_" + obj1.get_item(), obj2.get_refno() + "_" + obj2.get_item())
+            		.result();
+		}
+	}
+	
 	public class LonLatComparator implements Comparator<Object>
 	{
 		public final int compare ( Object a, Object b ) /*objects of type StatusItemObject*/
@@ -81,8 +106,8 @@ public class Houses {
                 return -1;
             }
 
-            InhabitantBasics obj1 = (InhabitantBasics)a;
-            InhabitantBasics obj2 = (InhabitantBasics)b;
+            Inhabitant obj1 = (Inhabitant)a;
+            Inhabitant obj2 = (Inhabitant)b;
             return ComparisonChain
                     .start()
                     .compare(obj1.get_lat(), obj2.get_lat())
