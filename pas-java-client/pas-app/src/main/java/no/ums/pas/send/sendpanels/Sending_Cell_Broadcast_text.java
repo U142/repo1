@@ -263,7 +263,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 									{
 									public static final long serialVersionUID = 1;
 										public void select(int index0, int index1) {
-											if (isSelectedIndex(index0)) {
+											if (isSelectedIndex(index0) && index0 == index1) {
 												super.removeSelectionInterval(index0, index1);
 											}
 											else
@@ -271,6 +271,12 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 												boolean defaultSelected = false;
 												
 												CCode cc = (CCode)m_lst_cc.getModel().getElementAt(index0);
+												
+												if(cc.getNCCode() == -1) {
+													defaultSelected = true;
+												}
+												
+												cc = (CCode)m_lst_cc.getModel().getElementAt(index1);
 												
 												if(cc.getNCCode() == -1) {
 													defaultSelected = true;
@@ -288,7 +294,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 												}
 												else {
 													super.removeSelectionInterval(0, m_lst_cc.getModel().getSize()-1);
-													super.addSelectionInterval(index0, index1);
+													super.addSelectionInterval(index1, index1);
 												}
 												
 											}
