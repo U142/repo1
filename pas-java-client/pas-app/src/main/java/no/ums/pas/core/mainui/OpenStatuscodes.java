@@ -7,6 +7,7 @@ import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.defines.TblCellColor;
 import no.ums.pas.core.popupmenus.PUStatusList;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusItemObject;
@@ -30,6 +31,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.SortedSet;
 
 
 public class OpenStatuscodes extends SearchPanelResults {
@@ -240,13 +242,12 @@ public class OpenStatuscodes extends SearchPanelResults {
 	int count_statusitems(int n_code)
 	{
 		int n_ret = 0;
-		ArrayList<Object> objects = get_statusframe().get_controller().get_items();
+		SortedSet<Inhabitant> objects = get_statusframe().get_controller().get_items();
 		if(objects==null)
 			return n_ret;
-		StatusItemObject obj;
-		for(int i=0; i < objects.size(); i++)
+		for(Inhabitant current : objects)
 		{
-			obj = (StatusItemObject)objects.get(i);
+			StatusItemObject obj = (StatusItemObject)current;
 			if(m_filter!=null)
 			{
 				//filter is activated. if refno's are noe equal, continue without counting

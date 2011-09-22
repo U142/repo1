@@ -8,6 +8,7 @@ import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
@@ -47,6 +48,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.SortedSet;
 
 
 
@@ -349,8 +351,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 
 		if(obj.get_sendproperties().get_isresend()) {
 			m_addresscount = new AddressCount();
-			// Her må jeg hente StatusController.get_items
-			ArrayList<Object> items = controller.get_pas().get_statuscontroller().get_items(); // denne listen inneholder StatusItemObjects
+			SortedSet<Inhabitant> items = controller.get_pas().get_statuscontroller().get_items();
 			StatusCodeList mainList = controller.get_pas().get_statuscontroller().get_statuscodes();
 			StatusCodeList list = new StatusCodeList();
 			
@@ -367,20 +368,28 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					list._add(sc);
 				}
 			}
-			
-			for(int i=0;i<items.size();i++) {
-				StatusItemObject item = (StatusItemObject)items.get(i);
+
+			int i= 0;
+			for(Inhabitant curInhab : items)
+			{
+				StatusItemObject item = (StatusItemObject)curInhab;
 				int count = 0;
 				
 				if(item.get_refno() == obj.get_sendproperties().get_resend_refno()) {
 					StatusItemObject tempItem;
-					for(int j=0; j<=i; j++) {
-						tempItem = ((StatusItemObject)items.get(j));
+					int j = 0;
+					for(Inhabitant curInhab2 : items)
+					{
+						if(j>i)
+							break;
+						tempItem = ((StatusItemObject)curInhab2);
 						if(tempItem.get_status() == item.get_status() && tempItem.get_refno() == item.get_refno())
-							count++;
-					}
+							count++;	
+						++j;
+					}					
 					list._add(new StatusCode(item.get_status(), mainList.get_statusname(item.get_status()), false, count, false));
 				}
+				++i;
 			}
 			
 			//m_resendpanel = new Sending_AddressResend(this, controller.get_pas().get_statuscontroller().get_statuscodes(), obj.get_sendproperties().get_resend_refno());				
@@ -709,20 +718,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				if(m_sendobject.get_sendproperties().get_isresend()) {
 					int count = 0;
 					ArrayList<Object> statuslist = m_resendpanel.get_checked();
-					ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
-					//ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
 					for(int j=0;j<statuslist.size();j++) {
 						Object[] obj = (Object[])statuslist.get(j);
-						//StatusCode statuscode = (StatusCode)obj[0];
 						count +=  Integer.parseInt(obj[2].toString());
-						/*for(int i=0;i<ting.size();i++) {
-							StatusItemObject item = (StatusItemObject)ting.get(i);
-							if(item.get_refno() == m_sendobject.get_sendproperties().get_resend_refno() &&
-									item.get_status() == statuscode.get_code()) {
-								//count++;
-								count+=1;//item.get_adrtype(); //kanskje denne i stedet?
-							}
-						}*/
 					}
                     message = String.format(Localization.l("main_sending_confirm_live_sending"), count);//"Confirm LIVE sending to " + count + " recipients";
 				}
