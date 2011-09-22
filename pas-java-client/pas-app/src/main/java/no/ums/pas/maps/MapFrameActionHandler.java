@@ -854,9 +854,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
 				{
 			        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
-			        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+			        MapPointLL p = new MapPointLL(ll.getLon(), ll.getLat());
 					addAction("act_search_houses", p);
-					//PAS.get_pas().get_statuscontroller().search_houses(new Dimension(e.getX(), e.getY()));
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY) {
 			        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());

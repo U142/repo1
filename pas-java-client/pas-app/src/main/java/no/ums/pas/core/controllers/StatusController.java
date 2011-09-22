@@ -16,6 +16,7 @@ import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -469,9 +470,9 @@ public class StatusController extends Controller implements ActionListener {
 		m_statuscodeframe.clear();
 		m_lba_total_tabbed.clear();
 
-		m_items = new StatusItemList();
 		m_statuscodes = new StatusCodeList();
 		m_houses = new Houses(false);
+		m_items = new StatusItemList(m_houses.new StatusComparator());
 	}
 
 	public synchronized void status_update() {
@@ -609,7 +610,7 @@ public class StatusController extends Controller implements ActionListener {
 												 */) {
 		get_statuscodeframe().fill();
 		get_houses().sort_houses(get_items(), true);
-        ViewOptions.TOGGLE_STATUSCODES.putValue(Action.SELECTED_KEY, true);
+		ViewOptions.TOGGLE_STATUSCODES.putValue(Action.SELECTED_KEY, true);
         StatusActions.EXPORT.setEnabled(true);
         PAS.get_pas().get_drawthread().set_neednewcoors(true);
 		set_visibility();
@@ -781,19 +782,17 @@ public class StatusController extends Controller implements ActionListener {
 			}
 			PAS.get_pas().get_drawthread().set_suspended(true);
 			StatusItemObject current = null;
-			for (int i = 0; i < get_items().size(); i++) {
-				current = (StatusItemObject) get_items().get(i);
+			for(Inhabitant curInhab : get_items())				
+			{
+				current = (StatusItemObject)curInhab;
 				if (current.get_item() == n_item)
+				{
+					Variables.getNavigation().exec_adrsearch(
+	                        current.get_lon(), current.get_lat(), 100);
 					break;
+				}
 			}
-			// HouseItem current;
 			PAS.get_pas().get_drawthread().set_suspended(false);
-			if (current != null) {
-				// PAS.get_pas().add_event("Going to " + current.get_lon() + " "
-				// + current.get_lat(), null);
-				Variables.getNavigation().exec_adrsearch(
-                        current.get_lon(), current.get_lat(), 100);
-			}
 		}
 	}
 

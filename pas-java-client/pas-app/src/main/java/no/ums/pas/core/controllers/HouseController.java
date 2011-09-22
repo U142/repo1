@@ -27,7 +27,10 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class HouseController extends Controller {
@@ -120,15 +123,15 @@ public class HouseController extends Controller {
     private final HouseDownloadCache cache = new HouseDownloadCache();
     public HouseDownloadCache getCache() { return cache; }
     
-	public void start_download(final boolean b) {
-		create_filter();
-		set_visibility_change(true);
+	public synchronized void start_download(final boolean b) {
 		try
 		{
-            m_items = new ArrayList<Object>();
+			create_filter();
+			set_visibility_change(true);
+			m_items = new TreeSet<Inhabitant>(m_houses.new LonLatComparator());
             for (final Point point : stdZoom.getTiles(new LonLat(get_nav()._lbo, get_nav()._ubo), new LonLat(get_nav()._rbo, get_nav()._bbo))) {
                 for (UAddress a : cache.getHouseInfos(stdZoom.getZoomLevel(), point.y, point.x)) {
-                    m_items.add(new Inhabitant(a));
+                    addInhabitant(new Inhabitant(a));
                 }
             }
 
@@ -137,9 +140,16 @@ public class HouseController extends Controller {
 			set_visibility_change(true);
 			PAS.get_pas().actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_FINISHED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		}
+		catch(ConcurrentModificationException e)
+		{
+			no.ums.pas.ums.errorhandling.Error.getError().addError("Error", "House download", e, 1);			
+		}
 		catch(Exception e)
 		{
 			no.ums.pas.ums.errorhandling.Error.getError().addError("Error", "House download", e, 1);
+		}
+		finally
+		{
 		}
 	}
 	
@@ -160,13 +170,9 @@ public class HouseController extends Controller {
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_insert_inhabitant".equals(e.getActionCommand())) {
 			if(!m_items.contains((Inhabitant)e.getSource())) {
-				m_items.add((Inhabitant)e.getSource());
-			}
-			else {
-				m_items.set(m_items.indexOf((Inhabitant)e.getSource()),(Inhabitant)e.getSource());
+				addInhabitant((Inhabitant)e.getSource());
 			}
 			
-			m_houses.sort_houses(get_items(), false);
 			m_houses.set_visible(true);
 			m_houses.calcHouseCoords();
 			set_visibility_change(true);
