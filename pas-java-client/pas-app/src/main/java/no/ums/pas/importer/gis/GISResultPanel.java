@@ -6,6 +6,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.tas.statistics.UMSChartFrame;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.LetterPairSimilarity;
 
@@ -17,6 +18,12 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 
 class GISPercentColouredCellRenderer extends DefaultTableCellRenderer{
 
@@ -68,23 +75,13 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 	GISList m_gislist;
 	GISFile m_gisfile;
 	private String m_encoding = "ISO-8859-15";
+	public void setEncoding(String encoding) { m_encoding = encoding; }
 	protected GISList get_gislist() { return m_gislist; }
 	int [] m_n_width;
 	int [] m_n_namefilter = new int[2];
 	int n_col_object = 7;
 	int n_col_include = 12;
 	boolean m_b_run_hittest = true;
-	
-	public GISResultPanel(PreviewPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim, String encoding) {
-		super(parent, new GISPercentColouredCellRenderer());
-		m_encoding = encoding;
-		m_gislist = gislist;
-		m_sz_cols = sz_columns;
-		m_n_width = n_col_width;
-		m_n_namefilter[0] = -1;
-		m_n_namefilter[1] = -1;
-		init();
-	}
 	
 	public GISResultPanel(PreviewPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim) {
 		super(parent, new GISPercentColouredCellRenderer());
@@ -208,7 +205,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 						try
 						{
 							Object [] line = new Object[] {n_recordcount, house.get_municipal(), house.get_streetid(), house.get_houseno(),
-															house.get_letter(), new String(house.get_name1().getBytes(),m_encoding), new String(house.get_name2().getBytes(), m_encoding), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
+															house.get_letter(), new String(encode(house.get_name1(), m_encoding)), new String(encode(house.get_name2(), m_encoding)), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
 															inhabitant.get_postno(), inhabitant.get_postarea(), b_include, hit, inhabitant.get_lon(), inhabitant.get_lat()};
 							inhabitant.set_included(b_include);
 							m_panel.insert_row(line, 0);
@@ -248,6 +245,31 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 		}
 		
 	}
+	
+	private String encode(String text, String encoding) {
+		String s = "";
+		if(text.length() > 0) {
+			try {
+				// Create the encoder and decoder for ISO-8859-1
+				Charset charset = Charset.forName(encoding);
+				CharsetDecoder decoder = charset.newDecoder();
+				CharsetEncoder encoder = charset.newEncoder();
+			    // Convert a string to ISO-LATIN-1 bytes in a ByteBuffer
+			    // The new ByteBuffer is ready to be read.
+			    ByteBuffer bbuf = encoder.encode(CharBuffer.wrap(text));
+	
+			    // Convert ISO-LATIN-1 bytes in a ByteBuffer to a character ByteBuffer and then to a string.
+			    // The new ByteBuffer is ready to be read.
+			    CharBuffer cbuf = decoder.decode(bbuf);
+			    s = cbuf.toString();
+			} catch (CharacterCodingException e) {
+				log.debug("Error PreviewPanel " + e.getMessage());
+				Error.getError().addError("PreviewList","Exception in init",e,1);
+			}
+		}
+		return s; 
+	}
+	
 	private void updateStatistics() {
 		m_parent.actionPerformed(new ActionEvent(get_gislist(), ActionEvent.ACTION_PERFORMED, "act_update_statistics"));
 	}

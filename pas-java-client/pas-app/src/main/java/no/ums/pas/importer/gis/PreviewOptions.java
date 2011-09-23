@@ -51,6 +51,8 @@ class PreviewOptions extends DefaultPanel {
 		}
 		else if("act_change_encoding".equals(e.getActionCommand())) {
 			m_parent.m_gis.set_encoding((String)m_cbx_encoding.getSelectedItem().toString());
+			m_parent.encoding = (String)m_cbx_encoding.getSelectedItem().toString();
+			m_parent.m_panel.get_resultpanel().setEncoding((String)m_cbx_encoding.getSelectedItem().toString());
 			m_parent.m_gis.set_preview(m_parent);
 			m_parent.m_gis.parse(m_parent.m_gis.get_file(), m_parent.m_gis.get_callback(), "act_gis_import_finished", m_parent.m_gis.getIsAlert());
 			
