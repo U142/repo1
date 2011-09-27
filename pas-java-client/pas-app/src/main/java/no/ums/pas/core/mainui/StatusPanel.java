@@ -356,7 +356,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 				}
 				catch(Exception err)
 				{
-					
+					log.warn(err.getMessage(), err);
 				}
 			}
 			int voicelba_count = 0;
@@ -552,6 +552,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 						m_tab.setTabComponentAt(idxOfNewTab, sending.getTotalSendingnameLabel());
 						m_tab.setIconAt(idxOfNewTab, icoUse);
 					}
+					StatusPanel.this.componentResized(null);
+					//sending.get_uipanel().setPreferredSize(sending.get_uipanel().getSize());
+					sending.get_uipanel().componentResized(null);
 					StatusPanel.this.revalidate();
 					sending.get_uipanel().revalidate();
 		            m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { Localization.l("main_status_filter") + ":", icoUse, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
