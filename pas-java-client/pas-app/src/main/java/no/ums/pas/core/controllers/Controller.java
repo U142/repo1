@@ -13,6 +13,7 @@ package no.ums.pas.core.controllers;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
 import no.ums.pas.maps.defines.Inhabitant;
@@ -27,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 
@@ -94,10 +97,15 @@ public abstract class Controller implements ActionListener {
 	}
 	public int get_filter_date() { return m_n_filter_date; }
 	public int get_filter_time() { return m_n_filter_time; }
-	ArrayList <Object>m_items = null;
+	SortedSet<Inhabitant> m_items = new TreeSet<Inhabitant>();
+	protected void addInhabitant(Inhabitant inhab)
+	{
+		m_items.add(inhab);
+	}
+	
 	Houses m_houses = null;
 	public Houses get_houses() { return m_houses; }
-	public ArrayList<Object> get_items() { return m_items; }
+	public SortedSet<Inhabitant> get_items() { return m_items; }
 	public boolean get_pause() { return m_b_pause; }
 	public void set_pause(boolean pause) { m_b_pause = pause; }
 	
@@ -144,16 +152,10 @@ public abstract class Controller implements ActionListener {
 	private Dimension m_mouse;
 	public synchronized void find_houses_bypix(Dimension dim) {
 		m_mouse = dim;
-		//arr_found.clear();
 		ArrayList <Object>arr_temp = new ArrayList<Object>();
 		ArrayList <Object>arr_temp_houses = new ArrayList<Object>();
 		
 		if(get_houses()!=null && get_houses().is_housesready()) {
-			/*while(1==1) {
-				if(get_houses().is_housesready())
-					break;
-			}*/
-			//get_pas().get_drawthread().set_suspended(true);
 			HouseItem current;
 			int n_radius;
 			int n_count = 0;
@@ -252,8 +254,14 @@ public abstract class Controller implements ActionListener {
 				//tt.setTipText("Test");
 				//tt.setBounds(p.x - n_compensate_left, p.y - n_compensate_up, quad.width, quad.height);
 				//tt.setVisible(true);
-				sz += "<tr style=\"font-size:9px; font-face:Arial;\">";
-				sz += "<td><b>" + sz_showname + "</td><td style=\"width:150px;\">" + sz_showaddr + "</td><td align=center style=\"width:60px;\">" + cur.get_number() + "</td><td align=center style=\"width:60px;\">" + cur.get_mobile() + "</b></td>";
+				sz += "<tr style=\"font-size:8px; font-face:Arial;\">";
+				sz += "<td><img src=\"" + ImageFetcher.class.getResource(cur.bedrift() ? "address_company_16.png" : "address_private_16.png") + "\"></td>";
+				sz += cur.isVulnerable() ? "<td><img src=\"" + ImageFetcher.class.getResource("bandaid_16.png") + "\"></td>" : "<td></td>";
+				sz += "<td><b>";
+				sz += "<font color=";
+				sz += (cur.isVulnerable() ? "red" : "black");
+				sz += ">";
+				sz += sz_showname + "</td><td style=\"width:150px;\">" + sz_showaddr + "</td><td align=center style=\"width:60px;\">" + cur.get_number() + "</td><td align=center style=\"width:60px;\">" + cur.get_mobile() + "</b></td>";
 				sz += "</tr>";
 			//}
 		}

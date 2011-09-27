@@ -43,7 +43,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	private SendObject m_sendobject;
 	private ActionListener m_callbackframe;
 	
-	public PreviewPanel(SendObject so, boolean b_results_only, ActionListener callbackframe) {
+	public PreviewPanel(SendObject so, boolean b_results_only, ActionListener callbackframe, String encoding) {
 		super();
 		m_sendobject = so;
 		m_callbackframe = callbackframe;

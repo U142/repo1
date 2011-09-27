@@ -76,7 +76,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		try {
 			init_common();
 			get_statisticspanel().n_filelines = list.size();
-			PreviewPanel pp = new PreviewPanel(so, false, this);
+			PreviewPanel pp = new PreviewPanel(so, false, this, encoding);
 			GISRecord gisr;
 			File gistemp = new File(StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + PAS.get_pas().get_parmcontroller().getHighestTemp() + ".txt");
 			try
@@ -126,7 +126,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		{
 			
 		}
-		m_panel = new PreviewPanel(so, true, this);
+		m_panel = new PreviewPanel(so, true, this, encoding);
 		int x = 800;
 		int y = 600;
 		setBounds(Utils.screendlg_upperleft(x, y).width, Utils.screendlg_upperleft(x, y).height, x, y);

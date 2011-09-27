@@ -373,7 +373,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_lbl_addresstypes_lba.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.LBA));	
 
 		m_btn_adrtypes_nofax.setEnabled(IsAbasChannelSelected());
+		if(!IsAbasChannelSelected() && m_btn_adrtypes_nofax.isSelected())
+			m_btn_adrtypes_nofax.setSelected(false);
 		m_btn_adrtypes_vulnerable.setEnabled(IsAbasChannelSelected());
+		
 
 	}
 	
@@ -1703,7 +1706,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public boolean canFinalize()
 	{
 		// Hengelåsen skal være visuelt og praktisk deaktivert frem til område og kanal er valgt
-		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || get_parent().get_sendproperties().get_addresstypes() == 0));
+		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
 		m_btn_finalize.setEnabled(bCanFinalize);
 		return bCanFinalize;
 	}

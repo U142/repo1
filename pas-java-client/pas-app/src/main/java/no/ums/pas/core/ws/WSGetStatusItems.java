@@ -884,7 +884,7 @@ public class WSGetStatusItems extends WSThread
 			if(list_items==null)
 				return;
 	
-			String[] sz_itemattr = { "l_refno", "l_item", "l_adrpk", "l_lon", "l_lat", "sz_adrname", "sz_postaddr", "sz_postno", "sz_postarea", "l_date", "l_time", "l_status", "sz_number", "l_tries", "l_channel", "l_pcid", "l_seconds", "l_changedate", "l_changetime", "l_ldate", "l_ltime" };
+			String[] sz_itemattr = { "l_refno", "l_item", "l_adrpk", "l_lon", "l_lat", "sz_adrname", "sz_postaddr", "sz_postno", "sz_postarea", "l_date", "l_time", "l_status", "sz_number", "l_tries", "l_channel", "l_pcid", "l_seconds", "l_changedate", "l_changetime", "l_ldate", "l_ltime", "l_prioritized" };
 			
 			StatusItemObject obj;			
 			double f_percent = 0;

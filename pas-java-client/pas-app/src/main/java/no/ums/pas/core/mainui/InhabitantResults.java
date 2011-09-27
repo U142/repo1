@@ -5,6 +5,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUInhabitantList;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -36,6 +37,7 @@ public class InhabitantResults extends SearchPanelResults {
 		m_pas = pas;
 		m_inhabitantframe = inhabitantframe;
 		m_popup_list = new PUInhabitantList(get_pas(), "Inhabitant");
+		super.SetColumnClass(2, Inhabitant.class);
 	}
 	void populate(int n_row, Point p)
 	{

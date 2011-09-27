@@ -4,8 +4,10 @@ package no.ums.pas.core.defines;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -481,6 +483,18 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 				{
 					return (JLabel)value;
 				}
+				else if(type.equals(Inhabitant.class))
+				{
+					
+					Inhabitant inhab = (Inhabitant)value;
+					JLabel ret;
+					ret = inhab.isVulnerable() ? new JLabel(inhab.get_adrname(), ImageFetcher.getIcon("bandaid_16.png"), JLabel.LEFT) : new JLabel(inhab.get_adrname());
+					ret.setOpaque(true);
+					ret.setBackground(getBgColorForRow(row));
+					ret.setForeground(inhab.isVulnerable() ? Color.red : getFgColorForRow(row));
+					
+					return ret;
+				}
 				else if(no.ums.pas.core.mainui.OpenStatuscodes.StatusCodeRenderer.class.equals(type))
 					return (no.ums.pas.core.mainui.OpenStatuscodes.StatusCodeRenderer)value;
 				else if(StdTextArea.class.equals(type))
@@ -726,7 +740,50 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		}
 		
 		public synchronized void mousePressed(java.awt.event.MouseEvent e) { }
-		public synchronized void mouseReleased(java.awt.event.MouseEvent e) { }
+		public synchronized void mouseReleased(java.awt.event.MouseEvent e) {
+			int idx = m_tbl.rowAtPoint(e.getPoint());
+			int idxcol = m_tbl.columnAtPoint(e.getPoint());
+			setSelected(idx, idxcol);
+
+			switch(e.getButton())
+			{
+				case MouseEvent.BUTTON1:
+					if(e.getClickCount()==1 || m_n_selectedcolumn == 3 || m_n_selectedcolumn == 4) // Dette er litt jalla, men må nesten ha det for at den skal få med seg despoklikkingen til Randi (altså ikke hoppe over til double click)
+					{
+						if(m_n_selectedindex>=0) {
+							onMouseLClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+					}
+					else if(e.getClickCount()==2) //double click
+					{
+						if(m_n_selectedindex>=0)
+						{
+							select(e);
+							onMouseLDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+					}
+					break;
+				case MouseEvent.BUTTON3:
+					if(e.getClickCount()==1)
+					{
+						if(m_n_selectedindex>=0) {
+							//m_tbl.getComponentAt(e.getX(), e.getY())
+							onMouseRClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+						
+					}
+					else if(e.getClickCount()==2)
+					{
+						if(m_n_selectedindex>=0) {
+							onMouseRDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+					}
+					break;
+			}
+			if(m_n_selectedindex>=0) {
+				//m_tbl.setColumnSelectionInterval(0, m_tbl.getColumnCount()-1);
+			}
+		}
 		public synchronized void mouseExited(java.awt.event.MouseEvent e) { }	
 		public synchronized void mouseEntered(java.awt.event.MouseEvent e) { 
 			//get_pas().add_event("Mouse entered");
@@ -768,52 +825,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	        }	
 	    }
 
-		public synchronized void mouseClicked(java.awt.event.MouseEvent e)
-		{
-			int idx = m_tbl.rowAtPoint(e.getPoint());
-			int idxcol = m_tbl.columnAtPoint(e.getPoint());
-			setSelected(idx, idxcol);
-
-			switch(e.getButton())
-			{
-				case MouseEvent.BUTTON1:
-					if(e.getClickCount()==1 || m_n_selectedcolumn == 3 || m_n_selectedcolumn == 4) // Dette er litt jalla, men må nesten ha det for at den skal få med seg despoklikkingen til Randi (altså ikke hoppe over til double click)
-					{
-						if(m_n_selectedindex>=0) {
-							//PAS.get_pas().add_event("mouseClicked " + m_n_selectedcolumn);
-							onMouseLClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
-						}
-					}
-					else if(e.getClickCount()==2) //double click
-					{
-						if(m_n_selectedindex>=0)
-						{
-							select(e);
-							onMouseLDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
-						}
-					}
-					break;
-				case MouseEvent.BUTTON3:
-					if(e.getClickCount()==1)
-					{
-						if(m_n_selectedindex>=0) {
-							//m_tbl.getComponentAt(e.getX(), e.getY())
-							onMouseRClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
-						}
-						
-					}
-					else if(e.getClickCount()==2)
-					{
-						if(m_n_selectedindex>=0) {
-							onMouseRDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
-						}
-					}
-					break;
-			}
-			if(m_n_selectedindex>=0) {
-				//m_tbl.setColumnSelectionInterval(0, m_tbl.getColumnCount()-1);
-			}
-		}	
+		public void mouseClicked(java.awt.event.MouseEvent e) { }	
 	}
 	
 	public class TableList extends DefaultTableModel

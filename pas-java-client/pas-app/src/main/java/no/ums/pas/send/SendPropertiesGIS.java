@@ -9,7 +9,9 @@ import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.Houses.LonLatComparator;
 import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
@@ -32,6 +34,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class SendPropertiesGIS extends SendProperties {
 
@@ -50,16 +54,18 @@ public class SendPropertiesGIS extends SendProperties {
 	public void set_gislist(GISList list) {
 		m_gislist = list;
 		m_houses = new Houses(true);
-		m_inhabitants = new ArrayList<Object>();
+		m_inhabitants = new TreeSet<Inhabitant>(m_houses.new LonLatComparator());
+		m_inhabitants.clear();
 		for(int i=0; i < list.size(); i++) {
 			for(int j=0; j < list.get_gisrecord(i).get_inhabitantcount(); j++) {
-				m_inhabitants.add(list.get_gisrecord(i).get_inhabitant(j));
+				InhabitantBasics bas = list.get_gisrecord(i).get_inhabitant(j);
+				m_inhabitants.add((Inhabitant)bas);
 			}
 		}
 		m_houses.sort_houses(m_inhabitants, false);
 		m_houses.set_visible(true);
 	}
-	ArrayList<Object> m_inhabitants = null;
+	SortedSet<Inhabitant> m_inhabitants = new TreeSet<Inhabitant>(); 
 	private Houses m_houses;
 	public Houses get_houses() { return m_houses; }
 	@Override

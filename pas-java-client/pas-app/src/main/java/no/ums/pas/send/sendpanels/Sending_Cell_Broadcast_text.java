@@ -262,12 +262,50 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_lst_cc.setSelectionModel(new DefaultListSelectionModel()
 									{
 									public static final long serialVersionUID = 1;
-										public void setSelectionInterval(int index0, int index1) {
-											if (isSelectedIndex(index0))
+										public void select(int index0, int index1) {
+											if (isSelectedIndex(index0) && index0 == index1) {
 												super.removeSelectionInterval(index0, index1);
-											else
-												super.addSelectionInterval(index0, index1);
 											}
+											else
+											{
+												boolean defaultSelected = false;
+												
+												CCode cc = (CCode)m_lst_cc.getModel().getElementAt(index0);
+												
+												if(cc.getNCCode() == -1) {
+													defaultSelected = true;
+												}
+												
+												cc = (CCode)m_lst_cc.getModel().getElementAt(index1);
+												
+												if(cc.getNCCode() == -1) {
+													defaultSelected = true;
+												}
+												
+												Object[] ccs = m_lst_cc.getSelectedValues();
+												for(int i=0;i<ccs.length;i++) {
+													if(((CCode)ccs[i]).getNCCode() == -1) {
+														defaultSelected = true;
+													}
+														
+												}
+												if(!defaultSelected) {
+													super.addSelectionInterval(index0, index1);
+												}
+												else {
+													super.removeSelectionInterval(0, m_lst_cc.getModel().getSize()-1);
+													super.addSelectionInterval(index1, index1);
+												}
+												
+											}
+										}
+										public void setSelectionInterval(int index0, int index1) {
+											select(index0, index1);
+										}
+										@Override
+										public void addSelectionInterval(int index0, int index1) {
+											select(index0, index1);
+										}
 									}
 		);
 		m_lst_cc.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

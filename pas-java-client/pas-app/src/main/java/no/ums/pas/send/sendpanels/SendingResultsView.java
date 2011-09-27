@@ -28,7 +28,7 @@ public class SendingResultsView extends JDialog {
 	private ISendingResultsUpdate callback;
 	private SendingResultsController controller;
 	
-	public SendingResultsView(Frame owner, boolean bStatusNotOpened) {
+	public SendingResultsView(Component owner, boolean bStatusNotOpened) {
 		initComponents();
 		controller = new SendingResultsController();
 		sendingResultsModel1.setStatusNotOpened(bStatusNotOpened);
@@ -103,6 +103,7 @@ public class SendingResultsView extends JDialog {
 		setTitle(bundle.getString("quicksend_dlg_results"));
 		setModal(true);
 		setResizable(false);
+		setAlwaysOnTop(true);
 		Container contentPane = getContentPane();
 
 		//---- btnYes ----

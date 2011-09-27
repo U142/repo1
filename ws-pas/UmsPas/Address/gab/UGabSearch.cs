@@ -218,7 +218,17 @@ namespace com.ums.PAS.Address.gab
                 r.Close();
                 response.Close();
             }
-            catch (Exception)
+            catch (WebException e)
+            {
+                //403 forbidden may be returned from destination if adrsearch is too general.
+                //This and other forbidden messages are described in StatusDescription.
+                //mark the list with this error to show it properly in client
+                HttpWebResponse wr = (HttpWebResponse)e.Response;
+                UGabSearchResultList list = new UGabSearchResultList();
+                list.setError(e.Message, wr.StatusDescription);
+                return list;
+            }
+            catch (Exception e)
             {
                 throw;
             }

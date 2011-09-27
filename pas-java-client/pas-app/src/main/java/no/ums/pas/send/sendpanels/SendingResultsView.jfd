@@ -43,6 +43,10 @@
        <string>resizable</string> 
        <boolean>false</boolean> 
       </void> 
+      <void method="setProperty"> 
+       <string>alwaysOnTop</string> 
+       <boolean>true</boolean> 
+      </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JButton</string> 

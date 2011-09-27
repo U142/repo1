@@ -6,6 +6,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.tools.Timeout;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //import Core.Controllers.*;
 
@@ -34,14 +38,10 @@ public class Houses {
 	private NavStruct m_bounds = null;
 	private ArrayList<HouseItem> m_houses = null;
 	private ArrayList<HouseItem> m_houses_paint = null;
-	private Compare_lat m_comp_lat;
-	private Compare_lon m_comp_lon;
-	//private Controller m_controller;
+	final private LonLatComparator m_comp_lonlat = new LonLatComparator();
 	private boolean m_b_housesready;
-//	private void set_housesready(boolean b_ready) { m_b_housesready = b_ready; }
 	public NavStruct get_bounds() { return m_bounds; } 
 	
-	//private Controller get_controller() { return m_controller; }
 	public ArrayList<HouseItem> get_houses() { return m_houses; }
 	public ArrayList<HouseItem> get_paint_houses() { return m_houses_paint; }
 	protected NavStruct m_fullbounds = null;
@@ -64,14 +64,35 @@ public class Houses {
 	{
 		this.b_joinhouses = b_joinhouses;
 		m_b_housesready= false;
-		//m_controller = controller;
-		m_comp_lat = new Compare_lat();		
-		m_comp_lon = new Compare_lon();
 	}
 	
 	public boolean is_housesready() { return m_b_housesready; }
 	
-	public class Compare_lat implements Comparator<Object>
+	public class StatusComparator implements Comparator<Object>
+	{
+		public final int compare ( Object a, Object b ) /*objects of type StatusItemObject*/
+		{
+            if (a == b) {
+                return 0;
+            }
+            else if (a == null) {
+                return 1;
+            }
+            else if (b == null) {
+                return -1;
+            }
+            StatusItemObject obj1 = (StatusItemObject)a;
+            StatusItemObject obj2 = (StatusItemObject)b;
+            return ComparisonChain
+            		.start()
+            		.compare(obj1.get_lat(), obj2.get_lat())
+            		.compare(obj1.get_lon(), obj2.get_lon())
+            		.compare(obj1.get_refno() + "_" + obj1.get_item(), obj2.get_refno() + "_" + obj2.get_item())
+            		.result();
+		}
+	}
+	
+	public class LonLatComparator implements Comparator<Object>
 	{
 		public final int compare ( Object a, Object b ) /*objects of type StatusItemObject*/
 		{
@@ -85,12 +106,13 @@ public class Houses {
                 return -1;
             }
 
-            InhabitantBasics obj1 = (InhabitantBasics)a;
-            InhabitantBasics obj2 = (InhabitantBasics)b;
+            Inhabitant obj1 = (Inhabitant)a;
+            Inhabitant obj2 = (Inhabitant)b;
             return ComparisonChain
                     .start()
                     .compare(obj1.get_lat(), obj2.get_lat())
                     .compare(obj1.get_lon(), obj2.get_lon())
+                    .compare(obj1.get_kondmid(), obj2.get_kondmid())
                     .result();
 		}
 	}
@@ -100,6 +122,8 @@ public class Houses {
 		{
 			InhabitantBasics obj1 = (InhabitantBasics)a;
 			InhabitantBasics obj2 = (InhabitantBasics)b;
+			if(obj1==null || obj2==null)
+				return 0;
 			if(obj1.get_lon() > obj2.get_lon())
 				return 1;
 			else if(obj1.get_lon() == obj2.get_lon())
@@ -159,21 +183,12 @@ public class Houses {
 		return false;
 	}
 	
-	protected int get_min_valid_coor_index(ArrayList<Object> inhabitants) {
-		int ret = -1;
-		for(int i=0; i < inhabitants.size(); i++) {
-			InhabitantBasics in = (InhabitantBasics)inhabitants.get(i);
-			if(in.get_lon()>0.0 && in.get_lat()>0.0) {
-				ret = i;
-				break;
-			}
-		}
-		//if(i == inhabitants.size())
-		//	return -1;
-		return ret;
+	protected Inhabitant get_min_valid_coor_index(Iterable<Inhabitant> inhabitants) {
+		Iterator<Inhabitant> it = inhabitants.iterator();
+		return it.hasNext() ? it.next() : null;
 	}
 	
-	public NavStruct calc_bbox_by_stddev(ArrayList<Object> l)
+	public NavStruct calc_bbox_by_stddev(SortedSet<Inhabitant> l)
 	{
 		if(l.size()<=2)
 			return new NavStruct();
@@ -188,23 +203,24 @@ public class Houses {
 		double deviation_lat = 0;
 		double deviation_lon = 0;
 		NavStruct nav = new NavStruct();
-		int i;
+		int i = 0;
 		
-		for(i=0; i < l.size(); i++)
+		for(InhabitantBasics b : l)
 		{
-			InhabitantBasics b = (InhabitantBasics)l.get(i);
 			sum_lat += b.get_lat();
 			sum_lon += b.get_lon();
+			++i;
 		}
+		
 		mean_lat = sum_lat/i;
 		mean_lon = sum_lon/i;
 		
 		int factor = 300;
-		for(i=0; i < l.size(); i++)
+		
+		for(InhabitantBasics b : l)
 		{
-			InhabitantBasics b = (InhabitantBasics)l.get(i);
 			sum_deviations_lat += Math.pow(mean_lat*factor - b.get_lat()*factor,2);
-			sum_deviations_lon += Math.pow(mean_lon*factor - b.get_lon()*factor,2);
+			sum_deviations_lon += Math.pow(mean_lon*factor - b.get_lon()*factor,2);			
 		}
 
 		deviation_lat = sum_deviations_lat / (i-1);
@@ -218,74 +234,74 @@ public class Houses {
 		return nav;
 	}
 	
+	AtomicBoolean sortReady = new AtomicBoolean(true);
+	
 	/*
 	 * Parse all statusitems and create distinct houseitems. 
 	 * needs only to be done at every statusload/update
 	 */
-	public void sort_houses(ArrayList<Object> inhabitants, boolean b_statusmode)
+	public void sort_houses(SortedSet<Inhabitant> inhabitants, boolean b_statusmode)
 	{
-		//if(get_controller().get_items()==null)
+		if(!sortReady.compareAndSet(true, false))
+		{
+			System.out.println("previous sort_houses not ready yet");
+			return;
+		}
 		if(inhabitants==null) {
 			m_b_housesready = true;
+			sortReady.set(true);
 			return;
 		}
 		m_houses = new ArrayList<HouseItem>();
 		if(inhabitants.size() <= 0) {
 			m_b_housesready = true;
+			sortReady.set(true);
 			return;
 		}
-		//Collections.sort(get_controller().get_items(), m_comp_lat);
-		//Collections.sort(get_controller().get_items(), m_comp_lon);
-		Collections.sort(inhabitants, m_comp_lat);
-		Collections.sort(inhabitants, m_comp_lon);
-		try {
-			//Inhabitant inhab_ul = (Inhabitant)inhabitants.get(0);
-			int idx = get_min_valid_coor_index(inhabitants);
-			if(idx==-1) { //error
-				m_bounds = null;
-			} else {
-				m_fullbounds = m_bounds;
-			}
-		} catch(Exception e) {
-			log.debug(e.getMessage());
-			log.warn(e.getMessage(), e);
+		try
+		{
+			double f_prev_lon = 0.0;
+			double f_prev_lat = 0.0;
+			HouseItem prev_item = null;
+			InhabitantBasics current;
+	        for (Object inhabitant : inhabitants) {
+	            current = (InhabitantBasics) inhabitant;
+	
+	            /* lon and/or lat is different, this is a new house
+	                * add the house to the list, and add current inhabitant
+	                * */
+	            if(current==null)
+	            {
+	            	log.error("current==null");
+	            	continue;
+	            }
+	            if (f_prev_lon != current.get_lon() || f_prev_lat != current.get_lat()) {
+	                HouseItem item = new HouseItem(current.get_lon(), current.get_lat());
+	                item.add_itemtohouse(current, b_statusmode);
+	                current.set_parenthouse(item);
+	                add_house(item);
+	                prev_item = item;
+	                item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
+	
+	            }
+	            /* lon and lat is equal, add a new inhabitant to the house*/
+	            else {
+	                if (prev_item != null) {
+	                    prev_item.add_itemtohouse(current, b_statusmode);
+	                    current.set_parenthouse(prev_item);
+	                    prev_item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
+	                }
+	            }
+	            f_prev_lon = current.get_lon();
+	            f_prev_lat = current.get_lat();
+	        }
+			m_bounds = calc_bbox_by_stddev(inhabitants);
+			m_b_housesready = true;
 		}
-		double f_prev_lon = 0.0;
-		double f_prev_lat = 0.0;
-		HouseItem prev_item = null;
-		InhabitantBasics current;
-		//for(int i=0; i < get_controller().get_items().size(); i++)
-        for (Object inhabitant : inhabitants) {
-            //current = (Inhabitant)get_controller().get_items().get(i);
-            current = (InhabitantBasics) inhabitant;
-
-            /* lon and/or lat is different, this is a new house
-                * add the house to the list, and add current inhabitant
-                * */
-
-            if (f_prev_lon != current.get_lon() || f_prev_lat != current.get_lat()) {
-                HouseItem item = new HouseItem(current.get_lon(), current.get_lat());
-                item.add_itemtohouse(current, b_statusmode);
-                current.set_parenthouse(item);
-                add_house(item);
-                prev_item = item;
-                item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
-
-            }
-            /* lon and lat is equal, add a new inhabitant to the house*/
-            else {
-                if (prev_item != null) {
-                    prev_item.add_itemtohouse(current, b_statusmode);
-                    current.set_parenthouse(prev_item);
-                    prev_item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
-                }
-            }
-            f_prev_lon = current.get_lon();
-            f_prev_lat = current.get_lat();
-        }
-		m_bounds = calc_bbox_by_stddev(inhabitants);
-		//get_controller().get_pas().add_event("sort_houses: " + get_controller().get_items().size());
-		m_b_housesready = true;
+		finally
+		{
+			sortReady.set(true);
+		}
 	}
 	
 	public void calcHouseCoords() {
@@ -378,13 +394,13 @@ public class Houses {
 			if(current.get_screencoords() != null && current.isVisible())// && (current.HAS_INHABITANT_TYPES_ & n_addresstypes)>0)
 			{
 				drawItem(current, gfx, Math.min(15, PAS.get_pas().get_mapproperties().get_pixradius() + (int)(1+current.getJoinedHouses()*0.1)), b_border, n_alertborder, 
-						 b_showtext, n_fontsize, n_addresstypes, col_override);
+						 b_showtext, n_fontsize, n_addresstypes, col_override, current.HasVulnerable() ? Color.red : Color.black, current.HasVulnerable() ? 2 : 1);
 				n_houses++;
 			}
 		}
 	}
 	public void drawItem(HouseItem house, Graphics gfx, int n_size, boolean b_border, int n_alertborder, boolean b_showtext,
-						 int n_fontsize, int n_addresstypes, Color col_override)
+						 int n_fontsize, int n_addresstypes, Color col_override, Color col_border_override, int borderWidth)
 	{
 		int n_border = n_size;
 		if(house.get_alert()) {
@@ -402,7 +418,10 @@ public class Houses {
 			gfx.fillRect(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
 			gfx.setColor(Color.black);
 			if(b_border)
+			{
+				gfx.setColor(col_border_override);
 				gfx.drawRect(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
+			}
 		}
 		else
 		{
@@ -410,8 +429,8 @@ public class Houses {
 			gfx.setColor(Color.black);
 			Graphics2D gfx2d = (Graphics2D)gfx;
 			Stroke revertStroke = gfx2d.getStroke();
-			Stroke singleStroke = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-			Stroke dualstroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			Stroke singleStroke = new BasicStroke(borderWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			Stroke dualstroke = new BasicStroke(borderWidth+1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 			if(house.get_armed()) {				
 				gfx2d.setStroke(dualstroke);
 			}
@@ -420,7 +439,10 @@ public class Houses {
 				gfx2d.setStroke(singleStroke);
 			}
 			if(b_border)
+			{
+				gfx.setColor(col_border_override);
 				gfx.drawOval(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
+			}
 			if(house.get_armed()) {
 			}
 			n_border+=4;

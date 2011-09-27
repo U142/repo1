@@ -98,6 +98,9 @@ public class StatusSending {
 	{
 		m_lba_by_operator.add(lba);
 	}
+	public int getNumberOfOperators() {
+		return m_lba_by_operator.size();
+	}
 	
 	public float get_percentage() {
 		float percent = 0;
@@ -121,8 +124,18 @@ public class StatusSending {
 		case 4: // LBA
 			if(m_lba != null && (this.m_lba.n_status == LBASEND.LBASTATUS_CANCELLED || this.m_lba.n_status == LBASEND.LBASTATUS_FINISHED || this.m_lba.n_status > 42000 || this.m_lba.n_status == -1))
 				percent = 100.0f;
-			else if(m_lba != null)
-				percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			else if(m_lba != null) {
+				//float[] f_percent = new float[m_lba_by_operator.size()];
+				for(int i=0;i<m_lba_by_operator.size();i++) {
+					if(m_lba_by_operator.get(i).n_items > 0) {
+						percent += ((m_lba_by_operator.get(i).n_cancelled + m_lba_by_operator.get(i).n_proc) * 100.0f / m_lba_by_operator.get(i).n_items) / m_lba_by_operator.size();
+					}
+					else {
+						percent += 0;
+					}
+				}
+				//percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			}
 			else
 				percent = 0;
 			break;
@@ -162,7 +175,12 @@ public class StatusSending {
 		return m_lbl_sendingname;
 	}
 	public JLabel getProcessedAndTotalLabel() {
-		m_lbl_processed_and_total.setText(get_proc() + " / " + get_totitem());
+		if(_n_type == 4) { // LBA
+			m_lbl_processed_and_total.setText(get_lba_processed() + " / " + get_lba_items());
+		}
+		else {
+			m_lbl_processed_and_total.setText(get_proc() + " / " + get_totitem());
+		}
 		return m_lbl_processed_and_total;
 	}
 	public JLabel getCompletionPercentLabel() {
@@ -200,8 +218,17 @@ public class StatusSending {
 				(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT)) ||
 				(((get_addresstypes() & SendController.SENDTO_TAS_SMS) == SendController.SENDTO_TAS_SMS)))
 		{
-			if(get_lba_items()>0)
-				n_lba_percent = get_lba_processed()*100.0f / get_lba_items();
+			if(get_lba_items()>0) {
+				n_lba_percent = 0;
+				for(int i=0;i<m_lba_by_operator.size();i++) {
+					if(m_lba_by_operator.get(i).n_items > 0) {
+						n_lba_percent += ((m_lba_by_operator.get(i).n_cancelled + m_lba_by_operator.get(i).n_proc) * 100.0f / m_lba_by_operator.get(i).n_items) / m_lba_by_operator.size();
+					}
+					else {
+						n_lba_percent += 0;
+					}					
+				}
+			}
 			else
 			{
 				if(m_lba.HasFinalStatus())
@@ -418,8 +445,21 @@ public class StatusSending {
 			{
 				m_lba_progress.setIndeterminate(false);
 				m_lba_progress.setMinimum(0);
-				m_lba_progress.setMaximum(m_lba.n_items);
-				m_lba_progress.setValue(m_lba.n_proc + m_lba.getCancelled());
+				
+				m_lba_progress.setMaximum(100);
+				float percentTotal = 0;
+				for(LBASEND ls : m_lba_by_operator)
+				{
+					if(m_filter_status_by_operator==ls.l_operator || m_filter_status_by_operator==-1)
+					{
+						float fTmp = (ls.n_proc + ls.getCancelled())*1.0f/(ls.n_items* (m_filter_status_by_operator==-1 ? m_lba_by_operator.size() : 1));
+						percentTotal += fTmp;
+					}
+				}
+				m_lba_progress.setValue((int)(percentTotal*100));
+				//m_lba_progress.setMaximum(m_lba.n_items);
+				
+				//m_lba_progress.setValue(m_lba.n_proc + m_lba.getCancelled());
 				m_lba_progress.setStringPainted(true);
 			}
 			//m_lba_progress.setString(m_lba_progress.getString());
@@ -502,7 +542,7 @@ public class StatusSending {
 			else if(m_lba.f_simulation==1) {
                 pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + Localization.l("main_sending_simulated") + "]" + sz_time_used)); //JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Simulated) -- JobID " + m_lba.sz_jobid));
             }
-			else {
+			else if(m_lba.f_simulation==0) {
                 pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + Localization.l("main_sending_live") + "]" + sz_time_used));// JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Live sending) -- JobID " + m_lba.sz_jobid));
             }
 		}
@@ -512,7 +552,10 @@ public class StatusSending {
 		}
 		try
 		{
-			pnl_cell.init();
+			if(pnl_cell!=null)
+			{
+				pnl_cell.init();
+			}
 		}
 		catch(Exception e)
 		{
@@ -819,7 +862,7 @@ public class StatusSending {
 					    log.warn("Failed to reset all overlays", err);
 					}
 					m_filter_status_by_operator = operator;
-					log.debug("Filter by operator " + m_filter_status_by_operator);
+					//log.debug("Filter by operator " + m_filter_status_by_operator);
 					CalcLbaTotalsFromOperators();
 					update_ui();
 					//MergeLbaTimestamps();
@@ -857,7 +900,7 @@ public class StatusSending {
 		{
 			_n_alloc		= s.get_alloc();
 			_n_maxalloc		= s.get_maxalloc();
-			if(!pnl_voice.m_b_allocset) {
+			if(pnl_voice!=null && !pnl_voice.m_b_allocset) {
 				pnl_voice.set_maxalloc(_n_maxalloc);
 				pnl_voice.m_progress.setValue(_n_maxalloc);
 			}
@@ -1771,14 +1814,23 @@ public class StatusSending {
 			{
 				if(get_type()==4 || get_type()==5) //new type. LBA=4, voice=1, sms=2
 				{
-					pnl_cell.setVisible(true);
-					pnl_voice.setVisible(false);
-					m_btn_kill.setVisible(false);
+					if(pnl_cell!=null)
+						pnl_cell.setVisible(true);
+					if(pnl_voice!=null)
+						pnl_voice.setVisible(false);
+					if(m_btn_kill!=null)
+						m_btn_kill.setVisible(false);
 				}
 				else
 				{
-					pnl_cell.setVisible(false);
-					pnl_voice.setVisible(true);
+					if(pnl_cell!=null)
+					{
+						pnl_cell.setVisible(false);
+					}
+					if(pnl_voice!=null)
+					{
+						pnl_voice.setVisible(true);
+					}
 					m_btn_kill.setVisible(true);
 					if(get_sendingstatus()==7) {
 						enableResend();
