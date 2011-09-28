@@ -159,24 +159,6 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_center_all_polygon_sendings".equals(e.getActionCommand())) {
 			try {
-				PAS.get_pas().get_drawthread().set_suspended(true);
-				/*SendObject obj;
-				ArrayList<ShapeStruct> polygons = new ArrayList<ShapeStruct>();
-				for(int i=0; i < PAS.get_pas().get_sendcontroller().get_sendings().size(); i++) {
-					obj = (SendObject)PAS.get_pas().get_sendcontroller().get_sendings().get(i);
-					polygons.add(obj.get_sendproperties().get_shapestruct());
-				}
-				try {
-					NavStruct nav = CommonFunc.calc_bounds(polygons.toArray());
-					if(nav!=null)
-						actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-				} catch(Exception err) {
-					
-				}
-				finally
-				{
-					PAS.get_pas().get_drawthread().set_suspended(false);
-				}*/
 				NavStruct nav_total = new NavStruct();
 				for(SendObject so : Variables.getSendController().get_sendings())
 				{
@@ -197,7 +179,6 @@ public class PASActions implements ActionListener {
 				log.warn(err.getMessage(), err);
 				Error.getError().addError("PAS", "Error centering all polygon sendings", err, Error.SEVERITY_ERROR);
 			}
-			PAS.get_pas().get_drawthread().set_suspended(false);
 		}
 		else if("act_toggle_houseselect".equals(e.getActionCommand())) {
 //			MapFrameActionHandler.ActionHouseSelect h = (MapFrameActionHandler.ActionHouseSelect)e.getSource();
@@ -323,7 +304,12 @@ public class PASActions implements ActionListener {
 				get_mappane().get_actionhandler().actionPerformed(new ActionEvent(arr, ActionEvent.ACTION_PERFORMED, "act_onmouseover_houses"));
 		}*/
 		else if("act_search_houses".equals(e.getActionCommand())) {
-			PAS.get_pas().get_statuscontroller().search_houses(-99999, false, (MapPointLL)e.getSource());
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run()
+				{
+					PAS.get_pas().get_statuscontroller().search_houses(-99999, false, (MapPointLL)e.getSource());					
+				}
+			});
 		}
 		else if("act_set_pinpoint".equals(e.getActionCommand())) {
 			MapPointLL ll = (MapPointLL)e.getSource();

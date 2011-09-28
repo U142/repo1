@@ -126,7 +126,6 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
 		printJob.setPageable(this);
-		Variables.getDraw().set_suspended(true);
 	    if (printJob.printDialog()) {
 	        try {
 	        	//format = printJob.getPageFormat(pras);
@@ -138,7 +137,6 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	        	PAS.get_pas().add_event("Error printing: " + pe, pe);
 	          Error.getError().addError("PrintCtrl","Exception in print",pe,1);
 	        } finally {
-	        	Variables.getDraw().set_suspended(false);
 	        }
 	    }
 	}

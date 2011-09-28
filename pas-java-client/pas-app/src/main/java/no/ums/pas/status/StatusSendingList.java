@@ -22,7 +22,8 @@ public class StatusSendingList extends ArrayList<StatusSending> implements Actio
 		super();
 	}
 	public void add_sending(StatusSending sending, ActionListener callback) {
-		if(!update_sending(sending)) {
+		if(!update_sending(sending)) 
+		{
 			try
 			{
 				sending.set_sendinglist(this);

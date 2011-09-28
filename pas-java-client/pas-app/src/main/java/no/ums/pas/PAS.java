@@ -511,12 +511,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public void print_map()
 	{
-		get_drawthread().set_suspended(true);
 		get_mappane().print_map();
-		get_drawthread().set_suspended(false);
 	}
 	public void save_map() {
-		get_drawthread().set_suspended(true);
 		try {
 			//get_mappane().save_map(get_mappane().get_image()); //get_drawthread().get_buff_image());
 
@@ -528,7 +525,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		} catch(Exception e) {
 			
 		} finally {
-			get_drawthread().set_suspended(false);
 		}
 	}
 	

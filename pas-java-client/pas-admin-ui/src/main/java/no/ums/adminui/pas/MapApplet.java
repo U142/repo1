@@ -366,7 +366,6 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			else if("act_center_all_polygon_sendings".equals(e.getActionCommand())) {
 				try {
-					PAS.get_pas().get_drawthread().set_suspended(true);
 					SendObject obj;
 					ArrayList<ShapeStruct> polygons = new ArrayList<ShapeStruct>();
 					for(int i=0; i < PAS.get_pas().get_sendcontroller().get_sendings().size(); i++) {
@@ -386,7 +385,6 @@ public class MapApplet extends JApplet implements ActionListener {
 					log.warn(err.getMessage(), err);
 					log.error("Error centering all polygon sendings", err);
 				}
-				PAS.get_pas().get_drawthread().set_suspended(false);
 			}
 			else if("act_toggle_houseselect".equals(e.getActionCommand())) {
 //				MapFrameActionHandler.ActionHouseSelect h = (MapFrameActionHandler.ActionHouseSelect)e.getSource();

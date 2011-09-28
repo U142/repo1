@@ -16,6 +16,7 @@ import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdIntegerArea;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UMapPoint;
@@ -72,17 +73,17 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
     private StdTextLabel m_lbl_birthday = new StdTextLabel(Localization.l("common_adr_birthday") + " (DD.MM.YYYY)", 150);
 
     private StdTextArea m_txt_name		= new StdTextArea("", false, 150);
-	private StdTextArea m_txt_phone		= new StdTextArea("", false, 100);
-	private StdTextArea m_txt_mobile	= new StdTextArea("", false, 100);
+	private StdTextArea m_txt_phone		= new StdIntegerArea("", false, 100, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
+	private StdTextArea m_txt_mobile	= new StdIntegerArea("", false, 100, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
 	private StdTextArea m_txt_address	= new StdTextArea("", false, 150);
-	private StdTextArea m_txt_house		= new StdTextArea("", false, 30);
+	private StdTextArea m_txt_house		= new StdIntegerArea("", false, 30, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);;
 	private StdTextArea m_txt_letter	= new StdTextArea("", false, 20);
-	private StdTextArea m_txt_postno	= new StdTextArea("", false, 50);
+	private StdTextArea m_txt_postno	= new StdIntegerArea("", false, 50, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
 	private StdTextArea m_txt_place		= new StdTextArea("", false, 100);
-	private StdTextArea m_txt_gnr		= new StdTextArea("", false, 50);
-	private StdTextArea m_txt_bnr		= new StdTextArea("", false, 50);
-	private StdTextArea m_txt_municipal = new StdTextArea("", false, 75);
-	private StdTextArea m_txt_streetid	= new StdTextArea("", false, 75);
+	private StdTextArea m_txt_gnr		= new StdIntegerArea("", false, 50, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
+	private StdTextArea m_txt_bnr		= new StdIntegerArea("", false, 50, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
+	private StdTextArea m_txt_municipal = new StdIntegerArea("", false, 75, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
+	private StdTextArea m_txt_streetid	= new StdIntegerArea("", false, 75, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);
 	private StdTextLabel m_txt_lonshow  = new StdTextLabel("", false, 75);
 	private StdTextLabel m_txt_latshow  = new StdTextLabel("", false, 75);
 	private StdTextArea m_txt_birthday = new StdTextArea("", false, 75);
@@ -390,6 +391,19 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			String sz_place = m_txt_place.getText();
 			String sz_gnr = m_txt_gnr.getText();
 			String sz_bnr = m_txt_bnr.getText();
+			String sz_streetid = m_txt_streetid.getText();
+			int n_streetid = 0;
+			try
+			{
+				if(sz_streetid.length()>0)
+				{
+					n_streetid = Integer.parseInt(sz_streetid);
+				}
+			}
+			catch(Exception e)
+			{
+				log.error(e.getMessage());
+			}
 			String sz_municipalid = m_txt_municipal.getText();
 			String sz_birthday = m_txt_birthday.getText();
 			//String sz_bedrift = ((Integer)((IconRadio)m_group_user.getSelection()).get_value()).toString();
@@ -420,6 +434,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			m_inhabitant.set_adrtype(n_adrtype);
 			m_inhabitant.set_birthday_formatted(sz_birthday);
 			m_inhabitant.set_region(sz_municipalid);
+			m_inhabitant.set_streetid(n_streetid);
 			
 			sz_birthday = m_inhabitant.get_birthday();
 			log.debug(sz_birthday);
