@@ -4,8 +4,11 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.ums.errorhandling.Error;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 
 
 public class GISWriter {
@@ -16,7 +19,6 @@ public class GISWriter {
 	protected File m_file_out;
 	protected LineData m_linedata;
 	
-	//public File get_original_file() { return m_f1; }
 	public File get_umsgis_file() { return m_file_out; }
 	protected LineData data() { return m_linedata; }
 	
@@ -25,10 +27,13 @@ public class GISWriter {
 		m_linedata = data;
 	}
 	
-	public File convert(int n_mun, int n_str, int n_hou, int n_let, int n_namefilter1, int n_namefilter2, int skip) {
+	public File convert(int n_mun, int n_str, int n_hou, int n_let, int n_namefilter1, int n_namefilter2, int skip, String encoding) {
 		try {
-			FileWriter write = new FileWriter(get_umsgis_file());
+			
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(get_umsgis_file()), encoding);
+			
 			LineData.Line line;
+			
 			String sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2;
 			for(int i=skip; i < data().get_lines().size(); i++) {
 				line = (LineData.Line)data().get_lines().get(i);
@@ -61,16 +66,16 @@ public class GISWriter {
 					sz_namefilter1 = "";
 				}
 				try {
-					sz_namefilter2 = line.get_row(n_namefilter2);
+					sz_namefilter2 =  line.get_row(n_namefilter2);
 				} catch(Exception e) {
 					sz_namefilter2 = "";
 				}
 				//if(sz_mun.trim().length()>0 && sz_street.trim().length()>0 && sz_house.trim().length()>0)
-					write_line(write, sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2);
+					write_line(out, sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2);
 				//else
 				//	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
 			}
-			write.close();
+			out.close();
 			return get_umsgis_file();
 		} catch(Exception e) {
 			log.debug(e.getMessage());
@@ -79,7 +84,7 @@ public class GISWriter {
 		}
 		return null;
 	}
-	private boolean write_line(FileWriter w, String c1, String c2, String c3, String c4, String c5, String c6) {
+	private boolean write_line(OutputStreamWriter w, String c1, String c2, String c3, String c4, String c5, String c6) {
 		try {
 			w.write(c1 + "\t" + c2 + "\t" + c3 + "\t" + c4 + "\t" + c5 + "\t" + c6 + "\r\n");
 		} catch(Exception e) {

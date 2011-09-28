@@ -205,7 +205,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 						try
 						{
 							Object [] line = new Object[] {n_recordcount, house.get_municipal(), house.get_streetid(), house.get_houseno(),
-															house.get_letter(), new String(encode(house.get_name1(), m_encoding)), new String(encode(house.get_name2(), m_encoding)), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
+															house.get_letter(), house.get_name1(), house.get_name2(), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
 															inhabitant.get_postno(), inhabitant.get_postarea(), b_include, hit, inhabitant.get_lon(), inhabitant.get_lat()};
 							inhabitant.set_included(b_include);
 							m_panel.insert_row(line, 0);
@@ -250,21 +250,17 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 		String s = "";
 		if(text.length() > 0) {
 			try {
-				// Create the encoder and decoder for ISO-8859-1
 				Charset charset = Charset.forName(encoding);
 				CharsetDecoder decoder = charset.newDecoder();
 				CharsetEncoder encoder = charset.newEncoder();
-			    // Convert a string to ISO-LATIN-1 bytes in a ByteBuffer
-			    // The new ByteBuffer is ready to be read.
-			    ByteBuffer bbuf = encoder.encode(CharBuffer.wrap(text));
+
+				ByteBuffer bbuf = encoder.encode(CharBuffer.wrap(text));
 	
-			    // Convert ISO-LATIN-1 bytes in a ByteBuffer to a character ByteBuffer and then to a string.
-			    // The new ByteBuffer is ready to be read.
 			    CharBuffer cbuf = decoder.decode(bbuf);
 			    s = cbuf.toString();
 			} catch (CharacterCodingException e) {
 				log.debug("Error PreviewPanel " + e.getMessage());
-				Error.getError().addError("PreviewList","Exception in init",e,1);
+				Error.getError().addError("PreviewList","Exception in encode",e,1);
 			}
 		}
 		return s; 

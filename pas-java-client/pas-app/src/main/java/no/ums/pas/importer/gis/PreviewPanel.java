@@ -42,9 +42,13 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	public GISResultPanel get_resultpanel() { return m_resultpanel; }
 	private SendObject m_sendobject;
 	private ActionListener m_callbackframe;
+	private String m_encoding = "ISO-8859-15";
+	public void setEncoding(String encoding) { m_encoding = encoding; }
+	
 	
 	public PreviewPanel(SendObject so, boolean b_results_only, ActionListener callbackframe, String encoding) {
 		super();
+		m_encoding = encoding;
 		m_sendobject = so;
 		m_callbackframe = callbackframe;
 		if(b_results_only) {
@@ -138,20 +142,9 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 								  get_previewlist().get_gis().get_parser().get_linedata(), 
 								  n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
 				
-				/*HttpPostForm form = new HttpPostForm(sz_sitename + "PAS_gisdata.asp");
-				form.setParameter("n_col_municipal", new Integer(n_col_municipal).toString());
-				form.setParameter("n_col_streetid",  new Integer(n_col_streetid).toString());
-				form.setParameter("n_col_houseno",   new Integer(n_col_houseno).toString());
-				form.setParameter("n_col_letter", 	 new Integer(n_col_letter).toString());
-				form.setParameter("n_col_namefilter1", new Integer(n_col_namefilter1).toString());
-				form.setParameter("n_col_namefilter2", new Integer(n_col_namefilter2).toString());
-				form.setParameter("n_skiplines", 	 new Integer(n_skiplines).toString());
-				form.setParameter("sz_separator",    sz_separator);
-				form.setParameter("file", f_post); //get_previewlist().get_gis().get_parser().get_file());
-				XMLGis gis = new XMLGis(null, form, sz_sitename, this, "act_gis_imported", get_loader());
-				gis.start();*/
-				WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader);
-				//GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_col_namefilter1, n_col_namefilter2, n_skiplines, sz_separator, f_post);
+				
+				WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader, m_encoding);
+				
 				GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, n_skiplines, sz_separator, f_post);
 				gis.setColSet(colset);
 				gis.start();
@@ -175,22 +168,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 				}
 				File f_post = (File)e.getSource();
 				
-				/*HttpPostForm form = new HttpPostForm(sz_sitename + "PAS_gisdata.asp");
-				form.setParameter("n_col_municipal", new Integer(0).toString());
-				form.setParameter("n_col_streetid",  new Integer(1).toString());
-				form.setParameter("n_col_houseno",   new Integer(2).toString());
-				form.setParameter("n_col_letter", 	 new Integer(3).toString());
-				form.setParameter("n_col_namefilter1", new Integer(4).toString());
-				form.setParameter("n_col_namefilter2", new Integer(5).toString());
-				form.setParameter("n_skiplines", 	 new Integer(0).toString());
-				form.setParameter("sz_separator",    "	");
-				form.setParameter("file", f_post); //get_previewlist().get_gis().get_parser().get_file());
-				//LoadingFrame loader = new LoadingFrame("Parsing GIS", null);
-				//loader.set_totalitems(0, "GIS");
-				//loader.setVisible(true);
-				XMLGis gis = new XMLGis(null, form, sz_sitename, this, "act_gis_imported", get_loader());
-				gis.start();*/
-				WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader);
+				WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader, m_encoding);
 				GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, 0, "	", f_post);
 				gis.setColSet(colset);
 				gis.start();
@@ -356,7 +334,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		}
 		try {
 			GISWriter writer = new GISWriter(linedata, f_ums);
-			return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip);
+			return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip, m_encoding);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
 			log.warn(e.getMessage(), e);

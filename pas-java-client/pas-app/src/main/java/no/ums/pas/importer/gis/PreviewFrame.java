@@ -44,13 +44,11 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		super(PAS.get_pas(), "Import preview", true);
 		try {
 			setAlwaysOnTop(true);
-			//super.setIconImage(PAS.get_pas().getIconImage());
 		} catch(Exception e) {
 			
 		}
 		init_common();
-		//get_statisticspanel().n_filelines = gis.
-		//setModal(true);
+
 		m_gis = gis;
 		m_options = new PreviewOptions(this, gis.getIsAlert());
 		m_panel = new PreviewPanel(gis, this);
@@ -98,17 +96,11 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			}
 			writer.flush();
 			writer.close();
-			//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_statistics_view"));
 
 			pp.actionPerformed(new ActionEvent(gistemp,ActionEvent.ACTION_PERFORMED,"act_autofetch_addresses"));
 			addComponentListener(this);
 			resize();
 
-//			GISFile gisfile = new GISFile();
-//			gisfile.parse(gistemp, callback, action);
-//			m_panel = new PreviewPanel(gisfile);
-//			m_options = new PreviewOptions(this);
-//			m_options.m_btn_fetch.doClick();
 			
 		} catch(IOException ioe) {
 			Error.getError().addError("IO Exception", "Error opening file in gis directory", ioe, Error.SEVERITY_ERROR);

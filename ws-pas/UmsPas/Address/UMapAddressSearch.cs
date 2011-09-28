@@ -54,6 +54,13 @@ namespace com.ums.PAS.Address
             m_logon = logon;
             m_callback = percentCallback;
         }
+
+        public UGisImportLookup(ref ULOGONINFO logon, PercentProgress.SetPercentDelegate percentCallback, ProgressJobType jobType)
+        {
+            this.jobType = jobType;
+            m_logon = logon;
+            m_callback = percentCallback;
+        }
         public UGisImportResultsByStreetId SearchDatabase(ref List<UGisImportResultLine> filelines, bool only_coors)
         {
             UGisImportResultsByStreetId ret = new UGisImportResultsByStreetId();
@@ -168,12 +175,66 @@ namespace com.ums.PAS.Address
                     b_only_coors = true;
                 else
                     b_only_coors = false;
+                
                 return SearchDatabase(ref filelines, b_only_coors);
             }
             catch (Exception e)
             {
                 throw;
             }
+        }
+
+        public IAddressResults Find(UGisImportList filelines)
+        {
+            //UGisImportResultsByStreetId ret = new UGisImportResultsByStreetId();
+            /*parse file and get results from db
+             populate UGisImportResultLine with house info, the inhabitant results will be returned
+             * in UGisImportResultLine.list
+             */
+
+            m_search = new UGisImportParamsByStreetId();
+            m_search.SKIPLINES = filelines.SKIP_LINES;
+
+            List<UGisImportResultLine> resultlines = convertGisImportList(filelines);
+
+            try
+            {
+                bool b_only_coors = false;
+                if (filelines.list.Count > filelines.DETAIL_THRESHOLD_LINES)
+                    b_only_coors = true;
+                else
+                    b_only_coors = false;
+                
+                return SearchDatabase(ref resultlines, b_only_coors);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        private List<UGisImportResultLine> convertGisImportList(UGisImportList importlist)
+        {
+            List<UGisImportResultLine> gisImportResultList = new List<UGisImportResultLine>();
+            int line = 0;
+            foreach (var import in importlist.list)
+            {
+                UGisImportResultLine tmp = new UGisImportResultLine
+                {
+                    houseno = import.houseno,
+                    letter = import.letter,
+                    municipalid = import.municipalid,
+                    namefilter1 = import.namefilter1,
+                    namefilter2 = import.namefilter2,
+                    streetid = import.streetid,
+                    n_linenumber = line
+                };
+                tmp.finalize();
+                gisImportResultList.Add(tmp);
+                line++;
+            }
+
+            return gisImportResultList;
         }
     }
 

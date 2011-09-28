@@ -53,6 +53,7 @@ class PreviewOptions extends DefaultPanel {
 			m_parent.m_gis.set_encoding((String)m_cbx_encoding.getSelectedItem().toString());
 			m_parent.encoding = (String)m_cbx_encoding.getSelectedItem().toString();
 			m_parent.m_panel.get_resultpanel().setEncoding((String)m_cbx_encoding.getSelectedItem().toString());
+			m_parent.m_panel.setEncoding((String)m_cbx_encoding.getSelectedItem().toString());
 			m_parent.m_gis.set_preview(m_parent);
 			m_parent.m_gis.parse(m_parent.m_gis.get_file(), m_parent.m_gis.get_callback(), "act_gis_import_finished", m_parent.m_gis.getIsAlert());
 			
@@ -78,7 +79,7 @@ class PreviewOptions extends DefaultPanel {
 		m_check_firstline_columnnames.setActionCommand("act_first_row_has_columnnames");
         m_btn_fetch = new JButton((m_b_is_alert ? Localization.l("common_preview") : Localization.l("common_wizard_next")));
 		m_lbl_encoding = new JLabel(Localization.l("importpreview_encoding"));
-		m_cbx_encoding = new JComboBox(new String[] { "ISO-8859-15", "UTF-8", "ISO-8859-2" });
+		m_cbx_encoding = new JComboBox(new String[] { "ISO-8859-15", "UTF-8", "ISO-8859-2", "ISO-8859-1", "Cp1252", "UTF-16BE" });
 		m_cbx_encoding.setActionCommand("act_change_encoding");
 		m_cbx_encoding.addActionListener(this);
 		m_btn_fetch.addActionListener(this);

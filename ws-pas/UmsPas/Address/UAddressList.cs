@@ -129,6 +129,23 @@ namespace com.ums.PAS.Address
         public UAddressList list = new UAddressList(); //list of inhabitants of this address
     }
 
+    public class UGisImportList
+    {        
+        public int DETAIL_THRESHOLD_LINES;
+        public int SKIP_LINES;
+        public List<UGisImportLine> list;
+    }
+
+    public class UGisImportLine
+    {
+        public String municipalid;
+        public String streetid;
+        public String houseno;
+        public String letter;
+        public String namefilter1;
+        public String namefilter2;
+    }
+
     /*
      * Collect all the lines from UGisSearchParams.FILE here.
      * All inhabitants under each FILE-line are listed in UGisResultLine.list
