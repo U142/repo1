@@ -792,7 +792,7 @@ public class PolygonStruct extends ShapeStruct {
                     if (lastPoint == null) {
                         lastPoint = lineTo;
                         path.moveTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
-                    } else if (lineTo.x != lastPoint.x && lineTo.y != lastPoint.y) {
+                    } else if (lineTo.x != lastPoint.x || lineTo.y != lastPoint.y) {
                         lastPoint = lineTo;
                         path.lineTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
                     }
