@@ -41,7 +41,7 @@ import java.awt.image.ImageObserver;
 		//private Image m_mapoverlay = null;
 		private boolean m_b_imgpaint_success = false;
 		public boolean isImgpaintSuccess() { return m_b_imgpaint_success; }
-		public synchronized void set_suspended(boolean b_suspend) {
+		public void set_suspended(boolean b_suspend) {
 			//m_n_suspension_instances += (b_suspend ? 1 : -1);
 		}
 		//private int m_n_suspension_instances = 0;

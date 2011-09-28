@@ -323,7 +323,12 @@ public class PASActions implements ActionListener {
 				get_mappane().get_actionhandler().actionPerformed(new ActionEvent(arr, ActionEvent.ACTION_PERFORMED, "act_onmouseover_houses"));
 		}*/
 		else if("act_search_houses".equals(e.getActionCommand())) {
-			PAS.get_pas().get_statuscontroller().search_houses(-99999, false, (MapPointLL)e.getSource());
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run()
+				{
+					PAS.get_pas().get_statuscontroller().search_houses(-99999, false, (MapPointLL)e.getSource());					
+				}
+			});
 		}
 		else if("act_set_pinpoint".equals(e.getActionCommand())) {
 			MapPointLL ll = (MapPointLL)e.getSource();

@@ -29,6 +29,7 @@ import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.status.StatusSendingList;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.PopupDialog;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
@@ -821,46 +822,19 @@ public class StatusController extends Controller implements ActionListener {
 		
 		PAS.get_pas().get_inhabitantframe().set_visible(true);
 		if (get_houses() != null) {
-			Timeout time = new Timeout(1, 100);
-			while (1 == 1) {
-				if (get_houses().is_housesready())
-					break;
-				try {
-					Thread.sleep(time.get_msec_interval());
-				} catch (Exception e) {
-					Error.getError().addError("StatusController",
-							"Exception in search_houses", e, 1);
-				}
-				time.inc_timer();
-				if (time.timer_exceeded())
-					return;
-			}
 			PAS.get_pas().get_drawthread().set_suspended(true);
 			HouseItem current;
-			int n_count = 0;
-			int n_total_inhabitants = 0;
 			Object[] data;
 			PAS.get_pas().get_inhabitantframe().get_panel().clear();
 			for (int i = 0; i < get_houses().size(); i++) {
 				current = (HouseItem) get_houses().get_houses().get(i);
 				current.set_selected(false);
-				//if ((current.get_screencoords() != null && current
-				//		.get_visible())
-				//		|| b_all) {
-				
-				//if b_all or
-				//if n_status
-				//if(current.isVisible(Variables.getNavigation()) || b_all)
-				//int n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
-				double f_radius = 0.0002;
-				Rectangle.Double rect = new Rectangle.Double(current.get_lon() - f_radius,
+				double f_radius = 0.00005;
+				double f_radius_lon = f_radius / Math.cos(current.get_lat()*CoorConverter.deg2rad);
+				Rectangle.Double rect = new Rectangle.Double(current.get_lon() - f_radius_lon,
 											current.get_lat() - f_radius,
-											f_radius*2,
+											f_radius_lon*2,
 											f_radius*2);
-				/*boolean test = (current.get_lon() >= ll_search.get_lon()-f_radius &&
-						current.get_lat() >= ll_search.get_lat()-f_radius &&
-						current.get_lon() < ll_search.get_lon() + f_radius*2 &&
-						current.get_lat() < ll_search.get_lat() + f_radius*2);*/
 				boolean test = rect.contains(new Point.Double(ll_search.get_lon(), ll_search.get_lat()));
 				if(b_all ||
 					(!b_search_by_coor && current.isVisible(Variables.getNavigation())) ||
@@ -907,16 +881,11 @@ public class StatusController extends Controller implements ActionListener {
 											"StatusController",
 											"Exception in search_houses", e, 1);
 								}
-								n_count++;
 							}
 						}
 					}
 				}
 			}
-			// data = new Object[] { new Integer(0), "", "", n_count + "
-			// record(s) found", "", "", "", "" };
-			// PAS.get_pas().get_inhabitantframe().get_panel().insert_row(data,
-			// 0);
 			PAS.get_pas().get_drawthread().set_suspended(false);
 		}
 		PAS.get_pas().get_inhabitantframe().m_inhabitantpanel.popSelection();
