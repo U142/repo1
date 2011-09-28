@@ -189,24 +189,11 @@ public abstract class XMLThread extends Thread
 		}
 		else {
 			try {
-				PAS.get_pas().get_drawthread().set_suspended(true);
-			} catch(Exception e) {
-				Error.getError().addError("XMLThread","Exception in run",e,1);
-			}
-			try {
 				if(get_loadingpanel()!=null)
 					get_loadingpanel().lock_overallstage();
 				parseDoc(doc);
 			} catch(Exception e1) {
 				Error.getError().addError("XMLThread","Exception in run",e1,1);
-				try {
-					PAS.get_pas().get_drawthread().set_suspended(false);
-				} catch(Exception e2) {
-					log.debug(e2.getMessage());
-					log.warn(e2.getMessage(), e2);
-					Error.getError().addError("XMLThread","Exception in run",e2,1);
-				}
-				//PAS.get_pas().add_event("", e);
 				log.debug(e1.getMessage());
 				log.warn(e1.getMessage(), e1);
 			}
@@ -217,11 +204,6 @@ public abstract class XMLThread extends Thread
 		if(get_loadingpanel()!=null)
 			get_loadingpanel().reset_progress();
 		stopped();
-		try {
-			PAS.get_pas().get_drawthread().set_suspended(false);
-		} catch(Exception e) {
-			Error.getError().addError("XMLThread","Exception in run",e,1);
-		}
 	}
 	abstract public void parseDoc(Document doc);
 	abstract public void onDownloadFinished();

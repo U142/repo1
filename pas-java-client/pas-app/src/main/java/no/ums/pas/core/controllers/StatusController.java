@@ -781,7 +781,6 @@ public class StatusController extends Controller implements ActionListener {
 				if (time.timer_exceeded())
 					return;
 			}
-			PAS.get_pas().get_drawthread().set_suspended(true);
 			StatusItemObject current = null;
 			for(Inhabitant curInhab : get_items())				
 			{
@@ -793,7 +792,6 @@ public class StatusController extends Controller implements ActionListener {
 					break;
 				}
 			}
-			PAS.get_pas().get_drawthread().set_suspended(false);
 		}
 	}
 
@@ -822,7 +820,6 @@ public class StatusController extends Controller implements ActionListener {
 		
 		PAS.get_pas().get_inhabitantframe().set_visible(true);
 		if (get_houses() != null) {
-			PAS.get_pas().get_drawthread().set_suspended(true);
 			HouseItem current;
 			Object[] data;
 			PAS.get_pas().get_inhabitantframe().get_panel().clear();
@@ -886,7 +883,6 @@ public class StatusController extends Controller implements ActionListener {
 					}
 				}
 			}
-			PAS.get_pas().get_drawthread().set_suspended(false);
 		}
 		PAS.get_pas().get_inhabitantframe().m_inhabitantpanel.popSelection();
 	}
@@ -908,7 +904,6 @@ public class StatusController extends Controller implements ActionListener {
 				if (time.timer_exceeded())
 					return;
 			}
-			PAS.get_pas().get_drawthread().set_suspended(true);
 			HouseItem current;
 			int n_radius;
 			int n_count = 0;
@@ -970,7 +965,6 @@ public class StatusController extends Controller implements ActionListener {
 				Error.getError().addError("StatusController",
 						"Exception in search_houses", e, 1);
 			}
-			PAS.get_pas().get_drawthread().set_suspended(false);
 		}
 	}
 

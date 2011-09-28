@@ -35,17 +35,8 @@ import java.awt.image.ImageObserver;
 		private boolean m_b_neednewcoors = true;
 		private MediaTracker m_tracker;
 		private int m_n_currenttrackerid;
-		//private PAS m_pas;
-		private boolean m_b_suspended = false;
-//		private Image m_mapimg = null;
-		//private Image m_mapoverlay = null;
 		private boolean m_b_imgpaint_success = false;
 		public boolean isImgpaintSuccess() { return m_b_imgpaint_success; }
-		public void set_suspended(boolean b_suspend) {
-			//m_n_suspension_instances += (b_suspend ? 1 : -1);
-		}
-		//private int m_n_suspension_instances = 0;
-		//public int get_suspension_instances() { return m_n_suspension_instances; }
 		public boolean isRunning() { return m_b_isrunning; }
 		private Component m_parent;
 		private String m_sz_lasterror;
@@ -60,12 +51,8 @@ import java.awt.image.ImageObserver;
 			b_firstmap = b;
 		}
 		
-		/*public boolean get_suspended() {
-			return (m_n_suspension_instances > 0 ? true : false); 
-		}*/
 		public void set_dimension(Dimension d) {
 			m_dimension = d;
-			//m_img_offscreen = new BufferedImage(m_dimension.width, m_dimension.height, BufferedImage.TYPE_INT_ARGB);
 		}
 		public void resize(Dimension d) {
 			set_dimension(d);
