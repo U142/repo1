@@ -152,13 +152,16 @@ public class WSGisImport extends WSThread
 				else {
 					resline = new UGisImportLine();
 					String[] ting = temp.split(m_colset.SEPARATOR);
-					resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]); // getC
-					resline.setStreetid(ting[m_colset.COL_STREETID]);
-					resline.setHouseno(ting[m_colset.COL_HOUSENO]);
-					resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
-					resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-					resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
-					importlines.getUGisImportLine().add(resline);
+					if(ting.length>0)
+					{
+						resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]); // getC
+						resline.setStreetid(ting[m_colset.COL_STREETID]);
+						resline.setHouseno(ting[m_colset.COL_HOUSENO]);
+						resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
+						resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
+						resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
+						importlines.getUGisImportLine().add(resline);
+					}
 				}
 				line++;
 			}	
