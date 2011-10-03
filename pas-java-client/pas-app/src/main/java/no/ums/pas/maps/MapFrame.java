@@ -558,9 +558,10 @@ public class MapFrame extends JPanel implements ActionListener {
     public void draw_pinpoint(Graphics g) {
         if (ViewOptions.TOGGLE_SEARCHPOINTS.isSelected() && get_pinpointll() != null) {
             try {
-                MapPoint p = new MapPoint(get_navigation(), get_pinpointll());
-
-                g.drawImage(get_icon_pinpoint().getImage(), p.get_x() - get_icon_pinpoint().getIconWidth() / 2, p.get_y() - get_icon_pinpoint().getIconHeight() / 2, get_icon_pinpoint().getIconWidth(), get_icon_pinpoint().getIconHeight(), this);
+            	Point pointPin = getZoomLookup().getPoint(new LonLat(get_pinpointll().get_lon(), get_pinpointll().get_lat()));
+            	Point topLeft = getZoomLookup().getPoint(getMapModel().getTopLeft());
+            	Point p = new Point(pointPin.x - topLeft.x, pointPin.y - topLeft.y);
+                g.drawImage(get_icon_pinpoint().getImage(), p.x - get_icon_pinpoint().getIconWidth() / 2, p.y - get_icon_pinpoint().getIconHeight() / 2, get_icon_pinpoint().getIconWidth(), get_icon_pinpoint().getIconHeight(), this);
             } catch (Exception e) {
                 log.warn("Failed to draw pinpoint", e);
             }

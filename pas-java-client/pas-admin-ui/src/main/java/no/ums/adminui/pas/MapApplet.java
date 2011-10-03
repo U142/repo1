@@ -511,8 +511,8 @@ public class MapApplet extends JApplet implements ActionListener {
 			else if("act_set_pinpoint".equals(e.getActionCommand())) {
 				MapPointLL ll = (MapPointLL)e.getSource();
 				m_mappane.set_pinpoint(ll);
-            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
-            PAS.get_pas().get_mainmenu().actionPerformed(new ActionEvent(true, ActionEvent.ACTION_PERFORMED, "act_force_searchpinpoint"));
+	            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
+	            PAS.get_pas().get_mainmenu().actionPerformed(new ActionEvent(true, ActionEvent.ACTION_PERFORMED, "act_force_searchpinpoint"));
 			}
 			else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
             ViewOptions.TOGGLE_SEARCHPOINTS.setSelected((Boolean) e.getSource());
