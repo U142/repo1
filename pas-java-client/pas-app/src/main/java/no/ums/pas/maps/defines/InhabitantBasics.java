@@ -7,6 +7,24 @@ import java.awt.Dimension;
 
 public class InhabitantBasics
 {
+	public Inhabitant toInhabitant()
+	{
+		Inhabitant inhab = new Inhabitant();
+		inhab.arrayindex = this.arrayindex;
+		inhab.m_b_is_useredited = this.m_b_is_useredited;
+		inhab.m_f_lat = this.m_f_lat;
+		inhab.m_f_lon = this.m_f_lon;
+		inhab.m_dim_screencoor = this.m_dim_screencoor;
+		inhab.m_n_adrtype = this.m_n_adrtype;
+		inhab.m_n_hasfixed = this.m_n_hasfixed;
+		inhab.m_n_hasmobile = this.m_n_hasmobile;
+		inhab.m_n_inhabitant_type = this.m_n_inhabitant_type;
+		inhab.m_n_vulnerable = this.m_n_vulnerable;
+		inhab.m_parent_house = this.m_parent_house;
+		inhab.m_sz_kondmid = this.m_sz_kondmid;
+		return inhab;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

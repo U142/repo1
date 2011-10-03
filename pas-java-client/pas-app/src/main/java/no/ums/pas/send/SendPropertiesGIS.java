@@ -58,8 +58,8 @@ public class SendPropertiesGIS extends SendProperties {
 		m_inhabitants.clear();
 		for(int i=0; i < list.size(); i++) {
 			for(int j=0; j < list.get_gisrecord(i).get_inhabitantcount(); j++) {
-				InhabitantBasics bas = list.get_gisrecord(i).get_inhabitant(j);
-				m_inhabitants.add((Inhabitant)bas);
+				Inhabitant bas = list.get_gisrecord(i).get_inhabitant(j).toInhabitant();
+				m_inhabitants.add(bas);
 			}
 		}
 		m_houses.sort_houses(m_inhabitants, false);

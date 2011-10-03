@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.LonLat;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.status.StatusItemObject;
@@ -16,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -276,7 +278,7 @@ public class Houses {
 			double f_prev_lat = 0.0;
 			HouseItem prev_item = null;
 			InhabitantBasics current;
-	        for (Object inhabitant : inhabitants) {
+	        for (InhabitantBasics inhabitant : inhabitants) {
 	            current = (InhabitantBasics) inhabitant;
 	
 	            /* lon and/or lat is different, this is a new house
@@ -329,7 +331,10 @@ public class Houses {
                 log.error("Encountered null house at index "+i, new Exception("Test stack trace"));
                 continue;
             }
-			Dimension p = Variables.getNavigation().coor_to_screen(current.get_lon(), current.get_lat(), true);
+			final Point topLeft = Variables.getMapFrame().getZoomLookup().getPoint(Variables.getMapFrame().getMapModel().getTopLeft());
+
+			Point point = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(current.get_lon(), current.get_lat()));
+			Dimension p = new Dimension(point.x - topLeft.x, point.y - topLeft.y);
 			current.set_screencoords(p);
 			
 			if(b_joinhouses)
