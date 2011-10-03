@@ -205,6 +205,7 @@ public class HouseController extends Controller {
 			return;
 		if(get_houses().get_houses()==null)
 			return;
+		get_houses().setJoinHouses(true, 20);
 		get_houses().calcHouseCoords();
 	}
 	public void drawItems(Graphics gfx)

@@ -17,7 +17,9 @@ import no.ums.pas.ums.tools.FilePicker;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -118,9 +120,9 @@ public class SosiExport
 			
 			
 			String sz_curdate = no.ums.pas.ums.tools.Utils.get_current_date_formatted();
-			FileWriter writer = new FileWriter(file);
-			BufferedWriter bw = new BufferedWriter(writer);
-			PrintWriter w = new PrintWriter(bw);
+			FileOutputStream fos = new FileOutputStream(file);
+			OutputStreamWriter osw = new OutputStreamWriter(fos, "cp1252");
+			PrintWriter w = new PrintWriter(osw);
 			w.println(SosiFile.FIELD_HODE_);
 			w.println(SosiFile.FIELD_TEGNSETT_ + " ANSI");
 			w.println("...KOORDSYS " + sosikoor);
@@ -178,7 +180,7 @@ public class SosiExport
 				
 			}
 			
-			
+			w.println(SosiFile.FIELD_SLUTT_);
 			w.close();
 		}
 		catch(Exception e)

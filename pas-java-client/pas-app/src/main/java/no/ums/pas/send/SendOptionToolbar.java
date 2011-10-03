@@ -413,7 +413,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 												BTN_ADRTYPES_COMPANY_ | BTN_ADRTYPES_NOPHONE_ | BTN_COLORPICKER_ | BTN_FINALIZE_ | 
 												BTN_SEND_ | BTN_CLOSE_ | BTN_OPEN_ | BTN_ACTIVATE_ | BTN_CENTER_ON_MAP_ | TXT_SENDINGNAME_ | 
 												BTN_CELL_BROADCAST_ | BTN_CELL_BROADCAST_VOICE_ | BTN_ADRTYPES_NOFAX_ | 
-												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_;
+												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_ | BTN_ADRTYPES_VULNERABLE_;
 	
 	private void hide_buttons() {
 		show_buttonsbyadrtype(PAS.get_pas().get_rightsmanagement().addresstypes());

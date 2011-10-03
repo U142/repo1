@@ -1066,7 +1066,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			}
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
 		*/
-		
+		if(ViewOptions.TOGGLE_HOUSES.isSelected())
+		{
+			p.get_housecontroller().calcHouseCoords();
+			p.get_housecontroller().drawItems(g);
+		}
+
 		if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
 			EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
 		{
@@ -1105,11 +1110,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			en.nextElement().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), true, true, false, null, true, true, 1, false);
 		}			
 
-		if(ViewOptions.TOGGLE_HOUSES.isSelected())
-		{
-			p.get_housecontroller().calcHouseCoords();
-			p.get_housecontroller().drawItems(g);
-		}
 		try {
 			p.get_mappane().draw_pinpoint(g);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }

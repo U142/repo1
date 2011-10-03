@@ -52,6 +52,12 @@ public class Houses {
 	}
 	
 	protected boolean b_joinhouses = false;
+	protected int nJoinHousesPixelLimit = 20;
+	public void setJoinHouses(boolean bJoin, int pixelLimit)
+	{
+		b_joinhouses = bJoin;
+		nJoinHousesPixelLimit = pixelLimit;
+	}
 	
 	public int size() {
 		if(get_houses()!=null)
@@ -190,8 +196,14 @@ public class Houses {
 	
 	public NavStruct calc_bbox_by_stddev(SortedSet<Inhabitant> l)
 	{
-		if(l.size()<=2)
+		if(l.size()==0)
+		{
 			return new NavStruct();
+		}
+		else if(l.size()==1) //make a point navstruct
+		{
+			return new NavStruct(l.first().m_f_lon, l.first().m_f_lon, l.first().m_f_lat, l.first().m_f_lat);
+		}
 		
 		//double mid_lat = 0, mid_lon = 0;
 		double sum_lat = 0;
@@ -341,14 +353,13 @@ public class Houses {
 				else //point is free, make a reservation
 				{
 					HouseItem house_paint = new HouseItem(current.m_f_lon, current.m_f_lat);
-					int threshold = 50;
+					int threshold = nJoinHousesPixelLimit;
 					for(int x = p.width - threshold; x < p.width + threshold; x++)
 					{
 						for(int y = p.height - threshold; y < p.height + threshold; y++)
 						{
 							Dimension dim = new Dimension(x, y);
-							hash_points.put(dim, house_paint);
-							
+							hash_points.put(dim, house_paint);							
 						}
 					}
 					house_paint.set_screencoords(p);
@@ -363,7 +374,10 @@ public class Houses {
 					
 				}
 			}
+			else
+				m_houses_paint = m_houses;
 		}		
+		//m_houses = m_houses_paint;
 	}
 	public void draw_houses(Graphics gfx, int n_alertborder, boolean b_border, boolean b_showtext, int n_fontsize,
 					int n_addresstypes, Color col_override) {

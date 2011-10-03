@@ -73,7 +73,10 @@ public class SendPropertiesGIS extends SendProperties {
 	{
 		try
 		{
-			get_houses().calcHouseCoords();
+			if(get_houses()!=null)
+			{
+				get_houses().calcHouseCoords();
+			}
 			get_shapestruct().calc_coortopix(Variables.getNavigation());
 		}
 		catch(Exception e)

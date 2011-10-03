@@ -118,9 +118,7 @@ public class WSGisImport extends WSThread
 		logon.setSzStdcc(u.get_current_department().get_stdcc());
 		logon.setLDeptpk(u.get_current_department().get_deptpk());
 		logon.setSessionid(u.get_sessionid());
-		logon.setJobid(WSThread.GenJobId());
-		//WSFillLogoninfo.fill((no.ums.ws.pas.status.ULOGONINFO)logon, PAS.get_pas().get_userinfo());
-		
+		logon.setJobid(WSThread.GenJobId());		
 		
 		WSProgressPoller progress = new WSProgressPoller(loader, ProgressJobType.GEMINI_IMPORT_STREETID, logon, "GIS Import", "Finished", false);
 		try
@@ -140,53 +138,26 @@ public class WSGisImport extends WSThread
 			ArrayOfUGisImportLine importlines = new ArrayOfUGisImportLine();
 			search.setList(importlines);
 			search.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
-			search.setSKIPLINES(m_colset.SKIPLINES);
+			search.setSKIPLINES(0); //editor has already made a new file
 			final BufferedReader br = new BufferedReader(new StringReader(content.toString()));
 			String temp;
 			int line=0;
 			UGisImportLine resline;
 			while((temp = br.readLine()) != null) {
-				if(line==0 && search.getSKIPLINES() == 1) {
-					// isje jørr någe
-				}
-				else {
-					resline = new UGisImportLine();
-					String[] ting = temp.split(m_colset.SEPARATOR);
-					if(ting.length>0)
-					{
-						resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]); // getC
-						resline.setStreetid(ting[m_colset.COL_STREETID]);
-						resline.setHouseno(ting[m_colset.COL_HOUSENO]);
-						resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
-						resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-						resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
-						importlines.getUGisImportLine().add(resline);
-					}
+				resline = new UGisImportLine();
+				String[] ting = temp.split(m_colset.SEPARATOR);
+				if(ting.length>0)
+				{
+					resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]); // getC
+					resline.setStreetid(ting[m_colset.COL_STREETID]);
+					resline.setHouseno(ting[m_colset.COL_HOUSENO]);
+					resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
+					resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
+					resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
+					importlines.getUGisImportLine().add(resline);
 				}
 				line++;
 			}	
-			
-			
-			/*
-			 * PasApplication.getInstance().getPaswsSoap().getGisByStreetIdAsync(logon, search, new AsyncHandler<GetGisByStreetIdResponse>() {
-				
-				@Override
-				public void handleResponse(Response<GetGisByStreetIdResponse> res) {
-					m_callback.actionPerformed(new ActionEvent(m_gislist, ActionEvent.ACTION_PERFORMED, sz_cb_cmd));
-					m_gislist = new GISList(); //init array as l_totitem big
-					try {
-						m_gislist.fill(res.get().getGetGisByStreetIdResult());
-					} catch (InterruptedException e) {
-						progress.setFinishedText("Aborted");
-					} catch (ExecutionException e) {
-						log.warn(e.getMessage(), e);
-						throw e;
-					}
-				}
-			});
-			 */
-			
-			//URL wsdl = new URL("http://localhost/ws/Pas.asmx?WSDL");
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			UGisImportResultsByStreetId res = new Pasws(wsdl, service).getPaswsSoap12().getGisByStreetIdV2(logon, search);
@@ -195,14 +166,12 @@ public class WSGisImport extends WSThread
 		}
 		catch(Exception e)
 		{
-			//no.ums.pas.ums.errorhandling.Error.getError().addError("Error fetching GIS import", "WSGisImport::run()", e, 1);
 			log.warn(e.getMessage(), e);
 			throw e;
 		}
 		finally
 		{
 			progress.SetFinished();
-			//onDownloadFinished();
 			
 		}
 

@@ -163,8 +163,8 @@ public abstract class Controller implements ActionListener {
 			Object [] data;
 			try
 			{
-				for(int i=0; i < get_houses().size(); i++) {
-					current = (HouseItem)get_houses().get_houses().get(i);				
+				for(int i=0; i < get_houses().get_paint_houses().size(); i++) {
+					current = (HouseItem)get_houses().get_paint_houses().get(i);				
 					if(current!=null && current.get_screencoords() != null && current.get_visible()) {
 						n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
 						if(dim.width >= (current.get_screencoords().width - n_radius) && dim.width <= (current.get_screencoords().width + n_radius) &&
