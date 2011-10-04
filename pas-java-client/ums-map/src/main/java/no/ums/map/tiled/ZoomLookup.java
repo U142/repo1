@@ -55,7 +55,7 @@ public class ZoomLookup {
     }
 
     public LonLat getBottomRight(int row, int column) {
-        return getLonLat(column*tileSize+tileSize-1, row*tileSize+tileSize-1);
+    	return getLonLat(column*tileSize+tileSize, row*tileSize+tileSize);
     }
 
 

@@ -155,7 +155,7 @@ public abstract class Controller implements ActionListener {
 		ArrayList <Object>arr_temp = new ArrayList<Object>();
 		ArrayList <Object>arr_temp_houses = new ArrayList<Object>();
 		
-		if(get_houses()!=null && get_houses().is_housesready()) {
+		if(get_houses()!=null && get_houses().is_housesready() && get_houses().get_paint_houses()!=null) {
 			HouseItem current;
 			int n_radius;
 			int n_count = 0;

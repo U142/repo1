@@ -129,6 +129,8 @@ public class HouseController extends Controller {
 			create_filter();
 			set_visibility_change(true);
 			m_items = new TreeSet<Inhabitant>(m_houses.new LonLatComparator());
+			
+			
             for (final Point point : stdZoom.getTiles(new LonLat(get_nav()._lbo, get_nav()._ubo), new LonLat(get_nav()._rbo, get_nav()._bbo))) {
                 for (UAddress a : cache.getHouseInfos(stdZoom.getZoomLevel(), point.y, point.x)) {
                     addInhabitant(new Inhabitant(a));
