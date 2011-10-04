@@ -327,7 +327,8 @@ public class Houses {
 		for(int i=0; i < get_houses().size(); i++)
 		{
 			current = get_houses().get(i);
-            if (current == null) {
+			
+			if (current == null) {
                 log.error("Encountered null house at index "+i, new Exception("Test stack trace"));
                 continue;
             }
@@ -336,6 +337,15 @@ public class Houses {
 			Point point = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(current.get_lon(), current.get_lat()));
 			Dimension p = new Dimension(point.x - topLeft.x, point.y - topLeft.y);
 			current.set_screencoords(p);
+			if(current.get_screencoords().width < -nJoinHousesPixelLimit*3 ||
+				current.get_screencoords().width > nJoinHousesPixelLimit*3+Variables.getMapFrame().getWidth() ||
+				current.get_screencoords().height < -nJoinHousesPixelLimit*3 ||
+				current.get_screencoords().height > nJoinHousesPixelLimit*3+Variables.getMapFrame().getHeight())
+			{
+				current.set_visible(false);
+				continue;
+			}
+			current.set_visible(true);
 			
 			if(b_joinhouses)
 			{
@@ -386,17 +396,6 @@ public class Houses {
 	}
 	public void draw_houses(Graphics gfx, int n_alertborder, boolean b_border, boolean b_showtext, int n_fontsize,
 					int n_addresstypes, Color col_override) {
-		Timeout time = new Timeout(1, 20);
-		while(1==1)
-		{
-			if(is_housesready())
-				break;
-				//break;
-			time.inc_timer();
-			if(time.timer_exceeded())
-				return;
-			try { Thread.sleep(time.get_msec_interval()); } catch(InterruptedException e) { }
-		}
 		ArrayList<HouseItem> arraylist = get_houses();
 		if(b_joinhouses)
 			arraylist = get_paint_houses();
