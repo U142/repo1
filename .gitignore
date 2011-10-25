@@ -24,3 +24,8 @@ pasinvoke/pasinvoke.suo
 pasinvoke/pasinvoke.suo
 ws-pas/wsPASExec/Web.configatlassian-ide-plugin.xml
 atlassian-ide-plugin.xml
+
+*/_ReSharper.*
+*.ReSharper.*
+*.user
+*.suo
