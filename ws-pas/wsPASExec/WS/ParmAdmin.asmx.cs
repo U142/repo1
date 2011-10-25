@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -11,8 +12,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Xml;
 using System.Text;
-using java.util.zip;
-using java.io;
 using System.Data.Odbc;
 
 using com.ums.UmsCommon;
@@ -90,7 +89,7 @@ namespace com.ums.ws.parm
             try
             {
                 UPAEVENTRESULT ret = new UPAEVENTRESULT();
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 createOutXml();
                 ret.pk = HandleEventUpdate(ev.parmop, ref logon, ref ev);
                 outxml.insertEndElement(); //PAROOT
@@ -112,7 +111,7 @@ namespace com.ums.ws.parm
             try
             {
                 UPAOBJECTRESULT ret = new UPAOBJECTRESULT();
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 createOutXml();
                 ret.pk = HandleObjectUpdate(obj.parmop, ref logon, ref obj);
                 outxml.insertEndElement(); //PAROOT
@@ -132,7 +131,7 @@ namespace com.ums.ws.parm
         {
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
 
                 UPAOBJECTRESULT ret = new UPAOBJECTRESULT();
                 
@@ -165,7 +164,7 @@ namespace com.ums.ws.parm
             try
             {
                 UPAALERTRESTULT ret = new UPAALERTRESTULT();
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 createOutXml();
                 ret.pk = HandleAlertUpdate(a.parmop, ref logon, ref a);
                 outxml.insertEndElement(); //PAROOT
@@ -197,7 +196,7 @@ namespace com.ums.ws.parm
             //log on
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
             }
             catch (Exception e)
             {
@@ -1427,8 +1426,8 @@ namespace com.ums.ws.parm
                                             "WHERE up.l_userpk = u.l_userpk " +
 		                                      "AND dept.l_deptpk = up.l_deptpk " +
                                               "AND up.l_userpk = {0}", user[i].l_userpk);
-                    
-                    db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+
+                    db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                     rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                     
                     while (rs.Read())
@@ -1481,7 +1480,7 @@ namespace com.ums.ws.parm
             OdbcDataReader rs = null;
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 db.CheckLogon(ref logoninfo, true);
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -1520,7 +1519,7 @@ namespace com.ums.ws.parm
             OdbcDataReader rs = null;
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 db.CheckLogon(ref logoninfo, true);
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -1573,7 +1572,7 @@ namespace com.ums.ws.parm
             OdbcDataReader rs = null;
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 db.CheckLogon(ref logoninfo, true);
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_objectpk, l_deptpk, l_importpk, sz_name, sz_description;
@@ -1659,7 +1658,7 @@ namespace com.ums.ws.parm
                 
                 UBBUSER user;
 
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 while (rs.Read())

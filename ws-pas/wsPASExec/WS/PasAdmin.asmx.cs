@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -66,7 +67,7 @@ namespace com.ums.ws.pas.admin
         {
             string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper().Replace("'", "''"));
             StoreUserResponse res = new StoreUserResponse();
-            PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
             OdbcDataReader rs = null;
             try
             {
@@ -133,7 +134,7 @@ namespace com.ums.ws.pas.admin
             GetUsersResponse res = new GetUsersResponse();
 
             String sz_sql = "SELECT * FROM BBUSER";
-            PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
             OdbcDataReader rs = null;
             try
             {
@@ -240,7 +241,7 @@ namespace com.ums.ws.pas.admin
         public SetPAShapeObsoleteResponse doSetPAShapeObsolete(ULOGONINFO logoninfo, UDEPARTMENT department, UShape shape)
         {
             SetPAShapeObsoleteResponse res;
-            PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
             try
             {
                 db.CheckLogon(ref logoninfo, true);
@@ -264,7 +265,7 @@ namespace com.ums.ws.pas.admin
         public GetTotalNumberOfMessagesResponse doGetTotalNumberOfMessages(ULOGONINFO logoninfo, long l_period)
         {
             GetTotalNumberOfMessagesResponse res;
-            PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
             try
             {
                 db.CheckLogon(ref logoninfo, true);
@@ -385,7 +386,7 @@ namespace com.ums.ws.pas.admin
 
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
                 db.CheckLogon(ref logoninfo, true);
                 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);

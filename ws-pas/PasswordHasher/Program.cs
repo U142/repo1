@@ -20,7 +20,7 @@ namespace PasswordHasher
         static void Main(string[] args)
         {
             String test = Helpers.CreateSHA512Hash("røyken4pas");
-            PASUmsDb db = new PASUmsDb("aoba", "sa", "diginform", 60);
+            PASUmsDb db = new PASUmsDb("DSN=aoba; UID=sa; PWD=diginform", 60);
             OdbcDataReader rs = db.ExecReader("SELECT l_userpk, sz_paspassword FROM BBUSER WHERE sz_paspassword is not null", PASUmsDb.UREADER_KEEPOPEN);
             //OdbcDataReader rs = db.ExecReader("SELECT l_userpk, sz_paspassword FROM BBUSER WHERE l_userpk=3000000000000740", PASUmsDb.UREADER_KEEPOPEN);
             ArrayList list = new ArrayList();

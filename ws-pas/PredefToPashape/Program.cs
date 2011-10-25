@@ -18,7 +18,7 @@ namespace PredefToPashape
             //String szPath = "U:\\vb4utv\\predefined-areas\\";
             String szPath = "\\\\195.119.0.167\\broadcast_dialogic\\predefined-areas\\";
             //find all objects and all alerts in DB with no ref to PASHAPE
-            PASUmsDb db = new PASUmsDb("backbone_aoba125", "sa", "diginform", 60);
+            PASUmsDb db = new PASUmsDb("DSN=backbone_aoba125; UID=sa; PWD=diginform", 60);
             HashSet<Int64> hash_alerts = new HashSet<Int64>();
             HashSet<Int64> hash_objects = new HashSet<Int64>();
 

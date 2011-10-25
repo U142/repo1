@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using com.ums.UmsCommon;
@@ -21,7 +22,6 @@ namespace com.ums.UmsParm
             ALERTINFO_SYSLOG_INFO
         };
 
-        bool insertdb = true;
         PASUmsDb db;
         ULOGONINFO logoninfo;
         protected USimpleXmlWriter xmlwriter;
@@ -76,7 +76,7 @@ namespace com.ums.UmsParm
             this.logoninfo = logoninfo;
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 60);
             }
             catch (Exception e)
             {

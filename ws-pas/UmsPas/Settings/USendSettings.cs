@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Xml;
@@ -27,14 +28,9 @@ namespace com.ums.PAS.Settings
         public byte [] Find()
         {
             //Connect to database
-            UmsDbConnParams dbparams = new UmsDbConnParams();
-            dbparams.sz_dsn = UCommon.UBBDATABASE.sz_dsn;
-            dbparams.sz_uid = UCommon.UBBDATABASE.sz_uid;
-            dbparams.sz_pwd = UCommon.UBBDATABASE.sz_pwd;
-
             try
             {
-                m_db = new USettingsDb(dbparams);
+                m_db = new USettingsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString);
             }
             catch (Exception)
             {

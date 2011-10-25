@@ -290,14 +290,7 @@ namespace com.ums.UmsCommon.Audio
                         catch (Exception)
                         {
                         }
-                        try
-                        {
-                            File.Copy(sz_physpath + sz_tempfileraw, sz_destraw);
-                        }
-                        catch (Exception e)
-                        {
-                            throw;
-                        }
+                        File.Copy(sz_physpath + sz_tempfileraw, sz_destraw);
 
                         break;
                     /*case 2: //SOUNDFILE_TYPE_TTS_

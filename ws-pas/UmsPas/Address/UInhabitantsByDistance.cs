@@ -23,14 +23,9 @@ namespace com.ums.PAS.Address
 
         public IAddressResults Find()
         {
-            UmsDbConnParams conn = new UmsDbConnParams();
-            conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
-            conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
-            conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-
             try
             {
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60, m_logon.l_deptpk);
+                UAdrDb db = new UAdrDb(m_logon.sz_stdcc, 60, m_logon.l_deptpk);
                 UAddressList list = db.FindAddressesByDistance(m_search);
                 db.close();
                 return list;

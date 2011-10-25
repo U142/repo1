@@ -40,9 +40,6 @@ namespace com.ums.address
         public AddressIndexer(string baseDir)
             : this(Path.Combine(baseDir, "index"), Path.Combine(baseDir, "backup")) { }
 
-        public AddressIndexer() 
-            : this(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "umsAddress")) { }
-
         internal void Backup()
         {
             var backupFolder = Lucene.Net.Store.FSDirectory.Open(new DirectoryInfo(Path.Combine(_backupPath, "Backup." + DateTime.Now.ToString("yyyyMMdd.HHmmss"))));

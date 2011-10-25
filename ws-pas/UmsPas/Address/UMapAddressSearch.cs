@@ -28,12 +28,7 @@ namespace com.ums.PAS.Address
 
         public IAddressResults Find()
         {
-            UmsDbConnParams conn = new UmsDbConnParams();
-            conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
-            conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
-            conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-
-            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60, m_logon.l_deptpk);
+            UAdrDb db = new UAdrDb(m_logon.sz_stdcc, 60, m_logon.l_deptpk);
             UAddressList list = db.GetAddresslist(m_search);
             db.close();
             return list;
@@ -66,26 +61,8 @@ namespace com.ums.PAS.Address
             UGisImportResultsByStreetId ret = new UGisImportResultsByStreetId();
             try
             {
-                UmsDbConnParams conn = new UmsDbConnParams();
-                conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
-                conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
-                conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, UCommon.USETTINGS.l_gisimport_db_timeout, m_logon.l_deptpk);
+                UAdrDb db = new UAdrDb(m_logon.sz_stdcc, UCommon.USETTINGS.l_gisimport_db_timeout, m_logon.l_deptpk);
 
-                /*
-                 * OLD ONE BY ONE LINE VERSION
-                for (int x = 0; x < filelines.Count; x++)
-                {
-                    UGisImportResultLine tmp = filelines[x];
-                    if (tmp.isValid())
-                    {
-                        int i = db.GetGisImport(ref tmp);
-                        tmp.list.finalize();
-                    }
-
-                    tmp.finalize();
-                    ret.addLine(ref tmp);
-                }*/
                 int x = 0;
                 int prev = 0;
                 int next = 0;

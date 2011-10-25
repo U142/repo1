@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -26,7 +27,7 @@ namespace com.ums.wsPASExec
 
         public void StartupAddressDb()
         {
-            AdrIndex = new AddressIndexer();
+            AdrIndex = new AddressIndexer(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "umsAddress"));
             new PersonImport(AdrIndex).RefreshDatabase();
         }
 
@@ -35,7 +36,7 @@ namespace com.ums.wsPASExec
         {
 
             // Manual registration of hibernate module.
-            StartupAddressDb();
+            // Disabled - requires a base folder - StartupAddressDb();
             DateTime ret = DateTime.ParseExact("20100923121859", "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
             String test = string.Format("{0:yyyy-MM-ddTHH:mm:ss}", ret);
 
@@ -61,13 +62,9 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_cap_publish = settings["sz_path_cap_publish"];
             UCommon.UPATHS.sz_url_vb = settings["sz_url_vb"];
             
-            UCommon.UBBDATABASE.sz_dsn = settings["sz_db_dsn"]; //"backbone_ibuki";
-            UCommon.UBBDATABASE.sz_dsn_aoba = settings["sz_db_dsn_aoba"]; //"aoba";
-            UCommon.UBBDATABASE.sz_uid = settings["sz_db_uid"];//"sa";
-            UCommon.UBBDATABASE.sz_pwd = settings["sz_db_pwd"]; //"diginform";
-            UCommon.UBBDATABASE.sz_adrdb_dsnbase = settings["sz_adrdb_dsnbase"];
-            UCommon.UBBDATABASE.sz_adrdb_uid = settings["sz_adrdb_uid"];
-            UCommon.UBBDATABASE.sz_adrdb_pwd = settings["sz_adrdb_pwd"];
+            // UCommon.UBBDATABASE.sz_adrdb_dsnbase = settings["sz_adrdb_dsnbase"];
+            // UCommon.UBBDATABASE.sz_adrdb_uid = settings["sz_adrdb_uid"];
+            // UCommon.UBBDATABASE.sz_adrdb_pwd = settings["sz_adrdb_pwd"];
 
             UCommon.UVOICE.sz_send_number = settings["sz_send_number"];
             UCommon.UVOICE.l_tts_timeout = int.Parse(settings["l_tts_timeout_secs"]);

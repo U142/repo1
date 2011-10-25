@@ -10,8 +10,8 @@ namespace com.ums.UmsParm
 {
     public class PASUmsDb : UmsDb
     {
-        public PASUmsDb(string sz_dsn, string sz_uid, string sz_password, int timeout)
-            : base(sz_dsn, sz_uid, sz_password, timeout)
+        public PASUmsDb(string connectionString, int timeout)
+            : base(connectionString, timeout)
         {
         }
         public PASUmsDb()
