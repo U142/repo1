@@ -130,8 +130,9 @@ namespace com.ums.PAS.Address.gab
                 String StreetID = node_street.Attributes["Id"].Value;
                 if (StreetID != null && StreetID.Length >= 5)
                 {
-                    res.streetid = Int32.Parse(StreetID.Substring(StreetID.Length - 4));
-                    res.municipalid = Int32.Parse(StreetID.Substring(0, StreetID.Length - 4));
+                    //kan ikke sette streetid og kommunenr da verdien ikke har leading zero
+                    res.municipalid = 0;
+                    res.streetid = 0;
                 }
                 else
                 {
