@@ -127,6 +127,18 @@ namespace com.ums.PAS.Address.gab
                 XmlNode node_street = nl.Item(0);
                 res.name = node_street.Attributes["Name"].Value;
                 res.region = node_street.Attributes["Region"].Value;
+                String StreetID = node_street.Attributes["Id"].Value;
+                if (StreetID != null && StreetID.Length >= 5)
+                {
+                    res.streetid = Int32.Parse(StreetID.Substring(StreetID.Length - 4));
+                    res.municipalid = Int32.Parse(StreetID.Substring(0, StreetID.Length - 4));
+                }
+                else
+                {
+                    res.municipalid = 0;
+                    res.streetid = 0;
+                }
+
                 XmlNode node_house = node_street.FirstChild;
                 if (node_house != null)
                 {

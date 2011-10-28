@@ -99,6 +99,7 @@ public class RightsManagement {
 		return (m_userprofile.get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0; 
 	}
 	
+	
 	public boolean cap()
 	{
 		return (m_userprofile.get_addresstypes() & SendController.SENDTO_CAP) > 0;

@@ -34,6 +34,8 @@ namespace com.ums.PAS.Address.gab
         public GABTYPE type;
         public UBoundingRect rect;
         public int scope;
+        public int municipalid;
+        public int streetid;
         public void finalize()
         {
         }

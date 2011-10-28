@@ -170,33 +170,56 @@ public class SendPropertiesGIS extends SendProperties {
 			populate_common(poly, logon, bounds);
 
 			ArrayOfUGisRecord gis = new ArrayOfUGisRecord();
+			int inhabIncluded = 0;
 			if(get_gislist()!=null && !get_isresend())
 			{
 				for(int i=0; i < get_gislist().size(); i++)
 				{
 					for(int j=0; j < get_gislist().get_gisrecord(i).get_inhabitantcount(); j++)
 					{
-						long l = new Long(get_gislist().get_gisrecord(i).get_inhabitant(j).get_kondmid());
+						InhabitantBasics inhab = get_gislist().get_gisrecord(i).get_inhabitant(j);
+						long l = new Long(inhab.get_kondmid());
 						
+						/*
+						 * check for addresstypes. 
+						 * Check for private/company, fixed/mobile combinations.
+						 * To avoid sending more data to server than needed
+						 */
+						boolean SMSPrivate = (get_addresstypes() & SendController.CHECK_PRIVATE_SMS_INCLUDED) > 0;
+						boolean SMSCompany = (get_addresstypes() & SendController.CHECK_COMPANY_SMS_INCLUDED) > 0;
+						boolean FixPrivate = (get_addresstypes() & SendController.CHECK_PRIVATE_FIXED_INCLUDED) > 0;
+						boolean FixCompany = (get_addresstypes() & SendController.CHECK_COMPANY_FIXED_INCLUDED) > 0;
+						boolean MobPrivate = (get_addresstypes() & SendController.CHECK_PRIVATE_MOBILE_INCLUDED) > 0;
+						boolean MobCompany = (get_addresstypes() & SendController.CHECK_COMPANY_MOBILE_INCLUDED) > 0;
+						boolean OnlyVulner = (get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0;
+						boolean OnlyHead   = (get_addresstypes() & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0;
+						
+						//check if at least one of these statements are correct to include address in server object
+						boolean bDoInclude = (SMSPrivate && inhab.hasmobile() && !inhab.bedrift()) |
+											(SMSCompany && inhab.hasmobile() && inhab.bedrift()) |
+											(FixPrivate && inhab.hasfixed() && !inhab.bedrift()) |
+											(FixCompany && inhab.hasfixed() && inhab.bedrift()) | 
+											(MobPrivate && inhab.hasmobile() && !inhab.bedrift()) |
+											(MobCompany && inhab.hasmobile() && inhab.bedrift());
 						/*
 						 * Check addresstypes. If "only send to vulnerable citizens" is selected,
 						 * add only inhabitants marked as vulnerable.
 						 */
 						boolean bVulnerable = get_gislist().get_gisrecord(i).get_inhabitant(j).isVulnerable();
-						if(((get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0 && bVulnerable) ||
-							((get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) <= 0))
+						if((OnlyVulner && bVulnerable && bDoInclude) ||
+							(!OnlyVulner && bDoInclude))
 						{
 							UGisRecord r = new UGisRecord();
 							r.setId(l);
 							gis.getUGisRecord().add(r);
+							++inhabIncluded;
 						}
 					}
 				}
 				poly.setGis(gis);
 			}
-			
+			log.info("Send GIS: %d inhabitants included in GIS-list based on channels and private/company", inhabIncluded);
 			URL wsdl = new java.net.URL(vars.WSDL_EXTERNALEXEC); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ExternalExec.asmx?WSDL"); 
-			//URL wsdl = new URL("http://localhost/WS/ExternalExec.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/parm/", "parmws");
 			Parmws myService = new Parmws(wsdl, service); //wsdlLocation, new QName("https://secure.ums2.no/vb4utv/ExecAlert/ExternalExec.asmx"));
 			ExecResponse response = myService.getParmwsSoap12().execGisSending(poly);

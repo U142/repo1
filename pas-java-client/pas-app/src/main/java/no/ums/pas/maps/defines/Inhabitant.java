@@ -142,7 +142,7 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		
 		m_n_deptpk		= n_deptpk;
 		m_n_vulnerable	= n_vulnerable;
-		if(m_n_deptpk >= 0)
+		if(m_n_deptpk > 0)
 			set_useredited();
 	}
 	

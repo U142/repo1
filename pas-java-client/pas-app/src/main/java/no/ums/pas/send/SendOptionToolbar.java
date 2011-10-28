@@ -123,6 +123,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype m_btn_adrtypes_cell_broadcast_voice;
 	public ToggleAddresstype m_btn_adrtypes_nofax;
 	public ToggleAddresstype m_btn_adrtypes_vulnerable;
+	public ToggleAddresstype m_btn_adrtypes_headofhousehold;
+	
 	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	JToggleButton m_btn_finalize;
@@ -159,6 +161,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		LBA,
 		NOFAX,
 		VULNERABLE,
+		HEAD_OF_HOUSEHOLD,
 	}
 	
 	public int get_addresstypes() { return m_n_addresstypes; }
@@ -212,6 +215,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 					if((m_n_addresstypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS)> 0) {
 						temp += sz_font + "- " + Localization.l("main_sending_adr_btn_vulnerable_citizens")+"<br>";
 					}
+					if((m_n_addresstypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0) {
+						temp += sz_font + "- " + Localization.l("main_sending_adr_btn_head_of_household")+"<br>";
+					}
+						 
 				}
 				if(temp.length()==0)
 				{
@@ -280,6 +287,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
                     temp += sz_font + "- " + Localization.l("main_sending_adr_btn_vulnerable_citizens");
                 }
 				ret += temp;				
+			}
+			if(group==ADRGROUPS.HEAD_OF_HOUSEHOLD)
+			{
+				if((m_n_addresstypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0) {
+					temp += sz_font + "- " + Localization.l("main_sending_adr_btn_head_of_household");
+				}
+				ret += temp;
 			}
 		}
 		ret += "</html>";
@@ -362,6 +376,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_vulnerable.setSelected(true);
 		}*/
 		m_btn_adrtypes_vulnerable.setSelected((m_n_addresstypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		m_btn_adrtypes_headofhousehold.setSelected((m_n_addresstypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) == SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD);
 		
 		m_btn_adrtypes_nophone_private.setSelected(false);
 		m_btn_adrtypes_nophone_company.setSelected(false);
@@ -376,7 +391,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if(!IsAbasChannelSelected() && m_btn_adrtypes_nofax.isSelected())
 			m_btn_adrtypes_nofax.setSelected(false);
 		m_btn_adrtypes_vulnerable.setEnabled(IsAbasChannelSelected());
-		
+		m_btn_adrtypes_headofhousehold.setEnabled(IsAbasChannelSelected());
 
 	}
 	
@@ -408,12 +423,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public static final int BTN_SENDINGTYPE_MUNICIPAL_	= 1 << 17;
 	public static final int BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_ = 1 << 18; 
 	public static final int BTN_ADRTYPES_VULNERABLE_	= 1 << 19;
+	public static final int BTN_ADRTYPES_HEADOFHOUSEHOLD_ = 1 << 20;
 	
 	public static final int COMPONENTS_ALL_ = BTN_SENDINGTYPE_POLYGON_ | BTN_SENDINGTYPE_ELLIPSE_ | BTN_ADRTYPES_PRIVATE_ |
 												BTN_ADRTYPES_COMPANY_ | BTN_ADRTYPES_NOPHONE_ | BTN_COLORPICKER_ | BTN_FINALIZE_ | 
 												BTN_SEND_ | BTN_CLOSE_ | BTN_OPEN_ | BTN_ACTIVATE_ | BTN_CENTER_ON_MAP_ | TXT_SENDINGNAME_ | 
 												BTN_CELL_BROADCAST_ | BTN_CELL_BROADCAST_VOICE_ | BTN_ADRTYPES_NOFAX_ | 
-												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_ | BTN_ADRTYPES_VULNERABLE_;
+												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_ | BTN_ADRTYPES_VULNERABLE_ | BTN_ADRTYPES_HEADOFHOUSEHOLD_;
 	
 	private void hide_buttons() {
 		show_buttonsbyadrtype(PAS.get_pas().get_rightsmanagement().addresstypes());
@@ -472,6 +488,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		m_btn_adrtypes_vulnerable.setVisible(PAS.get_pas().get_rightsmanagement().only_vulnerable_subscribers() &&
 				(ADR & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		m_btn_adrtypes_headofhousehold.setVisible(PAS.get_pas().get_rightsmanagement().only_head_of_household() &&
+				(ADR & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) == SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD);
 	}
 	
 	public void show_buttonsbyadrtype(long ADR, AbstractButton btn_private_fixed, AbstractButton btn_private_mobile,
@@ -553,6 +571,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//only make access to vulnerable citizens adrtype if LBA-text is not enabled.
 		if((FLAGS & BTN_ADRTYPES_VULNERABLE_) == BTN_ADRTYPES_VULNERABLE_) {
 			this.m_btn_adrtypes_vulnerable.setVisible(b_show);
+		}
+		
+		if((FLAGS & BTN_ADRTYPES_HEADOFHOUSEHOLD_) == BTN_ADRTYPES_HEADOFHOUSEHOLD_) {
+			this.m_btn_adrtypes_headofhousehold.setVisible(b_show);
 		}
 	}
 
@@ -687,6 +709,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//only make this option available if the button is visible
 		if(m_btn_adrtypes_vulnerable.isSelected() && m_btn_adrtypes_vulnerable.isVisible()) 
 			TYPES |= m_btn_adrtypes_vulnerable.get_adrtype();
+		if(m_btn_adrtypes_headofhousehold.isSelected() && m_btn_adrtypes_headofhousehold.isVisible())
+			TYPES |= m_btn_adrtypes_headofhousehold.get_adrtype();
 		TYPES = customizeSelections(TYPES);
 		set_addresstypes(TYPES);
 		log.debug("Addresstypes = " + TYPES);
@@ -936,6 +960,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_adrtypes_nofax = new ToggleAddresstype(ImageLoader.load_icon("flag_red_16.gif"), false, SendController.SENDTO_USE_NOFAX_COMPANY);
 		
 		m_btn_adrtypes_vulnerable = new ToggleAddresstype(ImageLoader.load_icon("bandaid_24.png"), false, SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		
+		m_btn_adrtypes_headofhousehold = new ToggleAddresstype(ImageLoader.load_icon("HeadOfHousehold_24.png"), false, SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD);
+		
 		//m_btngroup_lba.add(m_btn_adrtypes_cell_broadcast_text);
 		//m_btngroup_lba.add(m_btn_adrtypes_cell_broadcast_voice);
 		m_btn_color = new ColorButton(new Color((float)1.0, (float)0.0, (float)0.0), new Dimension(SIZE_BUTTON_ICON, SIZE_BUTTON_ICON));
@@ -992,6 +1019,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
             m_btn_adrtypes_cell_broadcast_voice.setToolTipText(Localization.l("main_sending_adr_btn_lba_voice_tooltip"));
             m_btn_adrtypes_nofax.setToolTipText(Localization.l("main_sending_adr_btn_company_blocklist_tooltip"));
             m_btn_adrtypes_vulnerable.setToolTipText(Localization.l("main_sending_adr_btn_vulnerable_citizens_tooltip"));
+            m_btn_adrtypes_headofhousehold.setToolTipText(Localization.l("main_sending_adr_btn_head_of_household_tooltip"));
             m_btn_finalize.setToolTipText(Localization.l("main_sending_adr_btn_lock_tooltip"));
             m_btn_color.setToolTipText(Localization.l("common_color"));
             m_btn_send.setToolTipText(Localization.l("main_sending_prepare"));
@@ -1018,6 +1046,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		set_size(m_btn_adrtypes_cell_broadcast_voice, SIZE_BUTTON_LARGE);
 		set_size(m_btn_adrtypes_nofax, SIZE_BUTTON_LARGE);
 		set_size(m_btn_adrtypes_vulnerable, SIZE_BUTTON_LARGE);
+		set_size(m_btn_adrtypes_headofhousehold, SIZE_BUTTON_LARGE);
 		
 		set_size(m_btn_color, SIZE_BUTTON_ICON, SIZE_BUTTON_ICON);
 		set_size(m_btn_send, SIZE_BUTTON_LARGE);
@@ -1041,6 +1070,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_cell_broadcast_voice.addActionListener(this);
 		m_btn_adrtypes_nofax.addActionListener(this);
 		m_btn_adrtypes_vulnerable.addActionListener(this);
+		m_btn_adrtypes_headofhousehold.addActionListener(this);
 		
 				
 		m_btn_color.addActionListener(this);
@@ -1072,6 +1102,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_cell_broadcast_voice.setActionCommand("act_set_addresstypes");
 		m_btn_adrtypes_nofax.setActionCommand("act_set_addresstypes");
 		m_btn_adrtypes_vulnerable.setActionCommand("act_set_addresstypes");
+		m_btn_adrtypes_headofhousehold.setActionCommand("act_set_addresstypes");
 		m_btn_close.setActionCommand("act_sending_close");
 		m_btn_open.setActionCommand("act_open_polygon");
 		
@@ -1092,6 +1123,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if(PAS.get_pas() != null && PAS.get_pas().get_rightsmanagement().only_vulnerable_subscribers())
 		{
 			show_buttons(SendOptionToolbar.BTN_ADRTYPES_VULNERABLE_, true);
+		}
+		if(PAS.get_pas() != null && PAS.get_pas().get_rightsmanagement().only_head_of_household())
+		{
+			show_buttons(SendOptionToolbar.BTN_ADRTYPES_HEADOFHOUSEHOLD_, true);
 		}
 		add_controls();
 		
@@ -1283,9 +1318,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		this.reset_xpanels();
 		this.set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.WEST);
 		add(m_radio_activate, m_gridconst);
-		set_gridconst(inc_xpanels(), get_panel(), 13, 1, GridBagConstraints.WEST);
+		set_gridconst(inc_xpanels(), get_panel(), 16, 1, GridBagConstraints.WEST);
 		add(m_txt_sendname, m_gridconst);
-		inc_xpanels2(10);
+		inc_xpanels2(13);
 		//add_spacing(DIR_HORIZONTAL, 15);
 		inc_xpanels2(3);
 		//addSeparator(15);
@@ -1307,6 +1342,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_panels2();
 		//inc_xpanels2();
 	
+		int groupSpacing=5;
+		
 		add(m_btn_adrtypes_private_fixed, m_gridconst);
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
@@ -1317,7 +1354,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(15);
+		addSeparator(groupSpacing);
 		inc_xpanels2();
 		add(m_btn_adrtypes_company_fixed, m_gridconst);
 		m_place_holder = new JLabel("");
@@ -1329,7 +1366,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(15);
+		addSeparator(groupSpacing);
 		inc_xpanels2();
 		add(m_btn_adrtypes_nofax, m_gridconst);
 		m_place_holder = new JLabel("");
@@ -1338,12 +1375,22 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		addSeparator(2);
 		inc_xpanels2();
-	
+
+
 		add(m_btn_adrtypes_vulnerable, m_gridconst);
+
+		inc_xpanels2();
+		addSeparator(2);
+		inc_xpanels2();
+		add(m_btn_adrtypes_headofhousehold, m_gridconst);
+
+		
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(15);
+		
+		
+		addSeparator(groupSpacing);
 		
 		inc_xpanels2();
 		add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
@@ -1484,6 +1531,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_btn_adrtypes_nofax.toggleSelection();
 			if(e.getSource().equals(m_btn_adrtypes_vulnerable))
 				m_btn_adrtypes_vulnerable.toggleSelection();
+			if(e.getSource().equals(m_btn_adrtypes_headofhousehold))
+				m_btn_adrtypes_headofhousehold.toggleSelection();
 				
 			gen_addresstypes();
 			if(get_parent()!=null && get_parent().isActive()) {
@@ -1746,6 +1795,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype get_adrtype_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	public ToggleAddresstype get_adrtype_nofax() { return m_btn_adrtypes_nofax; }
 	public ToggleAddresstype get_adrtype_vulnerable() { return m_btn_adrtypes_vulnerable; }
+	public ToggleAddresstype get_adrtype_headofhousehold() { return m_btn_adrtypes_headofhousehold; }
 	public JButton get_btn_open() { return m_btn_open; }
 	public ColorButton get_btn_color() { return m_btn_color; }
 	public JToggleButton get_btn_finalize() { return m_btn_finalize; }
@@ -1844,6 +1894,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_open.setEnabled(!b);
 			m_btn_adrtypes_nofax.setEnabled(!b);
 			m_btn_adrtypes_vulnerable.setEnabled(!b);
+			m_btn_adrtypes_headofhousehold.setEnabled(!b);
 			
 			//test of auto expand polygon
 			//can be removed

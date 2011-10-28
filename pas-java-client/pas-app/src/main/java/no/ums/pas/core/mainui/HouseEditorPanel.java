@@ -263,6 +263,10 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		m_txt_house.setText(get_inhabitant().get_no());
 		m_txt_letter.setText(get_inhabitant().get_letter());
 		m_txt_place.setText(get_inhabitant().get_postarea());
+		
+		//TODO avvent å slenge på disse da vi ikke vet om parsing av Id på WS gjøres korrekt. Kommunenr=3,4 siffer, gatekode=4,5 siffer.
+		//m_txt_streetid.setText(Integer.toString(get_inhabitant().get_streetid()));
+		//m_txt_municipal.setText(get_inhabitant().get_region());
 		String sz_houseinfo = Localization.l("main_houseeditortab_newhouse");
 		if(get_house()!=null && get_house().size()>=1)
 		{

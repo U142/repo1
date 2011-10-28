@@ -21,7 +21,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {seq t {comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p}, comp tabbedPane1::t::595:x}, space :::p}}</string> 
+        <string>par l {seq {space ::436:x, comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p, space :::p}, seq l {space :::p, comp tabbedPane1:::p:637:p, space :::x}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
@@ -201,7 +201,7 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::324:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::329:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}}, space :::p}}</string> 
+            <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::366:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::371:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
@@ -518,7 +518,7 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::271:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::70:x}}</string> 
+            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::292:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::91:x}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
@@ -666,7 +666,7 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::190:x:1, comp lblMailAddress::l::190:x:1, comp lblMailDisplayname::l::190:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer::::161:x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string> 
+            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::232:x:1, comp lblMailAddress::l::232:x:1, comp lblMailDisplayname::l::232:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer::::161:x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
@@ -792,11 +792,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par t:::p {comp autostartup::l:::x:1, comp pnlLBA::l:::x:1, comp panel2::l::571:x:1}, space :p:35:p}}</string> 
+            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:612:x:1}}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p:183:p, space ::37:x}}</string> 
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p:178:p, space ::42:x}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -809,7 +809,7 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:272:p, space ::279:x}}</string> 
+              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:272:p, space ::320:x}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
@@ -860,7 +860,7 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::205:x}}</string> 
+              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::246:x}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
@@ -927,11 +927,11 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l::p {space :::p, par l:::p {seq l {par l {seq {comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p}, comp lblPrivateAdrTypes:::p:132:p:1}, space :::p, par l {seq {comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p, space s:::p, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p}, comp lblCompanyAdrtypes:::p:137:p:1}, space s:::p, par l {comp lblLbaText::::130:x:2, comp toggleLba:8:l:p:47:p:1}}, seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}}, space :p::p}}</string> 
+              <string>par l {seq l::p {space :::p, par l:::p {seq l {par l {seq {comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p}, comp lblPrivateAdrTypes:::p:132:p:1}, space :::p, par l {seq l {comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p, space s:::p, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p, space :p:8:p, comp toggleHeadOfHousehold:::p::p}, comp lblCompanyAdrtypes::l:p:137:p:1}, space s:::p, par l {comp lblLbaText::l:p:111:p:2, comp toggleLba:8:l:p:47:p:1}}, seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}}, space :p::p}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
-              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleLba::::33:x:1, comp toggleVulnerable::::33:x, comp toggleBlocklist::::33:x:1, comp toggleCompanyMobile::t::33:x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1}, space :::p, par l:::p {comp lblLbaText:::p::p, comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, space :::p}}</string> 
+              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable::::33:x, comp toggleBlocklist::::33:x:1, comp toggleCompanyMobile::t::33:x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba::::33:x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string> 
              </void> 
             </object> 
             <void method="setProperty"> 
@@ -1354,6 +1354,42 @@
               </void> 
              </object> 
             </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>no.ums.pas.send.ToggleAddresstype</string> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/HeadOfHousehold_24.png</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>toggleHeadOfHousehold.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>toggleHeadOfHousehold</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>toggleHeadOfHouseholdActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
            </object> 
           </void> 
          </object> 
@@ -1386,7 +1422,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>635</int> 
+        <int>670</int> 
         <int>520</int> 
        </object> 
       </void> 

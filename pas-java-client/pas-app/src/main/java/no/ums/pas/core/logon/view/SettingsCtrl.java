@@ -100,6 +100,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     	boolean b_enable_parm = false;
     	boolean b_enable_lba = false;
     	boolean b_enable_vulnerable = false;
+    	boolean b_enable_headofhousehold = false;
     	for(DeptInfo di : userinfo.get_departments())
     	{
     		if(di.get_userprofile().get_parm_rights()>=1)
@@ -115,6 +116,10 @@ public class SettingsCtrl implements ISettingsUpdate {
     		{
     			b_enable_vulnerable = true;
     		}
+    		if((adrtypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD)>0)
+    		{
+    			b_enable_headofhousehold = true;
+    		}
     	}
     	if(!b_enable_parm)
     	{
@@ -124,6 +129,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     	dlg.getPnlLBA().setVisible(b_enable_lba);
     	dlg.getToggleLba().setVisible(b_enable_lba);
     	dlg.getToggleVulnerable().setVisible(b_enable_vulnerable);
+    	dlg.getToggleHeadOfHousehold().setVisible(b_enable_headofhousehold);
     	
     }
     

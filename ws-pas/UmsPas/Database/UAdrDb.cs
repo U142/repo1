@@ -446,18 +446,6 @@ namespace com.ums.PAS.Database
                 while (rs.Read())
                 {
                     c.bedrift = rs.GetInt16(0);
-                    /*if (rs.IsDBNull(1))
-                        c.hasfixed = false;
-                    else
-                        c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
-                    if (rs.IsDBNull(2))
-                        c.hasmobile = false;
-                    else
-                        c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
-                    if (rs.IsDBNull(3))
-                        c.add = 0;
-                    else
-                        c.add = rs.GetInt32(3);*/
                     object o1 = rs.GetValue(1);
                     object o2 = rs.GetValue(2);
                     if (rs.IsDBNull(1))
@@ -491,33 +479,35 @@ namespace com.ums.PAS.Database
 
         protected UAdrCount _PolyCount(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
         {
-            int n_maxadr_polycount = 50000;
+            int n_maxadr_polycount = 500000;
             UAdrCount count = new UAdrCount();
             OdbcDataReader rs = null;
             try
             {
                 String szSQL = "";
                 bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                bool bOnlyHeadOfHousehold = (adrtypes & (long)ADRTYPES.ONLY_HEAD_OF_HOUSEHOLD) > 0;
                 if (m_n_pastype == 1)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile FROM ADR_KONSUM " +
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM ADR_KONSUM " +
                                         "WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                              n_maxadr_polycount,
                                              b.l_bo, b.r_bo, b.b_bo, b.u_bo);
                 }
                 else if (m_n_pastype == 2)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0) FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
                                                             "WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={5} " +
-                                                            "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
+                                                            "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
                                             n_maxadr_polycount,
-                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1");
+                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                            ""/*,bOnlyHeadOfHousehold ? "ORDER BY l_familyno, l_personcode" : ""*/);
                 }
                                                                 
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                //List<UAdrcountCandidate> candidates = new List<UAdrcountCandidate>();
                 UMapPoint cpoint = new UMapPoint();
                 UAdrcountCandidate c = new UAdrcountCandidate();
+                //long nPrevFamilyno = 0;
                 while (rs.Read())
                 {
                     c.lon = rs.GetDouble(1);
@@ -525,6 +515,21 @@ namespace com.ums.PAS.Database
                     c.bedrift = rs.GetInt32(2);
                     c.hasfixed = (rs.GetByte(3) == 1 ? true : false);
                     c.hasmobile = (rs.GetByte(4) == 1 ? true : false);
+
+                    /*
+                     * if we're sending to only head of household, only include the first person in the familylist
+                     * This may be inaccurate - if first person have no numbers registered, no numbers will be counted, but the next persons numbers may be included in the sending
+                     */
+                    /*if (bOnlyHeadOfHousehold)
+                    {
+                        long nFamilyNo = rs.GetInt64(5);
+                        int nPersonCode = rs.GetInt32(6);
+                        if (nFamilyNo > 0 && nFamilyNo == nPrevFamilyno)
+                        {
+                            continue;
+                        }
+                        nPrevFamilyno = nFamilyNo;
+                    }*/
                     cpoint.lat = c.lat;
                     cpoint.lon = c.lon;
                     if (p._point_inside(ref cpoint))

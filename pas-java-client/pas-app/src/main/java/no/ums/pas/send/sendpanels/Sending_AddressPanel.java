@@ -6,6 +6,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.send.AddressCount;
+import no.ums.pas.send.Send;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -35,6 +36,8 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
     private StdTextLabel m_lbl_adrcount_total   = new StdTextLabel(Localization.l("main_sending_adr_total_voice"), new Dimension(250,16));
     private StdTextLabel m_lbl_adrcount_total_sms = new StdTextLabel(Localization.l("main_sending_adr_total_sms"), new Dimension(250,16));
 
+    private StdTextLabel m_lbl_adrcount_disclaimer = new StdTextLabel("tester", SIZING.DYNAMIC);
+    
     private StdTextLabel m_txt_adrcount_private = new StdTextLabel("", SIZING.DYNAMIC); //new Dimension(250, 16));
 	private StdTextLabel m_txt_adrcount_company = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
 	private StdTextLabel m_txt_adrcount_privatemobile  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
@@ -71,22 +74,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		super();
 		parent = parentwin;
 		Font fontSelected = new Font(null, Font.BOLD, 12);
-		/*m_lbl_adrcount_private.setFont(get_parent().hasVoicePrivate(adrtypes) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_company.setFont(get_parent().hasVoiceCompany(adrtypes) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_privatemobile.setFont(get_parent().hasMobilePrivate(adrtypes) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_companymobile.setFont(get_parent().hasMobileCompany(adrtypes) ? fontSelected : fontNotselected);
-		*/
 
-		
-		/*m_lbl_adrcount_private.setFont(SendController.HasType(adrtypes, SendController.SENDTO_FIXED_PRIVATE) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_company.setFont(SendController.HasType(adrtypes, SendController.SENDTO_FIXED_COMPANY) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_privatemobile.setFont(SendController.HasType(adrtypes, SendController.SENDTO_MOBILE_PRIVATE) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_companymobile.setFont(SendController.HasType(adrtypes, SendController.SENDTO_MOBILE_COMPANY) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_privatenonumber.setFont(SendController.HasType(adrtypes, SendController.SENDTO_NOPHONE_PRIVATE) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_companynonumber.setFont(SendController.HasType(adrtypes, SendController.SENDTO_NOPHONE_COMPANY) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_private_sms.setFont(SendController.HasType(adrtypes, SendController.SENDTO_SMS_PRIVATE) ? fontSelected : fontNotselected);
-		m_lbl_adrcount_company_sms.setFont(SendController.HasType(adrtypes, SendController.SENDTO_SMS_COMPANY) ? fontSelected : fontNotselected);
-		*/
 		m_lbl_adrcount_total.setFont(fontSelected);
 		m_txt_adrcount_total.setFont(fontSelected);
 		m_lbl_adrcount_total_sms.setFont(fontSelected);
@@ -100,6 +88,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 
 	public void add_controls() {
 		int n_width = 10;
+		_add(m_lbl_adrcount_disclaimer, 0, inc_panels(), n_width, 1);
 		_add(m_lbl_adrcount_private, 0, inc_panels(), n_width/2, 1);
 		_add(m_txt_adrcount_private, n_width/2, get_panel(), n_width/2, 1);
 		_add(m_lbl_adrcount_privatemobile,  0, inc_panels(), n_width/2, 1);
@@ -161,6 +150,13 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	protected void set_addresscount(AddressCount c) {
 		int n_addrtypes = get_parent().get_sendcontroller().get_activesending().get_toolbar().get_addresstypes();
 		boolean bVunerableOnly = (n_addrtypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0;
+		boolean bHeadOfHousehold = (n_addrtypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0;
+		if(bHeadOfHousehold)
+		{
+			m_lbl_adrcount_disclaimer.setText(Localization.l("main_sending_adr_type_head_of_household"));
+			m_lbl_adrcount_disclaimer.setToolTipText(Localization.l("main_sending_adr_type_head_of_household_tooltip"));
+			m_lbl_adrcount_disclaimer.setVisible(true);
+		} 
 		m_txt_adrcount_private.setText(new Integer(c.get_private()).toString());
 		if((n_addrtypes & SendController.SENDTO_FIXED_PRIVATE) > 0 || (n_addrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
 				(n_addrtypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) > 0 || (n_addrtypes & SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) > 0 ||
@@ -267,20 +263,9 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 			m_lbl_adrcount_lba_sms.setVisible(false);
 			m_txt_adrcount_lba_sms.setVisible(false);
 		}
-		//m_txt_adrcount_total.setText(new Integer(c.get_total()).toString());
 		int n_total = 0;
 		//calculate recipient count by addresstypes, and update AddressCount object
 		//this new count (total_by_adrtypes()) will then be reflected when confirming Live/Test sending in SendWindow
-		int adrtypes = parent.get_sendobject().get_sendproperties().get_addresstypes();
-		int newadrtypes = GetAdrTypesForCount(adrtypes);
-		/*n_total = (SendController.HasType(newadrtypes, SendController.SENDTO_FIXED_PRIVATE) ? c.get_private() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_FIXED_COMPANY) ? c.get_company() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_MOBILE_PRIVATE)? c.get_privatemobile() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_MOBILE_COMPANY) ? c.get_companymobile() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_NOPHONE_PRIVATE) ? c.get_privatenonumber() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_NOPHONE_COMPANY) ? c.get_companynonumber() : 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_SMS_COMPANY) ? c.get_companymobile(): 0) +
-				  (SendController.HasType(newadrtypes, SendController.SENDTO_SMS_PRIVATE) ? c.get_privatemobile(): 0);*/
 		n_total = c.get_private()+c.get_company()+c.get_privatemobile()+c.get_companymobile();
 		m_txt_adrcount_total.setText(new Integer(n_total).toString() + (bVunerableOnly ? " (" + Localization.l("main_sending_adr_btn_vulnerable_citizens") + ")" : ""));
 		n_total = c.get_privatesms()+c.get_companysms();

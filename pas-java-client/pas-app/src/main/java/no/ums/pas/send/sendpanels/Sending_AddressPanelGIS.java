@@ -37,15 +37,7 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 	}
 	protected final void exec_adrcount() {
 		SendPropertiesGIS gis = get_parent().get_sendobject().get_sendproperties().typecast_gis();
-		/*int newadrtypes = 0;
-		newadrtypes = GetAdrTypesForCount(get_parent().get_sendobject().get_sendproperties().get_addresstypes());
 
-		AddressCount adrcount = new AddressCount(gis.get_adrcount(SendController.SENDTO_FIXED_PRIVATE), 
-				 gis.get_adrcount(SendController.SENDTO_FIXED_COMPANY), 
-				 gis.get_adrcount(SendController.SENDTO_MOBILE_PRIVATE),
-				 gis.get_adrcount(SendController.SENDTO_MOBILE_COMPANY),
-				 gis.get_adrcount(SendController.SENDTO_NOPHONE_PRIVATE),
-				 gis.get_adrcount(SendController.SENDTO_NOPHONE_COMPANY));*/
 		AddressCount adrcount = new AddressCount();
 		GISList list = gis.get_gislist();
 		for(int i=0; i < list.size(); i++)

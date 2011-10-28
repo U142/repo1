@@ -60,6 +60,8 @@ public class WSClosestGAB extends WSThread
 			results.set_no(temp.getNo());
 			results.set_postarea(temp.getRegion());
 			results.set_postno(temp.getPostno());
+			results.set_streetid(temp.getStreetid());
+			results.set_region(Integer.toString(temp.getMunicipalid()));
 
 		}
 		catch(Exception e)
