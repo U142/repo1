@@ -65,13 +65,19 @@ namespace com.ums.ws.pas
         [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)
         {
-            //System.Web.SessionState.HttpSessionState state = this.Session;
-            l.sessionid = l.onetimekey; //Guid.NewGuid().ToString();//state.SessionID.ToString();
-            //String sha = Helpers.CreateSHA512Hash(l.sz_password);
-            ULogon logon = new ULogon();
-            UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
-            logon.close();
-            return ret;
+            try
+            {
+                l.sessionid = l.onetimekey; //Guid.NewGuid().ToString();//state.SessionID.ToString();
+                ULogon logon = new ULogon();
+                UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
+                logon.close();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, "PasLogon failed \n" + e.Message, e.ToString());
+                throw;
+            }
         }
         [WebMethod]
         public bool PasLogoff(ULOGONINFO l)
