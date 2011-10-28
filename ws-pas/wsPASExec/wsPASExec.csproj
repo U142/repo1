@@ -36,6 +36,51 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_Prod|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_QA|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Prod|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\ExtLib\DotNetZipLib-DevKit-v1.9\Ionic.Zip.Reduced.dll</HintPath>
@@ -71,10 +116,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
-    <Reference Include="vjslib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternComAudio\vjslib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="WS\AddressDatabase.asmx" />
@@ -195,6 +236,27 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Orange_Prod.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Orange_QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Prod.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Beta.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -241,4 +303,76 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="UmsDeploy">
+    <PropertyGroup Condition="$(Configuration) == 'Beta'">
+      <DeployTargetFolder>\PAS\ws_pasutv\</DeployTargetFolder>
+      <DeployShare1>\\192.168.3.40\www</DeployShare1>
+      <DeployUser1>Administrator</DeployUser1>
+      <DeployPassword1>digi20ums</DeployPassword1>
+      <DeployLocation1>$(DeployShare1)$(DeployTargetFolder)</DeployLocation1>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'QA'">
+      <DeployTargetFolder>\www\pas\ws_pasqa</DeployTargetFolder>
+      <DeployShare1>\\195.119.0.172\d$</DeployShare1>
+      <DeployUser1>Administrator</DeployUser1>
+      <DeployPassword1>digi20ums</DeployPassword1>
+      <DeployLocation1>$(DeployShare1)$(DeployTargetFolder)</DeployLocation1>
+      <DeployShare2>\\195.119.0.173\d$</DeployShare2>
+      <DeployUser2>Administrator</DeployUser2>
+      <DeployPassword2>digi20ums</DeployPassword2>
+      <DeployLocation2>$(DeployShare2)$(DeployTargetFolder)</DeployLocation2>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'Prod'">
+      <DeployTargetFolder>\www\pas\ws_pasprod</DeployTargetFolder>
+      <DeployShare1>\\195.119.0.172\d$</DeployShare1>
+      <DeployUser1>Administrator</DeployUser1>
+      <DeployPassword1>digi20ums</DeployPassword1>
+      <DeployLocation1>$(DeployShare1)$(DeployTargetFolder)</DeployLocation1>
+      <DeployShare2>\\195.119.0.173\d$</DeployShare2>
+      <DeployUser2>Administrator</DeployUser2>
+      <DeployPassword2>digi20ums</DeployPassword2>
+      <DeployLocation2>$(DeployShare2)$(DeployTargetFolder)</DeployLocation2>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'Orange_QA'">
+      <DeployUrl1>https://192.168.5.21:8172/MsDeploy.axd</DeployUrl1>
+      <DeployPath1>secure.ums.no/pas/ws_pasqa</DeployPath1>
+      <DeployUrl2>https://192.168.5.26:8172/MsDeploy.axd</DeployUrl2>
+      <DeployPath2>secure.ums.no/pas/ws_pasqa</DeployPath2>
+      <username>Administrator</username>
+      <password>Digi20ums</password>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration) == 'Orange_Prod'">
+      <DeployUrl1>https://192.168.5.21:8172/MsDeploy.axd</DeployUrl1>
+      <DeployPath2>secure.ums.no/pas/ws_pasprod</DeployPath2>
+      <DeployUrl2>https://192.168.5.26:8172/MsDeploy.axd</DeployUrl2>
+      <DeployPath2>secure.ums.no/pas/ws_pasprod</DeployPath2>
+      <username>Administrator</username>
+      <password>Digi20ums</password>
+    </PropertyGroup>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="MsDeployServiceUrl=$(DeployUrl1);username=$(username);password=$(password);DeployIisAppPath=$(DeployPath1);AllowUntrustedCertificate=True" Targets="ResolveReferences;MSDeployPublish" Condition="$(DeployUrl1) != ''" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="MsDeployServiceUrl=$(DeployUrl2);username=$(username);password=$(password);DeployIisAppPath=$(DeployPath2);AllowUntrustedCertificate=True" Targets="ResolveReferences;MSDeployPublish" Condition="$(DeployUrl2) != ''" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" Condition="$(DeployLocation1) != ''" />
+    <TransformXml Source="$(MSBuildProjectDirectory)\Web.config" Transform="$(MSBuildProjectDirectory)\Web.$(Configuration).config" Destination="$(_PackageTempDir)\Web.config" Condition="$(DeployLocation1) != ''" StackTrace="True" />
+    <ItemGroup Condition="$(DeployLocation1) != ''">
+      <DeployFiles Include="$(_PackageTempDir)/**" />
+      <ExistingFiles1 Include="$(DeployLocation1)/*" Condition="$(DeployLocation1) != ''" />
+      <ExistingFolders1 Include="$(DeployLocation1)/*/*" Condition="$(DeployLocation1) != ''" />
+      <ExistingFiles2 Include="$(DeployLocation2)/*" Condition="$(DeployLocation2) != ''" />
+      <ExistingFolders2 Include="$(DeployLocation2)/*/*" Condition="$(DeployLocation2) != ''" />
+    </ItemGroup>
+    <Message Text="***********************************" Importance="high" Condition="$(DeployLocation1) != ''" />
+    <Message Text="Deploying to file location 1 - $(DeployLocation1)" Condition="$(DeployLocation1) != ''" />
+    <Exec Command="net use &quot;$(DeployShare1)&quot; /delete /y" Condition="$(DeployShare1) != '' And $(DeployPassword1) != '' And $(DeployUser1) != ''" IgnoreExitCode="True" />
+    <Exec Command="net use &quot;$(DeployShare1)&quot; &quot;$(DeployPassword1)&quot; /user:&quot;$(DeployUser1)&quot;" Condition="$(DeployShare1) != '' And $(DeployPassword1) != '' And $(DeployUser1) != ''" />
+    <Delete Files="@(ExistingFiles1)" Condition="$(DeployLocation1) != ''" />
+    <RemoveDir Directories="@(ExistingFolders1->'%(RootDir)%(Directory)')" Condition="$(DeployLocation1) != ''" />
+    <Copy SourceFiles="@(DeployFiles)" DestinationFiles="@(DeployFiles->'$(DeployLocation1)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(DeployLocation1) != ''" />
+    <Message Text="***********************************" Importance="high" Condition="$(DeployLocation2) != ''" />
+    <Message Text="Deploying to file location 2 - $(DeployLocation2)" Condition="$(DeployLocation2) != ''" />
+    <Exec Command="net use &quot;$(DeployShare2)&quot; /delete /y" Condition="$(DeployShare2) != '' And $(DeployPassword2) != '' And $(DeployUser2) != ''" IgnoreExitCode="True" />
+    <Exec Command="net use &quot;$(DeployShare2)&quot; &quot;$(DeployPassword2)&quot; /user:&quot;$(DeployUser2)&quot;" Condition="$(DeployShare2) != '' And $(DeployPassword2) != '' And $(DeployUser2) != ''" />
+    <Delete Files="@(ExistingFiles2)" Condition="$(DeployLocation2) != ''" />
+    <RemoveDir Directories="@(ExistingFolders2->'%(RootDir)%(Directory)')" Condition="$(DeployLocation2) != ''" />
+    <Copy SourceFiles="@(DeployFiles)" DestinationFiles="@(DeployFiles->'$(DeployLocation2)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(DeployLocation2) != ''" />
+  </Target>
 </Project>

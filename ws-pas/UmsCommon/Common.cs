@@ -502,18 +502,11 @@ namespace com.ums.UmsCommon
         public static String appname; //global name of application. Used in event logging
         public static bool Initialize(String app, String sysloghost, int syslogport)
         {
-            try
-            {
-                UGlobalizationInfo.NumberDecimalSeparator = ".";
-                appname = app;
-                UPATHS.CheckParameters();
-                USysLog.init(sysloghost, syslogport);
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            UGlobalizationInfo.NumberDecimalSeparator = ".";
+            appname = app;
+            UPATHS.CheckParameters();
+            USysLog.init(sysloghost, syslogport);
+            return true;
         }
         public static void UnInitialize()
         {
@@ -572,17 +565,10 @@ namespace com.ums.UmsCommon
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {
-                try
-                {
-                    DirectoryInfo dInfo = new DirectoryInfo(FileName);
-                    DirectorySecurity dSecurity = dInfo.GetAccessControl();
-                    dSecurity.AddAccessRule(new FileSystemAccessRule(Account, Rights, ControlType));
-                    dInfo.SetAccessControl(dSecurity);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                DirectoryInfo dInfo = new DirectoryInfo(FileName);
+                DirectorySecurity dSecurity = dInfo.GetAccessControl();
+                dSecurity.AddAccessRule(new FileSystemAccessRule(Account, Rights, ControlType));
+                dInfo.SetAccessControl(dSecurity);
             }
 
             public static bool CheckParameters()
@@ -627,16 +613,7 @@ namespace com.ums.UmsCommon
                 return true;
             throw new UFileNotFoundException(String.Format("Path does not exist. {0}", path));
         }
-        public struct UBBDATABASE
-        {
-            public static String sz_dsn;
-            public static String sz_dsn_aoba;
-            public static String sz_uid;
-            public static String sz_pwd;
-            public static String sz_adrdb_dsnbase;
-            public static String sz_adrdb_uid;
-            public static String sz_adrdb_pwd;
-        }
+        
         public static String UGetDateNow() { return String.Format("{0:yyyy}{0:MM}{0:dd}", DateTime.Now.ToLocalTime()); }
         public static String UGetTimeNow() { return String.Format("{0:HH}{0:mm}", DateTime.UtcNow.ToLocalTime()); }
         public static String UGetFullTimeNow() { return String.Format("{0:HH}{0:mm}{0:ss}", DateTime.UtcNow.ToLocalTime()); }
@@ -726,70 +703,57 @@ namespace com.ums.UmsCommon
         public DateTime getDT() { return dt; }
         public long getTimeDiffSec(UDATETIME old)
         {
-            long seconds = 0;
             TimeSpan ts = dt - old.getDT();
             return (long)ts.TotalSeconds;
         }
         protected void createDt()
         {
-            try
+            if (sz_date.Length == 8 && sz_time.Length == 6)
             {
-                if (sz_date.Length == 8 && sz_time.Length == 6)
-                {
-                    int year = int.Parse(sz_date.Substring(0, 4));
-                    int month = int.Parse(sz_date.Substring(4, 2));
-                    int day = int.Parse(sz_date.Substring(6, 2));
-                    int hour = int.Parse(sz_time.Substring(0, 2));
-                    int minute = int.Parse(sz_time.Substring(2, 2));
-                    int second = int.Parse(sz_time.Substring(4, 2));
-                    dt = new DateTime(year, month, day, hour, minute, second);
-                }
-                else if (sz_date.Length == 8 && sz_time.Length == 4)
-                {
-                    int year = int.Parse(sz_date.Substring(0, 4));
-                    int month = int.Parse(sz_date.Substring(4, 2));
-                    int day = int.Parse(sz_date.Substring(6, 2));
-                    int hour = int.Parse(sz_time.Substring(0, 2));
-                    int minute = int.Parse(sz_time.Substring(2, 2));
-                    int second = 0;
-                    dt = new DateTime(year, month, day, hour, minute, second);
-                }
-                else if (sz_date.Length == 8 && sz_time.Length > 0) //assume we use backbone time-style (time = 0..2359). HHMM
-                {
-                    int year = int.Parse(sz_date.Substring(0, 4));
-                    int month = int.Parse(sz_date.Substring(4, 2));
-                    int day = int.Parse(sz_date.Substring(6, 2));
-                    int hour = 0;
-                    int minute = 0;
-                    if (sz_time.Length == 3) //we have hours. HHMM are found in previous else if, search for HMM, MM and M
-                    {
-                        hour = int.Parse(sz_time.Substring(0, 1));
-                        minute = int.Parse(sz_time.Substring(1));
-                    }
-                    else
-                    {
-                        minute = int.Parse(sz_time);
-                    }
-                    int second = 0;
-                    dt = new DateTime(year, month, day, hour, minute, second);
-                }
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = int.Parse(sz_time.Substring(0, 2));
+                int minute = int.Parse(sz_time.Substring(2, 2));
+                int second = int.Parse(sz_time.Substring(4, 2));
+                dt = new DateTime(year, month, day, hour, minute, second);
             }
-            catch (Exception)
+            else if (sz_date.Length == 8 && sz_time.Length == 4)
             {
-                throw;
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = int.Parse(sz_time.Substring(0, 2));
+                int minute = int.Parse(sz_time.Substring(2, 2));
+                int second = 0;
+                dt = new DateTime(year, month, day, hour, minute, second);
+            }
+            else if (sz_date.Length == 8 && sz_time.Length > 0) //assume we use backbone time-style (time = 0..2359). HHMM
+            {
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = 0;
+                int minute = 0;
+                if (sz_time.Length == 3) //we have hours. HHMM are found in previous else if, search for HMM, MM and M
+                {
+                    hour = int.Parse(sz_time.Substring(0, 1));
+                    minute = int.Parse(sz_time.Substring(1));
+                }
+                else
+                {
+                    minute = int.Parse(sz_time);
+                }
+                int second = 0;
+                dt = new DateTime(year, month, day, hour, minute, second);
             }
         }
+
         public UDATETIME(Int64 datetime)
         {
-            try
-            {
-                genDate(datetime);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            genDate(datetime);
         }
+
         protected void genDate(Int64 datetime)
         {
             try
@@ -836,22 +800,15 @@ namespace com.ums.UmsCommon
         }
         public long getDateTime()
         {
-            try
+            if (sz_date.Length == 8 && (sz_time.Length == 6 || sz_time.Length == 4))
             {
-                if (sz_date.Length == 8 && (sz_time.Length == 6 || sz_time.Length == 4))
-                {
-                    if (sz_time.Length == 6)
-                        return long.Parse(sz_date + sz_time);
-                    else
-                        return long.Parse(sz_date + sz_time + "00");
-                }
+                if (sz_time.Length == 6)
+                    return long.Parse(sz_date + sz_time);
                 else
-                    return 0;
+                    return long.Parse(sz_date + sz_time + "00");
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            else
+                return 0;
         }
     }
 

@@ -16,8 +16,8 @@ namespace com.ums.PAS.Database
 {
     public class UStatusListDb : PASUmsDb
     {
-        public UStatusListDb(UmsDbConnParams conn) 
-            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, 60)
+        public UStatusListDb(String conn) 
+            : base(conn, 60)
         {
 
         }

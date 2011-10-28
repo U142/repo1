@@ -57,12 +57,7 @@ namespace com.ums.PAS.Status
         }
         public IStatusListResults Find()
         {
-            UmsDbConnParams conn = new UmsDbConnParams();
-            conn.sz_dsn = UCommon.UBBDATABASE.sz_dsn;
-            conn.sz_uid = UCommon.UBBDATABASE.sz_uid;
-            conn.sz_pwd = UCommon.UBBDATABASE.sz_pwd;
-
-            UStatusListDb db = new UStatusListDb(conn);
+            UStatusListDb db = new UStatusListDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString);
             UStatusListResults list = db.GetStatusList(ref m_logon, m_filter);
             db.close();
             return list;

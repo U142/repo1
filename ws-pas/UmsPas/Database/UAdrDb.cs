@@ -22,52 +22,14 @@ namespace com.ums.PAS.Database
         /*
          * Connect to "vb_adr_" + sz_stdcc depending on which database to access
          */
-        public UAdrDb(UmsDbConnParams conn, String sz_stdcc, int timeout, int n_deptpk) 
+        public UAdrDb(String sz_stdcc, int timeout, int n_deptpk) 
             : base(timeout)
             //: base(conn.sz_dsn + sz_stdcc + (n_pastype==2 ? "_reg" : ""), conn.sz_uid, conn.sz_pwd, timeout)
         {
             m_n_deptpk = n_deptpk;
             try
             {
-                Connect(sz_stdcc, conn.sz_dsn, conn.sz_uid, conn.sz_pwd, n_deptpk);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        /*public UAdrDb(UmsDbConnParams conn, int timeout, int n_deptpk)
-            //: base(conn.sz_dsn + (n_pastype==2 ? "_reg" : ""), conn.sz_uid, conn.sz_pwd, timeout)
-            : base(timeout)
-        {
-            m_n_deptpk = n_deptpk;
-            try
-            {
-                Connect(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, n_deptpk);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }*/
-
-        /*always connect to reg db*/
-        /*public UAdrDb(String sz_stdcc)
-            : base(UCommon.UBBDATABASE.sz_adrdb_dsnbase + sz_stdcc + "_reg", UCommon.UBBDATABASE.sz_adrdb_uid,
-            UCommon.UBBDATABASE.sz_adrdb_pwd, 120)
-        {
-
-        }*/
-
-        public UAdrDb(String sz_stdcc, int timeout, int n_deptpk)
-            : base(timeout)
-            //: base(UCommon.UBBDATABASE.sz_adrdb_dsnbase + sz_stdcc + (n_pastype==2 ? "_reg" : ""), UCommon.UBBDATABASE.sz_adrdb_uid, UCommon.UBBDATABASE.sz_adrdb_pwd, timeout)
-        {
-            m_n_deptpk = n_deptpk;
-            try
-            {
-                Connect(sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_dsnbase, UCommon.UBBDATABASE.sz_adrdb_uid,
-                    UCommon.UBBDATABASE.sz_adrdb_pwd, n_deptpk);
+                Connect(sz_stdcc, n_deptpk);
             }
             catch (Exception)
             {
@@ -79,8 +41,7 @@ namespace com.ums.PAS.Database
         {
             try
             {
-                Connect(sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_dsnbase, UCommon.UBBDATABASE.sz_adrdb_uid,
-                    UCommon.UBBDATABASE.sz_adrdb_pwd, -1);
+                Connect(sz_stdcc, -1);
             }
             catch (Exception)
             {
@@ -89,7 +50,7 @@ namespace com.ums.PAS.Database
         }
 
         /*used for address databases only*/
-        public bool Connect(string sz_stdcc, string sz_dsn, string sz_uid, string sz_password, int n_deptpk)
+        public bool Connect(string sz_stdcc, int n_deptpk)
         {
             if (!UCommon.USETTINGS.b_enable_adrdb)
             {
@@ -102,12 +63,10 @@ namespace com.ums.PAS.Database
                 if (m_n_pastype <= 0)
                     throw new ULogonFailedException();
 
-                String dsn = "";
-                dsn = sz_dsn;
-                dsn += sz_stdcc;
+                String dsn = "address_" + sz_stdcc;
                 if (m_n_pastype == 2)
                     dsn += "_reg";
-                sz_constring = String.Format("DSN={0}; UID={1}; PWD={2}", dsn, sz_uid, sz_password);
+                sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
                 db.close();
                 return init();
             }

@@ -18,13 +18,13 @@ namespace com.ums.PAS.Database
 {
     public class UStatusItemsDb : PASUmsDb
     {
-        public UStatusItemsDb(UmsDbConnParams conn) 
-            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, 180)
+        public UStatusItemsDb(String conn) 
+            : base(conn, 180)
         {
 
         }
         public UStatusItemsDb()
-            : base(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
+            : base(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120)
         {
 
         }

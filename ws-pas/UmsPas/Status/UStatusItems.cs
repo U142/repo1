@@ -66,14 +66,9 @@ namespace com.ums.PAS.Status
         public byte[] Find()
         {
             //Connect to database
-            UmsDbConnParams dbparams = new UmsDbConnParams();
-            dbparams.sz_dsn = UCommon.UBBDATABASE.sz_dsn;
-            dbparams.sz_uid = UCommon.UBBDATABASE.sz_uid;
-            dbparams.sz_pwd = UCommon.UBBDATABASE.sz_pwd;
-
             try
             {
-                m_db = new UStatusItemsDb(dbparams);
+                m_db = new UStatusItemsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString);
             }
             catch (Exception)
             {

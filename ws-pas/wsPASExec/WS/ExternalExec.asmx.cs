@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -658,7 +659,7 @@ namespace com.ums.ws.parm
             //ret.sz_jobid = sz_jobid;
             try
             {
-                PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
+                PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 60);
                 if (!db.CheckLogon(ref logon, true))
                 {
                     //logon failed
@@ -742,7 +743,7 @@ namespace com.ums.ws.parm
             ret.sz_jobid = sz_jobid;
             try
             {
-                PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
+                PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 60);
                 if (!db.CheckLogon(ref logon, true))
                 {
                     //logon failed

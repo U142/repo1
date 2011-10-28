@@ -45,8 +45,7 @@ namespace com.ums.VB
 
         private void openConnection()
         {
-            conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
-            //conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]));
+            conn = new OdbcConnection(ConfigurationManager.ConnectionStrings["info"].ConnectionString);
             conn.Open();
             cmd = new OdbcCommand();
             cmd.Connection = conn;

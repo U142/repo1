@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Data.Odbc;
@@ -82,14 +83,14 @@ namespace com.ums.UmsDbLib
         }
 
 
-        public UmsDb(string sz_dsn, string sz_uid, string sz_password, int timeout)
+        public UmsDb(string constring, int timeout)
         {
-            sz_constring = String.Format("DSN={0}; UID={1}; PWD={2}", sz_dsn, sz_uid, sz_password);
+            this.sz_constring = constring;
             this.timeout = timeout;
             init();
         }
 
-        public UmsDb() : this(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
+        public UmsDb() : this(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120)
         {
             
         }
@@ -294,10 +295,6 @@ namespace com.ums.UmsDbLib
 
                 return true;
             }
-            catch (Exception e)
-            {
-                throw;
-            }
             finally
             {
                 if (rs != null && !rs.IsClosed)
@@ -324,10 +321,6 @@ namespace com.ums.UmsDbLib
                     throw new USessionDoesNotExsistException();
                 }
             }
-            catch (Exception e)
-            {
-                throw;
-            }
             finally
             {
                 if (rs != null && !rs.IsClosed)
@@ -351,7 +344,7 @@ namespace com.ums.UmsDbLib
                 rs.Close();
 
             }
-            catch (Exception e)
+            catch
             {
             }
             finally
@@ -418,10 +411,6 @@ namespace com.ums.UmsDbLib
                 }
                 rs.Close();
                 return list;
-            }
-            catch (Exception e)
-            {
-                throw;
             }
             finally
             {
@@ -546,10 +535,6 @@ namespace com.ums.UmsDbLib
                 rs.Close();
                 return list;
             }
-            catch (Exception e)
-            {
-                throw;
-            }
             finally
             {
                 if (rs != null && !rs.IsClosed)
@@ -596,14 +581,7 @@ namespace com.ums.UmsDbLib
             catch (Exception)
             {
             }
-            try
-            {
-                conn.Close();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            conn.Close();
         }
         public long newRefno()
         {

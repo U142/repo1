@@ -281,14 +281,7 @@ namespace com.ums.UmsFile
         }
         public override bool publish()
         {
-            try
-            {
-                sw.Close();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            sw.Close();
             //UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
             String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
             UFile desttemp = new UFile(UCommon.UPATHS.sz_path_lba, tempfile);
@@ -318,7 +311,7 @@ namespace com.ums.UmsFile
             this.file = new UFile(UCommon.UPATHS.sz_path_bcp, String.Format("pri{0}-{1}{2}.{3}", n_priority, sendingtype, l_refno, "res"));
             open();
         }
-        public virtual bool publish()
+        public override bool publish()
         {
             try
             {
@@ -375,15 +368,8 @@ namespace com.ums.UmsFile
         }
         public virtual bool delete()
         {
-            try
-            {
-                File.Delete(this.file.full());
-                return true;
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            File.Delete(this.file.full());
+            return true;
         }
         public virtual bool publish()
         {
@@ -453,18 +439,9 @@ namespace com.ums.UmsFile
         }
         virtual public bool writeline(String s)
         {
-            try
-            {
-                sw.WriteLine(s);
-                sw.Flush();
-                return true;
-            }
-            catch (Exception e)
-            {
-                //ULog.error(e.Message);
-                //return false;
-                throw;
-            }
+            sw.WriteLine(s);
+            sw.Flush();
+            return true;
         }
         virtual public void close()
         {

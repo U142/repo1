@@ -28,22 +28,18 @@ namespace com.ums.UmsCommon.CoorConvert
 	        double x, y;
 	        int ZoneNumber;
 	        //char ZoneLetter;
-	        int NorthernHemisphere; //1 for northern hemispher, 0 for southern
 
-	        x = UTMEasting - 500000.0; //remove 500,000 meter offset for longitude
+            x = UTMEasting - 500000.0; //remove 500,000 meter offset for longitude
 	        y = UTMNorthing;
 
 
             ZoneNumber = int.Parse(UTMZone);//strtoul(UTMZone, &ZoneLetter, 10);
-	        if((ZoneLetter - 'N') >= 0)
-		        NorthernHemisphere = 1;//point is in northern hemisphere
-	        else
-	        {
-		        NorthernHemisphere = 0;//point is in southern hemisphere
-		        y -= 10000000.0;//remove 10,000,000 meter offset used for southern hemisphere
-	        }
+            if ((ZoneLetter - 'N') < 0)
+            {
+                y -= 10000000.0; //remove 10,000,000 meter offset used for southern hemisphere
+            }
 
-	        LongOrigin = (ZoneNumber - 1.0)*6.0 - 180.0 + 3.0;  //+3 puts origin in middle of zone
+            LongOrigin = (ZoneNumber - 1.0)*6.0 - 180.0 + 3.0;  //+3 puts origin in middle of zone
 
 	        eccPrimeSquared = (eccSquared)/(1.0-eccSquared);
 
