@@ -636,13 +636,14 @@ namespace com.ums.UmsParm
                     }
                     else
                     {
-                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                         db.SetLBAStatus(lbasending.l_refno, 41100);
                     }
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    ULog.error(tassending.l_refno, e.ToString());
                 }
             }
 
@@ -667,13 +668,14 @@ namespace com.ums.UmsParm
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                                 db.SetLBAStatus(lbasending.l_refno, 41100);
                             }
                         }
                         catch (Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            ULog.error(lbasending.l_refno, e.ToString());
                         }
                     }
                     else
@@ -1228,13 +1230,14 @@ namespace com.ums.UmsParm
                     }
                     else
                     {
-                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                         db.SetLBAStatus(lbasending.l_refno, 41100);
                     }
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    ULog.error(tassending.l_refno, e.ToString());
+                    setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                 }
             }
 
@@ -1272,13 +1275,14 @@ namespace com.ums.UmsParm
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                                 db.SetLBAStatus(lbasending.l_refno, 41100);
                             }
                         }
                         catch (Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            ULog.error(lbasending.l_refno, e.ToString());
                         }
                     }
                     else
@@ -1745,8 +1749,8 @@ namespace com.ums.UmsParm
                             catch (Exception e)
                             {
                                 //this is not important for the sending, so continue
-                                ULog.warning(lbasending.l_refno, "Could not publish [SMS] GUI address file. Only required for status view.", e.ToString());
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                                ULog.warning(lbasending.l_refno, "Could not publish [LBA] GUI address file. Only required for status view.", e.ToString());
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [LBA] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                             }
 
                             b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, 0, 0);
@@ -1758,13 +1762,14 @@ namespace com.ums.UmsParm
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                                 db.SetLBAStatus(sending.l_refno, 41100);
                             }
                         }
                         catch(Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            ULog.error(lbasending.l_refno, e.ToString());
                         }
                     }
                     else
@@ -2016,7 +2021,7 @@ namespace com.ums.UmsParm
                         if (sending.publishLBAFile())
                             setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                         else
-                            setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                     }
                     else
                     {

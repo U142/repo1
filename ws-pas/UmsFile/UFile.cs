@@ -219,7 +219,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
+                ULog.error(n_refno, String.Format("Error publishing LBA addressfile {0} to {1}. {2}", file.full(), dest.full(), e.ToString()), e.ToString());
                 throw;
 
             }
@@ -259,7 +259,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
+                ULog.error(n_refno, String.Format("Error publishing LBA addressfile {0} to {1}. {2}", file.full(), dest.full(), e.ToString()), e.ToString());
                 throw;
 
             }
@@ -333,7 +333,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                ULog.error(n_refno, "Error publishing addressfile", e.Message);
+                ULog.error(n_refno, String.Format("Error publishing TAS Resend {0} to {1}. {2}", file.full(), dest.full(), e.ToString()), e.ToString());
                 throw;
             }
         }
@@ -393,7 +393,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                ULog.error(n_refno, "Error publishing addressfile", e.Message);
+                ULog.error(n_refno, String.Format("Error publishing addressfile {0} to {1}. {2}", file.full(), dest.full(), e.ToString()), e.ToString());
                 throw;
             }
         }
