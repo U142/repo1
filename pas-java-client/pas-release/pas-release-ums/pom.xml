@@ -64,7 +64,7 @@
                 <jnlp_title>UMS Population Alert System</jnlp_title>
                 <jnlp_codebase_url>http://192.168.5.21/PAS/pasqa/</jnlp_codebase_url>
                 <jnlp_s>http://192.168.5.21/PAS/</jnlp_s>
-                <jnlp_w>http://192.168.5.21/PAS/ws_pasqa/WS/</jnlp_w>
+                <jnlp_w>http://192.168.5.21/PAS/ws_pas_qa/WS/</jnlp_w>
                 <jnlp_v>http://192.168.5.21/gas/</jnlp_v>
             </properties>
         </profile>
@@ -74,7 +74,7 @@
                 <jnlp_title>UMS Population Alert System</jnlp_title>
                 <jnlp_codebase_url>http://192.168.5.21/PAS/pasprod/</jnlp_codebase_url>
                 <jnlp_s>http://192.168.5.21/PAS/</jnlp_s>
-                <jnlp_w>http://192.168.5.21/PAS/ws_pasprod/WS/</jnlp_w>
+                <jnlp_w>http://192.168.5.21/PAS/ws_pas/WS/</jnlp_w>
                 <jnlp_v>http://192.168.5.21/gas/</jnlp_v>
             </properties>
         </profile>
