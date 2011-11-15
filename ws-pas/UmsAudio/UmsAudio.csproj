@@ -36,6 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_Prod|AnyCPU'">
     <OutputPath>bin\Orange_Prod\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_QA|AnyCPU'">
     <OutputPath>bin\Orange_QA\</OutputPath>

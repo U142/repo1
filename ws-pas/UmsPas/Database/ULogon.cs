@@ -295,10 +295,6 @@ namespace com.ums.PAS.Database
 
                 return ret;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (rs != null && !rs.IsClosed)
