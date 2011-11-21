@@ -16,6 +16,7 @@ import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Utils;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,6 +26,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JToolTip;
 import javax.swing.ListCellRenderer;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
@@ -330,14 +332,14 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_combo_language = new JComboBox();
 			m_lbl_errormsg.setForeground(Color.RED);
 			m_btn_submit = new JButton(Localization.l("common_submit"));
-			m_txt_userid.setPreferredSize(new Dimension(100, 19));
-			m_txt_compid.setPreferredSize(new Dimension(100, 19));
-			m_txt_passwd.setPreferredSize(new Dimension(100, 19));
-			m_combo_language.setPreferredSize(new Dimension(100,19));
-			m_lbl_userid.setPreferredSize(new Dimension(100, 19));
-			m_lbl_compid.setPreferredSize(new Dimension(100, 19));
-			m_lbl_passwd.setPreferredSize(new Dimension(100, 19));
-			m_lbl_language.setPreferredSize(new Dimension(100, 19));
+			m_txt_userid.setPreferredSize(new Dimension(110, 19));
+			m_txt_compid.setPreferredSize(new Dimension(110, 19));
+			m_txt_passwd.setPreferredSize(new Dimension(110, 19));
+			m_combo_language.setPreferredSize(new Dimension(110,22));
+			m_lbl_userid.setPreferredSize(new Dimension(110, 19));
+			m_lbl_compid.setPreferredSize(new Dimension(110, 19));
+			m_lbl_passwd.setPreferredSize(new Dimension(110, 19));
+			m_lbl_language.setPreferredSize(new Dimension(110, 19));
 			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
 			m_lbl_errormsg.setPreferredSize(new Dimension(390, 15));
 			m_btn_submit.setActionCommand(ENABLE);
@@ -353,12 +355,35 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_txt_passwd.addKeyListener(this);
 			this.addFocusListener(this);
 			m_txt_passwd.addFocusListener(this);
-			m_combo_language.setRenderer(new ListCellRenderer() {
+
+			m_combo_language.setRenderer(new ListCellRenderer() {				
+				@Override
 				public Component getListCellRendererComponent(JList list, Object value,
 						int index, boolean isSelected, boolean cellHasFocus) {
-					return (StdTextLabel)value;
+					if(value instanceof StdTextLabel)
+					{
+						StdTextLabel ta = (StdTextLabel)value;
+						ta.setOpaque(true);
+						if(isSelected)
+						{
+							Color cb = UIManager.getColor("ComboBox.selectionBackground");
+							Color cf = UIManager.getColor("ComboBox.selectionForeground");
+							ta.setBackground(cb);
+							ta.setForeground(cf);
+						}
+						else
+						{
+							Color cb = UIManager.getColor("ComboBox.background");
+							Color cf = UIManager.getColor("ComboBox.foreground");
+							ta.setBackground(cb);
+							ta.setForeground(cf);
+						}
+						return ta;
+					}
+					return new JLabel(value.toString());
 				}
 			});
+			
 			m_combo_language.addActionListener(this);
 			m_combo_language.setActionCommand("act_language_changed");
 			

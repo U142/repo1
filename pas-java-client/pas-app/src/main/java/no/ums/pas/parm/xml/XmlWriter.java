@@ -1635,7 +1635,47 @@ public class XmlWriter {
 		}
 		writeXMLFile(polyxmlDoc,ParmConstants.polyxmlLocation);
 	}
-	
+	public void saveLanguage()
+	{
+		Settings settings = PAS.get_pas().get_settings();
+		Document doc = getXMLDocument(StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini",StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini");
+		
+		Element element = null;
+		Element rootnd = doc.getDocumentElement();
+		
+		if(!doc.hasChildNodes()) {
+			rootnd = (Element) doc.createElement("settings");
+			doc.appendChild(rootnd);
+		}
+		NodeList nl;
+		Element userchild = null;
+
+		nl = rootnd.getElementsByTagName("defaultuser");
+		
+		if(nl.getLength() < 1) {
+			element = (Element) doc.createElement("defaultuser");
+			rootnd.appendChild(element);
+		}
+		else
+			element = (Element)nl.item(0);
+		
+		nl = element.getElementsByTagName("language");
+		if(nl.getLength() < 1) {
+			userchild = (Element) doc.createElement("language");
+			element.appendChild(userchild);
+		} else
+			userchild = (Element)nl.item(0);
+		String lang = settings.getLanguage();
+		userchild.setTextContent(lang);
+		try
+		{
+			writeXMLFile(doc,StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini");
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
 	public void saveSettings(boolean b_save_default_user) {
 		Settings settings = PAS.get_pas().get_settings();
 		Document doc = getXMLDocument(StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini",StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini");
