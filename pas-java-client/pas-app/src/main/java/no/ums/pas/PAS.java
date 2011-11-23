@@ -81,6 +81,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -1095,7 +1096,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			printStackTrace(e.getStackTrace());
 			Error.getError().addError(Localization.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
 		}
-		
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                pasplugin.onSetInitialMapBounds(get_navigation(), get_userinfo());
+                removeWindowListener(this);
+            }
+        });
+
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -1105,8 +1114,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				try
 				{
 					pasplugin.onAddPASComponents(PAS.this);
-					pasplugin.onSetInitialMapBounds(get_navigation(), get_userinfo());
-					m_mappane.initialize();
+                    m_mappane.initialize();
 					try {
 						kickRepaint();
 					} catch(Exception e) {
@@ -1446,37 +1454,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public synchronized void kickRepaint()
 	{
-		//if(get_drawthread().m_b_needrepaint)
-		//	return;
-		try
-		{
-			if(get_drawthread()!=null) {
-//			m_mapimg = img;
-                //if(m_b_needrepaint==0)
-                //m_b_needrepaint ++;
-            }
-		}
-		catch(Exception e)
-		{
-			
-		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-				//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-				//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 				get_mappane().repaint();
 				get_mappane().validate();
 			}
 		});
-		/*if(m_n_repaints % 20 == 0) {
-			this.repaint();
-			m_n_repaints = 0;
-		}
-		else {
-			get_mappane().repaint();
-		}*/
 		m_n_repaints ++;
 	}
 	public synchronized void kickRepaint(Rectangle r)
