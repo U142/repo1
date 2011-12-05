@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -32,7 +33,7 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
             final ZoomLookup zoomLookup = getZoomLookup(zoom);
             final LonLat ll1 = zoomLookup.getLonLat(column * TILE_SIZE, row * TILE_SIZE);
             final LonLat ll2 = zoomLookup.getLonLat(column * TILE_SIZE + TILE_SIZE, row * TILE_SIZE + TILE_SIZE);
-            String query = String.format("SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=,&SRS=EPSG:4326&VERSION=%s", getLayers(), getFormat(), ll1.getLon(), ll2.getLat(), ll2.getLon(), ll1.getLat(), TILE_SIZE, TILE_SIZE, getVersion());
+            String query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=,&SRS=EPSG:4326&VERSION=%s", getLayers(), getFormat(), ll1.getLon(), ll2.getLat(), ll2.getLon(), ll1.getLat(), TILE_SIZE, TILE_SIZE, getVersion());
             return new URI(getScheme(), getHost(), getPath(), query, null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);

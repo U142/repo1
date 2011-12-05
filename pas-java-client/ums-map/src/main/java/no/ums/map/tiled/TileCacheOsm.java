@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -22,7 +23,7 @@ public class TileCacheOsm extends AbstractTileCacheUri {
     protected URI createUri(int zoom, int column, int row) {
         try {
             final String host = "abc".charAt((int) (3 * Math.random())) + ".tile.openstreetmap.org";
-            return new URI("http", host, String.format("/%d/%d/%d.png", zoom, column, row), null);
+            return new URI("http", host, String.format(Locale.ENGLISH, "/%d/%d/%d.png", zoom, column, row), null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);
         }

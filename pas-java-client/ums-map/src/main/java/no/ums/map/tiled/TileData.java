@@ -1,5 +1,7 @@
 package no.ums.map.tiled;
 
+import java.util.Locale;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
@@ -83,6 +85,6 @@ public final class TileData {
 
     @Override
     public String toString() {
-        return String.format("TileData{(z:%d, r: %d, c: %d) (x: %d, y: %d) (%d x %d)}", zoom, row, column, x, y, width, height);
+        return String.format(Locale.ENGLISH, "TileData{(z:%d, r: %d, c: %d) (x: %d, y: %d) (%d x %d)}", zoom, row, column, x, y, width, height);
     }
 }

@@ -13,6 +13,7 @@ import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 import java.awt.Container;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +29,7 @@ public class TestFrame extends JFrame {
                 final long totalMemory = Runtime.getRuntime().totalMemory();
                 final long freeMemory = Runtime.getRuntime().freeMemory();
                 final long usedMemory = totalMemory - freeMemory;
-                lblMem.setText(String.format("%5.2fM of %5.2fM used", usedMemory / (Math.pow(1024, 2)), totalMemory / (Math.pow(1024, 2))));
+                lblMem.setText(String.format(Locale.ENGLISH, "%5.2fM of %5.2fM used", usedMemory / (Math.pow(1024, 2)), totalMemory / (Math.pow(1024, 2))));
                 prgMem.getModel().setMinimum(0);
                 prgMem.getModel().setMaximum((int) (totalMemory / 1024));
                 prgMem.getModel().setValue((int) (usedMemory / 1024));

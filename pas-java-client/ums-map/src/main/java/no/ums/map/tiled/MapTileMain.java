@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Locale;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -36,8 +37,8 @@ public class MapTileMain {
                         final MapComponent map = (MapComponent) e.getComponent();
                         final ZoomLookup zoomLookup = map.getTileLookup().getZoomLookup(map.getModel().getZoom());
                         final LonLat ll = zoomLookup.getLonLat(map.getModel().getTopLeft(), e.getX(), e.getY());
-                        mainFrame.getLblLon().setText(String.format("%8.2f", ll.getLon()));
-                        mainFrame.getLblLat().setText(String.format("%8.2f", ll.getLat()));
+                        mainFrame.getLblLon().setText(String.format(Locale.ENGLISH, "%8.2f", ll.getLon()));
+                        mainFrame.getLblLat().setText(String.format(Locale.ENGLISH, "%8.2f", ll.getLat()));
                         mainFrame.getLblZoom().setText(String.valueOf(zoomLookup.getZoomLevel()));
                     }
                 });

@@ -291,7 +291,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     PAS.get_pas().waitForFirstMap();
 
                     log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
-                    log.debug(String.format("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
+                    log.debug(String.format(Locale.ENGLISH, "Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
                     if (PAS.get_pas().get_parmcontroller() != null) {
                         return null;
                     }
