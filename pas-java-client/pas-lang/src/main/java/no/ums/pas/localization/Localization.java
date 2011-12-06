@@ -5,6 +5,9 @@ import no.ums.log.UmsLog;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Central handle for localization messages.
@@ -17,6 +20,11 @@ public enum Localization {
 
     public static String l(String key) {
         return INSTANCE.val.l(key);
+    }
+    
+    public static Map<String,String> valuesStartingWith(String prefix)
+    {
+    	return INSTANCE.val.valueList(prefix);
     }
 
     private lang val = new lang(new Locale("en", "GB"), false, new DefaultLangError());

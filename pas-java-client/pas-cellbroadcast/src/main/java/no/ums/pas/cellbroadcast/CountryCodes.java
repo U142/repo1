@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@Deprecated
 public enum CountryCodes {
     INSTANCE;
 
