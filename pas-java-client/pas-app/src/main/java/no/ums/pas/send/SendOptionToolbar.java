@@ -1151,7 +1151,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//_SelectAddressSelection(m_n_addresstypes);
 		
 		if(PAS.get_pas() != null)
-			add_municipals(m_radio_sendingtype_municipal, menu_municipals, "Select municipals");
+			add_municipals(m_radio_sendingtype_municipal, menu_municipals, Localization.l("main_sending_type_municipal_select"));
 		
 		lock_sending(false);
 	}

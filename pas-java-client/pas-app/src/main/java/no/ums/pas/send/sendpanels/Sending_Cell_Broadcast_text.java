@@ -796,7 +796,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		UpdateTextFields();
 		m_cbx_messages.setSelectedIndex(-1);
 		m_btn_delete.setEnabled(false);
-		m_btn_add.setText("Add");
+		m_btn_add.setText(Localization.l("common_add"));
 	}
 	protected void UpdateTextFields() {
 		set_size_label(m_txt_messagetext.getText(), m_lbl_messagesize);		
