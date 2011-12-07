@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordStrength;
+import no.ums.pas.localization.Localization;
 
 import org.jdesktop.beansbinding.AbstractBean;
 
@@ -22,26 +23,26 @@ public class PasswordUpdateModel extends AbstractBean {
 	{
 		PasswordStrength ret = PasswordStrength.TOO_WEAK;
 		String s = (getNewpassword()!=null ? getNewpassword() : "");
-		String strength = "Too weak";
+		String strength = Localization.l("mainmenu_update_password_too_weak");
 		Pattern pEnough = Pattern.compile("[(?=.{6,}).*]");
 		Pattern pMedium = Pattern.compile("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$");
 		Pattern pStrong = Pattern.compile("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$");
 		Matcher m = pEnough.matcher(s);
 		if(m.find())
 		{
-			strength = "Weak";
+			strength = Localization.l("mainmenu_update_password_weak");
 			ret = PasswordStrength.WEAK;
 		}
 		m = pMedium.matcher(s);
 		if(m.find())
 		{
-			strength = "Medium";
+			strength = Localization.l("mainmenu_update_password_medium");
 			ret = PasswordStrength.MEDIUM;
 		}
 		m = pStrong.matcher(s);
 		if(m.find())
 		{
-			strength = "Strong";
+			strength = Localization.l("mainmenu_update_password_strong");
 			ret = PasswordStrength.STRONG;
 		}
 		
