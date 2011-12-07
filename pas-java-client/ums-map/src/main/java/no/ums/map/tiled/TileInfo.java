@@ -14,11 +14,11 @@ public class TileInfo {
 
     private final ImmutableList<TileData> tileData;
 
-    public TileInfo(Iterable<TileData> tileData) {
+    public TileInfo(final Iterable<TileData> tileData) {
 
         final TileData[] sorted = Iterables.toArray(tileData, TileData.class);
         Arrays.sort(sorted, new Comparator<TileData>() {
-            public int compare(TileData o1, TileData o2) {
+            public int compare(final TileData o1, final TileData o2) {
                 return ComparisonChain.start()
                         .compare(o1.getY(), o2.getY())
                         .compare(o1.getX(), o2.getX())
@@ -28,7 +28,7 @@ public class TileInfo {
         this.tileData = ImmutableList.copyOf(sorted);
     }
 
-    public ImmutableList<TileData> getTileData() {
+    public final ImmutableList<TileData> getTileData() {
         return tileData;
     }
 

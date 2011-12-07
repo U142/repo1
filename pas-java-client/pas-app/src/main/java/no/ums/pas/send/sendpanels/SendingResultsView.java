@@ -90,129 +90,129 @@ public class SendingResultsView extends JDialog {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
-		btnYes = new JButton();
-		btnNo = new JButton();
-		lblOpenStatus = new JLabel();
-		scrollPane1 = new JScrollPane();
-		lblResult = new JLabel();
-		btnOk = new JButton();
-		sendingResultsModel1 = new SendingResultsModel();
+        ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
+        btnYes = new JButton();
+        btnNo = new JButton();
+        lblOpenStatus = new JLabel();
+        scrollPane1 = new JScrollPane();
+        lblResult = new JLabel();
+        btnOk = new JButton();
+        sendingResultsModel1 = new SendingResultsModel();
 
-		//======== this ========
-		setTitle(bundle.getString("quicksend_dlg_results"));
-		setModal(true);
-		setResizable(false);
-		setAlwaysOnTop(true);
-		Container contentPane = getContentPane();
+        //======== this ========
+        setTitle(bundle.getString("quicksend_dlg_results"));
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        Container contentPane = getContentPane();
 
-		//---- btnYes ----
-		btnYes.setText(bundle.getString("common_yes"));
-		btnYes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				btnYesActionPerformed(e);
-			}
-		});
+        //---- btnYes ----
+        btnYes.setText(bundle.getString("common_yes"));
+        btnYes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnYesActionPerformed(e);
+            }
+        });
 
-		//---- btnNo ----
-		btnNo.setText(bundle.getString("common_no"));
-		btnNo.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				btnNoActionPerformed(e);
-			}
-		});
+        //---- btnNo ----
+        btnNo.setText(bundle.getString("common_no"));
+        btnNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnNoActionPerformed(e);
+            }
+        });
 
-		//---- lblOpenStatus ----
-		lblOpenStatus.setText(bundle.getString("quicksend_dlg_open_status"));
+        //---- lblOpenStatus ----
+        lblOpenStatus.setText(bundle.getString("quicksend_dlg_open_status"));
 
-		//======== scrollPane1 ========
-		{
+        //======== scrollPane1 ========
+        {
 
-			//---- lblResult ----
-			lblResult.setVerticalAlignment(SwingConstants.TOP);
-			scrollPane1.setViewportView(lblResult);
-		}
+            //---- lblResult ----
+            lblResult.setVerticalAlignment(SwingConstants.TOP);
+            scrollPane1.setViewportView(lblResult);
+        }
 
-		//---- btnOk ----
-		btnOk.setText(bundle.getString("common_ok"));
-		btnOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				btnOkActionPerformed(e);
-			}
-		});
+        //---- btnOk ----
+        btnOk.setText(bundle.getString("common_ok"));
+        btnOk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnOkActionPerformed(e);
+            }
+        });
 
-		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-		contentPane.setLayout(contentPaneLayout);
-		contentPaneLayout.setHorizontalGroup(
-			contentPaneLayout.createParallelGroup()
-				.addGroup(contentPaneLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(contentPaneLayout.createParallelGroup()
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-							.addComponent(lblOpenStatus)
-							.addGap(129, 129, 129))
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addComponent(btnYes, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
-							.addComponent(btnNo, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
-						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-							.addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-							.addGap(153, 153, 153))))
-		);
-		contentPaneLayout.setVerticalGroup(
-			contentPaneLayout.createParallelGroup()
-				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-					.addGap(18, 18, 18)
-					.addComponent(lblOpenStatus)
-					.addGap(18, 18, 18)
-					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addComponent(btnNo)
-						.addComponent(btnYes))
-					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-					.addComponent(btnOk)
-					.addGap(30, 30, 30))
-		);
-		pack();
-		setLocationRelativeTo(getOwner());
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addComponent(lblOpenStatus)
+                            .addGap(129, 129, 129))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(btnYes, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                            .addComponent(btnNo, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+                            .addGap(153, 153, 153))))
+        );
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                    .addGap(18, 18, 18)
+                    .addComponent(lblOpenStatus)
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnNo)
+                        .addComponent(btnYes))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(btnOk)
+                    .addGap(30, 30, 30))
+        );
+        pack();
+        setLocationRelativeTo(getOwner());
 
-		//---- bindings ----
-		bindingGroup = new BindingGroup();
-		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-			sendingResultsModel1, BeanProperty.create("resText"),
-			lblResult, BeanProperty.create("text")));
-		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
-			lblOpenStatus, BeanProperty.create("visible")));
-		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
-			btnNo, BeanProperty.create("visible")));
-		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-			sendingResultsModel1, BeanProperty.create("statusOpened"),
-			btnOk, BeanProperty.create("visible")));
-		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
-			btnYes, BeanProperty.create("visible")));
-		bindingGroup.bind();
+        //---- bindings ----
+        bindingGroup = new BindingGroup();
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            sendingResultsModel1, BeanProperty.create("resText"),
+            lblResult, BeanProperty.create("text")));
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+            lblOpenStatus, BeanProperty.create("visible")));
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+            btnNo, BeanProperty.create("visible")));
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            sendingResultsModel1, BeanProperty.create("statusOpened"),
+            btnOk, BeanProperty.create("visible")));
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+            btnYes, BeanProperty.create("visible")));
+        bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JButton btnYes;
-	private JButton btnNo;
-	private JLabel lblOpenStatus;
-	private JScrollPane scrollPane1;
-	private JLabel lblResult;
-	private JButton btnOk;
-	private SendingResultsModel sendingResultsModel1;
-	private BindingGroup bindingGroup;
+    private JButton btnYes;
+    private JButton btnNo;
+    private JLabel lblOpenStatus;
+    private JScrollPane scrollPane1;
+    private JLabel lblResult;
+    private JButton btnOk;
+    private SendingResultsModel sendingResultsModel1;
+    private BindingGroup bindingGroup;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -27,8 +27,9 @@ import java.util.concurrent.Future;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class MapComponent extends JComponent {
+public final class MapComponent extends JComponent {
 
+    private static final int TILE_SIZE = 256;
     private TileLookup tileLookup;
     private final MapModel model = new MapModel();
     private final Controller controller = new MapController();
@@ -36,10 +37,10 @@ public class MapComponent extends JComponent {
     private final List<Future<?>> tasks = new ArrayList<Future<?>>();
 
     public MapComponent() {
-        setPreferredSize(new Dimension(256, 256));
+        setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
         addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(final ComponentEvent e) {
                 repaint();
             }
         });
@@ -50,13 +51,13 @@ public class MapComponent extends JComponent {
 
         model.addPropertyChangeListener("zoom", new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 repaint();
             }
         });
         model.addPropertyChangeListener("topLeft", new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 repaint();
             }
         });
@@ -70,7 +71,7 @@ public class MapComponent extends JComponent {
         return tileLookup;
     }
 
-    public void setTileLookup(TileLookup value) {
+    public void setTileLookup(final TileLookup value) {
         final TileLookup oldValue = this.tileLookup;
         this.tileLookup = value;
         firePropertyChange("tileLookup", oldValue, value);
@@ -121,7 +122,7 @@ public class MapComponent extends JComponent {
         private Cursor oldCursor;
 
         @Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
+        public void mouseWheelMoved(final MouseWheelEvent e) {
             if (model.isNavigationEnabled()) {
                 if (e.getWheelRotation() < 0) {
                     controller.onZoomIn(model, tileLookup, getSize(), new Point(e.getX(), e.getY()));
@@ -132,7 +133,7 @@ public class MapComponent extends JComponent {
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {
+        public void mousePressed(final MouseEvent e) {
             if (model.isNavigationEnabled()) {
                 mouseDownPoint = e.getPoint();
                 oldCursor = getCursor();
@@ -141,16 +142,18 @@ public class MapComponent extends JComponent {
         }
 
         @Override
-        public void mouseDragged(MouseEvent e) {
+        public void mouseDragged(final MouseEvent e) {
             if (mouseDownPoint != null && model.isNavigationEnabled()) {
-                controller.mapDragged(model, tileLookup, getSize(), e.getPoint().x - mouseDownPoint.x, e.getPoint().y - mouseDownPoint.y);
+                final int xDelta = e.getPoint().x - mouseDownPoint.x;
+                final int uDelta = e.getPoint().y - mouseDownPoint.y;
+                controller.mapDragged(model, tileLookup, getSize(), xDelta, uDelta);
                 mouseDownPoint = e.getPoint();
                 repaint();
             }
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {
+        public void mouseReleased(final MouseEvent e) {
             if (model.isNavigationEnabled()) {
                 setCursor(oldCursor);
                 mouseDownPoint = null;

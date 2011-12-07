@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_24" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void property="contentType"> 
    <string>form/swing</string> 
@@ -13,7 +13,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp exceptionPanel::l:::x, seq l {par l {comp sourceLabel::l:p::p, comp levelLabel::l:p::p, comp time::l:p::p}, space :p:54:p, par l {comp timeValue::l:p::p, comp levelValue::l:p::p}}, comp messageLabel::l:p::p, comp jScrollPane2::l::228:x, seq {space :12:12:12, comp sourceValue::::216:x}}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp exceptionPanel::l:::x, seq l {par l {comp sourceLabel::l:p::p, comp levelLabel::l:p::p, comp time::l:p::p}, space :p:54:p, par l {comp timeValue::l:p::p, comp levelValue::l:p::p}}, comp messageLabel::l:p::p, comp jScrollPane2::l::376:x, seq {space :12:12:12, comp sourceValue::::364:x}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
@@ -204,11 +204,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq {comp exceptionLabel:::p::p, space ::162:x}, comp jScrollPane3::t::228:x}</string> 
+          <string>par l {seq {comp exceptionLabel:::p::p, space ::310:x}, comp jScrollPane3::t::376:x}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {comp exceptionLabel:::p::p, space :::p, comp jScrollPane3::::178:x, space :::p}}</string> 
+          <string>par l {seq l {comp exceptionLabel:::p::p, space :::p, comp jScrollPane3::::79:x, space :::p}}</string> 
          </void> 
         </object> 
         <void property="name"> 
@@ -279,6 +279,13 @@
         <int>300</int> 
        </object> 
       </void> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>0</int> 
+       </object> 
+      </void> 
      </object> 
     </void> 
     <void method="add"> 
@@ -304,6 +311,16 @@
         <void property="name"> 
          <string>jTextArea1</string> 
         </void> 
+       </object> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>310</int> 
        </object> 
       </void> 
      </object> 

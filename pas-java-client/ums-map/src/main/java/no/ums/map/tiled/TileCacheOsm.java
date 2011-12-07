@@ -1,28 +1,45 @@
 package no.ums.map.tiled;
 
-import com.google.common.io.Resources;
-
-import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCacheOsm extends AbstractTileCacheUri {
+public final class TileCacheOsm extends AbstractTileCacheUri {
 
-    public TileCacheOsm() {
-        super(18, 256);
+    private static final int MAX_ZOOM = 18;
+    private static final int TILE_SIZE = 256;
+    private static final String HOST_NAMES = "abc";
+
+    // OSM http://a.tah.openstreetmap.org/Tiles/tile/6/20/39.png
+    // MapNik: http://a.tah.openstreetmap.org/Tiles/tile/6/20/39.png
+
+    public static enum Layer {
+        OSM(".tah.openstreetmap.org", "/Tiles/tile/%d/%d/%d.png"),
+        MAPNIK(".tile.openstreetmap.org", "/%d/%d/%d.png");
+
+        private final String hostPostfix;
+        private final String pathFormat;
+
+        Layer(final String hostPostfix, final String pathFormat) {
+            this.hostPostfix = hostPostfix;
+            this.pathFormat = pathFormat;
+        }
+    }
+
+    private final Layer layer;
+
+    public TileCacheOsm(final Layer layer) {
+        super(MAX_ZOOM, TILE_SIZE);
+        this.layer = layer;
     }
 
     @Override
-    protected URI createUri(int zoom, int column, int row) {
+    protected URI createUri(final int zoom, final int row, final int column) {
         try {
-            final String host = "abc".charAt((int) (3 * Math.random())) + ".tile.openstreetmap.org";
-            return new URI("http", host, String.format("/%d/%d/%d.png", zoom, column, row), null);
+            final String host = HOST_NAMES.charAt((int) (HOST_NAMES.length() * Math.random())) + layer.hostPostfix;
+            return new URI("http", host, String.format(layer.pathFormat, zoom, column, row), null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);
         }

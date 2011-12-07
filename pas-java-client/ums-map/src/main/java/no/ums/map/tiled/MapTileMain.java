@@ -11,10 +11,13 @@ import java.io.File;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class MapTileMain {
-    private static final File tiles2 = new File("/storage/osm/mapnik/tiles2");
+public final class MapTileMain {
+    private static final File TILES = new File("/storage/osm/mapnik/tiles2");
 
-    public static void main(String[] args) {
+    private MapTileMain() {
+    }
+
+    public static void main(final String[] args) {
         PasApplication.init("https://secure.ums2.no/PAS/experimental/parm2/ws");
 
 
@@ -25,14 +28,15 @@ public class MapTileMain {
                 mainFrame.getMapComponent1().getModel().setZoom(4);
 //                final TileCacheOsm osmTileCache = new TileCacheOsm();
 //                final TileCacheGoogle googleTileCache = new TileCacheGoogle();
-//                final TileCacheLocal localTileCache = new TileCacheLocal(tiles2);
+//                final TileCacheLocal localTileCache = new TileCacheLocal(TILES);
 //                final TileCachePas pas = new TileCachePas();
                 final TileCacheFleximap fleximap = new TileCacheFleximap();
-//                final TileCacheWms wms = new TileCacheWms("http", "www.webatlas.no", "/wms-UMs", "1.1.1", "image/png", "ortofoto");
+//                final TileCacheWms wms = new TileCacheWms("http", "www.webatlas.no", "/wms-UMs", "1.1.1",
+//                        "image/png", "ortofoto");
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(fleximap));
                 mainFrame.getMapComponent1().addMouseMotionListener(new MouseAdapter() {
                     @Override
-                    public void mouseMoved(MouseEvent e) {
+                    public void mouseMoved(final MouseEvent e) {
                         final MapComponent map = (MapComponent) e.getComponent();
                         final ZoomLookup zoomLookup = map.getTileLookup().getZoomLookup(map.getModel().getZoom());
                         final LonLat ll = zoomLookup.getLonLat(map.getModel().getTopLeft(), e.getX(), e.getY());

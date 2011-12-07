@@ -1,7 +1,5 @@
 package no.ums.map.tiled;
 
-import javax.print.Doc;
-
 /**
  * @author Ståle Undheim <su@ums.no>
  */
@@ -9,41 +7,40 @@ public class LonLat {
 
     public static final LonLat NONE = new LonLat(Double.NaN, Double.NaN);
 
-    private static final double DEG_TO_RAD = Math.PI/180;
+    private static final double DEG_TO_RAD = Math.PI / 180;
 
     private final double lon;
     private final double lat;
 
-    public LonLat(double lon, double lat) {
+    public LonLat(final double lon, final double lat) {
         this.lon = lon;
         this.lat = lat;
     }
 
-    public double getLon() {
+    public final double getLon() {
         return lon;
     }
 
-    public double getLat() {
+    public final double getLat() {
         return lat;
     }
 
-    public double distanceToInM(LonLat other) {
+    public final double distanceToInM(final LonLat other) {
         double y1r = 0;
-		if(lat>0 && other.lat>0) {
+        if (lat > 0 && other.lat > 0) {
             y1r = Math.min(lat, other.lat) * DEG_TO_RAD;
-        }
-		else if(lat<0 && other.lat<0) {
+        } else if (lat < 0 && other.lat < 0) {
             y1r = Math.max(lat, other.lat) * DEG_TO_RAD;
         }
-		double w = Math.abs(lon - other.lon) * 3600 * 30.92 * Math.cos(y1r);
-		double h = Math.abs(lat - other.lat) * 3600 * 30.92;
-        return Math.sqrt(w*w+h*h);
+        double w = Math.abs(lon - other.lon) * 3600 * 30.92 * Math.cos(y1r);
+        double h = Math.abs(lat - other.lat) * 3600 * 30.92;
+        return Math.sqrt(w * w + h * h);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public final boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         LonLat lonLat = (LonLat) o;
 
@@ -51,18 +48,18 @@ public class LonLat {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int result;
         long temp;
-        temp = lon != +0.0d ? Double.doubleToLongBits(lon) : 0L;
+        temp = (lon != +0.0d) ? Double.doubleToLongBits(lon) : 0L;
         result = (int) (temp ^ (temp >>> 32));
-        temp = lat != +0.0d ? Double.doubleToLongBits(lat) : 0L;
+        temp = (lat != +0.0d) ? Double.doubleToLongBits(lat) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("LonLat");
         sb.append("{lon=").append(lon);

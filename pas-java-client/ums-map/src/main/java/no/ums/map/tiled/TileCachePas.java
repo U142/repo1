@@ -10,16 +10,17 @@ import java.awt.Toolkit;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCachePas extends AbstractTileCache {
+public final class TileCachePas extends AbstractTileCache {
 
     private static final int TILE_SIZE = 256;
+    private static final int MAX_ZOOM = 18;
 
     public TileCachePas() {
-        super(18, TILE_SIZE);
+        super(MAX_ZOOM, TILE_SIZE);
     }
 
     @Override
-    protected Image getImage(TileCell input) {
+    protected Image getImage(final TileCell input) {
         // https://api.fleximap.com/servlet/FlexiMap?
                 // OID=UMS_TEST&
                 // UID=UMS&
@@ -39,7 +40,8 @@ public class TileCachePas extends AbstractTileCache {
                 UMapInfo info = new UMapInfo();
         final ZoomLookup zoomLookup = getZoomLookup(input.getZoom());
                 final LonLat ll1 = zoomLookup.getLonLat(input.getColumn() * TILE_SIZE, input.getRow() * TILE_SIZE);
-                final LonLat ll2 = zoomLookup.getLonLat(input.getColumn() * TILE_SIZE + TILE_SIZE, input.getRow() * TILE_SIZE + TILE_SIZE);
+                final LonLat ll2 = zoomLookup.getLonLat(input.getColumn() * TILE_SIZE + TILE_SIZE,
+                        input.getRow() * TILE_SIZE + TILE_SIZE);
                 info.setLBo(ll1.getLon());
                 info.setRBo(ll2.getLon());
                 info.setUBo(ll2.getLat());

@@ -1,6 +1,6 @@
 package no.ums.log.swing;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -9,7 +9,9 @@ import java.util.logging.LogRecord;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class LogRecordModel extends AbstractListModel {
+public final class LogRecordModel extends AbstractListModel {
+
+    private static final long serialVersionUID = 3191015776791957166L;
 
     private final List<LogRecord> content = new ArrayList<LogRecord>();
     private final List<LogRecord> filteredList = new ArrayList<LogRecord>();
@@ -26,23 +28,23 @@ public class LogRecordModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int index) {
+    public Object getElementAt(final int index) {
         return filteredList.get(index);
     }
 
-    public void add(LogRecord record) {
+    public void add(final LogRecord record) {
         content.add(record);
         internalAdd(record);
     }
 
-    private void internalAdd(LogRecord record) {
+    private void internalAdd(final LogRecord record) {
         if (record.getLevel().intValue() >= level.intValue()) {
             filteredList.add(record);
             fireIntervalAdded(this, filteredList.size() - 1, filteredList.size() - 1);
         }
     }
 
-    void setLevel(Level level) {
+    void setLevel(final Level level) {
         if (!this.level.equals(level)) {
             this.level = level;
             refresh();

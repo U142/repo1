@@ -8,7 +8,7 @@ public final class TileCell {
     private final int column;
     private final int row;
 
-    public TileCell(int zoom, int row, int column) {
+    public TileCell(final int zoom, final int row, final int column) {
         this.zoom = zoom;
         this.column = column;
         this.row = row;
@@ -27,9 +27,9 @@ public final class TileCell {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         TileCell cell = (TileCell) o;
 

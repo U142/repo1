@@ -16,38 +16,41 @@ import java.util.zip.CRC32;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class LogRecordCollector extends Handler {
+public final class LogRecordCollector extends Handler {
     public static final LogRecordModel MODEL = new LogRecordModel();
-    private static final Logger umsLog = Logger.getLogger("no.ums");
+    private static final Logger log = Logger.getLogger("no.ums");
     private static LogMailSender logMailSender = new LogMailSender() {
         @Override
-        public boolean sendMail(String id, String content) {
+        public boolean sendMail(final String id, final String content) {
             System.out.printf("Dummy mail:\n%s\nID: %s\n", content, id);
             return true;
         }
     };
+    private static final int LOG_SECONDS = 10;
+    private static final int STACK_ELEMENTS = 5;
 
     // Findbugs reports an error here, as the can potentially fail when using OpenJDK.
     // As we only deploy to the Oracle JDK, we can ignore this warning.
     // http://findbugs.sourceforge.net/bugDescriptions.html#LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE")
-    public static void install(@Nullable LogMailSender logMailSender, final boolean enableDebugLogging) {
-        umsLog.setUseParentHandlers(false);
-        umsLog.setLevel(Level.FINEST);
-        umsLog.addHandler(new LogRecordCollector());
-        if (logMailSender != null) {
-            LogRecordCollector.logMailSender = logMailSender;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE")
+    public static void install(@Nullable final LogMailSender newLogMailSender, final boolean enableDebugLogging) {
+        log.setUseParentHandlers(false);
+        log.setLevel(Level.FINEST);
+        log.addHandler(new LogRecordCollector());
+        if (newLogMailSender != null) {
+            LogRecordCollector.logMailSender = newLogMailSender;
         }
 
         // We log everything, so no need for the parent to log our messages
-        umsLog.addHandler(new Handler() {
+        log.addHandler(new Handler() {
 
             {
                 setLevel((enableDebugLogging) ? Level.ALL : Level.WARNING);
                 setFormatter(new UmsLogFormat(true));
             }
+
             @Override
-            public void publish(LogRecord record) {
+            public void publish(final LogRecord record) {
                 if (isLoggable(record)) {
                     if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
                         System.err.println(getFormatter().format(record));
@@ -63,14 +66,14 @@ public class LogRecordCollector extends Handler {
             }
 
             @Override
-            public void close() throws SecurityException {
+            public void close() {
                 // Noop
             }
         });
     }
 
     @Override
-    public void publish(LogRecord record) {
+    public void publish(final LogRecord record) {
         MODEL.add(record);
     }
 
@@ -80,7 +83,7 @@ public class LogRecordCollector extends Handler {
     }
 
     @Override
-    public void close() throws SecurityException {
+    public void close() {
         // Noop
     }
 
@@ -89,7 +92,7 @@ public class LogRecordCollector extends Handler {
         PrintWriter pw = new PrintWriter(sw);
         final List<LogRecord> allRecords = MODEL.getAllRecords();
         int lastThrowable = allRecords.size();
-        while (lastThrowable > 0 && allRecords.get(lastThrowable-1).getLevel().intValue() < Level.SEVERE.intValue()) {
+        while (lastThrowable > 0 && allRecords.get(lastThrowable - 1).getLevel().intValue() < Level.SEVERE.intValue()) {
             lastThrowable--;
         }
         // If there are no severe messages, include all log statements
@@ -97,12 +100,12 @@ public class LogRecordCollector extends Handler {
             lastThrowable = allRecords.size();
         }
         final LogRecord lastRecord = allRecords.get(lastThrowable - 1);
-        final long startTime = lastRecord.getMillis() - TimeUnit.SECONDS.toMillis(10);
+        final long startTime = lastRecord.getMillis() - TimeUnit.SECONDS.toMillis(LOG_SECONDS);
         final String id;
         if (lastRecord.getThrown() != null) {
             final CRC32 crc32 = new CRC32();
             final StackTraceElement[] stackTrace = lastRecord.getThrown().getStackTrace();
-            for (int i=0; i<Math.min(5, stackTrace.length); i++) {
+            for (int i = 0; i < Math.min(STACK_ELEMENTS, stackTrace.length); i++) {
                 crc32.update(stackTrace[i].getClassName().getBytes(Charsets.UTF_8));
                 crc32.update(stackTrace[i].getMethodName().getBytes(Charsets.UTF_8));
                 crc32.update(stackTrace[i].getLineNumber());
@@ -114,7 +117,11 @@ public class LogRecordCollector extends Handler {
         for (LogRecord logRecord : allRecords.subList(0, lastThrowable)) {
             // Only include logging statements from the last 10 seconds
             if (logRecord.getMillis() > startTime) {
-                pw.printf("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%tS %-6s %s\n\t%s\n", logRecord.getMillis(), logRecord.getLevel(), logRecord.getLoggerName(), logRecord.getMessage());
+                pw.printf("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%tS %-6s %s\n\t%s\n",
+                        logRecord.getMillis(),
+                        logRecord.getLevel(),
+                        logRecord.getLoggerName(),
+                        logRecord.getMessage());
                 final Throwable throwable = logRecord.getThrown();
                 if (throwable != null) {
                     throwable.printStackTrace(pw);

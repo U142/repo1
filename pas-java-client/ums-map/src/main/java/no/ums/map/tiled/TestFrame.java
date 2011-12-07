@@ -19,7 +19,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author User #1
  */
-public class TestFrame extends JFrame {
+public final class TestFrame extends JFrame {
+
+    private static final int ONE_K = 1024;
+
     public TestFrame() {
         initComponents();
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
@@ -28,10 +31,12 @@ public class TestFrame extends JFrame {
                 final long totalMemory = Runtime.getRuntime().totalMemory();
                 final long freeMemory = Runtime.getRuntime().freeMemory();
                 final long usedMemory = totalMemory - freeMemory;
-                lblMem.setText(String.format("%5.2fM of %5.2fM used", usedMemory / (Math.pow(1024, 2)), totalMemory / (Math.pow(1024, 2))));
+                final double usedInM = usedMemory / (Math.pow(ONE_K, 2));
+                final double totalInM = totalMemory / (Math.pow(ONE_K, 2));
+                lblMem.setText(String.format("%5.2fM of %5.2fM used", usedInM, totalInM));
                 prgMem.getModel().setMinimum(0);
-                prgMem.getModel().setMaximum((int) (totalMemory / 1024));
-                prgMem.getModel().setValue((int) (usedMemory / 1024));
+                prgMem.getModel().setMaximum((int) totalInM);
+                prgMem.getModel().setValue((int) usedInM);
             }
         }, 0, 250, TimeUnit.MILLISECONDS);
     }

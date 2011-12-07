@@ -11,30 +11,23 @@
 
 package no.ums.log.swing;
 
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Primitives;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Comparator;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-import java.util.logging.Level;
+import javax.swing.GroupLayout;
+import javax.swing.JLabel;
+import javax.swing.LayoutStyle;
+import javax.swing.UIManager;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.logging.LogRecord;
 
 /**
  * @author staaleu
  */
-public class LogRecordLine extends javax.swing.JPanel {
-
-
+public final class LogRecordLine extends javax.swing.JPanel {
 
     /**
-     * Creates new form LogMessage
+     * Creates new form LogMessage.
      */
-    public LogRecordLine(LogRecord logRecord, boolean selected) {
+    public LogRecordLine(final LogRecord logRecord, final boolean selected) {
         initComponents();
         level.setForeground(LogSwingUtil.toColor(logRecord.getLevel()));
         level.setText(logRecord.getLevel().getLocalizedName());
@@ -74,22 +67,23 @@ public class LogRecordLine extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup()
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(time)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(level, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(msg, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(time)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(level, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(msg, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(time)
-                    .addComponent(level)
-                    .addComponent(msg))
+                layout.createParallelGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(time)
+                                .addComponent(level)
+                                .addComponent(msg))
         );
-    }// </editor-fold>//GEN-END:initComponents
+    }
+    // </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

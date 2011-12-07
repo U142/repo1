@@ -11,17 +11,19 @@ import java.io.IOException;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCacheLocal extends AbstractTileCache {
+public final class TileCacheLocal extends AbstractTileCache {
 
+    private static final int MAX_ZOOM = 18;
+    private static final int TILE_SIZE = 256;
     private final File base;
 
-    public TileCacheLocal(File base) {
-        super(18, 256);
+    public TileCacheLocal(final File base) {
+        super(MAX_ZOOM, TILE_SIZE);
         this.base = base;
     }
 
     @Override
-    protected Image getImage(TileCell tile) {
+    protected Image getImage(final TileCell tile) {
         if (getFile(tile).exists()) {
             return readImage(getFile(tile));
         }
@@ -43,19 +45,19 @@ public class TileCacheLocal extends AbstractTileCache {
             throw new IllegalStateException("Failed to execute tasks", e);
         } catch (InterruptedException e) {
             // Ignored, cancelled
-            return new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+            return new BufferedImage(TILE_SIZE, TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
         }
     }
 
-    private File getFile(TileCell tile) {
+    private File getFile(final TileCell tile) {
         return getFile(base, tile.getZoom(), tile.getRow(), tile.getColumn());
     }
 
-    private static File getFile(File base, int zoom, int row, int column) {
+    private static File getFile(final File base, final int zoom, final int row, final int column) {
         return new File(new File(new File(base, String.valueOf(zoom)), String.valueOf(column)), row + ".png");
     }
 
-    private BufferedImage readImage(File fn) {
+    private BufferedImage readImage(final File fn) {
         try {
             return ImageIO.read(fn);
         } catch (IOException e) {

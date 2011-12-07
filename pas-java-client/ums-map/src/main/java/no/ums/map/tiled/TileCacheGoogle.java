@@ -1,28 +1,28 @@
 package no.ums.map.tiled;
 
-import com.google.common.io.Resources;
-
-import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCacheGoogle extends AbstractTileCacheUri {
+public final class TileCacheGoogle extends AbstractTileCacheUri {
 
+
+    private static final String SERVER_CHARS = "0123";
+    private static final int MAX_ZOOM = 18;
+    private static final int TILE_SIZE = 256;
 
     public TileCacheGoogle() {
-        super(18, 256);
+        super(MAX_ZOOM, TILE_SIZE);
     }
 
-    protected URI createUri(int zoom, int row, int column) {
+    protected URI createUri(final int zoom, final int row, final int column) {
         try {
-            final String host = "mt" + ("0123".charAt((int) (4 * Math.random()))) + ".google.com";
-            return new URI("http", host, String.format("/vt/lyrs=m@152000000&hl=no&x=%d&y=%d&z=%d&s=", column, row, zoom), null);
+            final String host =
+                    "mt" + (SERVER_CHARS.charAt((int) (SERVER_CHARS.length() * Math.random()))) + ".google.com";
+            final String path = String.format("/vt/lyrs=m@152000000&hl=no&x=%d&y=%d&z=%d&s=", column, row, zoom);
+            return new URI("http", host, path, null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);
         }

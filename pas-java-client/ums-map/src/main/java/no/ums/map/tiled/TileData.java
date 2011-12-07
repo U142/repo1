@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
  * @author Ståle Undheim <su@ums.no>
  */
 public final class TileData {
-    
+
     private final int x;
     private final int y;
     private final int width;
@@ -17,7 +17,8 @@ public final class TileData {
     private final int row;
     private final int column;
 
-    public TileData(int zoom, int row, int column, int x, int y, int width, int height) {
+    public TileData(final int zoom, final int row, final int column, final int x, final int y, final int width,
+                    final int height) {
         Preconditions.checkElementIndex(column, (int) Math.pow(2, zoom), "column");
         Preconditions.checkElementIndex(row, (int) Math.pow(2, zoom), "row");
         Preconditions.checkArgument(width > 0, "width must be positive");
@@ -60,9 +61,9 @@ public final class TileData {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         TileData tileData = (TileData) o;
 
@@ -83,6 +84,7 @@ public final class TileData {
 
     @Override
     public String toString() {
-        return String.format("TileData{(z:%d, r: %d, c: %d) (x: %d, y: %d) (%d x %d)}", zoom, row, column, x, y, width, height);
+        return String.format("TileData{(z:%d, r: %d, c: %d) (x: %d, y: %d) (%d x %d)}",
+                zoom, row, column, x, y, width, height);
     }
 }

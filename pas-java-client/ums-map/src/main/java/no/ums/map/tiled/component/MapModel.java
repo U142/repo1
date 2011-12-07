@@ -8,7 +8,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class MapModel {
+public final class MapModel {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -23,7 +23,7 @@ public class MapModel {
         return topLeft;
     }
 
-    public void setTopLeft(LonLat value) {
+    public void setTopLeft(final LonLat value) {
         final LonLat oldValue = this.topLeft;
         this.topLeft = value;
         update("topLeft", oldValue, value);
@@ -33,7 +33,7 @@ public class MapModel {
         return zoom;
     }
 
-    public void setZoom(int value) {
+    public void setZoom(final int value) {
         final int oldValue = this.zoom;
         this.zoom = value;
         update("zoom", oldValue, value);
@@ -52,7 +52,7 @@ public class MapModel {
      *
      * @param value enabled navigation.
      */
-    public void setNavigationEnabled(boolean value) {
+    public void setNavigationEnabled(final boolean value) {
         final boolean oldValue = this.navigationEnabled;
         this.navigationEnabled = value;
         update("navigationEnabled", oldValue, value);
@@ -82,30 +82,30 @@ public class MapModel {
         return layer;
     }
 
-    public void setLayer(String layer) {
+    public void setLayer(final String layer) {
         String oldLayer = this.layer;
         this.layer = layer;
         update("layer", oldLayer, layer);
     }
 
 
-    private void update(String property, Object oldValue, Object newValue) {
+    private void update(final String property, final Object oldValue, final Object newValue) {
         support.firePropertyChange(property, oldValue, newValue);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         support.addPropertyChangeListener(propertyName, listener);
     }
 
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         support.removePropertyChangeListener(propertyName, listener);
     }
 }

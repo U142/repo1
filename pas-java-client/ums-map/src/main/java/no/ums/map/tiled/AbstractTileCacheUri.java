@@ -14,12 +14,12 @@ import java.net.URL;
  */
 public abstract class AbstractTileCacheUri extends AbstractTileCache {
 
-    public AbstractTileCacheUri(int maxZoom, int tileSize) {
+    public AbstractTileCacheUri(final int maxZoom, final int tileSize) {
         super(maxZoom, tileSize);
     }
 
     @Override
-    protected Image getImage(TileCell input) {
+    protected final Image getImage(final TileCell input) {
         final URI uri = createUri(input.getZoom(), input.getRow(), input.getColumn());
         try {
             final URL url = uri.toURL();

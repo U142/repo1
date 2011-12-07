@@ -14,7 +14,8 @@ public class TileCacheWms extends AbstractTileCacheWms {
     private final String format;
     private final String layers;
 
-    public TileCacheWms(String scheme, String host, String path, String version, String format, Iterable<String> layers) {
+    public TileCacheWms(final String scheme, final String host, final String path, final String version,
+                        final String format, final Iterable<String> layers) {
         this.scheme = scheme;
         this.host = host;
         this.path = path;
@@ -23,7 +24,8 @@ public class TileCacheWms extends AbstractTileCacheWms {
         this.layers = Joiner.on(",").join(layers);
     }
 
-    public TileCacheWms(String scheme, String host, String path, String version, String format, String ... layers) {
+    public TileCacheWms(final String scheme, final String host, final String path, final String version,
+                        final String format, final String ... layers) {
         this.scheme = scheme;
         this.host = host;
         this.path = path;
@@ -33,32 +35,32 @@ public class TileCacheWms extends AbstractTileCacheWms {
     }
 
     @Override
-    public String getScheme() {
+    public final String getScheme() {
         return scheme;
     }
 
     @Override
-    public String getHost() {
+    public final String getHost() {
         return host;
     }
 
     @Override
-    public String getPath() {
+    public final String getPath() {
         return path;
     }
 
     @Override
-    public String getVersion() {
+    public final String getVersion() {
         return version;
     }
 
     @Override
-    public String getFormat() {
+    public final String getFormat() {
         return format;
     }
 
     @Override
-    public String getLayers() {
+    public final String getLayers() {
         return layers;
     }
 }

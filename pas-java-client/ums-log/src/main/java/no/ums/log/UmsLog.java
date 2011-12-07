@@ -1,19 +1,18 @@
 package no.ums.log;
 
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
  * Factory to create Log instances.
  */
-public class UmsLog {
+public final  class UmsLog {
 
-    UmsLog() {
+    private UmsLog() {
         // Cannot construct outside this package.
     }
 
-    public static Log getLogger(Class<?> src) {
+    public static Log getLogger(final Class<?> src) {
         return getLogger(src.getName());
     }
 
@@ -23,25 +22,25 @@ public class UmsLog {
 
     private static final class JavaLoggerLog extends AbstractLog<Level> {
 
-        final Logger log;
+        private final Logger log;
 
-        public JavaLoggerLog(String src) {
+        public JavaLoggerLog(final String src) {
             super(Level.FINEST, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE);
             log = Logger.getLogger(src);
         }
 
         @Override
-        protected void logImpl(Level level, String message) {
+        protected void logImpl(final Level level, final String message) {
             log.log(level, message);
         }
 
         @Override
-        protected void logImpl(Level level, String message, Throwable throwable) {
+        protected void logImpl(final Level level, final String message, final Throwable throwable) {
             log.log(level, message, throwable);
         }
 
         @Override
-        protected boolean isLoggable(Level level) {
+        protected boolean isLoggable(final Level level) {
             return log.isLoggable(level);
         }
     }
