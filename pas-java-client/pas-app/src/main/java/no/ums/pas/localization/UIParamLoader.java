@@ -15,7 +15,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 
 public class UIParamLoader extends ClassLoader
@@ -33,6 +35,43 @@ public class UIParamLoader extends ClassLoader
             defaults.put("OptionPane.noButtonText", Localization.l("common_no"));
             defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
             defaults.put("OptionPane.yesButtonText", Localization.l("common_yes"));
+            
+            
+            
+            /*defaults.put("FileChooser.Title", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.acceptAllFileFilterText", Localization.l("FileChooser.fileNameLabelText"));
+            
+            
+            defaults.put("FileChooser.lookInLabelText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.filesOfTypeLabelText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.upFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.upFolderAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
+
+            defaults.put("FileChooser.fileSizeHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
+            defaults.put("FileChooser.fileTypeHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
+            defaults.put("FileChooser.fileDateHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
+            defaults.put("FileChooser.fileAttrHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
+            defaults.put("FileChooser.openDialogTitleText",Localization.l("FileChooser.fileNameLabelText"));
+            
+            defaults.put("FileChooser.fileNameLabelText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.homeFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.homeFolderAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.newFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.listViewButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.listViewButtonAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
+            
+            defaults.put("FileChooser.detailsViewButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.detailsViewButtonAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.saveButtonText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.openButtonText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.cancelButtonText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.updateButtonText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.helpButtonText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.saveButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.openButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.cancelButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.updateButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
+            defaults.put("FileChooser.helpButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));*/
             
             // Status color codes
             /*defaults.put("statuscodecolor.0", 		"FFFFFF");

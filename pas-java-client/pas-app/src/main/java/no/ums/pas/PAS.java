@@ -63,6 +63,7 @@ import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
@@ -70,6 +71,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -374,6 +377,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			locale = temp;
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
             Localization.INSTANCE.setLocale(locale);
+            Locale.setDefault(locale);
+            
+            UIManager.getDefaults().addResourceBundle(String.format("no.ums.pas.localization.lang_%s_%s", locale.getLanguage(), locale.getCountry()));
+            String test = UIManager.getString("FileChooser.saveButtonText");
 			//locale = new Locale("en");
 			//Locale.setDefault(locale);
 			if(b_changed)

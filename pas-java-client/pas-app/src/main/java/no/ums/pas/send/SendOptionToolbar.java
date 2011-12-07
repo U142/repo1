@@ -41,6 +41,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Color;
@@ -1401,9 +1402,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public synchronized void actionPerformed(ActionEvent e) {
 		
 		if("act_open_colorpicker".equals(e.getActionCommand())) {
-			m_colorpicker = new SendingColorPicker("Color",
-					new Point(0,0), get_parent().get_sendproperties().get_shapestruct().get_fill_color(), this);			
-			get_colorpicker().show();
+			m_colorpicker = new SendingColorPicker(UIManager.getString("ColorChooser.titleText"),
+					new Point(0,0), get_parent().get_sendproperties().get_shapestruct().get_fill_color(), this);		
+			m_colorpicker.show();
+			//get_colorpicker().showDialog(component, title, get_parent().get_sendproperties().get_shapestruct().get_fill_color())
 		}
 		else if("act_set_color".equals(e.getActionCommand())) {
 			/*get_colorbutton().setBackground((Color)e.getSource());
