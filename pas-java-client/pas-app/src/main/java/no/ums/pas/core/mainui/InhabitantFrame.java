@@ -1,6 +1,7 @@
 package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,7 +31,15 @@ public class InhabitantFrame extends JPanel implements ComponentListener { //JFr
 		//setBounds(0,0,m_dim.width, m_dim.height);
 		setSize(m_dim.width, m_dim.height);
 
-		String sz_columns[] = { "Item", "Status", "Name", "Number", "Address", "Postno", "Area", "Time" };
+		String sz_columns[] = { Localization.l("common_item"), 
+								Localization.l("mainmenu_status"), 
+								Localization.l("common_name"), 
+								Localization.l("common_number"), 
+								Localization.l("common_adr_address"), 
+								Localization.l("common_adr_postno"), 
+								Localization.l("common_adr_postplace"), 
+								Localization.l("common_time") 
+							};
 		boolean b_editable[] = { false, false, false, false, false, false, false, false };
 		int n_width[] = { 1, 70, 130, 70, 70, 30, 30, 30 };
 		m_inhabitantpanel = new InhabitantResults(get_pas(), this, sz_columns, n_width, b_editable, m_dim);

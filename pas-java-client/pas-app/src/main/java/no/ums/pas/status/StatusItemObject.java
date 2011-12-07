@@ -1,5 +1,6 @@
 package no.ums.pas.status;
 
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 
@@ -174,49 +175,49 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 		
 		EXPORT_HEADING = "";
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_REFNO) != 0)
-			EXPORT_HEADING += sz_td + "Refno" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_refno") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_ITEM) != 0)
-			EXPORT_HEADING += sz_td + "Item" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_item") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_ADRNAME) != 0)
-			EXPORT_HEADING += sz_td + "Name" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_name") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_BDATE) != 0)
-			EXPORT_HEADING += sz_td + "Birth date" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_birthday") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_POSTADDR) != 0)
-			EXPORT_HEADING += sz_td + "Address" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_address") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_HOUSE) != 0)
-			EXPORT_HEADING += sz_td + "House" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_houseno") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_POSTNO) != 0)
-			EXPORT_HEADING += sz_td + "Postno" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_postno") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_AREA) != 0)
-			EXPORT_HEADING += sz_td + "Area" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_postplace") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_PHONE) != 0)
-			EXPORT_HEADING += sz_td + "Phone" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_phone") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_MOBILE) != 0)
-			EXPORT_HEADING += sz_td + "Mobile" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_mobile") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_DATE) != 0)
-			EXPORT_HEADING += sz_td + "Date" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_date")+ sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_TIME) != 0)
-			EXPORT_HEADING += sz_td + "Time" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_time") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_LATESTDATE) != 0)
-			EXPORT_HEADING += sz_td + "Latest Date" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_latest_date") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_LATESTTIME) != 0)
-			EXPORT_HEADING += sz_td + "Latest Time" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_latest_time") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_TRIES) != 0)
-			EXPORT_HEADING += sz_td + "Tries" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_tries") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_STATUS) != 0)
-			EXPORT_HEADING += sz_td + "Status Code" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_code") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_STATUSNAME) != 0)
-			EXPORT_HEADING += sz_td + "Status" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_text") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_SECONDS) != 0)
-			EXPORT_HEADING += sz_td + "Duration" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_duration") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_LAT) != 0)
-			EXPORT_HEADING += sz_td + "Latitude" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_latitude") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_LON) != 0)
-			EXPORT_HEADING += sz_td + "Longitude" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_longitude") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_PCID) != 0)
-			EXPORT_HEADING += sz_td + "PC ID" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_pcid") + sz_end;
 		if((EXPORT_FIELDS & ADR_EXPORT_FIELD_CHANNEL) != 0)
-			EXPORT_HEADING += sz_td + "Channel" + sz_end;
+			EXPORT_HEADING += sz_td + Localization.l("common_adr_status_channel") + sz_end;
 		EXPORT_HEADING += "\r\n";
 	}
 	

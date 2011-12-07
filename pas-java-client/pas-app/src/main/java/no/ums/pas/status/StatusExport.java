@@ -50,11 +50,11 @@ public class StatusExport
 		try
 		{
 			w = new FileWriter(f);
-			if(sz_filetype.equalsIgnoreCase("HTML file"))
+			if(sz_filetype.equalsIgnoreCase("html"))
 			{
 				return export_as_html(w);
 			}
-			else if(sz_filetype.equalsIgnoreCase("CSV file"))
+			else if(sz_filetype.equalsIgnoreCase("csv"))
 			{
 				return export_as_csv(w);
 			}
@@ -214,7 +214,7 @@ public class StatusExport
 					"Open file", FILE_FILTERS_, FilePicker.MODE_SAVE_);	
 			//picker.getSelectedFile();
 			if(picker!= null && picker.getSelectedFile() != null)
-				export(picker.getSelectedFile(), picker.getFileType());
+				export(picker.getSelectedFile(), picker.getFileExtension());
 		}
 	}
 }
