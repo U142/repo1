@@ -66,7 +66,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");
         m_lbl_sendname = new StdTextLabel(Localization.l("main_parm_alert_dlg_name") + ":");
-		int common_width = 150;
+		int common_width = 220;
 		m_lbl_sendname.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_schedprofiles.setPreferredSize(new Dimension(common_width, 20));
@@ -77,7 +77,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_txt_sendname = new StdTextArea("", false);
 		m_txt_sendname.setPreferredSize(new Dimension(200, 20));
 		m_combo_validity.setPreferredSize(new Dimension(50, 20));
-		m_lbl_validity_days = new StdTextLabel("Day(s)");
+		m_lbl_validity_days = new StdTextLabel(Localization.l("common_days_maybe"));
 		m_radio_sendnow.addActionListener(this);
 		m_radio_sched.addActionListener(this);
 		
