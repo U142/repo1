@@ -491,7 +491,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					ready = false;
 					// Please enter a message
 					JFrame frame = get_frame();
-                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					frame.dispose();
 					m_tabbedpane.setSelectedComponent(m_sms_broadcast_text_panel);
 				}	
@@ -521,7 +521,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				else if (m_alert.getParent().m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1) {
 					ready = false;
 					JFrame frame = get_frame();
-                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms_oadc"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms_oadc"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					frame.dispose();
 					m_alert.getParent().m_tabbedpane.setSelectedComponent(m_alert.getParent().m_sms_broadcast_text_panel);
 				}

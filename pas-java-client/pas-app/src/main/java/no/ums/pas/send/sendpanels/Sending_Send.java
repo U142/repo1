@@ -158,11 +158,11 @@ public class Sending_Send extends DefaultPanel {
 			istas=true;
 		}
 		if(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1) {
-            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"));
+            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
 		} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && !istas) {
-            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"));
+            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
 		} else if(parent.m_sms_broadcast_text_panel.get_gsmsize(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText())>parent.m_sms_broadcast_text_panel.m_maxSize) {
