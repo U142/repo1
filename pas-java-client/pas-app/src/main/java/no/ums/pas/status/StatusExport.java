@@ -5,6 +5,7 @@ import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.mainui.StatusItemList;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.FilePicker;
 
 import javax.swing.JFrame;
@@ -195,9 +196,9 @@ public class StatusExport
 		public static final String MIME_TYPE_HTML_ = ".html";
 		public static final String MIME_TYPE_TXT_ = ".xls";
 		public final String[][] FILE_FILTERS_ = new String[][] {
-			{ "CSV file", MIME_TYPE_CSV_ },
-			{ "HTML file", MIME_TYPE_HTML_ },
-			{ "Tab separated text file (for Excel)", MIME_TYPE_TXT_ }
+			{ Localization.l("FileChooser.fileTypeCSV"), MIME_TYPE_CSV_ },
+			{ Localization.l("FileChooser.fileTypeHMTL"), MIME_TYPE_HTML_ },
+			{ Localization.l("FileChooser.fileTypeTab"), MIME_TYPE_TXT_ }
 		};	
 		
 		public StatusExportGUI()
