@@ -36,70 +36,13 @@ public class UIParamLoader extends ClassLoader
             defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
             defaults.put("OptionPane.yesButtonText", Localization.l("common_yes"));
             
-            
-            
-            /*defaults.put("FileChooser.Title", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.acceptAllFileFilterText", Localization.l("FileChooser.fileNameLabelText"));
-            
-            
-            defaults.put("FileChooser.lookInLabelText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.filesOfTypeLabelText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.upFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.upFolderAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
-
-            defaults.put("FileChooser.fileSizeHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
-            defaults.put("FileChooser.fileTypeHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
-            defaults.put("FileChooser.fileDateHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
-            defaults.put("FileChooser.fileAttrHeaderText", Localization.l("FileChooser.fileNameLabelText")); 
-            defaults.put("FileChooser.openDialogTitleText",Localization.l("FileChooser.fileNameLabelText"));
-            
-            defaults.put("FileChooser.fileNameLabelText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.homeFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.homeFolderAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.newFolderToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.listViewButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.listViewButtonAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
-            
-            defaults.put("FileChooser.detailsViewButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.detailsViewButtonAccessibleName", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.saveButtonText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.openButtonText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.cancelButtonText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.updateButtonText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.helpButtonText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.saveButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.openButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.cancelButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.updateButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));
-            defaults.put("FileChooser.helpButtonToolTipText", Localization.l("FileChooser.fileNameLabelText"));*/
-            
-            // Status color codes
-            /*defaults.put("statuscodecolor.0", 		"FFFFFF");
-            defaults.put("statuscodecolor.2", 		"FF0000");
-            defaults.put("statuscodecolor.168", 	"FFFF00");
-            defaults.put("statuscodecolor.169", 	"009003");
-            defaults.put("statuscodecolor.8000", 	"0000FF");
-            defaults.put("statuscodecolor.8002", 	"FF00FF");*/
-            
-            
-			/*
-			 * List defaults
-			 * 
-			 * Enumeration<Object> def_el = defaults.keys();
-			while(def_el.hasMoreElements())
-			{
-				log.debug(def_el.nextElement().toString());
-			}*/
 			
 			Enumeration<Object> keys = b.keys(); //b.getKeys();
 			while(keys.hasMoreElements())
 			{
 				String key = (String)keys.nextElement();
-				if(key.equals("StatusCodeColor.0"))
-					log.debug("break");
 				try
 				{
-					//String value = b.getString(key);
 					Object obj_type = new Object();
 					Object obj_value = b.getProperty(key);
 					String value = "";

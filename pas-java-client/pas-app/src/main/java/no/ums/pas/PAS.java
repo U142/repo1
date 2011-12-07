@@ -379,8 +379,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
             Localization.INSTANCE.setLocale(locale);
             Locale.setDefault(locale);
             
-            UIManager.getDefaults().addResourceBundle(String.format("no.ums.pas.localization.lang_%s_%s", locale.getLanguage(), locale.getCountry()));
-            String test = UIManager.getString("FileChooser.saveButtonText");
+            //UIManager.getDefaults().addResourceBundle(String.format("no/ums/pas/localization/lang_%s_%s", locale.getLanguage(), locale.getCountry()));
 			//locale = new Locale("en");
 			//Locale.setDefault(locale);
 			if(b_changed)

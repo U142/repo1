@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.UIManager;
+
 /**
  * Central handle for localization messages.
  *
@@ -41,6 +43,7 @@ public enum Localization {
             final Locale old = getLocale();
             val = new lang(locale, false, new DefaultLangError());
             propertyChangeSupport.firePropertyChange("locale", old, locale);
+            UIManager.getDefaults().addResourceBundle(String.format("no/ums/pas/localization/lang_%s_%s", locale.getLanguage(), locale.getCountry()));
         }
     }
 
