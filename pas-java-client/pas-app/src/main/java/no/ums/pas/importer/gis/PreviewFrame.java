@@ -164,7 +164,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 				enableControls(false);
 			}
 			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
 		}
 		else if("act_gis_finish".equals(e.getActionCommand())) {
 			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
@@ -175,7 +175,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 				this.setVisible(false);
 			}
 			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
 		}
 		else if("act_set_statistics_view".equals(e.getActionCommand())) {
 			if(m_options!=null) {

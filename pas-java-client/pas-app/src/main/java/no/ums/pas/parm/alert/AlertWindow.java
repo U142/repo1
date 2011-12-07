@@ -481,7 +481,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			if((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 					(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert.getGui());
 				ready = false;
@@ -498,7 +498,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			}
 			if(ready && get_alert_settings().get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				ready = false;
@@ -514,7 +514,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				if(m_alert.getParent().m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1) {
 					ready = false;
 					JFrame frame = get_frame();
-                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					frame.dispose();
 					m_alert.getParent().m_tabbedpane.setSelectedComponent(m_alert.getParent().m_sms_broadcast_text_panel);
 				}
@@ -797,7 +797,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass()) {
 			JFrame frame = get_frame();
-            JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"));
+            JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			m_tabbedpane.setSelectedComponent(m_alert.getGui());
 			return;
@@ -813,7 +813,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(alert_name_index < m_tabbedpane.getSelectedIndex()) {
 			if(m_alert_settings.get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				return;

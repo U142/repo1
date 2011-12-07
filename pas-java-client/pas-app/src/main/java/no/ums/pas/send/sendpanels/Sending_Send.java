@@ -277,17 +277,17 @@ public class Sending_Send extends DefaultPanel {
 			
 			String sz_number = m_txt_sendtest.getText();
 			if(sz_number.length() < 8) {
-                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"));
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			if(parent.hasSMS(parent.m_sendobject.get_toolbar().get_addresstypes())) {
 				if(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1 && b_continue) {
 					b_continue = false;
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 				} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && b_continue) {
 					b_continue = false;
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 				} else if(parent.m_sms_broadcast_text_panel.get_gsmsize(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText())>parent.m_sms_broadcast_text_panel.m_maxSize) {
 					b_continue = false;

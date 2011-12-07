@@ -154,7 +154,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		} else if("act_send_test".equals(e.getActionCommand())) {
 			String sz_number = m_txt_sendtest.getText();
 			if(sz_number.length() < 8) {
-                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"));
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			parent.get_btn_next().setEnabled(false);
