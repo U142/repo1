@@ -830,10 +830,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		        about.println();
 //		        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
 //		        about.printf("Specification version: %s\n", VersionInfo.getInstance().SPECIFICATION_VERSION);
-		        about.printf("Version: %s\n", VersionInfo.INSTANCE.buildVersion);
+		        about.printf("%s %s\n", Localization.l("mainmenu_help_about_version"), VersionInfo.INSTANCE.buildVersion);
 //		        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
 //		        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
-		        about.printf("Revision: %s (b%s)\n", VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
+		        about.printf("%s %s (b%s)\n", Localization.l("mainmenu_help_about_revision"), VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
 		        //if(wsVersion!=null)
 		        //	about.printf("Web Service Version: %d.%d.%d\n", wsVersion.getMajor(), wsVersion.getMinor(), wsVersion.getBuild());
 		        //else
@@ -848,7 +848,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			        			Integer.parseInt(ts.substring(6, 8)), 
 			        			Integer.parseInt(ts.substring(9, 11)),
 			        			Integer.parseInt(ts.substring(11, 13)));
-			        about.printf("Created: %s\n", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
+			        about.printf("%s %s\n", Localization.l("mainmenu_help_about_created"), DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
 		        }
 			    about.close();
 		        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), Localization.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
