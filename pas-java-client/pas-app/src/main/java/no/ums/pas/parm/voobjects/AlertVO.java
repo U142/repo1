@@ -376,7 +376,7 @@ public class AlertVO extends ParmVO implements Cloneable {
 				if(sz_lba_areaid.equals("-2"))
 					ret += " [LBA ERROR]";
 				else if(sz_lba_areaid.equals("0"))
-					ret += " [Waiting for LBA area to be generated]";
+					ret += " [" + Localization.l("main_parm_alert_lba_waiting_text") + "]";
 					
 				b_size_dirty = true;
 			}			
