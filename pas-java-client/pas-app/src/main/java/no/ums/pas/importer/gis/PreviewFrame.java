@@ -41,7 +41,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public GISFile m_gis;
 	
 	public PreviewFrame(GISFile gis) {
-		super(PAS.get_pas(), "Import preview", true);
+		super(PAS.get_pas(), Localization.l("common_preview"), true);
 		try {
 			setAlwaysOnTop(true);
 		} catch(Exception e) {
@@ -52,7 +52,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		m_gis = gis;
 		m_options = new PreviewOptions(this, gis.getIsAlert());
 		m_panel = new PreviewPanel(gis, this);
-		m_btn_finish = new JButton("Finish");
+		m_btn_finish = new JButton(Localization.l("common_finish"));
 		//setSize(620, 500);
 		int x = 800;
 		int y = 600;

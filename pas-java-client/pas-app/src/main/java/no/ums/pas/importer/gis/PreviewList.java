@@ -5,6 +5,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.JComponentCellEditor;
 import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.JComboBox;
@@ -152,12 +153,12 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 	protected ComboAdrid [] m_field_combos;
 	protected ComboField [] m_fields = new ComboField[] { 
 			new ComboField(ComboField.FIELDID_EMPTY, ""), 
-			new ComboField(ComboField.FIELDID_MUNICIPALID, "Municipal ID"),
-			new ComboField(ComboField.FIELDID_STREETID, "Street ID"),
-			new ComboField(ComboField.FIELDID_HOUSENO, "House no"),
-			new ComboField(ComboField.FIELDID_LETTER, "Letter"),
-			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1, "Name filter1"),
-			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2, "Name filter2")
+			new ComboField(ComboField.FIELDID_MUNICIPALID, Localization.l("importpreview_municipalid")),
+			new ComboField(ComboField.FIELDID_STREETID, Localization.l("importpreview_streetid")),
+			new ComboField(ComboField.FIELDID_HOUSENO, Localization.l("importpreview_houseno")),
+			new ComboField(ComboField.FIELDID_LETTER, Localization.l("importpreview_letter")),
+			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1, Localization.l("importpreview_namefilter1")),
+			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2, Localization.l("importpreview_namefilter2"))
 	};
 	
 	PreviewList(PreviewPanel parent, GISFile gis, DefaultTableCellRenderer renderer) {
