@@ -312,7 +312,11 @@ public class AddressSearchDlg extends JFrame {
 				new Object[][] {
 				},
 				new String[] {
-					"Hit", "Address", "Region", "Lon", "Lat"
+					Localization.l("adrsearch_dlg_hit"), 
+					Localization.l("adrsearch_dlg_address"), 
+					Localization.l("adrsearch_dlg_region"), 
+					Localization.l("common_lon"), 
+					Localization.l("common_lat")
 				}
 			) {
 				boolean[] columnEditable = new boolean[] {
