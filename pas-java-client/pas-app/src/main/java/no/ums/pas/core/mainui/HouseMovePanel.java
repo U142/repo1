@@ -51,7 +51,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 	public static final long serialVersionUID = 1;
 	private HouseEditorDlg m_dlg;
 	private StdTextLabel m_lbl_heading = new StdTextLabel(Localization.l("main_houseeditortab_search_then_assign"), 400, 14, true);
-    private StdTextLabel m_lbl_postno = new StdTextLabel(Localization.l("common_adr_postno") + ":", 70);
+    private StdTextLabel m_lbl_postno = new StdTextLabel(Localization.l("common_adr_postno") + ":", 120);
     private StdTextArea m_txt_postno = new StdTextArea(false, false, 70);
 	private JButton m_btn_search = new JButton(Localization.l("common_search"));
     private JCheckBox m_chk_private = new JCheckBox(Localization.l("common_adr_private"), true);

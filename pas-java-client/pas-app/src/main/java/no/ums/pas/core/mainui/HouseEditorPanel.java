@@ -61,16 +61,16 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	}
 	
 	private StdTextLabel m_lbl_houseinfo= new StdTextLabel("", 300, 12, true);
-	private StdTextLabel m_lbl_name		= new StdTextLabel(Localization.l("common_adr_name"), 150);
-    private StdTextLabel m_lbl_phone	= new StdTextLabel(Localization.l("common_adr_phone"), 150);
-    private StdTextLabel m_lbl_mobile	= new StdTextLabel(Localization.l("common_adr_mobile"), 150);
-    private StdTextLabel m_lbl_address	= new StdTextLabel(Localization.l("common_adr_address"), 150);
-	private StdTextLabel m_lbl_place	= new StdTextLabel(Localization.l("common_adr_postno") + "/" + Localization.l("common_adr_postplace") ,150);
-    private StdTextLabel m_lbl_gnrbnr		= new StdTextLabel(Localization.l("common_adr_gno") + "/" + Localization.l("common_adr_bno"), 150);
-    private StdTextLabel m_lbl_municipal= new StdTextLabel(Localization.l("common_adr_municipal_no"), 150);
-    private StdTextLabel m_lbl_streetid = new StdTextLabel(Localization.l("common_adr_streetid"), 150);
-    private StdTextLabel m_lbl_lonlat	= new StdTextLabel(Localization.l("common_lon") + "/" + Localization.l("common_lat"), 150);
-    private StdTextLabel m_lbl_birthday = new StdTextLabel(Localization.l("common_adr_birthday") + " (DD.MM.YYYY)", 150);
+	private StdTextLabel m_lbl_name		= new StdTextLabel(Localization.l("common_adr_name"), 180);
+    private StdTextLabel m_lbl_phone	= new StdTextLabel(Localization.l("common_adr_phone"), 180);
+    private StdTextLabel m_lbl_mobile	= new StdTextLabel(Localization.l("common_adr_mobile"), 180);
+    private StdTextLabel m_lbl_address	= new StdTextLabel(Localization.l("common_adr_address"), 180);
+	private StdTextLabel m_lbl_place	= new StdTextLabel(Localization.l("common_adr_postno") + "/" + Localization.l("common_adr_postplace") ,180);
+    private StdTextLabel m_lbl_gnrbnr		= new StdTextLabel(Localization.l("common_adr_gno") + "/" + Localization.l("common_adr_bno"), 180);
+    private StdTextLabel m_lbl_municipal= new StdTextLabel(Localization.l("common_adr_municipal_no"), 180);
+    private StdTextLabel m_lbl_streetid = new StdTextLabel(Localization.l("common_adr_streetid"), 180);
+    private StdTextLabel m_lbl_lonlat	= new StdTextLabel(Localization.l("common_lon") + "/" + Localization.l("common_lat"), 180);
+    private StdTextLabel m_lbl_birthday = new StdTextLabel(Localization.l("common_adr_birthday") + " (DD.MM.YYYY)", 180);
 
     private StdTextArea m_txt_name		= new StdTextArea("", false, 150);
 	private StdTextArea m_txt_phone		= new StdIntegerArea("", false, 100, StdIntegerArea.INTEGER|StdIntegerArea.UNSIGNED);

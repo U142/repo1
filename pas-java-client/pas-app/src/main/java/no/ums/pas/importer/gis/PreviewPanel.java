@@ -399,21 +399,16 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		if(m_sendobject==null) {
 			m_tab.addTab(Localization.l("importpreview_file_content"), null,
 					m_previewlist,
-					"GIS Import File");
-			/*m_tab.addTab("Results", null,
-					m_loader,
-					"GIS Import results");*/
+					Localization.l("importpreview_file_content_tooltip"));
 			set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
 			add(m_tab, get_gridconst());
-	/*		set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
-			add(m_previewlist, get_gridconst());*/
 			set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTH);
 			if(m_loader!=null)
 				add(m_loader, get_gridconst());
 		} else {
-			m_tab.addTab("Results", null,
+			m_tab.addTab(Localization.l("importresults_results"), null,
 						m_resultpanel,
-						"Results");
+						Localization.l("importresults_results_tooltip"));
 			set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
 			add(m_tab, get_gridconst());
 			

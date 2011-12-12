@@ -107,7 +107,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		}
 	}
 	public PreviewFrame(SendObject so) {
-		super(PAS.get_pas(), "Results", true);
+		super(PAS.get_pas(), Localization.l("importpreview_file_content_tooltip"), true);
 		
 		init_common();
 		try
