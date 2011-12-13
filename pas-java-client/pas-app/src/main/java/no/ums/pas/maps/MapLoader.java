@@ -327,7 +327,7 @@ public class MapLoader {
 		
 	}
 	
-	private void setWmsAuthenticator(final String usr, final char[] pass)
+	public void setWmsAuthenticator(final String usr, final char[] pass)
 	{
 		if(usr.length()>0 && pass.length > 0)
 		{

@@ -345,7 +345,7 @@ public class Settings {
 			else //compatability
 			{
 				m_wms_layers.add(new WmsLayer(l[i], true));
-				m_selected_wms_layers.add(l[i]);
+				//m_selected_wms_layers.add(l[i]);
 			}
 		}
 	}

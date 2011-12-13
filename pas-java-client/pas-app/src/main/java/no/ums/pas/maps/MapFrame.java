@@ -885,6 +885,8 @@ public class MapFrame extends JPanel implements ActionListener {
                     scheme = base.getScheme();
                     host = base.getHost();
                     path = base.getPath();
+                    
+        			m_maploader.setWmsAuthenticator(Variables.getSettings().getWmsUsername(), Variables.getSettings().getWmsPassword().toCharArray());
                     WebMapServer wms = new WebMapServer(new URL(wmsSite));
                     version = wms.getCapabilities().getVersion();
                     lastLookup = wmsSite;
