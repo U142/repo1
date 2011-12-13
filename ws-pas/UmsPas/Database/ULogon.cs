@@ -604,6 +604,7 @@ namespace com.ums.PAS.Database
                         String szSessionSql = String.Format("sp_pas_startsession {0}, '{1}', '{2}'",
                                                 ret.l_userpk, l.sessionid, l.sz_password);
                         ExecNonQuery(szSessionSql);
+                        ULog.write(String.Format("{5} - User logged on: {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4}\nWith SessionID={6}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), nsl.sz_domain, nsl.sz_ip, nsl.sz_location, DateTime.Now.ToLocalTime(), l.sessionid));
                     }
                     catch (Exception)
                     {
