@@ -12,17 +12,13 @@
 package no.ums.log.swing;
 
 import java.awt.*;
-import java.awt.Color;
-import java.awt.EventQueue;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.JFrame;
-import javax.swing.LayoutStyle;
 
 /**
  *
@@ -43,164 +39,165 @@ public class LogRecordDetail extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        JLabel time = new JLabel();
-        JLabel levelLabel = new JLabel();
-        JLabel sourceLabel = new JLabel();
-        JLabel messageLabel = new JLabel();
-        jScrollPane2 = new JScrollPane();
-        messageValue = new JTextArea();
-        sourceValue = new JLabel();
-        levelValue = new JLabel();
-        timeValue = new JLabel();
-        exceptionPanel = new JPanel();
-        JLabel exceptionLabel = new JLabel();
-        jScrollPane3 = new JScrollPane();
-        exceptionValue = new JTextArea();
-        jScrollPane1 = new JScrollPane();
-        jTextArea1 = new JTextArea();
+	private void initComponents() {
+		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.log.localization.lang");
+		JLabel time = new JLabel();
+		JLabel levelLabel = new JLabel();
+		JLabel sourceLabel = new JLabel();
+		JLabel messageLabel = new JLabel();
+		jScrollPane2 = new JScrollPane();
+		messageValue = new JTextArea();
+		sourceValue = new JLabel();
+		levelValue = new JLabel();
+		timeValue = new JLabel();
+		exceptionPanel = new JPanel();
+		JLabel exceptionLabel = new JLabel();
+		jScrollPane3 = new JScrollPane();
+		exceptionValue = new JTextArea();
+		jScrollPane1 = new JScrollPane();
+		jTextArea1 = new JTextArea();
 
-        //======== this ========
-        setPreferredSize(new Dimension(250, 300));
-        setRequestFocusEnabled(false);
+		//======== this ========
+		setPreferredSize(new Dimension(250, 300));
+		setRequestFocusEnabled(false);
 
-        //---- time ----
-        time.setText("Time:");
+		//---- time ----
+		time.setText(bundle.getString("lblTime.text"));
 
-        //---- levelLabel ----
-        levelLabel.setText("Level:");
+		//---- levelLabel ----
+		levelLabel.setText(bundle.getString("lblLevel.text"));
 
-        //---- sourceLabel ----
-        sourceLabel.setText("Source:");
+		//---- sourceLabel ----
+		sourceLabel.setText(bundle.getString("lblSource.text"));
 
-        //---- messageLabel ----
-        messageLabel.setText("Message:");
+		//---- messageLabel ----
+		messageLabel.setText(bundle.getString("lblMessage.text"));
 
-        //======== jScrollPane2 ========
-        {
+		//======== jScrollPane2 ========
+		{
 
-            //---- messageValue ----
-            messageValue.setColumns(20);
-            messageValue.setEditable(false);
-            messageValue.setLineWrap(true);
-            messageValue.setRows(3);
-            messageValue.setTabSize(4);
-            jScrollPane2.setViewportView(messageValue);
-        }
+			//---- messageValue ----
+			messageValue.setColumns(20);
+			messageValue.setEditable(false);
+			messageValue.setLineWrap(true);
+			messageValue.setRows(3);
+			messageValue.setTabSize(4);
+			jScrollPane2.setViewportView(messageValue);
+		}
 
-        //---- sourceValue ----
-        sourceValue.setText("jLabel7");
+		//---- sourceValue ----
+		sourceValue.setText("jLabel7");
 
-        //---- levelValue ----
-        levelValue.setText("jLabel8");
+		//---- levelValue ----
+		levelValue.setText("jLabel8");
 
-        //---- timeValue ----
-        timeValue.setText("jLabel9");
+		//---- timeValue ----
+		timeValue.setText("jLabel9");
 
-        //======== exceptionPanel ========
-        {
+		//======== exceptionPanel ========
+		{
 
-            //---- exceptionLabel ----
-            exceptionLabel.setText("Exception:");
+			//---- exceptionLabel ----
+			exceptionLabel.setText(bundle.getString("lblException.text"));
 
-            //======== jScrollPane3 ========
-            {
+			//======== jScrollPane3 ========
+			{
 
-                //---- exceptionValue ----
-                exceptionValue.setColumns(20);
-                exceptionValue.setEditable(false);
-                exceptionValue.setRows(5);
-                jScrollPane3.setViewportView(exceptionValue);
-            }
+				//---- exceptionValue ----
+				exceptionValue.setColumns(20);
+				exceptionValue.setEditable(false);
+				exceptionValue.setRows(5);
+				jScrollPane3.setViewportView(exceptionValue);
+			}
 
-            GroupLayout exceptionPanelLayout = new GroupLayout(exceptionPanel);
-            exceptionPanel.setLayout(exceptionPanelLayout);
-            exceptionPanelLayout.setHorizontalGroup(
-                exceptionPanelLayout.createParallelGroup()
-                    .addGroup(exceptionPanelLayout.createSequentialGroup()
-                        .addComponent(exceptionLabel)
-                        .addContainerGap(162, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-            );
-            exceptionPanelLayout.setVerticalGroup(
-                exceptionPanelLayout.createParallelGroup()
-                    .addGroup(exceptionPanelLayout.createSequentialGroup()
-                        .addComponent(exceptionLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                        .addContainerGap())
-            );
-        }
+			GroupLayout exceptionPanelLayout = new GroupLayout(exceptionPanel);
+			exceptionPanel.setLayout(exceptionPanelLayout);
+			exceptionPanelLayout.setHorizontalGroup(
+				exceptionPanelLayout.createParallelGroup()
+					.addGroup(exceptionPanelLayout.createSequentialGroup()
+						.addComponent(exceptionLabel)
+						.addContainerGap(317, Short.MAX_VALUE))
+					.addComponent(jScrollPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+			);
+			exceptionPanelLayout.setVerticalGroup(
+				exceptionPanelLayout.createParallelGroup()
+					.addGroup(exceptionPanelLayout.createSequentialGroup()
+						.addComponent(exceptionLabel)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+						.addContainerGap())
+			);
+		}
 
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addComponent(exceptionPanel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(sourceLabel)
-                                .addComponent(levelLabel)
-                                .addComponent(time))
-                            .addGap(54, 54, 54)
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(timeValue)
-                                .addComponent(levelValue)))
-                        .addComponent(messageLabel, GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(12, 12, 12)
-                            .addComponent(sourceValue, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)))
-                    .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup()
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(time)
-                        .addComponent(timeValue))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(levelLabel)
-                        .addComponent(levelValue))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(sourceLabel)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(sourceValue)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(messageLabel)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(exceptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+		GroupLayout layout = new GroupLayout(this);
+		setLayout(layout);
+		layout.setHorizontalGroup(
+			layout.createParallelGroup()
+				.addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+						.addComponent(exceptionPanel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup()
+								.addComponent(sourceLabel)
+								.addComponent(levelLabel)
+								.addComponent(time))
+							.addGap(54, 54, 54)
+							.addGroup(layout.createParallelGroup()
+								.addComponent(timeValue)
+								.addComponent(levelValue)))
+						.addComponent(messageLabel, GroupLayout.Alignment.LEADING)
+						.addComponent(jScrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+						.addGroup(layout.createSequentialGroup()
+							.addGap(12, 12, 12)
+							.addComponent(sourceValue, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		layout.setVerticalGroup(
+			layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(time)
+						.addComponent(timeValue))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(levelLabel)
+						.addComponent(levelValue))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(sourceLabel)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(sourceValue)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(messageLabel)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(exceptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 
-        //======== jScrollPane1 ========
-        {
+		//======== jScrollPane1 ========
+		{
 
-            //---- jTextArea1 ----
-            jTextArea1.setColumns(20);
-            jTextArea1.setRows(5);
-            jScrollPane1.setViewportView(jTextArea1);
-        }
+			//---- jTextArea1 ----
+			jTextArea1.setColumns(20);
+			jTextArea1.setRows(5);
+			jScrollPane1.setViewportView(jTextArea1);
+		}
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JScrollPane jScrollPane2;
-    private JTextArea messageValue;
-    private JLabel sourceValue;
-    private JLabel levelValue;
-    private JLabel timeValue;
-    private JPanel exceptionPanel;
-    private JScrollPane jScrollPane3;
-    private JTextArea exceptionValue;
-    private JScrollPane jScrollPane1;
-    private JTextArea jTextArea1;
+	private JScrollPane jScrollPane2;
+	private JTextArea messageValue;
+	private JLabel sourceValue;
+	private JLabel levelValue;
+	private JLabel timeValue;
+	private JPanel exceptionPanel;
+	private JScrollPane jScrollPane3;
+	private JTextArea exceptionValue;
+	private JScrollPane jScrollPane1;
+	private JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
     public void setLogRecord(@Nullable LogRecord record) {
@@ -211,7 +208,8 @@ public class LogRecordDetail extends javax.swing.JPanel {
         messageValue.setText("");
         if (record != null) {
             timeValue.setText(LogSwingUtil.formatTime(record.getMillis()));
-            levelValue.setText(record.getLevel().getLocalizedName());
+    		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.log.localization.lang");
+    		levelValue.setText(bundle.getString("LogLevel."+record.getLevel()));
             levelValue.setForeground(LogSwingUtil.toColor(record.getLevel()));
             sourceValue.setText(record.getLoggerName());
             messageValue.setText(record.getMessage());

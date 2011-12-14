@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.NavigableMap;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -37,7 +38,8 @@ public class LogRecordLine extends javax.swing.JPanel {
     public LogRecordLine(LogRecord logRecord, boolean selected) {
         initComponents();
         level.setForeground(LogSwingUtil.toColor(logRecord.getLevel()));
-        level.setText(logRecord.getLevel().getLocalizedName());
+		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.log.localization.lang");
+        level.setText(bundle.getString("LogLevel."+logRecord.getLevel()));
         time.setText(LogSwingUtil.formatTime(logRecord.getMillis()));
         msg.setText(logRecord.getMessage());
         if (selected) {

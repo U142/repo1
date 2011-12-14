@@ -40,6 +40,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -254,11 +256,17 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	public class LanguageCombo extends StdTextLabel
 	{
 		String languageid;
+		String lang ="en";
+		String country = "GB";
+		public String getLanguage() { return lang; }
+		public String getCountry() { return country; }
 		public String getLanguageid() { return languageid; }
 		public LanguageCombo(String sz_language, String languageid)
 		{
 			super(sz_language);
 			this.languageid = languageid; 
+			lang = languageid.substring(0,2);
+			country = languageid.substring(3,5);
 			//load icon
 			try
 			{
@@ -404,6 +412,15 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				else
 					l.put("en_GB", "English");
 				Enumeration en = l.keys();
+				m_combo_language.addItemListener(new ItemListener() {
+					
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						JComboBox c = (JComboBox)e.getSource();
+						LanguageCombo l = (LanguageCombo)c.getSelectedItem();
+						Localization.INSTANCE.setLocale(new Locale(l.getLanguage(), l.getCountry()));
+					}
+				});
 				while(en.hasMoreElements())
 				{
 					String key = (String)en.nextElement();
