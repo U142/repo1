@@ -14,6 +14,7 @@ import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Logon;
 import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
@@ -723,10 +724,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     JOptionPane.showMessageDialog(null, Localization.l("logon_error_user_session_timeout"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 					break;
 				}
-				Logon logon = new Logon(PAS.get_pas(), new LogonInfo(PAS.get_pas().get_settings().getUsername(),
+				/*Logon logon = new Logon(new LogonInfo(PAS.get_pas().get_settings().getUsername(),
+						PAS.get_pas().get_settings().getCompany()), 
+						PAS.get_pas().get_settings().getLanguage(),
+						true);*/
+				Logon logon = Holder.getInstance(new LogonInfo(PAS.get_pas().get_settings().getUsername(),
 						PAS.get_pas().get_settings().getCompany()), 
 						PAS.get_pas().get_settings().getLanguage(),
 						true);
+				logon.startLogonProcedure();
 				if(!logon.isLoggedOn())
 					System.exit(0);
 	

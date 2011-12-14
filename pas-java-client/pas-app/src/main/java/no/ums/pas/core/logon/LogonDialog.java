@@ -24,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPasswordField;
 import javax.swing.JToolTip;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -161,6 +162,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		
 	}
 	
+	
 	public LogonDialog(Logon logon, JFrame owner, boolean b_modal, 
 			LogonInfo logoninfo, String wantedlanguage,
 			boolean b_request_newsession) {
@@ -184,6 +186,46 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		this.setLocationRelativeTo(PAS.get_pas());
 		if(b_request_newsession)
 			this.setAlwaysOnTop(true);
+		initComponents();
+		
+		if(b_request_newsession)
+		{
+			m_panel.m_txt_userid.setEditable(false);
+			m_panel.m_txt_compid.setEditable(false);
+		}
+		try
+		{
+			new WSPowerup(this);
+		}
+		catch(Exception e)
+		{
+			
+		}		
+
+	}
+	
+	Locale currentLocaleSelection = null;
+	@Override
+	public void setLocale(Locale l)
+	{
+		if(currentLocaleSelection==null || currentLocaleSelection.getLanguage()!=l.getLanguage())
+		{
+			currentLocaleSelection = l;
+			this.wantedlanguage = l.getLanguage() + "_" + l.getCountry();
+			super.setLocale(l);
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					getContentPane().removeAll();
+					initComponents();
+				}
+			});
+		}
+	}
+	
+	private void initComponents()
+	{
 		m_panel = new LogonPanel(PAS.get_pas());
 		m_panel.m_txt_passwd.addComponentListener(this);
 		//m_panel.add_controls();
@@ -202,19 +244,6 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		}
 		m_panel.init();
 
-		if(b_request_newsession)
-		{
-			m_panel.m_txt_userid.setEditable(false);
-			m_panel.m_txt_compid.setEditable(false);
-		}
-		try
-		{
-			new WSPowerup(this);
-		}
-		catch(Exception e)
-		{
-			
-		}
 	}
 	
 	@Override
@@ -309,8 +338,9 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		public JButton getBtnSubmit() { return m_btn_submit; }
 		public StdTextLabel getLblError() { return m_lbl_errormsg; }
 		
-		public LogonPanel(PAS pas) {
-			super();
+		
+		private void initComponents()
+		{
 			m_txt_userid = new StdTextArea("", false);
 			m_txt_compid = new StdTextArea("", false);
 			m_txt_passwd = new JPasswordField("") {
@@ -412,22 +442,14 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				else
 					l.put("en_GB", "English");
 				Enumeration en = l.keys();
-				m_combo_language.addItemListener(new ItemListener() {
-					
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						JComboBox c = (JComboBox)e.getSource();
-						LanguageCombo l = (LanguageCombo)c.getSelectedItem();
-						Localization.INSTANCE.setLocale(new Locale(l.getLanguage(), l.getCountry()));
-					}
-				});
+				
 				while(en.hasMoreElements())
 				{
 					String key = (String)en.nextElement();
 					String value = l.get(key);
 					LanguageCombo item = new LanguageCombo(value, key);
 					m_combo_language.addItem(item);
-					String temp = wantedlanguage;
+					String temp = LogonDialog.this.wantedlanguage;
 					boolean b_use = temp.equalsIgnoreCase(key);
 					if(b_use)
 					{
@@ -436,12 +458,29 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 					}
 				}
 				
+				m_combo_language.addItemListener(new ItemListener() {
+					
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						JComboBox c = (JComboBox)e.getSource();
+						LanguageCombo l = (LanguageCombo)c.getSelectedItem();
+						Localization.INSTANCE.setLocale(new Locale(l.getLanguage(), l.getCountry()));
+						LogonDialog.this.setLocale(new Locale(l.getLanguage(), l.getCountry()));
+						//PAS.setLocale(l.languageid); //setLocale(new Locale(l.getLanguage(), l.getCountry()));
+					}
+				});
 			}
 			catch(Exception e)
 			{
 				log.warn(e.getMessage(), e);
 				log.debug("Error");
 			}
+
+		}
+		
+		public LogonPanel(PAS pas) {
+			super();
+			initComponents();
 			log.debug("LOGON");
 			
 		}

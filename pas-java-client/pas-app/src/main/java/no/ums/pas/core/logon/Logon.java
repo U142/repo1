@@ -20,8 +20,20 @@ public class Logon implements ActionListener {
 
     private static final Log log = UmsLog.getLogger(Logon.class);
 
-	private PAS m_pas;
-	private PAS get_pas() { return m_pas; }
+	public static class Holder
+	{
+		public static Logon INSTANCE = null;
+		public static Logon getInstance(LogonInfo info, String lang, boolean bRequestNewSession)
+		{
+			if(Holder.INSTANCE==null)
+			{
+				Holder.INSTANCE = new Logon(info, lang, bRequestNewSession);
+			}
+			return Holder.INSTANCE;
+		}
+	}
+
+    
 	UserInfo m_info = null;
 	LogonInfo m_logoninfo = null;
 	LogonInfo m_initinfo = null;
@@ -32,6 +44,7 @@ public class Logon implements ActionListener {
 	public UPASUISETTINGS get_uisettings() { return m_pasui_settings; }
 	String m_sz_error;
 	LogonDialog dlg = null;
+	public LogonDialog getLogonDialog() { return dlg; }
 	boolean m_b_isloggedon = false;
 	public boolean isLoggedOn() { return m_b_isloggedon; }
 	private void setLoggedOn() { m_b_isloggedon = true; }
@@ -69,13 +82,16 @@ public class Logon implements ActionListener {
 			m_b_cantryagain = false;
 	}
 	
-	public Logon(PAS pas, LogonInfo info, String language, boolean b_request_newsession) {
-		m_pas = pas;
+	public Logon(LogonInfo info, String language, boolean b_request_newsession) {
 		m_logoninfo = info;
 		m_initinfo = info;
 		wantedlanguage = language;
 		this.b_request_newsession = b_request_newsession;
 		bAutoLogon = info.isAutoLogonReady();
+	}
+	
+	public void startLogonProcedure()
+	{
 		start();
 	}
 	
@@ -97,7 +113,7 @@ public class Logon implements ActionListener {
 				java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run()
 				{
-					dlg = new LogonDialog(temp, get_pas(), true, m_initinfo, wantedlanguage, b_request_newsession);
+					dlg = new LogonDialog(temp, null, true, m_initinfo, wantedlanguage, b_request_newsession);
 					PAS.pasplugin.onCustomizeLogonDlg(dlg);
 				}
 				});

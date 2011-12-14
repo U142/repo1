@@ -10,6 +10,7 @@ import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Logon;
+import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
@@ -864,7 +865,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						m_settings.setUsername(PAS_OVERRIDE_USERID);
 					}
-					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					//Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					Logon logon = Holder.getInstance(new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					logon.startLogonProcedure();
 					if(!logon.isLoggedOn() || logon.get_userinfo()==null) {
                         LogFrame.remove();
                         for (Frame frame : Frame.getFrames()) {
