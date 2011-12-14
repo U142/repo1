@@ -29,6 +29,12 @@ public class Logon implements ActionListener {
 			{
 				Holder.INSTANCE = new Logon(info, lang, bRequestNewSession);
 			}
+			else
+			{
+				Holder.INSTANCE.b_request_newsession = bRequestNewSession;
+				Holder.INSTANCE.wantedlanguage = lang;
+				Holder.INSTANCE.m_logoninfo = info;
+			}
 			return Holder.INSTANCE;
 		}
 	}
@@ -122,6 +128,10 @@ public class Logon implements ActionListener {
 			{
 				
 			}
+		}
+		else
+		{
+			dlg.setRenewSessionMode();
 		}
 
 		

@@ -70,6 +70,12 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	private LogonPanel m_panel;
 	public LogonPanel get_logonpanel() { return m_panel; }
 	private Logon m_logon;
+	private String extendedTitleLangID = "";
+	public void setExtendedTitleLangID(String s)
+	{
+		extendedTitleLangID = s;
+		updateTitle();
+	}
 	public void setMaxLogonTries(int i)
 	{
 		try
@@ -204,6 +210,13 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 
 	}
 	
+	public void setRenewSessionMode()
+	{
+		m_panel.m_txt_compid.setEditable(false);
+		m_panel.m_txt_userid.setEditable(false);
+		m_panel.m_combo_language.setEnabled(false);
+	}
+	
 	Locale currentLocaleSelection = null;
 	@Override
 	public void setLocale(Locale l)
@@ -224,8 +237,14 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		}
 	}
 	
+	public void updateTitle()
+	{
+		setTitle(Localization.l("logon_heading") + (extendedTitleLangID.length()>0 ? " - " + Localization.l(extendedTitleLangID) : ""));		
+	}
+	
 	private void initComponents()
 	{
+		updateTitle();
 		m_panel = new LogonPanel(PAS.get_pas());
 		m_panel.m_txt_passwd.addComponentListener(this);
 		//m_panel.add_controls();

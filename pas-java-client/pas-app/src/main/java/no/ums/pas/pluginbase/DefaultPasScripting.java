@@ -126,10 +126,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
 		if(ws.getResult()==WSRESULTCODE.OK) {
-            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_active"));
+			dlg.setExtendedTitleLangID("logon_ws_active");
         }
 		else {
-            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_inactive"));
+			dlg.setExtendedTitleLangID("logon_ws_inactive");
         }
 		try {
 			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
