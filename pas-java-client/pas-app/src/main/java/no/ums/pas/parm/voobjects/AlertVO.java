@@ -365,7 +365,7 @@ public class AlertVO extends ParmVO implements Cloneable {
     public String toString() {
 		String ret;
 		if(getLocked() == 1) {
-			ret = strName + " [Locked]";
+			ret = strName + String.format(" [%s]", Localization.l("main_parm_alert_lba_locked"));
 		}
 		else
 			ret = strName;
@@ -374,7 +374,7 @@ public class AlertVO extends ParmVO implements Cloneable {
 			if(sz_lba_areaid!=null)
 			{
 				if(sz_lba_areaid.equals("-2"))
-					ret += " [LBA ERROR]";
+					ret += String.format(" [%s]", Localization.l("main_parm_alert_lba_error_text"));
 				else if(sz_lba_areaid.equals("0"))
 					ret += " [" + Localization.l("main_parm_alert_lba_waiting_text") + "]";
 					
