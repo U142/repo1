@@ -1245,7 +1245,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public void onLocaleChanged(Locale from, Locale to) {
 		try
 		{
-			log.debug("Language changed from " + from.getLanguage() + " to " + to.getLanguage());
+			log.debug("Language changed from " + from.getDisplayLanguage() + " to " + to.getDisplayLanguage());
 			UIParamLoader.loadServerUIParams();
 		}
 		catch(FileNotFoundException e)

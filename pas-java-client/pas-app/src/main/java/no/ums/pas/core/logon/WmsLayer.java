@@ -11,7 +11,7 @@ public class WmsLayer {
 	@Override
 	public String toString()
 	{
-		return layername + "=" + checked.toString();
+		return layername + "=" + (checked.booleanValue() ? "1" : "0");
 	}
 	@Override
 	public int hashCode() {
@@ -21,4 +21,5 @@ public class WmsLayer {
 	public boolean equals(Object obj) {
 		return (obj==null ? false : this.hashCode()==obj.hashCode());
 	}
+	
 }

@@ -3,6 +3,9 @@ package no.ums.map.tiled;
 import com.google.common.io.Resources;
 
 import javax.imageio.ImageIO;
+
+import org.jfree.util.Log;
+
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

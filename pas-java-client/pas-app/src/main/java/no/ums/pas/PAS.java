@@ -374,6 +374,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			boolean b_changed = false;
 			if(temp!=null && locale!=null && !temp.getLanguage().equals(locale.getLanguage()))
 				b_changed = true;
+			if(b_changed)
+				PAS.pasplugin.onLocaleChanged(locale, temp);
 			locale = temp;
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
             Localization.INSTANCE.setLocale(locale);
@@ -382,8 +384,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
             //UIManager.getDefaults().addResourceBundle(String.format("no/ums/pas/localization/lang_%s_%s", locale.getLanguage(), locale.getCountry()));
 			//locale = new Locale("en");
 			//Locale.setDefault(locale);
-			if(b_changed)
-				PAS.pasplugin.onLocaleChanged(locale, temp);
 		}
 		catch(Exception e)
 		{

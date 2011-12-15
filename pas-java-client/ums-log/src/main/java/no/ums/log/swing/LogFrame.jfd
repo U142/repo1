@@ -39,6 +39,10 @@
         <string>LogFrame.title</string>
        </object>
       </void>
+      <void method="setProperty">
+       <string>$locationPolicy</string>
+       <int>0</int>
+      </void>
       <void method="addEvent">
        <object class="com.jformdesigner.model.FormEvent">
         <string>java.awt.event.WindowListener</string>
@@ -79,7 +83,7 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq t {space :::p, comp filterLabel:::p::p, space s:::p, comp jComboBox1:::p::p, space ::41:x, comp btnClear:::p::p, space s:::p, comp btnSendMail:::p::p, space u:::p, comp btnSave:::p::p, space u:::p, comp btnClose:::p::p, space :::p}, comp jScrollPane1::l::498:x}</string>
+            <string>par l {seq t {space :::p, comp filterLabel:::p::p, space s:::p, comp jComboBox1:::p::p, space ::46:x, comp btnClear:::p::p, space s:::p, comp btnSendMail:::p::p, space u:::p, comp btnSave:::p::p, space u:::p, comp btnClose:::p::p, space :::p}, comp jScrollPane1::l::498:x}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>

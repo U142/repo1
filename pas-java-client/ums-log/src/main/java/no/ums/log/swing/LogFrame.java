@@ -319,7 +319,7 @@ public class LogFrame extends javax.swing.JFrame {
 							.addComponent(filterLabel)
 							.addGap(18, 18, 18)
 							.addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
 							.addComponent(btnClear)
 							.addGap(18, 18, 18)
 							.addComponent(btnSendMail)

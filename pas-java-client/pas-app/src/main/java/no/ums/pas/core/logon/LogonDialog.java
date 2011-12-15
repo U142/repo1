@@ -472,7 +472,6 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 					boolean b_use = temp.equalsIgnoreCase(key);
 					if(b_use)
 					{
-						log.debug("language " + key);
 						m_combo_language.setSelectedItem(item);
 					}
 				}
