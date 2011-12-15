@@ -38,6 +38,7 @@ import javax.swing.tree.TreePath;
 import no.ums.pas.core.logon.WmsLayerTree.LayerCheckBoxNode;
 
 import org.geotools.data.ows.Layer;
+import org.geotools.data.ows.StyleImpl;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 public class WmsLayerTree extends JTree
@@ -305,7 +306,24 @@ public class WmsLayerTree extends JTree
 			Object userobj = node.getUserObject();
 			if(userobj instanceof LayerCheckBoxNode)
 			{
-				return ((LayerCheckBoxNode)userobj).layer.getTitle();
+				LayerCheckBoxNode n = (LayerCheckBoxNode)userobj;
+				StringBuilder toolTip = new StringBuilder();
+				toolTip.append("<html><b>");
+				toolTip.append(n.layer.getTitle());
+				toolTip.append("</b><br>");
+				for(String srs : n.layer.getSrs())
+				{
+					toolTip.append(srs);
+					toolTip.append("<br>");
+				}
+				toolTip.append("<br>");
+				for(StyleImpl s : n.layer.getStyles())
+				{
+					toolTip.append(s.getName());
+					toolTip.append("<br>");
+				}
+				toolTip.append("</html>");
+				return toolTip.toString();
 			}
 		}
 		

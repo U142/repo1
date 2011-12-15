@@ -203,6 +203,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 				dlg.setVisible(false);
 				if(final_reload_map)
 				{
+					Variables.getMapFrame().signalWmsLayersChanged();
 					Variables.getNavigation().reloadMap();
 				}
 			}

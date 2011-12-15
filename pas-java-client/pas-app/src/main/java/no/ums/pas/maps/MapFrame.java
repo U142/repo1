@@ -29,7 +29,6 @@ import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.MapPointPix;
 import no.ums.pas.maps.defines.MapSite;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PLMNShape;
@@ -868,6 +867,12 @@ public class MapFrame extends JPanel implements ActionListener {
         }
     }
 
+    public void signalWmsLayersChanged()
+    {
+    	wmsLookup.clearAllCache();
+    	repaint();
+    }
+
     private final TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
     private final TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
         private String lastLookup = null;
@@ -898,6 +903,7 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
         }
+        
 
         @Override
         public String getScheme() {

@@ -28,6 +28,7 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
     public AbstractTileCacheWms() {
         this(18, TILE_SIZE);
     }
+    
 
     @Override
     protected URI createUri(int zoom, int row, int column) {
