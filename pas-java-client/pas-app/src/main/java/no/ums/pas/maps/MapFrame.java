@@ -51,6 +51,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.SystemColor;
@@ -196,7 +197,6 @@ public class MapFrame extends JPanel implements ActionListener {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 		        //download houses when user stops dragging
-				log.debug("dragging set to " + get_actionhandler().get_isdragging());
 				switch(get_mode())
 				{
 				case PAN:
@@ -847,9 +847,11 @@ public class MapFrame extends JPanel implements ActionListener {
                 get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
 
                 for (final TileData tileData : tileInfo.getTileData()) {
-                    g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+               		g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+                		
                     if (!tileLookup.exists(tileData)) {
-                        pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
+                        PAS.pasplugin.onMapCellNotLoaded(g, tileLookup, tileData);
+                    	pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
                             @Override
                             public void run() {
                                 tileLookup.getImage(tileData);
