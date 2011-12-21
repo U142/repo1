@@ -126,7 +126,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			TileData tileData) {
     	Graphics2D g2d = (Graphics2D)g;
     	g2d.setColor(new Color(0, 0, 0, 128));
-    	g2d.drawRect(tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight());
+    	g2d.drawRect(tileData.getX(), tileData.getY(), tileData.getWidth()-1, tileData.getHeight()-1);
 
 		Point center = new Point(tileData.getX() + tileData.getWidth()/2, tileData.getY() + tileData.getHeight()/2);
     	Image img = ImageFetcher.getImage("unknown_24.png");

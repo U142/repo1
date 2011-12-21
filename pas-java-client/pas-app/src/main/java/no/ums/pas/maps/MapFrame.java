@@ -7,6 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.AbstractTileCache;
 import no.ums.map.tiled.AbstractTileCacheWms;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileCacheFleximap;
@@ -858,6 +859,10 @@ public class MapFrame extends JPanel implements ActionListener {
                                 repaint();
                             }
                         }));
+                    }
+                    else if(tileLookup.exists(tileData) && tileLookup.getImageFast(tileData) instanceof AbstractTileCache.InvalidImage)
+                    {
+                    	PAS.pasplugin.onMapCellError(g, tileLookup, tileData);
                     }
                 }
             }

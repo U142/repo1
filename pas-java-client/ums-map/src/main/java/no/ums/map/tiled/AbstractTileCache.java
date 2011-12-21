@@ -7,9 +7,13 @@ import javax.annotation.Nullable;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.lang.Math;
 import java.lang.Override;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -17,11 +21,20 @@ import java.util.Map;
 public abstract class AbstractTileCache {
 
     private final Map<TileCell, Image> cache;
+    private final HashSet<TileCell> invalidTiles = new HashSet<TileCell>();
 
     private final int maxZoom;
     private final ZoomLookup[] zoomLookups;
     private final int tileSize;
-
+    
+    public class InvalidImage extends BufferedImage
+    {
+    	public InvalidImage()
+    	{
+    		super(1, 1, BufferedImage.TYPE_INT_ARGB);
+    	}
+    }
+    
     public AbstractTileCache(int maxZoom, int tileSize) {
         this.maxZoom = maxZoom;
         this.tileSize = tileSize;
@@ -29,15 +42,48 @@ public abstract class AbstractTileCache {
         for (int i = 0; i < zoomLookups.length; i++) {
             zoomLookups[i] = new ZoomLookup(i, tileSize);
         }
-
-        cache = new MapMaker().softValues().makeComputingMap(new Function<TileCell, Image>() {
-            @Override
-            public Image apply(@Nullable TileCell input) {
-                return getImage(input);
-            }
+        
+        TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				doInvalidImageCleanup();
+			}
+		};
+        new Timer().scheduleAtFixedRate(task, 5000, 5000);
+        cache = new MapMaker()
+        		.softValues()
+				.makeComputingMap(new Function<TileCell, Image>() {
+		            @Override
+		            public Image apply(@Nullable TileCell input) {
+		                try
+		                {
+		                	Image img = getImage(input);
+		                	if(img==null)
+		                		invalidTiles.add(input);
+		                	else
+		                		invalidTiles.remove(input);
+			                return (img == null ? new InvalidImage() : img);
+		                }
+		                catch(Exception e)
+		                {
+		                	invalidTiles.add(input);
+		                	return new InvalidImage();
+		                }
+	            }
+            
         });
+        
     }
     
+    
+    protected void doInvalidImageCleanup()
+    {
+    	for(TileCell cell : invalidTiles)
+    	{
+   			cache.remove(cell);
+    	}
+    	invalidTiles.clear();
+    }
 
     protected abstract Image getImage(TileCell input);
 
