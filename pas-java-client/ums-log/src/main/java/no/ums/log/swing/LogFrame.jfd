@@ -71,7 +71,7 @@
         </void>
         <void method="setProperty">
          <string>resizeWeight</string>
-         <double>1.0</double>
+         <double>0.4</double>
         </void>
         <void property="name">
          <string>jSplitPane1</string>

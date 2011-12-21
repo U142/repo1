@@ -239,7 +239,7 @@ public class LogFrame extends javax.swing.JFrame {
 		{
 			jSplitPane1.setBorder(new EtchedBorder());
 			jSplitPane1.setDividerLocation(500);
-			jSplitPane1.setResizeWeight(1.0);
+			jSplitPane1.setResizeWeight(0.4);
 
 			//======== jPanel2 ========
 			{

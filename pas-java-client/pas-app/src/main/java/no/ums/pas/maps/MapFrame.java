@@ -854,7 +854,7 @@ public class MapFrame extends JPanel implements ActionListener {
                     	pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
                             @Override
                             public void run() {
-                                tileLookup.getImage(tileData);
+                            	tileLookup.getImage(tileData);
                                 repaint();
                             }
                         }));
