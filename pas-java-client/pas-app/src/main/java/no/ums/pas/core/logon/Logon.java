@@ -131,7 +131,10 @@ public class Logon implements ActionListener {
 		}
 		else
 		{
-			dlg.setRenewSessionMode();
+			if(b_request_newsession)
+			{
+				dlg.setRenewSessionMode();
+			}
 		}
 
 		
