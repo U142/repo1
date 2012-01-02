@@ -26,7 +26,9 @@ public abstract class AbstractTileCacheUri extends AbstractTileCache {
             final byte[] img = Resources.toByteArray(url);
             Image image = ImageIO.read(new ByteArrayInputStream(img));
             if(image==null)
+            {
             	throw new NullPointerException("No image retrieved from " + uri);
+            }
             return image;
         } catch (IOException e) {
             throw new IllegalStateException("Failed to download from " + uri, e);

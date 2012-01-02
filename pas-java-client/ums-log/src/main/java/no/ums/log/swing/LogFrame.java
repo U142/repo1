@@ -379,7 +379,9 @@ public class LogFrame extends javax.swing.JFrame {
 
     private void writeSelected(final PrintWriter writer) {
         //noinspection deprecation
-        for (final Object o : jList1.getSelectedValues()) {
+    	for(int i=0; i < jList1.getModel().getSize(); i++)
+    	{
+    		final Object o = jList1.getModel().getElementAt(i);
             final LogRecord logRecord = (LogRecord) o;
             writer.printf("%tF %tT [%-7s] (%s) %s\n", logRecord.getMillis(), logRecord.getMillis(), logRecord.getLevel().getName(), logRecord.getLoggerName(), logRecord.getMessage());
             //noinspection ThrowableResultOfMethodCallIgnored
