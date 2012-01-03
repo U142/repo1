@@ -1,7 +1,6 @@
 package no.ums.pas.parm.voobjects;
 
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -9,6 +8,7 @@ import no.ums.pas.parm.map.MapPanel;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
+import no.ums.pas.send.cellbroadcast.CBMessage;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
