@@ -85,6 +85,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -1116,6 +1117,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			Error.getError().addError(Localization.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
 		}
 		
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                pasplugin.onSetInitialMapBounds(get_navigation(), get_userinfo());
+                removeWindowListener(this);
+            }
+        });
+        
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -1125,7 +1134,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				try
 				{
 					pasplugin.onAddPASComponents(PAS.this);
-					pasplugin.onSetInitialMapBounds(get_navigation(), get_userinfo());
 					m_mappane.initialize();
 					try {
 						kickRepaint();
@@ -1408,11 +1416,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			int n_mapheight = get_mappane().getHeight();
 			int n_mapwidth = get_mappane().getWidth();
-			if(n_mapheight>2000 || n_mapwidth>2000)
-			{
-				log.debug("Mappane size too large");
-				return;
-			}
 			if((get_mappane().getWidth()!=n_previous_mapwidth || get_mappane().getHeight() != n_previous_mapheight) && (get_mappane().getWidth() > 0 && get_mappane().getHeight()>0)) {
 				b_need_new_map = true;
 				n_previous_mapwidth = get_mappane().getWidth();
