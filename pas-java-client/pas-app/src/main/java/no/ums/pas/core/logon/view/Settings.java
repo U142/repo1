@@ -630,16 +630,15 @@ public class Settings extends JDialog {
 									.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
 									.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-									.addGroup(mapsettingsLayout.createParallelGroup()
-										.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-										.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-											.addComponent(comboMapWmsImg, GroupLayout.Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-											.addComponent(lblMapWmsPassword, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)))
+									.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+										.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblMapWmsUser, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+										.addComponent(lblMapWmsPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 									.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 										.addComponent(txtMapWmsPassword)
-										.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE))
+										.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 315, Short.MAX_VALUE))
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 									.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 507, GroupLayout.PREFERRED_SIZE)
 									.addGap(18, 18, 18)
@@ -648,7 +647,6 @@ public class Settings extends JDialog {
 										.addComponent(btnMoveUp, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))))
 							.addContainerGap())
 				);
-				mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
 				mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnMoveDown, btnMoveUp});
 				mapsettingsLayout.setVerticalGroup(
 					mapsettingsLayout.createParallelGroup()
@@ -1051,7 +1049,7 @@ public class Settings extends JDialog {
 							.addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
 							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(37, Short.MAX_VALUE))
+							.addContainerGap(45, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
