@@ -52,6 +52,7 @@ public class ExecApp {
         String codebaseFolder = "";
         String[] arr_args = args;
         String shaPassword = null;
+        String szLanguage = null;
 
         for (String arg : args) {
             if (arg.charAt(0) == '-') {
@@ -86,6 +87,9 @@ public class ExecApp {
                     case 'p':
                         shaPassword = arg.substring(2);
                         break;
+                    case 'l':
+                    	szLanguage = arg.substring(2);
+                    	break;
                     case 'f':
                         if (arg.length() > 3) {
                             log.debug("auto import file=" + arg.substring(3));
@@ -122,6 +126,7 @@ public class ExecApp {
         m_pas.setOverrideUserId(sz_userid);
         m_pas.setOverrideCompId(sz_compid);
         m_pas.setOverrideShaPassword(shaPassword);
+        m_pas.setOverrideLanguage(szLanguage);
         m_pas.setPasWsSite(sz_pasws);
         m_pas.setDebug(debug);
         m_pas.setCodeBase(sz_codebase);

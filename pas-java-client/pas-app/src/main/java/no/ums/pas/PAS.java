@@ -194,6 +194,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String PAS_OVERRIDE_USERID = null;
 	private String PAS_OVERRIDE_COMPID = null;
 	private String PAS_OVERRIDE_SHAPASSWORD = null;
+	private String PAS_OVERRIDE_LANGUAGE = null;
 	private String PAS_WS_SITE;;
 	private String PAS_CODEBASE;
 	public String ADDRESSSEARCH_URL = "";
@@ -411,6 +412,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
 	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }
+	public void setOverrideLanguage(String s) { PAS_OVERRIDE_LANGUAGE = s; }
 	public void setAddressSeachUrl(String s) { 
 		ADDRESSSEARCH_URL = s;
 		log.debug("Address Search URL = " + ADDRESSSEARCH_URL);
@@ -639,10 +641,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		pasplugin.onBeforeLogon();
 		
 		
-		String sz_userid, sz_compid, sz_passwd;
+		String sz_userid, sz_compid, sz_passwd, sz_language;
 		sz_userid = PAS_OVERRIDE_USERID; //this.getParameter("sz_userid");
 		sz_compid = PAS_OVERRIDE_COMPID; //this.getParameter("sz_compid");
 		sz_passwd = PAS_OVERRIDE_SHAPASSWORD; //this.getParameter("sz_passwd");
+		sz_language = PAS_OVERRIDE_LANGUAGE;
 		if(PAS_SITENAME==null)
 			PAS_SITENAME = "https://secure.ums.no/vb4/";
 		this.addComponentListener(this);
@@ -821,6 +824,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				info = new LogonInfo(sz_userid, sz_compid, sz_passwd, m_settings.getLanguage());
 			}
 		}
+		if(sz_language!=null)
+		{
+			if(info!=null)
+				info.set_language(sz_language);
+			if(m_settings!=null)
+				m_settings.setLanguage(sz_language);
+		}
 
 		
 		if(m_settings!=null)
@@ -836,6 +846,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				{
 				}
 				info = new LogonInfo(m_settings.getUsername(),m_settings.getCompany());
+				if(sz_language!=null)
+					info.set_language(sz_language);
 			}
 		}
 		
