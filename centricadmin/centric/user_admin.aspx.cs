@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using com.ums.ws.pas;
 using com.ums.ws.pas.admin;
 using com.ums.ws.parm.admin;
+using System.ServiceModel;
 
 public partial class user_admin : System.Web.UI.Page
 {
@@ -43,8 +44,8 @@ public partial class user_admin : System.Web.UI.Page
         if (li == null)
             Server.Transfer("logon.aspx");
 
-        PasAdmin pa = new PasAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pa = new PasAdminSoapClient();
+        pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
         GetUsersResponse res = pa.doGetUsers(Util.convertLogonInfoPasAdmin(li));
         if (res.successful)
         {
@@ -54,15 +55,12 @@ public partial class user_admin : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            rad_regional.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_regional"]);
-            rad_sregional.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_super_regional"]);
-            rad_national.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_national"]);
-            rad_administrator.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_administrator"]);
+            rad_regional.Attributes.Add("value", ConfigurationManager.AppSettings["usertype_regional"]);
+            rad_sregional.Attributes.Add("value", ConfigurationManager.AppSettings["usertype_super_regional"]);
+            rad_national.Attributes.Add("value", ConfigurationManager.AppSettings["usertype_national"]);
+            rad_administrator.Attributes.Add("value", ConfigurationManager.AppSettings["usertype_administrator"]);
 
-            PasAdmin pasadmin = new PasAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
-
-            GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
+            GetRestrictionAreasResponse resp = pa.doGetRestrictionAreas(li, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] departments = resp.restrictions;
             Session["regions"] = departments;
             for (int i = 0; i < departments.Length; ++i)
@@ -230,19 +228,19 @@ public partial class user_admin : System.Web.UI.Page
         if (rad_administrator.Checked)
         {
             // No regions allowed
-            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]);
+            user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_administrator"]);
         }
         else if (rad_national.Checked)
         {
             // All regions?
-            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_national"]);
+            user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_national"]);
         }
         else if (rad_sregional.Checked)
-            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]);
+            user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_super_regional"]);
         else if (rad_regional.Checked)
         {
             // Only on region
-            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_regional"]);
+            user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_regional"]);
             user.l_deptpk = int.Parse(lst_regions.SelectedValue);
         }
 
@@ -252,30 +250,30 @@ public partial class user_admin : System.Web.UI.Page
         
         // Send med UBBUSER og restriction area kan bare sette departmentpk på bbuser forresten?
         com.ums.ws.pas.admin.ULOGONINFO li = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-        PasAdmin pasadmin = new PasAdmin();
-        pasadmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pasadmin = new PasAdminSoapClient();
+        pasadmin.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
 
         int[] regions = lst_regions.GetSelectedIndices();
         int[] regionpk = new int[regions.Length];
 
          StoreUserResponse res;
-         if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_regional"])) // regional
+         if (user.l_profilepk == int.Parse(ConfigurationManager.AppSettings["usertype_regional"])) // regional
          {
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
          }
-         else if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) || user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_national"])) // super regional and national
+         else if (user.l_profilepk == int.Parse(ConfigurationManager.AppSettings["usertype_super_regional"]) || user.l_profilepk == int.Parse(ConfigurationManager.AppSettings["usertype_national"])) // super regional and national
          {
             for (int i = 0; i < regions.Length; ++i)
             {
                 regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
             }
-            if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_national"]))
+            if (user.l_profilepk == int.Parse(ConfigurationManager.AppSettings["usertype_national"]))
             {
                 int[] regtemp = regionpk;
                 regionpk = new int[regtemp.Length + 1];
                 regtemp.CopyTo(regionpk,0);
-                regionpk[regionpk.Length - 1] = int.Parse(ConfigurationSettings.AppSettings["national_department"]);
-                user.l_deptpk = int.Parse(ConfigurationSettings.AppSettings["national_department"]);
+                regionpk[regionpk.Length - 1] = int.Parse(ConfigurationManager.AppSettings["national_department"]);
+                user.l_deptpk = int.Parse(ConfigurationManager.AppSettings["national_department"]);
             }
             else
                 user.l_deptpk = regionpk[0];
@@ -283,7 +281,7 @@ public partial class user_admin : System.Web.UI.Page
          }
          else
          {
-             user.l_deptpk = int.Parse(ConfigurationSettings.AppSettings["admin_department"]);
+             user.l_deptpk = int.Parse(ConfigurationManager.AppSettings["admin_department"]);
              //user.l_deptpk = 100000; // dummy department
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
          }
@@ -435,22 +433,22 @@ public partial class user_admin : System.Web.UI.Page
         rad_national.Checked = false;
         rad_administrator.Checked = false;
 
-        if (long.Parse(ConfigurationSettings.AppSettings["usertype_national"]) == user.l_profilepk)
+        if (long.Parse(ConfigurationManager.AppSettings["usertype_national"]) == user.l_profilepk)
         {
             rad_national.Checked = true;
             req_regions.Enabled = true;
         }
-        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) == user.l_profilepk)
+        else if (long.Parse(ConfigurationManager.AppSettings["usertype_super_regional"]) == user.l_profilepk)
         {
             rad_sregional.Checked = true;
             req_regions.Enabled = true;
         }
-        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_regional"]) == user.l_profilepk)
+        else if (long.Parse(ConfigurationManager.AppSettings["usertype_regional"]) == user.l_profilepk)
         {
             rad_regional.Checked = true;
             req_regions.Enabled = true; 
         }
-        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]) == user.l_profilepk)
+        else if (long.Parse(ConfigurationManager.AppSettings["usertype_administrator"]) == user.l_profilepk)
         {
             rad_administrator.Checked = true;
         }
@@ -465,8 +463,8 @@ public partial class user_admin : System.Web.UI.Page
         {
             com.ums.ws.pas.admin.ULOGONINFO li = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
-            PasAdmin pa = new PasAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pa = new PasAdminSoapClient();
+            pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             int[] indices = lst_regions.GetSelectedIndices();
             com.ums.ws.pas.admin.UDEPARTMENT dept = null;
             com.ums.ws.pas.admin.UPolygon poly = null;

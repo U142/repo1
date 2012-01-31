@@ -16,6 +16,7 @@ using System.Collections.Generic;
 
 using com.ums.ws.pas;
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class main : System.Web.UI.Page 
 {
@@ -32,12 +33,13 @@ public partial class main : System.Web.UI.Page
             //txt_activate.Attributes.Add("readonly", "readonly");
             //txt_deactivate.Attributes.Add("readonly", "readonly");
             //txt_activate.Text = DateTime.Now.ToString("dd-MM-yyyy");
-            pasws pws = new pasws();
-            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+            paswsSoapClient pws = new paswsSoapClient();
+            pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
-            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),1,UBBNEWSLIST_FILTER.IN_BETWEEN_START_END); // jukser til å hente ut alle meldinger
+            
+            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon), 1, UBBNEWSLIST_FILTER.IN_BETWEEN_START_END); // jukser til å hente ut alle meldinger
 
             IEnumerable<UBBNEWS> sorter = sysm.news.newslist.OrderBy(news => news.l_incident_start);
 
@@ -55,8 +57,8 @@ public partial class main : System.Web.UI.Page
                     //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
             }*/
 
-            PasAdmin padmin = new PasAdmin();
-            padmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient padmin = new PasAdminSoapClient();
+            padmin.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             GetOperatorsResponse res = padmin.doGetOperators(logon);
             if (res.successful)
             {
@@ -128,8 +130,8 @@ public partial class main : System.Web.UI.Page
                 // skriv ut i validate
             }*/
         }
-        pasws ws = new pasws();
-        ws.Url = ConfigurationSettings.AppSettings["Pas"];
+        paswsSoapClient ws = new paswsSoapClient();
+        ws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
         com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
         // Stores the new message and returns it with l_newspk
@@ -240,8 +242,8 @@ public partial class main : System.Web.UI.Page
     {
         if (lst_messages.SelectedIndex != -1)
         {
-            PasAdmin pasa = new PasAdmin();
-            pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pasa = new PasAdminSoapClient();
+            pasa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             
             DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));

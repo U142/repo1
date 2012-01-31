@@ -15,6 +15,7 @@ using System.Collections.Generic;
 
 using com.ums.ws.pas.admin;
 using com.ums.ws.parm.admin;
+using System.ServiceModel;
 
 public partial class area_edit : System.Web.UI.Page
 {
@@ -30,12 +31,12 @@ public partial class area_edit : System.Web.UI.Page
         deptid.Attributes.Add("value", logoninfo.l_deptpk.ToString());
         password.Attributes.Add("value", logoninfo.sz_password);
         session.Attributes.Add("value", logoninfo.sessionid);
-        mapinfo.Attributes.Add("value", ConfigurationSettings.AppSettings["mapinfo"]);
-        w.Attributes.Add("value", ConfigurationSettings.AppSettings["w"]);
-        c.Attributes.Add("value", ConfigurationSettings.AppSettings["c"]);
-        m.Attributes.Add("value", ConfigurationSettings.AppSettings["m"]);
-        applet_width.Attributes.Add("value", ConfigurationSettings.AppSettings["applet_width"]);
-        applet_height.Attributes.Add("value", ConfigurationSettings.AppSettings["applet_height"]);
+        mapinfo.Attributes.Add("value", ConfigurationManager.AppSettings["mapinfo"]);
+        w.Attributes.Add("value", ConfigurationManager.AppSettings["w"]);
+        c.Attributes.Add("value", ConfigurationManager.AppSettings["c"]);
+        m.Attributes.Add("value", ConfigurationManager.AppSettings["m"]);
+        applet_width.Attributes.Add("value", ConfigurationManager.AppSettings["applet_width"]);
+        applet_height.Attributes.Add("value", ConfigurationManager.AppSettings["applet_height"]);
         
         //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=area_edit')");
 
@@ -43,8 +44,8 @@ public partial class area_edit : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            PasAdmin pa = new PasAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pa = new PasAdminSoapClient();
+            pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
             Session["restrictions"] = obj;
@@ -188,8 +189,9 @@ public partial class area_edit : System.Web.UI.Page
         {
             // Only allow update of obsolete
             com.ums.ws.pas.admin.UDEPARTMENT[] obj = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
-            com.ums.ws.pas.admin.PasAdmin pa = new com.ums.ws.pas.admin.PasAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pa = new PasAdminSoapClient();
+            pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
+            
             SetPAShapeObsoleteResponse res;
             for (int i = 0; i < obj.Length; ++i)
             {
@@ -256,7 +258,7 @@ public partial class area_edit : System.Web.UI.Page
                     p.polypoint = pp;
 
                     ParmAdmin pa = new ParmAdmin();
-                    pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+                    pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
 
                     PAOBJECT obj = new PAOBJECT();
                     obj.sz_name = txt_name.Text;
@@ -273,8 +275,8 @@ public partial class area_edit : System.Web.UI.Page
                     {
                         com.ums.ws.pas.admin.UDEPARTMENT[] deptlist = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
                         //lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
-                        PasAdmin pasa = new PasAdmin();
-                        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+                        PasAdminSoapClient pasa = new PasAdminSoapClient();
+                        pasa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
                         GetSingleRestricionResponse response = pasa.doGetSingleRestricion(li, res.pk);
                         if (response.successful)
                         {

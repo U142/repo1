@@ -15,6 +15,7 @@ using System.Collections.Generic;
 
 using com.ums.ws.pas;
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class systemmessages : System.Web.UI.Page
 {
@@ -32,8 +33,8 @@ public partial class systemmessages : System.Web.UI.Page
         {
             //txt_activate.Attributes.Add("readonly","readonly");
             //txt_deactivate.Attributes.Add("readonly", "readonly");
-            pasws pws = new pasws();
-            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+            paswsSoapClient pws = new paswsSoapClient();
+            pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (logon == null)
                 Server.Transfer("logon.aspx");
@@ -59,8 +60,8 @@ public partial class systemmessages : System.Web.UI.Page
                 lst_messages_selectedindex(this, new EventArgs());
             }
 
-            PasAdmin padmin = new PasAdmin();
-            padmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient padmin = new PasAdminSoapClient();
+            padmin.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             GetOperatorsResponse res = padmin.doGetOperators(logon);
             if (res.successful)
             {
@@ -164,8 +165,8 @@ public partial class systemmessages : System.Web.UI.Page
                 news.l_incident_end = long.Parse(txt_deactivate.Text.Substring(6, 4) + txt_deactivate.Text.Substring(3, 2) + txt_deactivate.Text.Substring(0, 2) + ddl_deactivate_h.SelectedValue + ddl_deactivate_m.SelectedValue + "00");
             news.newstext.sz_news = txt_message.Text;
 
-            pasws pws = new pasws();
-            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+            paswsSoapClient pws = new paswsSoapClient();
+            pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
             news = pws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), news);
             ddl_operator.SelectedValue = news.l_operator.ToString();

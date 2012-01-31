@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
 using com.ums.ws.pas;
+using System.ServiceModel;
 
 public partial class parameters : System.Web.UI.Page
 {
@@ -22,8 +23,8 @@ public partial class parameters : System.Web.UI.Page
         if (!IsPostBack)
         {
             // web service load settings
-            pasws pws = new pasws();
-            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+            paswsSoapClient pws = new paswsSoapClient();
+            pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (logon == null)
@@ -54,8 +55,8 @@ public partial class parameters : System.Web.UI.Page
         param.l_interval = int.Parse(txt_interval.Text);
         //param.l_repetition = int.Parse(txt_repetitions.Text);
         param.l_duration = int.Parse(txt_duration.Text);
-        pasws pws = new pasws();
-        pws.Url = ConfigurationSettings.AppSettings["Pas"];
+        paswsSoapClient pws = new paswsSoapClient();
+        pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
         com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (logon == null)
             Server.Transfer("logon.aspx");

@@ -12,7 +12,7 @@ using com.ums.ws.parm.admin;
 using com.ums.ws.pas.admin;
 using System.Configuration;
 using System.Text.RegularExpressions;
-
+using System.ServiceModel;
 /// <summary>
 /// Summary description for Util
 /// </summary>
@@ -21,8 +21,9 @@ public class Util
     public static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 ._\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
 
     public static CheckAccessResponse setOccupied(com.ums.ws.pas.admin.ULOGONINFO l, ACCESSPAGE page, Boolean f_lock) {
-        PasAdmin pa = new PasAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pa = new PasAdminSoapClient();
+        pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
+        //pa.en = ConfigurationManager.AppSettings["PasAdmin"];
         CheckAccessResponse ares = pa.doSetOccupied(l, page, f_lock);
         return ares;
     }
@@ -43,13 +44,13 @@ public class Util
 
     public static String userType(long type)
     {
-        if(long.Parse(ConfigurationSettings.AppSettings["usertype_national"]) == type)
+        if(long.Parse(ConfigurationManager.AppSettings["usertype_national"]) == type)
             return "National";
-        else if(long.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) == type)
+        else if(long.Parse(ConfigurationManager.AppSettings["usertype_super_regional"]) == type)
             return "Super Regional";
-        else if(long.Parse(ConfigurationSettings.AppSettings["usertype_regional"]) == type)
+        else if(long.Parse(ConfigurationManager.AppSettings["usertype_regional"]) == type)
             return "Regional";
-        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]) == type)
+        else if (long.Parse(ConfigurationManager.AppSettings["usertype_administrator"]) == type)
             return "Administrator";
         else
             return "Unknown";
@@ -316,7 +317,7 @@ public class Util
         HttpContext.Current.Response.AddHeader("Pragma", "public");
         WriteUserActivityMonthlyColumnName();
         
-        String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
+        String[] tmp = ConfigurationManager.AppSettings["hide"].Split(',');
         HashSet<short> hide = new HashSet<short>();
         for (int i = 0; i < tmp.Length; ++i)
             hide.Add(short.Parse(tmp[i]));
@@ -341,7 +342,7 @@ public class Util
                 AddComma("\"" + ((com.ums.ws.pas.admin.UBBUSER)users[log.l_userpk]).sz_userid + "\"", stringBuilder);
             else
                 AddComma("\"Unknown\"", stringBuilder);
-        AddComma("\"" + ConfigurationSettings.AppSettings[log.l_operation.ToString()] + "\"", stringBuilder);
+        AddComma("\"" + ConfigurationManager.AppSettings[log.l_operation.ToString()] + "\"", stringBuilder);
         AddComma(log.l_timestamp.ToString(), stringBuilder);
         AddLast("\"" + log.sz_desc + "\"", stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
@@ -371,7 +372,7 @@ public class Util
         foreach (CB_USER_REGION_RESPONSE reg in region)
         {
             foreach(PAOBJECT obj in reg.regionlist)
-                if (obj.l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                if (obj.l_deptpk != int.Parse(ConfigurationManager.AppSettings["admin_department"]))
                     WriteAccessPerUser(obj, reg);
         }
         HttpContext.Current.Response.End();

@@ -21,8 +21,8 @@ public class Handler : IHttpHandler, IRequiresSessionState {
         String page = nvc.Get("page");
         context.Response.ContentType = "text/plain";
         context.Response.Write(page);
-        PasAdmin pa = new PasAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pa = new PasAdminSoapClient();
+        pa.Endpoint.Address = new System.ServiceModel.EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
         ULOGONINFO info = (ULOGONINFO)context.Session["logoninfo"];
         
         if (page == "area_edit") {

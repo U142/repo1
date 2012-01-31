@@ -10,20 +10,22 @@ using System.Web.UI.HtmlControls;
 
 using com.ums.ws.pas;
 using com.ums.ws.parm.admin;
+using System.ServiceModel;
 
 public partial class report_useraccess : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        pasws pasws = new pasws();
-        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
-         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+        paswsSoapClient pasws = new paswsSoapClient();
+        pasws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
+        
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
             ParmAdmin pa = new ParmAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+            pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
             com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(l));
             IEnumerable<com.ums.ws.parm.admin.UDEPARTMENT> sorter = obj.OrderBy(area => area.sz_deptid);
             foreach (com.ums.ws.parm.admin.UDEPARTMENT dept in sorter)
@@ -38,7 +40,7 @@ public partial class report_useraccess : System.Web.UI.Page
         int[] selection = lst_areas.GetSelectedIndices();
         UBBUSER[] ulist;
         ParmAdmin pa = new ParmAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+        pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
 
         tbl_output.Rows.Clear();
         List<UBBUSER[]> total = new List<UBBUSER[]>();

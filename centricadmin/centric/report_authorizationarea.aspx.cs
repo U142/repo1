@@ -10,13 +10,14 @@ using System.Configuration;
 using com.ums.ws.pas;
 using com.ums.ws.parm.admin;
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class report_authorizationarea : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        pasws pasws = new pasws();
-        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
+        paswsSoapClient pasws = new paswsSoapClient();
+        pasws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
@@ -24,7 +25,7 @@ public partial class report_authorizationarea : System.Web.UI.Page
         if (!IsPostBack)
         {
             ParmAdmin pa = new ParmAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+            pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
 
             com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(l));
             Session["shapes"] = obj;
@@ -63,8 +64,8 @@ public partial class report_authorizationarea : System.Web.UI.Page
 
         for (int i = 0; i < lst_areas.GetSelectedIndices().Length; ++i)
         {
-            PasAdmin pasadmin = new PasAdmin();
-            pasadmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pasadmin = new PasAdminSoapClient();
+            pasadmin.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             IsShapeActiveInPeriodResponse res = pasadmin.doIsShapeActiveInPeriod((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], int.Parse(lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Value), createTimestamp());
             if (res.successful)
             {
@@ -109,10 +110,10 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                         "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1> " +
                                             "<param name=lat value=" + lat + " >" +
                                             "<param name=lon value=" + lon + " >" +
-                                            "<param name=mapinfo value=" + ConfigurationSettings.AppSettings["mapinfo"] + " >" +
-                                            "<param name=w value=" + ConfigurationSettings.AppSettings["w"] + " >" +
-                                            "<param name=applet_width value=" + ConfigurationSettings.AppSettings["applet_width"] + " >" +
-                                            "<param name=applet_height value=" + ConfigurationSettings.AppSettings["applet_height"] + " >" +
+                                            "<param name=mapinfo value=" + ConfigurationManager.AppSettings["mapinfo"] + " >" +
+                                            "<param name=w value=" + ConfigurationManager.AppSettings["w"] + " >" +
+                                            "<param name=applet_width value=" + ConfigurationManager.AppSettings["applet_width"] + " >" +
+                                            "<param name=applet_height value=" + ConfigurationManager.AppSettings["applet_height"] + " >" +
                                             "<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
                                        "</applet>" +
                                     "')\" value=\"Save\" />";

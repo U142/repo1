@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using System.Configuration;
 
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class logon : System.Web.UI.Page
 {
@@ -15,7 +16,7 @@ public partial class logon : System.Web.UI.Page
     {
         if (!IsPostBack)
         {                                   
-            txt_company.Text = ConfigurationSettings.AppSettings["company"];
+            txt_company.Text = ConfigurationManager.AppSettings["company"];
         }
 
 
@@ -24,8 +25,8 @@ public partial class logon : System.Web.UI.Page
     protected void btn_ok_Click(object sender, EventArgs e)
     {
         // log på, etterpå lagre ulogon i session, da vil jeg alltid kunne bruke den på alle ws kall
-        PasAdmin pws = new PasAdmin();
-        pws.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pws = new PasAdminSoapClient();
+        pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
         ULOGONINFO l = new ULOGONINFO();
         l.sz_compid = txt_company.Text.Replace("'","''");
         l.sz_userid = txt_user.Text.Replace("'", "''");

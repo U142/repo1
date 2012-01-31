@@ -9,6 +9,7 @@ using System.Web.UI.HtmlControls;
 using System.Configuration;
 
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class report_useractivity : System.Web.UI.Page
 {
@@ -22,8 +23,8 @@ public partial class report_useractivity : System.Web.UI.Page
         if (!IsPostBack)
         {
             fillDropDown();
-            PasAdmin pa = new PasAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pa = new PasAdminSoapClient();
+            pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
 
             GetUsersResponse res = pa.doGetUsers(l);
             Hashtable users = new Hashtable();
@@ -90,8 +91,8 @@ public partial class report_useractivity : System.Web.UI.Page
         try
         {
             ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
-            PasAdmin pasa = new PasAdmin();
-            pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            PasAdminSoapClient pasa = new PasAdminSoapClient();
+            pasa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             Hashtable users = (Hashtable)Session["users"];
 
             int[] indices = lst_users.GetSelectedIndices();
@@ -147,7 +148,7 @@ public partial class report_useractivity : System.Web.UI.Page
 
                     tbl_output.Rows.Add(header);
 
-                    String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
+                    String[] tmp = ConfigurationManager.AppSettings["hide"].Split(',');
                     HashSet<short> hide = new HashSet<short>();
                     for (int i = 0; i < tmp.Length; ++i)
                         hide.Add(short.Parse(tmp[i]));
@@ -179,7 +180,7 @@ public partial class report_useractivity : System.Web.UI.Page
 
                             cell = new HtmlTableCell();
                             lbldesc = new Label();
-                            lbldesc.Text = ConfigurationSettings.AppSettings[log.l_operation.ToString()];
+                            lbldesc.Text = ConfigurationManager.AppSettings[log.l_operation.ToString()];
                             cell.Controls.Add(lbldesc);
                             row.Cells.Add(cell);
 

@@ -18,13 +18,14 @@ using System.Text.RegularExpressions;
 
 using com.ums.ws.pas;
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class predefine_text : System.Web.UI.Page
 {
 
     private Hashtable ht;
     private Db db;
-    private pasws pws;
+    private paswsSoapClient pws;
     private System.Drawing.Color disabled_color;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -86,8 +87,8 @@ public partial class predefine_text : System.Web.UI.Page
         //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
         f.n_timefilter = 0;
 
-        pws = new pasws();
-        pws.Url = ConfigurationSettings.AppSettings["Pas"];
+        pws = new paswsSoapClient();
+        pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
 
 
@@ -183,8 +184,11 @@ public partial class predefine_text : System.Web.UI.Page
 
 
                 if (pws == null)
-                    pws = new pasws();
-                pws.Url = ConfigurationSettings.AppSettings["Pas"];
+                {
+                    pws = new paswsSoapClient();
+                }
+                
+                pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
                 com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
                 
                 long id = (long)pdt.n_messagepk;
@@ -282,9 +286,11 @@ public partial class predefine_text : System.Web.UI.Page
                         deleteNode(nodes[i].ChildNodes, nodes[i].ChildNodes[j].Value);
 
                 if (pws == null)
-                    pws = new pasws();
+                {
+                    pws = new paswsSoapClient();
+                }
 
-                pws.Url = ConfigurationSettings.AppSettings["Pas"];
+                pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
                 com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
                 UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(id)];
 

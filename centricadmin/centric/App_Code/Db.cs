@@ -33,9 +33,9 @@ public class Db
         {*/
         //oSQLConn = new OdbcConnection("DSN=" + Common.DATABASE.sz_dsn + ";" + "UID=" + Common.DATABASE.sz_uid + ";PWD=" + Common.DATABASE.sz_pwd + ";");            
         // Brukt lang nok tid på dette, hardkoder    
-        oSQLConn = new OdbcConnection("DSN=" + ConfigurationSettings.AppSettings["sz_db_dsn"] +
-                                     ";UID=" + ConfigurationSettings.AppSettings["sz_db_uid"] +
-                                     ";PWD=" + ConfigurationSettings.AppSettings["sz_db_pwd"]);
+        oSQLConn = new OdbcConnection("DSN=" + ConfigurationManager.AppSettings["sz_db_dsn"] +
+                                     ";UID=" + ConfigurationManager.AppSettings["sz_db_uid"] +
+                                     ";PWD=" + ConfigurationManager.AppSettings["sz_db_pwd"]);
 
         return oSQLConn;
         /*}

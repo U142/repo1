@@ -10,13 +10,14 @@ using System.Web.UI.HtmlControls;
 
 using com.ums.ws.parm.admin;
 using com.ums.ws.pas;
+using System.ServiceModel;
 
 public partial class report_accesspruser : System.Web.UI.Page
 {    
     protected void Page_Load(object sender, EventArgs e)
     {
-        pasws pasws = new pasws();
-        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
+        paswsSoapClient pasws = new paswsSoapClient();
+        pasws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
@@ -26,14 +27,14 @@ public partial class report_accesspruser : System.Web.UI.Page
             //UPASLOGON pl = pasws.PasLogon(logoninfo);
             //UDEPARTMENT[] depts = pl.departments;
             ParmAdmin pa = new ParmAdmin();
-            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+            pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
             com.ums.ws.parm.admin.ULOGONINFO logoninfo = Util.convertLogonInfoParmAdmin(l);
             
             UBBUSER[] ulist = pa.GetUsers(logoninfo);
             IEnumerable<UBBUSER> sorter = ulist.OrderBy(user => user.sz_userid);
             foreach (UBBUSER user in sorter)
             {
-                if (user.l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                if (user.l_deptpk != int.Parse(ConfigurationManager.AppSettings["admin_department"]))
                     lst_users.Items.Add(new ListItem(user.sz_userid, user.l_userpk.ToString()));
             }
         }
@@ -45,7 +46,7 @@ public partial class report_accesspruser : System.Web.UI.Page
         com.ums.ws.parm.admin.ULOGONINFO logoninfo = Util.convertLogonInfoParmAdmin(l);
 
         ParmAdmin pa = new ParmAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+        pa.Url = ConfigurationManager.AppSettings["ParmAdmin"];
         
         int[] selection = lst_users.GetSelectedIndices();
         UBBUSER[] ulist = new UBBUSER[selection.Length];
@@ -81,7 +82,7 @@ public partial class report_accesspruser : System.Web.UI.Page
 
                 for (int j = 0; j < response[i].regionlist.Length; ++j)
                 {
-                    if (response[i].regionlist[j].l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                    if (response[i].regionlist[j].l_deptpk != int.Parse(ConfigurationManager.AppSettings["admin_department"]))
                     {
                         HtmlTableRow row = new HtmlTableRow();
                         Label lbldesc = new Label();

@@ -11,13 +11,14 @@ using System.Web.UI.HtmlControls;
 using com.ums.ws.pas.status;
 using com.ums.ws.pas;
 using com.ums.ws.pas.admin;
+using System.ServiceModel;
 
 public partial class report_monthly : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
         PasStatus ps = new PasStatus();
-        ps.Url = ConfigurationSettings.AppSettings["PasStatus"];
+        ps.Url = ConfigurationManager.AppSettings["PasStatus"];
         com.ums.ws.pas.admin.ULOGONINFO l = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
@@ -77,8 +78,8 @@ public partial class report_monthly : System.Web.UI.Page
     {
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
-        PasAdmin pa = new PasAdmin();
-        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+        PasAdminSoapClient pa = new PasAdminSoapClient();
+        pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
         GetTotalNumberOfMessagesResponse tnmres = pa.doGetTotalNumberOfMessages(l, createTimestamp());
         Session["totalMessages"] = tnmres;
         HtmlTableRow header = new HtmlTableRow();
@@ -143,7 +144,7 @@ public partial class report_monthly : System.Web.UI.Page
             btn_messages_total.Visible = false;
 
         PasStatus pasws = new PasStatus();
-        pasws.Url = ConfigurationSettings.AppSettings["PasStatus"];
+        pasws.Url = ConfigurationManager.AppSettings["PasStatus"];
 
         CB_MESSAGE_MONTHLY_REPORT_RESPONSE[] res = pasws.GetAllMesagesThisMonth(Util.convertLogonInfoPasStatus(l), createTimestamp());
         
@@ -286,8 +287,8 @@ public partial class report_monthly : System.Web.UI.Page
             btn_performance_month.Visible = false;
 
         // System messages this month
-        pasws pas = new pasws();        
-        pas.Url = ConfigurationSettings.AppSettings["Pas"];
+        paswsSoapClient pas = new paswsSoapClient();
+        pas.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
 
         USYSTEMMESSAGES msg = pas.GetSystemMessagesMonth(Util.convertLogonInfoPas(l), createTimestamp());
         
