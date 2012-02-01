@@ -14,7 +14,6 @@ import java.util.Locale;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCacheFleximap extends AbstractTileCacheUri {
 public final class TileCacheFleximap extends AbstractTileCacheUri {
 
     private static final int TILE_SIZE = 256;
