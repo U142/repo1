@@ -1,10 +1,11 @@
 package no.ums.pas.parm.xml;
 
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
-import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.localization.countrycodes.CCode;
+import no.ums.pas.localization.countrycodes.CountryCodes;
 import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.send.cellbroadcast.CBMessage;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

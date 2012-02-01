@@ -4,16 +4,16 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
-import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.pas.core.ws.WSSetDefaultOadc;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.localization.countrycodes.CCode;
+import no.ums.pas.localization.countrycodes.CountryCodes;
 import no.ums.pas.send.SendController;
+import no.ums.pas.send.cellbroadcast.CBMessage;
 import no.ums.pas.send.messagelibrary.MessageLibTreePanel;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.swing.UmsAction;
@@ -650,7 +650,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			frame.setLocation(p);
 			frame.setVisible(true);
 			frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_country_or_default"));
+            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_country_or_default"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			return false;
 		}
@@ -659,7 +659,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			frame.setLocation(p);
 			frame.setVisible(true);
 			frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_no_name"));
+            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_no_name"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			return false;
 		}
@@ -677,7 +677,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			frame.setLocation(p);
 			frame.setVisible(true);
 			frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_no_content"));
+            JOptionPane.showMessageDialog(frame, Localization.l("main_sending_lba_error_no_content"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			return false;
 		}
@@ -796,7 +796,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		UpdateTextFields();
 		m_cbx_messages.setSelectedIndex(-1);
 		m_btn_delete.setEnabled(false);
-		m_btn_add.setText("Add");
+		m_btn_add.setText(Localization.l("common_add"));
 	}
 	protected void UpdateTextFields() {
 		set_size_label(m_txt_messagetext.getText(), m_lbl_messagesize);		

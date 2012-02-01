@@ -1101,7 +1101,7 @@ public class StatusController extends Controller implements ActionListener {
 		}
 		if(!exported) {
 			JFrame frame = PopupDialog.get_frame();
-			JOptionPane.showMessageDialog(frame,Localization.l("main_status_export_no_records"));
+			JOptionPane.showMessageDialog(frame,Localization.l("main_status_export_no_records"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 		}
 	}

@@ -14,6 +14,7 @@ public class FilePicker extends JFileChooser {
 	private int m_mode;
 	//private String m_sz_lookin = null;
 	private String m_sz_selectedfiletype;
+	private String m_sz_extension;
 	//private String m_sz_selectedfileext;
 	
 	public FilePicker(Component parent, String sz_path, String sz_title, String [][] sz_filter, int MODE) {
@@ -30,6 +31,9 @@ public class FilePicker extends JFileChooser {
 	}
 	public String getFileType() {
 		return m_sz_selectedfiletype;
+	}
+	public String getFileExtension() {
+		return m_sz_extension;
 	}
 	private void init() {
 		// Prevents 2 filepickers from beeing opened when project is already loaded
@@ -53,6 +57,7 @@ public class FilePicker extends JFileChooser {
 					if(!getSelectedFile().getPath().endsWith(((SingleFilter)getFileFilter()).getExtension()))
 				setSelectedFile(new File(getSelectedFile().getPath() + ((SingleFilter)getFileFilter()).getExtension()));
 			m_sz_selectedfiletype = ((SingleFilter)getFileFilter()).getType();
+			m_sz_extension = ((SingleFilter)getFileFilter()).getExtension().replace(".", "");
 			}
 		}
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {

@@ -3,6 +3,8 @@ package no.ums.pas.pluginbase;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.TileData;
+import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
@@ -14,6 +16,7 @@ import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Logon;
 import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
@@ -39,6 +42,7 @@ import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
@@ -75,12 +79,18 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
+
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -107,6 +117,23 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     private final DefaultAddressSearch addressSearch = new DefaultAddressSearch();
 
     @Override
+	public void onMapCellNotLoaded(Graphics g, TileLookup tileLookup,
+			TileData tileData) {
+	}
+
+	@Override
+	public void onMapCellError(Graphics g, TileLookup tileLookup,
+			TileData tileData) {
+    	Graphics2D g2d = (Graphics2D)g;
+    	g2d.setColor(new Color(0, 0, 0, 128));
+    	g2d.drawRect(tileData.getX(), tileData.getY(), tileData.getWidth()-1, tileData.getHeight()-1);
+
+		Point center = new Point(tileData.getX() + tileData.getWidth()/2, tileData.getY() + tileData.getHeight()/2);
+    	Image img = ImageFetcher.getImage("unknown_24.png");
+    	g.drawImage(img, center.x - img.getWidth(null)/2, center.y - img.getHeight(null)/2, null);
+	}
+
+	@Override
     public void startPlugin() {
         super.startPlugin();
         log.debug("PAS_Scripting loaded");
@@ -125,10 +152,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
 		if(ws.getResult()==WSRESULTCODE.OK) {
-            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_active"));
+			dlg.setExtendedTitleLangID("logon_ws_active");
         }
 		else {
-            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_inactive"));
+			dlg.setExtendedTitleLangID("logon_ws_inactive");
         }
 		try {
 			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
@@ -291,7 +318,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     PAS.get_pas().waitForFirstMap();
 
                     log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
-                    log.debug(String.format("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
+                    log.debug(String.format(Locale.ENGLISH, "Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
                     if (PAS.get_pas().get_parmcontroller() != null) {
                         return null;
                     }
@@ -723,10 +750,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     JOptionPane.showMessageDialog(null, Localization.l("logon_error_user_session_timeout"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 					break;
 				}
-				Logon logon = new Logon(PAS.get_pas(), new LogonInfo(PAS.get_pas().get_settings().getUsername(),
+				/*Logon logon = new Logon(new LogonInfo(PAS.get_pas().get_settings().getUsername(),
+						PAS.get_pas().get_settings().getCompany()), 
+						PAS.get_pas().get_settings().getLanguage(),
+						true);*/
+				Logon logon = Holder.getInstance(new LogonInfo(PAS.get_pas().get_settings().getUsername(),
 						PAS.get_pas().get_settings().getCompany()), 
 						PAS.get_pas().get_settings().getLanguage(),
 						true);
+				logon.startLogonProcedure();
 				if(!logon.isLoggedOn())
 					System.exit(0);
 	
@@ -830,10 +862,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		        about.println();
 //		        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
 //		        about.printf("Specification version: %s\n", VersionInfo.getInstance().SPECIFICATION_VERSION);
-		        about.printf("Version: %s\n", VersionInfo.INSTANCE.buildVersion);
+		        about.printf("%s %s\n", Localization.l("mainmenu_help_about_version"), VersionInfo.INSTANCE.buildVersion);
 //		        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
 //		        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
-		        about.printf("Revision: %s (b%s)\n", VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
+		        about.printf("%s %s (b%s)\n", Localization.l("mainmenu_help_about_revision"), VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
 		        //if(wsVersion!=null)
 		        //	about.printf("Web Service Version: %d.%d.%d\n", wsVersion.getMajor(), wsVersion.getMinor(), wsVersion.getBuild());
 		        //else
@@ -848,7 +880,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			        			Integer.parseInt(ts.substring(6, 8)), 
 			        			Integer.parseInt(ts.substring(9, 11)),
 			        			Integer.parseInt(ts.substring(11, 13)));
-			        about.printf("Created: %s\n", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
+			        about.printf("%s %s\n", Localization.l("mainmenu_help_about_created"), DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
 		        }
 			    about.close();
 		        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), Localization.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
@@ -1239,7 +1271,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public void onLocaleChanged(Locale from, Locale to) {
 		try
 		{
-			log.debug("Language changed from " + from.getLanguage() + " to " + to.getLanguage());
+			log.debug("Language changed from " + from.getDisplayLanguage() + " to " + to.getDisplayLanguage());
 			UIParamLoader.loadServerUIParams();
 		}
 		catch(FileNotFoundException e)

@@ -10,6 +10,7 @@ import no.ums.pas.core.ws.WSGisImport;
 import no.ums.pas.core.ws.WSGisImport.GisColumnsetStreetid;
 import no.ums.pas.importer.gis.PreviewList.ComboAdrid;
 import no.ums.pas.importer.gis.PreviewList.ComboField;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -52,7 +53,24 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		m_sendobject = so;
 		m_callbackframe = callbackframe;
 		if(b_results_only) {
-			String [] sz_columns = new String[] { "No", "Municipal", "Street ID", "House", "Letter", "Namefilter1", "Namefilter2", "Name", "Phone", "Mobile", "Postcode", "Place", "", "Hit(%)", "Longitude", "Latitude" };
+			String [] sz_columns = new String[] { 
+						Localization.l("common_number"), 
+						Localization.l("importpreview_municipalid"), 
+						Localization.l("importpreview_streetid"),
+						Localization.l("importpreview_houseno"), 
+						Localization.l("importpreview_letter"), 
+						Localization.l("importpreview_namefilter1"),
+						Localization.l("importpreview_namefilter2"), 
+						Localization.l("common_adr_name"), 
+						Localization.l("common_adr_phone"), 
+						Localization.l("common_adr_mobile"), 
+						Localization.l("common_adr_postno"), 
+						Localization.l("common_adr_postplace"), 
+						"", 
+						Localization.l("adrsearch_dlg_hit")+"%", 
+						Localization.l("common_longitude"), 
+						Localization.l("common_latitude") 
+					};
 			int [] n_col_width = new int [] { 20, 30, 30, 20, 10, 60, 60, 60, 30, 30, 20, 30, 16, 16, 20, 20 };
 			if(m_resultpanel == null)
 				m_resultpanel = new GISResultPanel(this, so.get_sendproperties().typecast_gis().get_gislist(), sz_columns, n_col_width, new Dimension(600, 300));
@@ -75,7 +93,24 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		m_previewlist = new PreviewList(this, gis, null);
 		m_loader = new LoadingPanel("GIS Import", new Dimension(100, 40), true);
 		
-		String [] sz_columns = new String[] { "No", "Municipal", "Street ID", "House", "Letter", "Namefilter1", "Namefilter2", "Name", "Phone", "Mobile", "Postcode", "Place", "", "Hit(%)", "Longitude", "Latitude" };
+		String [] sz_columns = new String[] { 
+				Localization.l("common_number"), 
+				Localization.l("importpreview_municipalid"), 
+				Localization.l("importpreview_streetid"),
+				Localization.l("importpreview_houseno"), 
+				Localization.l("importpreview_letter"), 
+				Localization.l("importpreview_namefilter1"),
+				Localization.l("importpreview_namefilter2"), 
+				Localization.l("common_adr_name"), 
+				Localization.l("common_adr_phone"), 
+				Localization.l("common_adr_mobile"), 
+				Localization.l("common_adr_postno"), 
+				Localization.l("common_adr_postplace"), 
+				"", 
+				Localization.l("adrsearch_dlg_hit")+"%", 
+				Localization.l("common_longitude"), 
+				Localization.l("common_latitude") 
+			};
 		int [] n_col_width = new int [] { 20, 30, 30, 20, 10, 60, 60, 60, 30, 30, 20, 30, 16, 16, 20, 20 };
 		if(m_resultpanel==null)
 			m_resultpanel = new GISResultPanel(this, gis, sz_columns, n_col_width, new Dimension(400, 300));
@@ -86,7 +121,24 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	}
 	protected void CreateGISResultPanel(GISList gis)
 	{
-		String [] sz_columns = new String[] { "No", "Municipal", "Street ID", "House", "Letter", "Namefilter1", "Namefilter2", "Name", "Phone", "Mobile", "Postcode", "Place", "", "Hit(%)", "Longitude", "Latitude" };
+		String [] sz_columns = new String[] { 
+				Localization.l("common_number"), 
+				Localization.l("importpreview_municipalid"), 
+				Localization.l("importpreview_streetid"),
+				Localization.l("importpreview_houseno"), 
+				Localization.l("importpreview_letter"), 
+				Localization.l("importpreview_namefilter1"),
+				Localization.l("importpreview_namefilter2"), 
+				Localization.l("common_adr_name"), 
+				Localization.l("common_adr_phone"), 
+				Localization.l("common_adr_mobile"), 
+				Localization.l("common_adr_postno"), 
+				Localization.l("common_adr_postplace"), 
+				"", 
+				Localization.l("adrsearch_dlg_hit")+"%", 
+				Localization.l("common_longitude"), 
+				Localization.l("common_latitude") 
+			};
 		int [] n_col_width = new int [] { 20, 30, 30, 20, 10, 60, 60, 60, 30, 30, 20, 30, 16, 16, 20, 20 };
 		m_resultpanel = new GISResultPanel(this, gis, sz_columns, n_col_width, new Dimension(400, 300));
 		m_tab = new JTabbedPane();
@@ -190,9 +242,9 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			}
 			try
 			{
-				m_tab.addTab("Results", null,
+				m_tab.addTab(Localization.l("importresults_results"), null,
 								m_resultpanel,
-								"GIS Import results");
+								Localization.l("importresults_results_tooltip"));
 				final boolean dofill = b_dofill_results;
 				//SwingUtilities.invokeLater(new Runnable()
 				{
@@ -345,23 +397,18 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	public void add_controls() {
 		m_tab.addChangeListener(this);
 		if(m_sendobject==null) {
-			m_tab.addTab("File content", null,
+			m_tab.addTab(Localization.l("importpreview_file_content"), null,
 					m_previewlist,
-					"GIS Import File");
-			/*m_tab.addTab("Results", null,
-					m_loader,
-					"GIS Import results");*/
+					Localization.l("importpreview_file_content_tooltip"));
 			set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
 			add(m_tab, get_gridconst());
-	/*		set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
-			add(m_previewlist, get_gridconst());*/
 			set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTH);
 			if(m_loader!=null)
 				add(m_loader, get_gridconst());
 		} else {
-			m_tab.addTab("Results", null,
+			m_tab.addTab(Localization.l("importresults_results"), null,
 						m_resultpanel,
-						"Results");
+						Localization.l("importresults_results_tooltip"));
 			set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
 			add(m_tab, get_gridconst());
 			

@@ -17,6 +17,12 @@ public final class TileLookupImpl implements TileLookup {
     public TileLookupImpl(final AbstractTileCache tileCache) {
         this.tileCache = tileCache;
     }
+    
+    @Override
+    public void clearAllCache()
+    {
+    	tileCache.clear();
+    }
 
     @Override
     public TileInfo getTileInfo(final int zoom, final LonLat topLeft, final Dimension size) {

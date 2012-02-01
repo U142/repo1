@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 public class PolygonStruct extends ShapeStruct {
 
@@ -754,7 +755,7 @@ public class PolygonStruct extends ShapeStruct {
             final LonLat pointLonLat = zoomLookup.getLonLat(topLeft.x + editPoint.x, topLeft.y + editPoint.y);
             final LonLat lastLonLat = getLonLat(get_size() - 1);
             final Point lastPoint = zoomLookup.getPoint(lastLonLat);
-            final String distToEnd = String.format("%.2fm", pointLonLat.distanceToInM(lastLonLat));
+            final String distToEnd = String.format(Locale.ENGLISH, "%.2fm", pointLonLat.distanceToInM(lastLonLat));
 
             g.setColor(new Color(0.2f, 0.2f, 0.2f, 1.0f));
             g.drawLine(lastPoint.x-topLeft.x, lastPoint.y-topLeft.y, editPoint.x, editPoint.y);

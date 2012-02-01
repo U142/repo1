@@ -1,7 +1,13 @@
 package no.ums.pas.localization;
 
+import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.google.common.collect.Maps;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -37,6 +43,19 @@ public class lang {
         return bundle.getLocale();
     }
 
+    public Map<String,String> valueList(String prefix)
+    {
+    	Map<String,String> ret = Maps.newHashMap();
+    	for(String key : bundle.keySet())
+    	{
+    		if(key.startsWith(prefix))
+    		{
+    			ret.put(key, bundle.getString(key));
+    		}
+    	}
+    	return ret;
+    }
+    
     public String l(String key) {
         if (bundle.containsKey(key)) {
             return (DEBUGMODE) ? "*" + bundle.getString(key) + "*" : bundle.getString(key);

@@ -1,11 +1,11 @@
 package no.ums.pas.send.messagelibrary;
 
-import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.ws.WSMessageLibEdit;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.localization.countrycodes.CCode;
+import no.ums.pas.localization.countrycodes.CountryCodes;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.sound.SoundRecorderPanel;
 import no.ums.pas.sound.SoundTextTemplatePanel;

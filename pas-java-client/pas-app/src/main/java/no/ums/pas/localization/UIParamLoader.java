@@ -15,7 +15,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 
 public class UIParamLoader extends ClassLoader
@@ -34,33 +36,13 @@ public class UIParamLoader extends ClassLoader
             defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
             defaults.put("OptionPane.yesButtonText", Localization.l("common_yes"));
             
-            // Status color codes
-            /*defaults.put("statuscodecolor.0", 		"FFFFFF");
-            defaults.put("statuscodecolor.2", 		"FF0000");
-            defaults.put("statuscodecolor.168", 	"FFFF00");
-            defaults.put("statuscodecolor.169", 	"009003");
-            defaults.put("statuscodecolor.8000", 	"0000FF");
-            defaults.put("statuscodecolor.8002", 	"FF00FF");*/
-            
-            
-			/*
-			 * List defaults
-			 * 
-			 * Enumeration<Object> def_el = defaults.keys();
-			while(def_el.hasMoreElements())
-			{
-				log.debug(def_el.nextElement().toString());
-			}*/
 			
 			Enumeration<Object> keys = b.keys(); //b.getKeys();
 			while(keys.hasMoreElements())
 			{
 				String key = (String)keys.nextElement();
-				if(key.equals("StatusCodeColor.0"))
-					log.debug("break");
 				try
 				{
-					//String value = b.getString(key);
 					Object obj_type = new Object();
 					Object obj_value = b.getProperty(key);
 					String value = "";

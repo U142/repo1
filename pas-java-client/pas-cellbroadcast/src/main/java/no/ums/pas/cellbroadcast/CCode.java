@@ -8,6 +8,7 @@ import com.google.common.base.Splitter;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 
+@Deprecated
 public class CCode implements Cloneable {
 
     @Override

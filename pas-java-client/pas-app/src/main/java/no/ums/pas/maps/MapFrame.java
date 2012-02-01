@@ -7,6 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.AbstractTileCache;
 import no.ums.map.tiled.AbstractTileCacheWms;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileCacheFleximap;
@@ -29,7 +30,6 @@ import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.MapPointPix;
 import no.ums.pas.maps.defines.MapSite;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PLMNShape;
@@ -52,6 +52,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.SystemColor;
@@ -197,7 +198,6 @@ public class MapFrame extends JPanel implements ActionListener {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 		        //download houses when user stops dragging
-				log.debug("dragging set to " + get_actionhandler().get_isdragging());
 				switch(get_mode())
 				{
 				case PAN:
@@ -848,15 +848,21 @@ public class MapFrame extends JPanel implements ActionListener {
                 get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
 
                 for (final TileData tileData : tileInfo.getTileData()) {
-                    g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+               		g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+                		
                     if (!tileLookup.exists(tileData)) {
-                        pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
+                        PAS.pasplugin.onMapCellNotLoaded(g, tileLookup, tileData);
+                    	pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
                             @Override
                             public void run() {
-                                tileLookup.getImage(tileData);
+                            	tileLookup.getImage(tileData);
                                 repaint();
                             }
                         }));
+                    }
+                    else if(tileLookup.exists(tileData) && tileLookup.getImageFast(tileData) instanceof AbstractTileCache.InvalidImage)
+                    {
+                    	PAS.pasplugin.onMapCellError(g, tileLookup, tileData);
                     }
                 }
             }
@@ -866,6 +872,12 @@ public class MapFrame extends JPanel implements ActionListener {
         } catch (Exception e) {
             log.error("Failed to draw map", e);
         }
+    }
+
+    public void signalWmsLayersChanged()
+    {
+    	wmsLookup.clearAllCache();
+    	repaint();
     }
 
     private final TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
@@ -885,6 +897,8 @@ public class MapFrame extends JPanel implements ActionListener {
                     scheme = base.getScheme();
                     host = base.getHost();
                     path = base.getPath();
+                    
+        			m_maploader.setWmsAuthenticator(Variables.getSettings().getWmsUsername(), Variables.getSettings().getWmsPassword().toCharArray());
                     WebMapServer wms = new WebMapServer(new URL(wmsSite));
                     version = wms.getCapabilities().getVersion();
                     lastLookup = wmsSite;
@@ -896,6 +910,7 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
         }
+        
 
         @Override
         public String getScheme() {

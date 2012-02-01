@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.util.Locale;
 
+import javax.swing.UIManager;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -32,4 +34,5 @@ public class langTest {
         assertThat(new lang(new Locale("no", "NO"), false, langError).l("test_key_that_will_always_be_missing_in_no"), notNullValue());
         context.assertIsSatisfied();
     }
+    
 }

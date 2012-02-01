@@ -2,6 +2,7 @@ package no.ums.pas.cellbroadcast;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class CBMessage implements Cloneable {
 
 	@Override
