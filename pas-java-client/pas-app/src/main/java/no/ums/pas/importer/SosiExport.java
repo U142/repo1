@@ -5,6 +5,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -32,7 +33,7 @@ public class SosiExport
 	private File file;
 	public static final String MIME_TYPE_SOSI_ = ".sos";
 	public static final String[][] FILE_FILTERS_ = new String[][] {
-		{ "SOSI files", MIME_TYPE_SOSI_ }
+		{ Localization.l("FileChooser.fileTypeSOSI"), MIME_TYPE_SOSI_ }
 	};
 	public SosiExport(AlertVO [] alert)
 	{

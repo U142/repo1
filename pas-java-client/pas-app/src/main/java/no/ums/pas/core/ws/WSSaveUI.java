@@ -14,6 +14,8 @@ import javax.xml.namespace.QName;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class WSSaveUI extends WSThread
 {
@@ -43,7 +45,7 @@ public class WSSaveUI extends WSThread
 			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 			UPASUISETTINGS ui = new UPASUISETTINGS();
 			MailAccount account = PAS.get_pas().get_userinfo().get_mailaccount();
-			Settings settings = PAS.get_pas().get_settings();
+			final Settings settings = PAS.get_pas().get_settings();
 			String layerlist = "";
 			//Element layer;
 			/*for(int i=0; i < settings.getSelectedWmsLayers().size(); i++)
@@ -52,9 +54,20 @@ public class WSSaveUI extends WSThread
 					layerlist+=",";
 				layerlist+=settings.getSelectedWmsLayers().get(i);
 			}*/
+			Collections.sort(settings.getWmsLayers(), new Comparator<WmsLayer>() {
+				public int compare(WmsLayer w1, WmsLayer w2)
+				{
+					if(w1.checked.booleanValue())
+						return -1;
+					if(w2.checked.booleanValue())
+						return 1;
+					return settings.getWmsLayers().indexOf(w1) - settings.getWmsLayers().indexOf(w2);
+				}
+			});
 			for(WmsLayer l : settings.getWmsLayers())
 			{
-				layerlist+=l.toString() + ",";
+				//if(l.checked.booleanValue())
+					layerlist+=l.toString() + ",";
 			}
 			
 			if(account!=null)

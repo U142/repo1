@@ -645,7 +645,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				if(!m_send.checkSMSInput())
 					return;
 				if(m_sms_broadcast_text_panel.validateOADC(m_sms_broadcast_text_panel.get_txt_oadc_text().getText())) {
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_lba_error_content"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_lba_error_content"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 			}
@@ -780,11 +780,11 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_profile() == null) {
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_schedprofile() == null) {
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} 
@@ -858,11 +858,11 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_profile() == null) {
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_schedprofile() == null) {
-                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} 

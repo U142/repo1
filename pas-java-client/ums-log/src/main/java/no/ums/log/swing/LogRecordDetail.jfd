@@ -1,331 +1,354 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
- <object class="com.jformdesigner.model.FormModel"> 
-  <void property="contentType"> 
-   <string>form/swing</string> 
-  </void> 
-  <void property="root"> 
-   <object class="com.jformdesigner.model.FormRoot"> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormContainer"> 
-      <string>javax.swing.JPanel</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>org.jdesktop.layout.GroupLayout</class> 
-       <void method="setProperty"> 
-        <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp exceptionPanel::l:::x, seq l {par l {comp sourceLabel::l:p::p, comp levelLabel::l:p::p, comp time::l:p::p}, space :p:54:p, par l {comp timeValue::l:p::p, comp levelValue::l:p::p}}, comp messageLabel::l:p::p, comp jScrollPane2::l::376:x, seq {space :12:12:12, comp sourceValue::::364:x}}, space :::p}}</string> 
-       </void> 
-       <void method="setProperty"> 
-        <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par b {comp time::b:p::p, comp timeValue::b:p::p}, space :::p, par b {comp levelLabel::b:p::p, comp levelValue::b:p::p}, space :::p, comp sourceLabel:::p::p, space :::p, comp sourceValue:::p::p, space :::p, comp messageLabel:::p::p, space :::p, comp jScrollPane2:::p::p, space :::p, comp exceptionPanel:::::x}}</string> 
-       </void> 
-      </object> 
-      <void method="setProperty"> 
-       <string>preferredSize</string> 
-       <object class="java.awt.Dimension"> 
-        <int>250</int> 
-        <int>300</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>requestFocusEnabled</string> 
-       <boolean>false</boolean> 
-      </void> 
-      <void property="name"> 
-       <string>this</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>Time:</string> 
-        </void> 
-        <void property="name"> 
-         <string>time</string> 
-        </void> 
-        <void method="auxiliary"> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableLocal</string> 
-          <boolean>true</boolean> 
-         </void> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableModifiers</string> 
-          <int>0</int> 
-         </void> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>Level:</string> 
-        </void> 
-        <void property="name"> 
-         <string>levelLabel</string> 
-        </void> 
-        <void method="auxiliary"> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableLocal</string> 
-          <boolean>true</boolean> 
-         </void> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableModifiers</string> 
-          <int>0</int> 
-         </void> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>Source:</string> 
-        </void> 
-        <void property="name"> 
-         <string>sourceLabel</string> 
-        </void> 
-        <void method="auxiliary"> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableLocal</string> 
-          <boolean>true</boolean> 
-         </void> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableModifiers</string> 
-          <int>0</int> 
-         </void> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>Message:</string> 
-        </void> 
-        <void property="name"> 
-         <string>messageLabel</string> 
-        </void> 
-        <void method="auxiliary"> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableLocal</string> 
-          <boolean>true</boolean> 
-         </void> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableModifiers</string> 
-          <int>0</int> 
-         </void> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JScrollPane</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>javax.swing.JScrollPane</class> 
-        </object> 
-        <void property="name"> 
-         <string>jScrollPane2</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextArea</string> 
-          <void method="setProperty"> 
-           <string>columns</string> 
-           <int>20</int> 
-          </void> 
-          <void method="setProperty"> 
-           <string>editable</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="setProperty"> 
-           <string>lineWrap</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void method="setProperty"> 
-           <string>rows</string> 
-           <int>3</int> 
-          </void> 
-          <void method="setProperty"> 
-           <string>tabSize</string> 
-           <int>4</int> 
-          </void> 
-          <void property="name"> 
-           <string>messageValue</string> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>jLabel7</string> 
-        </void> 
-        <void property="name"> 
-         <string>sourceValue</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>jLabel8</string> 
-        </void> 
-        <void property="name"> 
-         <string>levelValue</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <string>jLabel9</string> 
-        </void> 
-        <void property="name"> 
-         <string>timeValue</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq {comp exceptionLabel:::p::p, space ::310:x}, comp jScrollPane3::t::376:x}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq l {comp exceptionLabel:::p::p, space :::p, comp jScrollPane3::::79:x, space :::p}}</string> 
-         </void> 
-        </object> 
-        <void property="name"> 
-         <string>exceptionPanel</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Exception:</string> 
-          </void> 
-          <void property="name"> 
-           <string>exceptionLabel</string> 
-          </void> 
-          <void method="auxiliary"> 
-           <void method="setProperty"> 
-            <string>JavaCodeGenerator.variableLocal</string> 
-            <boolean>true</boolean> 
-           </void> 
-           <void method="setProperty"> 
-            <string>JavaCodeGenerator.variableModifiers</string> 
-            <int>0</int> 
-           </void> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JScrollPane</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>javax.swing.JScrollPane</class> 
-          </object> 
-          <void property="name"> 
-           <string>jScrollPane3</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextArea</string> 
-            <void method="setProperty"> 
-             <string>columns</string> 
-             <int>20</int> 
-            </void> 
-            <void method="setProperty"> 
-             <string>editable</string> 
-             <boolean>false</boolean> 
-            </void> 
-            <void method="setProperty"> 
-             <string>rows</string> 
-             <int>5</int> 
-            </void> 
-            <void property="name"> 
-             <string>exceptionValue</string> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>size</string> 
-       <object class="java.awt.Dimension"> 
-        <int>400</int> 
-        <int>300</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>0</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormContainer"> 
-      <string>javax.swing.JScrollPane</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>javax.swing.JScrollPane</class> 
-      </object> 
-      <void property="name"> 
-       <string>jScrollPane1</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JTextArea</string> 
-        <void method="setProperty"> 
-         <string>columns</string> 
-         <int>20</int> 
-        </void> 
-        <void method="setProperty"> 
-         <string>rows</string> 
-         <int>5</int> 
-        </void> 
-        <void property="name"> 
-         <string>jTextArea1</string> 
-        </void> 
-       </object> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>310</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-   </object> 
-  </void> 
- </object> 
-</java> 
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_01" class="java.beans.XMLDecoder">
+ <object class="com.jformdesigner.model.FormModel">
+  <void method="setProperty">
+   <string>i18n.bundlePackage</string>
+   <string>no.ums.log.localization</string>
+  </void>
+  <void method="setProperty">
+   <string>i18n.bundleName</string>
+   <string>lang</string>
+  </void>
+  <void property="contentType">
+   <string>form/swing</string>
+  </void>
+  <void property="root">
+   <object class="com.jformdesigner.model.FormRoot">
+    <void method="add">
+     <object class="com.jformdesigner.model.FormContainer">
+      <string>javax.swing.JPanel</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>org.jdesktop.layout.GroupLayout</class>
+       <void method="setProperty">
+        <string>$horizontalGroup</string>
+        <string>par l {seq t {space :::p, par t {comp exceptionPanel::l:::x, seq l {par l {comp sourceLabel::l:p::p, comp levelLabel::l:p::p, comp time::l:p::p}, space :p:54:p, par l {comp timeValue::l:p::p, comp levelValue::l:p::p}}, comp messageLabel::l:p::p, comp jScrollPane2::l::376:x, seq {space :12:12:12, comp sourceValue::::364:x}}, space :::p}}</string>
+       </void>
+       <void method="setProperty">
+        <string>$verticalGroup</string>
+        <string>par l {seq l {space :::p, par b {comp time::b:p::p, comp timeValue::b:p::p}, space :::p, par b {comp levelLabel::b:p::p, comp levelValue::b:p::p}, space :::p, comp sourceLabel:::p::p, space :::p, comp sourceValue:::p::p, space :::p, comp messageLabel:::p::p, space :::p, comp jScrollPane2:::p::p, space :::p, comp exceptionPanel:::::x}}</string>
+       </void>
+      </object>
+      <void method="setProperty">
+       <string>preferredSize</string>
+       <object class="java.awt.Dimension">
+        <int>250</int>
+        <int>300</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>requestFocusEnabled</string>
+       <boolean>false</boolean>
+      </void>
+      <void property="name">
+       <string>this</string>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>lblTime.text</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>time</string>
+        </void>
+        <void method="auxiliary">
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableLocal</string>
+          <boolean>true</boolean>
+         </void>
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableModifiers</string>
+          <int>0</int>
+         </void>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>lblLevel.text</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>levelLabel</string>
+        </void>
+        <void method="auxiliary">
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableLocal</string>
+          <boolean>true</boolean>
+         </void>
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableModifiers</string>
+          <int>0</int>
+         </void>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>lblSource.text</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>sourceLabel</string>
+        </void>
+        <void method="auxiliary">
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableLocal</string>
+          <boolean>true</boolean>
+         </void>
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableModifiers</string>
+          <int>0</int>
+         </void>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>lblMessage.text</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>messageLabel</string>
+        </void>
+        <void method="auxiliary">
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableLocal</string>
+          <boolean>true</boolean>
+         </void>
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableModifiers</string>
+          <int>0</int>
+         </void>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JScrollPane</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>javax.swing.JScrollPane</class>
+        </object>
+        <void property="name">
+         <string>jScrollPane2</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextArea</string>
+          <void method="setProperty">
+           <string>columns</string>
+           <int>20</int>
+          </void>
+          <void method="setProperty">
+           <string>editable</string>
+           <boolean>false</boolean>
+          </void>
+          <void method="setProperty">
+           <string>lineWrap</string>
+           <boolean>true</boolean>
+          </void>
+          <void method="setProperty">
+           <string>rows</string>
+           <int>3</int>
+          </void>
+          <void method="setProperty">
+           <string>tabSize</string>
+           <int>4</int>
+          </void>
+          <void property="name">
+           <string>messageValue</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <string>jLabel7</string>
+        </void>
+        <void property="name">
+         <string>sourceValue</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <string>jLabel8</string>
+        </void>
+        <void property="name">
+         <string>levelValue</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <string>jLabel9</string>
+        </void>
+        <void property="name">
+         <string>timeValue</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JPanel</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>org.jdesktop.layout.GroupLayout</class>
+         <void method="setProperty">
+          <string>$horizontalGroup</string>
+          <string>par l {seq {comp exceptionLabel:::p::p, space ::317:x}, comp jScrollPane3::t::376:x}</string>
+         </void>
+         <void method="setProperty">
+          <string>$verticalGroup</string>
+          <string>par l {seq l {comp exceptionLabel:::p::p, space :::p, comp jScrollPane3::::57:x, space :::p}}</string>
+         </void>
+        </object>
+        <void property="name">
+         <string>exceptionPanel</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>lblException.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>exceptionLabel</string>
+          </void>
+          <void method="auxiliary">
+           <void method="setProperty">
+            <string>JavaCodeGenerator.variableLocal</string>
+            <boolean>true</boolean>
+           </void>
+           <void method="setProperty">
+            <string>JavaCodeGenerator.variableModifiers</string>
+            <int>0</int>
+           </void>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JScrollPane</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>javax.swing.JScrollPane</class>
+          </object>
+          <void property="name">
+           <string>jScrollPane3</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextArea</string>
+            <void method="setProperty">
+             <string>columns</string>
+             <int>20</int>
+            </void>
+            <void method="setProperty">
+             <string>editable</string>
+             <boolean>false</boolean>
+            </void>
+            <void method="setProperty">
+             <string>rows</string>
+             <int>5</int>
+            </void>
+            <void property="name">
+             <string>exceptionValue</string>
+            </void>
+           </object>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>size</string>
+       <object class="java.awt.Dimension">
+        <int>400</int>
+        <int>300</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>0</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormContainer">
+      <string>javax.swing.JScrollPane</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>javax.swing.JScrollPane</class>
+      </object>
+      <void property="name">
+       <string>jScrollPane1</string>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JTextArea</string>
+        <void method="setProperty">
+         <string>columns</string>
+         <int>20</int>
+        </void>
+        <void method="setProperty">
+         <string>rows</string>
+         <int>5</int>
+        </void>
+        <void property="name">
+         <string>jTextArea1</string>
+        </void>
+       </object>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>310</int>
+       </object>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

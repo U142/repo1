@@ -2,6 +2,7 @@ package no.ums.pas.importer.gis;
 
 
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -13,14 +14,14 @@ public class StatisticsPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;
 	
 	private static final int fontsize = 12;
-	private StdTextLabel m_lbl_filelines			= new StdTextLabel("Total lines in file:", 250, fontsize, true);
-	private StdTextLabel m_lbl_houses				= new StdTextLabel("Total buildings (lines in file):", 250, fontsize, true);
-	private StdTextLabel m_lbl_persons				= new StdTextLabel("Total number of persons:", 250, fontsize, true);
-	private StdTextLabel m_lbl_private				= new StdTextLabel("Private:", 250, fontsize, true);
-	private StdTextLabel m_lbl_company				= new StdTextLabel("Companies:", 250, fontsize, true);
-	private StdTextLabel m_lbl_fixed_phones			= new StdTextLabel("Fixed phones:", 250, fontsize, true);
-	private StdTextLabel m_lbl_mobile_phones		= new StdTextLabel("Mobile phones:", 250, fontsize, true);
-	private StdTextLabel m_lbl_nonumber				= new StdTextLabel("No number:", 250, fontsize, true);
+	private StdTextLabel m_lbl_filelines			= new StdTextLabel(Localization.l("importresults_stat_lines"), 250, fontsize, true);
+	private StdTextLabel m_lbl_houses				= new StdTextLabel(Localization.l("importresults_stat_buildings"), 250, fontsize, true);
+	private StdTextLabel m_lbl_persons				= new StdTextLabel(Localization.l("importresults_stat_persons"), 250, fontsize, true);
+	private StdTextLabel m_lbl_private				= new StdTextLabel(Localization.l("importresults_stat_private"), 250, fontsize, true);
+	private StdTextLabel m_lbl_company				= new StdTextLabel(Localization.l("importresults_stat_companies"), 250, fontsize, true);
+	private StdTextLabel m_lbl_fixed_phones			= new StdTextLabel(Localization.l("importresults_stat_fixed_phones"), 250, fontsize, true);
+	private StdTextLabel m_lbl_mobile_phones		= new StdTextLabel(Localization.l("importresults_stat_mobile_phones"), 250, fontsize, true);
+	private StdTextLabel m_lbl_nonumber				= new StdTextLabel(Localization.l("importresults_stat_nonumber"), 250, fontsize, true);
 	
 	private StdTextLabel m_txt_filelines			= new StdTextLabel("", 150, fontsize, false);
 	private StdTextLabel m_txt_persons				= new StdTextLabel("", 150, fontsize, false);

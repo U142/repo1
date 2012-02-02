@@ -10,6 +10,7 @@ import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSWeatherReport;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.localization.countrycodes.CountryCodes;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
@@ -264,8 +265,7 @@ public class InfoPanel extends GeneralPanel {
 		try {
 			db = "<html>";
 			db += ""
-					+ no.ums.pas.cellbroadcast.CountryCodes.getCountryByCCode(
-							dept.get_stdcc()).getCountry();
+					+ CountryCodes.getCountryByCCode(dept.get_stdcc()).getCountry();
 			switch (info.get_current_department().get_pas_rights()) {
 			case 1:
 				db += "";

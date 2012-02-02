@@ -194,6 +194,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_schedprofiles.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_maxchannels.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_oadc.setPreferredSize(new Dimension(common_width, 20));
 		m_txt_sendname = new StdTextArea(get_parent().get_sendobject().get_sendproperties().get_sendingname(), false);
 		m_txt_sendname.setPreferredSize(new Dimension(200, 20));
 		m_txt_sendname.addKeyListener(this);

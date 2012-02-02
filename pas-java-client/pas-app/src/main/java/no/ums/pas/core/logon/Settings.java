@@ -328,6 +328,10 @@ public class Settings {
 		String [] l = s.split(",");
 		m_wms_layers.clear();
 		m_selected_wms_layers.clear();
+		boolean bCompatabilityMode = true;
+		//normal mode is all layers available in user selected order (ticked or not), with =true,false indicators
+		//if at least one layer is set to this mode, keep it that way.
+		//if not, assume compatabilitymode, and add all listed layers as selected
 		for(int i=0; i < l.length; i++)
 		{
 			if(l[i].length()==0)
@@ -337,15 +341,18 @@ public class Settings {
 			if(idx>0)
 			{
 				String layername = l[i].substring(0, idx);
-				boolean checked = Boolean.parseBoolean(l[i].substring(idx+1));
+				String value = l[i].substring(idx+1);
+				boolean checked = value.equals("1") || value.equalsIgnoreCase("true");//Boolean.parseBoolean(l[i].substring(idx+1));
 				m_wms_layers.add(new WmsLayer(layername, checked));
 				if(checked)
 					m_selected_wms_layers.add(layername);
+				bCompatabilityMode = false;
 			}
 			else //compatability
 			{
 				m_wms_layers.add(new WmsLayer(l[i], true));
-				m_selected_wms_layers.add(l[i]);
+				if(bCompatabilityMode)
+					m_selected_wms_layers.add(l[i]);
 			}
 		}
 	}

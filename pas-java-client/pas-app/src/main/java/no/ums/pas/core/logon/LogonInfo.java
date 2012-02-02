@@ -22,6 +22,7 @@ public class LogonInfo {
 	public String get_language() { return m_sz_language; }
 	public void set_userid(String s) { m_sz_userid = s; }
 	public void set_compid(String s) { m_sz_compid = s; }
+	public void set_language(String s) { m_sz_language = s; }
 	
 	public LogonInfo(String sz_userid, String sz_compid, 
 			String sz_passwd, String sz_language) {

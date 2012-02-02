@@ -98,17 +98,17 @@ namespace com.ums.PAS.Database
             try
             {
                 String szSQL = String.Format("SELECT l_userpk, sz_location FROM BBUSER_NSLOOKUP WHERE l_userpk={0} AND "+
-                                            "sz_domain='{1}'",
-                                            n_userpk, ns.sz_domain);
+                                            "sz_ip='{1}'",
+                                            n_userpk, ns.sz_ip);
 
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     rs.Close();
-                    szSQL = String.Format("UPDATE BBUSER_NSLOOKUP SET l_lastdatetime={0}, sz_ip='{1}', f_success={2}, " +
-                                          "sz_location='{3}' WHERE l_userpk={4} AND sz_domain='{5}' ",
-                                          ns.l_lastdatetime, ns.sz_ip, (ns.f_success ? 1 : 0), ns.sz_location,
-                                          n_userpk, ns.sz_domain);
+                    szSQL = String.Format("UPDATE BBUSER_NSLOOKUP SET l_lastdatetime={0}, sz_domain='{1}', f_success={2}, " +
+                                          "sz_location='{3}' WHERE l_userpk={4} AND sz_ip='{5}' ",
+                                          ns.l_lastdatetime, ns.sz_domain, (ns.f_success ? 1 : 0), ns.sz_location,
+                                          n_userpk, ns.sz_ip);
                     ExecNonQuery(szSQL);
                 }
                 else
@@ -407,6 +407,14 @@ namespace com.ums.PAS.Database
                         NsLookup(ref nsl);
                     ULog.error(String.Format("{5} - Error in logon credentials (user/comp combination not found): {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4} \nUsing password: {6}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), nsl.sz_domain, nsl.sz_ip, nsl.sz_location, DateTime.Now.ToLocalTime(), (l.sz_password.Length < 128 ? l.sz_password : "[Hashed]")));
                 }
+                else if (ret.l_userpk > 0 && ret.f_granted)
+                {
+                    if (UCommon.USETTINGS.b_enable_nslookup)
+                    {
+                        NsLookup(ref nsl);
+                        SaveNsLookup(ret.l_userpk, ref nsl);
+                    }
+                }
 
                 if (!ret.f_granted)
                 {
@@ -592,6 +600,7 @@ namespace com.ums.PAS.Database
                         String szSessionSql = String.Format("sp_pas_startsession {0}, '{1}', '{2}'",
                                                 ret.l_userpk, l.sessionid, l.sz_password);
                         ExecNonQuery(szSessionSql);
+                        ULog.write(String.Format("{5} - User logged on: {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4}\nWith SessionID={6}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), nsl.sz_domain, nsl.sz_ip, nsl.sz_location, DateTime.Now.ToLocalTime(), l.sessionid));
                     }
                     catch (Exception)
                     {

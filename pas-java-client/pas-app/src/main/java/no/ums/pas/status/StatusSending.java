@@ -1101,7 +1101,7 @@ public class StatusSending {
 			public LBALanguage getLanguage() { return lang; } 
 			public LBALanguageMenuItem(LBALanguage lang)
 			{
-				super(lang.getSzName() + " (Click to copy message text to clipboard)");
+				super(lang.getSzName() + " (" + Localization.l("common_click_to_copy_message_to_clipboard") + ")");
 				this.lang = lang;
 			}
 		}

@@ -2,9 +2,15 @@ package no.ums.pas.localization;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.log.swing.LogFrame;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Locale;
+import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+
+import javax.swing.UIManager;
 
 /**
  * Central handle for localization messages.
@@ -18,6 +24,11 @@ public enum Localization {
     public static String l(String key) {
         return INSTANCE.val.l(key);
     }
+    
+    public static Map<String,String> valuesStartingWith(String prefix)
+    {
+    	return INSTANCE.val.valueList(prefix);
+    }
 
     private lang val = new lang(new Locale("en", "GB"), false, new DefaultLangError());
 
@@ -30,9 +41,19 @@ public enum Localization {
 
     public void setLocale(final Locale locale) {
         if (!locale.equals(val.getLocale())) {
+        	Locale.setDefault(locale);
             final Locale old = getLocale();
             val = new lang(locale, false, new DefaultLangError());
             propertyChangeSupport.firePropertyChange("locale", old, locale);
+            
+            ResourceBundle prb = ResourceBundle.getBundle(lang.class.getName(), new Locale(locale.getLanguage(), locale.getCountry()));
+            for(String key : prb.keySet())
+            {
+            	UIManager.getDefaults().put(key, prb.getString(key));
+            }
+        	LogFrame.getInstance().setLocale(locale);
+            //TODO: Finne ut hvorfor ikke lasting av bundle funker automagisk. det funker kun ved lokal kjøring.
+            //UIManager.getDefaults().addResourceBundle(String.format("no/ums/pas/localization/lang_%s_%s", locale.getLanguage(), locale.getCountry()));
         }
     }
 

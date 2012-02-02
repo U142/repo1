@@ -249,7 +249,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			else if(m_combo_replynumbers.getItemCount()==0) {
 				m_check_enable_response.setSelected(false);
 				m_combo_replynumbers.setEnabled(false);
-                JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_no_response_no"));
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_no_response_no"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			} else
 				m_combo_replynumbers.setEnabled(false);
 		}

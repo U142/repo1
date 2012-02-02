@@ -311,7 +311,6 @@ public class MapLoader {
 			URL url = new java.net.URL(sz_url);
 			wmstest = new WebMapServer(url);
 			capabilitiestest = wmstest.getCapabilities();
-			// Layer[] layers = WMSUtils.getNamedLayers(capabilitiestest);
 			log.debug(wmstest.getInfo().getTitle());
 			log.debug(wmstest.getInfo().getDescription());
 			log.debug("WMS Version " + capabilitiestest.getVersion());
@@ -327,7 +326,7 @@ public class MapLoader {
 		
 	}
 	
-	private void setWmsAuthenticator(final String usr, final char[] pass)
+	public void setWmsAuthenticator(final String usr, final char[] pass)
 	{
 		if(usr.length()>0 && pass.length > 0)
 		{

@@ -1,7 +1,6 @@
 package no.ums.pas.parm.voobjects;
 
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -9,6 +8,7 @@ import no.ums.pas.parm.map.MapPanel;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
+import no.ums.pas.send.cellbroadcast.CBMessage;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
@@ -365,7 +365,7 @@ public class AlertVO extends ParmVO implements Cloneable {
     public String toString() {
 		String ret;
 		if(getLocked() == 1) {
-			ret = strName + " [Locked]";
+			ret = strName + String.format(" [%s]", Localization.l("main_parm_alert_lba_locked"));
 		}
 		else
 			ret = strName;
@@ -374,9 +374,9 @@ public class AlertVO extends ParmVO implements Cloneable {
 			if(sz_lba_areaid!=null)
 			{
 				if(sz_lba_areaid.equals("-2"))
-					ret += " [LBA ERROR]";
+					ret += String.format(" [%s]", Localization.l("main_parm_alert_lba_error_text"));
 				else if(sz_lba_areaid.equals("0"))
-					ret += " [Waiting for LBA area to be generated]";
+					ret += " [" + Localization.l("main_parm_alert_lba_waiting_text") + "]";
 					
 				b_size_dirty = true;
 			}			

@@ -10,6 +10,7 @@ import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Logon;
+import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
@@ -63,6 +64,7 @@ import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
@@ -70,6 +72,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -191,6 +195,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String PAS_OVERRIDE_USERID = null;
 	private String PAS_OVERRIDE_COMPID = null;
 	private String PAS_OVERRIDE_SHAPASSWORD = null;
+	private String PAS_OVERRIDE_LANGUAGE = null;
 	private String PAS_WS_SITE;;
 	private String PAS_CODEBASE;
 	public String ADDRESSSEARCH_URL = "";
@@ -355,7 +360,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			locale = new Locale(country, language);
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
-			Locale.setDefault(locale);
 		}
 		catch(Exception e)
 		{
@@ -372,13 +376,16 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			boolean b_changed = false;
 			if(temp!=null && locale!=null && !temp.getLanguage().equals(locale.getLanguage()))
 				b_changed = true;
+			if(b_changed)
+				PAS.pasplugin.onLocaleChanged(locale, temp);
 			locale = temp;
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
             Localization.INSTANCE.setLocale(locale);
-			locale = new Locale("en");
-			Locale.setDefault(locale);
-			if(b_changed)
-				PAS.pasplugin.onLocaleChanged(locale, temp);
+            Locale.setDefault(locale);
+            
+            //UIManager.getDefaults().addResourceBundle(String.format("no/ums/pas/localization/lang_%s_%s", locale.getLanguage(), locale.getCountry()));
+			//locale = new Locale("en");
+			//Locale.setDefault(locale);
 		}
 		catch(Exception e)
 		{
@@ -406,6 +413,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
 	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }
+	public void setOverrideLanguage(String s) { PAS_OVERRIDE_LANGUAGE = s; }
 	public void setAddressSeachUrl(String s) { 
 		ADDRESSSEARCH_URL = s;
 		log.debug("Address Search URL = " + ADDRESSSEARCH_URL);
@@ -634,10 +642,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		pasplugin.onBeforeLogon();
 		
 		
-		String sz_userid, sz_compid, sz_passwd;
+		String sz_userid, sz_compid, sz_passwd, sz_language;
 		sz_userid = PAS_OVERRIDE_USERID; //this.getParameter("sz_userid");
 		sz_compid = PAS_OVERRIDE_COMPID; //this.getParameter("sz_compid");
 		sz_passwd = PAS_OVERRIDE_SHAPASSWORD; //this.getParameter("sz_passwd");
+		sz_language = PAS_OVERRIDE_LANGUAGE;
 		if(PAS_SITENAME==null)
 			PAS_SITENAME = "https://secure.ums.no/vb4/";
 		this.addComponentListener(this);
@@ -816,6 +825,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				info = new LogonInfo(sz_userid, sz_compid, sz_passwd, m_settings.getLanguage());
 			}
 		}
+		if(sz_language!=null)
+		{
+			if(info!=null)
+				info.set_language(sz_language);
+			if(m_settings!=null)
+				m_settings.setLanguage(sz_language);
+		}
 
 		
 		if(m_settings!=null)
@@ -831,6 +847,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				{
 				}
 				info = new LogonInfo(m_settings.getUsername(),m_settings.getCompany());
+				if(sz_language!=null)
+					info.set_language(sz_language);
 			}
 		}
 		
@@ -860,7 +878,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						m_settings.setUsername(PAS_OVERRIDE_USERID);
 					}
-					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					//Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					Logon logon = Holder.getInstance(new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
+					logon.startLogonProcedure();
 					if(!logon.isLoggedOn() || logon.get_userinfo()==null) {
                         LogFrame.remove();
                         for (Frame frame : Frame.getFrames()) {
@@ -1096,7 +1116,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			printStackTrace(e.getStackTrace());
 			Error.getError().addError(Localization.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
 		}
-
+		
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -1104,7 +1124,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
                 removeWindowListener(this);
             }
         });
-
+        
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -1114,7 +1134,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				try
 				{
 					pasplugin.onAddPASComponents(PAS.this);
-                    m_mappane.initialize();
+					m_mappane.initialize();
 					try {
 						kickRepaint();
 					} catch(Exception e) {
@@ -1396,11 +1416,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			int n_mapheight = get_mappane().getHeight();
 			int n_mapwidth = get_mappane().getWidth();
-			if(n_mapheight>2000 || n_mapwidth>2000)
-			{
-				log.debug("Mappane size too large");
-				return;
-			}
 			if((get_mappane().getWidth()!=n_previous_mapwidth || get_mappane().getHeight() != n_previous_mapheight) && (get_mappane().getWidth() > 0 && get_mappane().getHeight()>0)) {
 				b_need_new_map = true;
 				n_previous_mapwidth = get_mappane().getWidth();
@@ -1454,13 +1469,37 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public synchronized void kickRepaint()
 	{
+		//if(get_drawthread().m_b_needrepaint)
+		//	return;
+		try
+		{
+			if(get_drawthread()!=null) {
+//			m_mapimg = img;
+                //if(m_b_needrepaint==0)
+                //m_b_needrepaint ++;
+            }
+		}
+		catch(Exception e)
+		{
+			
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
+				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+				//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+				//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 				get_mappane().repaint();
 				get_mappane().validate();
 			}
 		});
+		/*if(m_n_repaints % 20 == 0) {
+			this.repaint();
+			m_n_repaints = 0;
+		}
+		else {
+			get_mappane().repaint();
+		}*/
 		m_n_repaints ++;
 	}
 	public synchronized void kickRepaint(Rectangle r)

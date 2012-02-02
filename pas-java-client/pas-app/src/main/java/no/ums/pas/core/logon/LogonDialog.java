@@ -16,7 +16,6 @@ import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPasswordField;
 import javax.swing.JToolTip;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,6 +41,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -68,6 +70,12 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	private LogonPanel m_panel;
 	public LogonPanel get_logonpanel() { return m_panel; }
 	private Logon m_logon;
+	private String extendedTitleLangID = "";
+	public void setExtendedTitleLangID(String s)
+	{
+		extendedTitleLangID = s;
+		updateTitle();
+	}
 	public void setMaxLogonTries(int i)
 	{
 		try
@@ -160,6 +168,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		
 	}
 	
+	
 	public LogonDialog(Logon logon, JFrame owner, boolean b_modal, 
 			LogonInfo logoninfo, String wantedlanguage,
 			boolean b_request_newsession) {
@@ -183,6 +192,59 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		this.setLocationRelativeTo(PAS.get_pas());
 		if(b_request_newsession)
 			this.setAlwaysOnTop(true);
+		initComponents();
+		
+		if(b_request_newsession)
+		{
+			m_panel.m_txt_userid.setEditable(false);
+			m_panel.m_txt_compid.setEditable(false);
+		}
+		try
+		{
+			new WSPowerup(this);
+		}
+		catch(Exception e)
+		{
+			
+		}		
+
+	}
+	
+	public void setRenewSessionMode()
+	{
+		m_panel.m_txt_compid.setEditable(false);
+		m_panel.m_txt_userid.setEditable(false);
+		m_panel.m_combo_language.setEnabled(false);
+	}
+	
+	Locale currentLocaleSelection = null;
+	@Override
+	public void setLocale(Locale l)
+	{
+		if(currentLocaleSelection==null || currentLocaleSelection.getLanguage()!=l.getLanguage())
+		{
+			currentLocaleSelection = l;
+			this.wantedlanguage = l.getLanguage() + "_" + l.getCountry();
+			super.setLocale(l);
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					getContentPane().removeAll();
+					initComponents();
+				}
+			});
+		}
+	}
+	
+	public void updateTitle()
+	{
+		setTitle(Localization.l("logon_heading") + (extendedTitleLangID.length()>0 ? " - " + Localization.l(extendedTitleLangID) : ""));		
+	}
+	
+	private void initComponents()
+	{
+		updateTitle();
 		m_panel = new LogonPanel(PAS.get_pas());
 		m_panel.m_txt_passwd.addComponentListener(this);
 		//m_panel.add_controls();
@@ -201,19 +263,6 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		}
 		m_panel.init();
 
-		if(b_request_newsession)
-		{
-			m_panel.m_txt_userid.setEditable(false);
-			m_panel.m_txt_compid.setEditable(false);
-		}
-		try
-		{
-			new WSPowerup(this);
-		}
-		catch(Exception e)
-		{
-			
-		}
 	}
 	
 	@Override
@@ -255,11 +304,17 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	public class LanguageCombo extends StdTextLabel
 	{
 		String languageid;
+		String lang ="en";
+		String country = "GB";
+		public String getLanguage() { return lang; }
+		public String getCountry() { return country; }
 		public String getLanguageid() { return languageid; }
 		public LanguageCombo(String sz_language, String languageid)
 		{
 			super(sz_language);
 			this.languageid = languageid; 
+			lang = languageid.substring(0,2);
+			country = languageid.substring(3,5);
 			//load icon
 			try
 			{
@@ -302,8 +357,9 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		public JButton getBtnSubmit() { return m_btn_submit; }
 		public StdTextLabel getLblError() { return m_lbl_errormsg; }
 		
-		public LogonPanel(PAS pas) {
-			super();
+		
+		private void initComponents()
+		{
 			m_txt_userid = new StdTextArea("", false);
 			m_txt_compid = new StdTextArea("", false);
 			m_txt_passwd = new JPasswordField("") {
@@ -330,32 +386,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			ToolTipManager.sharedInstance().registerComponent(m_lbl_errormsg);
 			m_lbl_errormsg.setHorizontalAlignment(JLabel.CENTER);
 			m_combo_language = new JComboBox();
-			m_lbl_errormsg.setForeground(Color.RED);
-			m_btn_submit = new JButton(Localization.l("common_submit"));
-			m_txt_userid.setPreferredSize(new Dimension(110, 19));
-			m_txt_compid.setPreferredSize(new Dimension(110, 19));
-			m_txt_passwd.setPreferredSize(new Dimension(110, 19));
-			m_combo_language.setPreferredSize(new Dimension(110,22));
-			m_lbl_userid.setPreferredSize(new Dimension(110, 19));
-			m_lbl_compid.setPreferredSize(new Dimension(110, 19));
-			m_lbl_passwd.setPreferredSize(new Dimension(110, 19));
-			m_lbl_language.setPreferredSize(new Dimension(110, 19));
-			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(390, 15));
-			m_btn_submit.setActionCommand(ENABLE);
-			m_btn_submit.setActionCommand("act_logon");
-			m_btn_submit.addActionListener(this);
-			m_lbl_userid.enableInputMethods(false);
-			m_lbl_compid.enableInputMethods(false);
-			m_lbl_passwd.enableInputMethods(false);
-			m_nslist = new NSList(new String [] { Localization.l("common_date") + "/" + Localization.l("common_time"), Localization.l("common_domain"), Localization.l("common_ip"), Localization.l("common_location"), "" }, new int [] { 80, 40, 40, 80, 20 }, new Dimension(380, 100));
-			this.addKeyListener(this);
-			m_txt_userid.addKeyListener(this);
-			m_txt_compid.addKeyListener(this);
-			m_txt_passwd.addKeyListener(this);
-			this.addFocusListener(this);
-			m_txt_passwd.addFocusListener(this);
-
+			
 			m_combo_language.setRenderer(new ListCellRenderer() {				
 				@Override
 				public Component getListCellRendererComponent(JList list, Object value,
@@ -383,7 +414,35 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 					return new JLabel(value.toString());
 				}
 			});
+
 			
+			m_lbl_errormsg.setForeground(Color.RED);
+			m_btn_submit = new JButton(Localization.l("common_submit"));
+
+			m_txt_userid.setPreferredSize(new Dimension(110, 19));
+			m_txt_compid.setPreferredSize(new Dimension(110, 19));
+			m_txt_passwd.setPreferredSize(new Dimension(110, 19));
+			m_combo_language.setPreferredSize(new Dimension(110,22));
+			m_lbl_userid.setPreferredSize(new Dimension(110, 19));
+			m_lbl_compid.setPreferredSize(new Dimension(110, 19));
+			m_lbl_passwd.setPreferredSize(new Dimension(110, 19));
+			m_lbl_language.setPreferredSize(new Dimension(110, 19));
+
+			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
+			m_lbl_errormsg.setPreferredSize(new Dimension(390, 15));
+			m_btn_submit.setActionCommand(ENABLE);
+			m_btn_submit.setActionCommand("act_logon");
+			m_btn_submit.addActionListener(this);
+			m_lbl_userid.enableInputMethods(false);
+			m_lbl_compid.enableInputMethods(false);
+			m_lbl_passwd.enableInputMethods(false);
+			m_nslist = new NSList(new String [] { Localization.l("common_date") + "/" + Localization.l("common_time"), Localization.l("common_domain"), Localization.l("common_ip"), Localization.l("common_location"), "" }, new int [] { 80, 40, 40, 80, 20 }, new Dimension(380, 100));
+			this.addKeyListener(this);
+			m_txt_userid.addKeyListener(this);
+			m_txt_compid.addKeyListener(this);
+			m_txt_passwd.addKeyListener(this);
+			this.addFocusListener(this);
+			m_txt_passwd.addFocusListener(this);
 			m_combo_language.addActionListener(this);
 			m_combo_language.setActionCommand("act_language_changed");
 			
@@ -402,27 +461,44 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				else
 					l.put("en_GB", "English");
 				Enumeration en = l.keys();
+				
 				while(en.hasMoreElements())
 				{
 					String key = (String)en.nextElement();
 					String value = l.get(key);
 					LanguageCombo item = new LanguageCombo(value, key);
 					m_combo_language.addItem(item);
-					String temp = wantedlanguage;
+					String temp = LogonDialog.this.wantedlanguage;
 					boolean b_use = temp.equalsIgnoreCase(key);
 					if(b_use)
 					{
-						log.debug("language " + key);
 						m_combo_language.setSelectedItem(item);
 					}
 				}
 				
+				m_combo_language.addItemListener(new ItemListener() {
+					
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						JComboBox c = (JComboBox)e.getSource();
+						LanguageCombo l = (LanguageCombo)c.getSelectedItem();
+						Localization.INSTANCE.setLocale(new Locale(l.getLanguage(), l.getCountry()));
+						LogonDialog.this.setLocale(new Locale(l.getLanguage(), l.getCountry()));
+						//PAS.setLocale(l.languageid); //setLocale(new Locale(l.getLanguage(), l.getCountry()));
+					}
+				});
 			}
 			catch(Exception e)
 			{
 				log.warn(e.getMessage(), e);
 				log.debug("Error");
 			}
+
+		}
+		
+		public LogonPanel(PAS pas) {
+			super();
+			initComponents();
 			log.debug("LOGON");
 			
 		}

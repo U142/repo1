@@ -6,13 +6,27 @@ package no.ums.pas.core.mainui.address_search;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.pas.PAS;
+no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdIntegerArea;
 import no.ums.ws.pas.GABTYPE;
 import no.ums.ws.pas.UGabResult;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
@@ -411,37 +425,37 @@ public class AddressSearchDlg extends JFrame {
         //======== scrollPane1 ========
         {
 
-            //---- tblResults ----
-            tblResults.setModel(new DefaultTableModel(
-                new Object[][] {
-                },
-                new String[] {
-                    "Hit", "Address", "Region", "Lon", "Lat"
-                }
-            ) {
-                boolean[] columnEditable = new boolean[] {
-                    false, false, false, false, false
-                };
-                @Override
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return columnEditable[columnIndex];
-                }
-            });
-            {
-                TableColumnModel cm = tblResults.getColumnModel();
-                cm.getColumn(0).setResizable(false);
-                cm.getColumn(3).setResizable(false);
-                cm.getColumn(4).setResizable(false);
-            }
-            tblResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            tblResults.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    tblResultsMouseClicked(e);
-                }
-            });
-            scrollPane1.setViewportView(tblResults);
-        }
+			//---- tblResults ----
+			tblResults.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Hit", "Address", "Region", "Lon", "Lat"
+				}
+			) {
+				boolean[] columnEditable = new boolean[] {
+					false, false, false, false, false
+				};
+				@Override
+				public boolean isCellEditable(int rowIndex, int columnIndex) {
+					return columnEditable[columnIndex];
+				}
+			});
+			{
+				TableColumnModel cm = tblResults.getColumnModel();
+				cm.getColumn(0).setResizable(false);
+				cm.getColumn(3).setResizable(false);
+				cm.getColumn(4).setResizable(false);
+			}
+			tblResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tblResults.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					tblResultsMouseClicked(e);
+				}
+			});
+			scrollPane1.setViewportView(tblResults);
+		}
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);

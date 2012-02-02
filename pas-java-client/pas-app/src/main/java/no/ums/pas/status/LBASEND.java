@@ -1,6 +1,7 @@
 package no.ums.pas.status;
 
 import no.ums.pas.localization.Localization;
+import no.ums.pas.localization.countrycodes.CountryCodes;
 import no.ums.ws.common.LBALanguage;
 
 import javax.swing.JProgressBar;
@@ -405,7 +406,7 @@ public class LBASEND
 			temp.l_subscribers = cc.l_subscribers;
 			temp.l_unknown = cc.l_unknown;
 			//temp.l_failed = temp.l_failed + temp.l_unknown;
-			temp.sz_country = no.ums.pas.cellbroadcast.CountryCodes.getCountryByCCode(String.valueOf(temp.l_ccode)).getCountry();
+			temp.sz_country = CountryCodes.getCountryByCCode(String.valueOf(temp.l_ccode)).getCountry();
 			hist_cc.add(temp);
 		}
 	}
@@ -474,7 +475,7 @@ public class LBASEND
 				l_submitted = new Integer(v[5]).intValue();
 				l_queued = new Integer(v[6]).intValue();
 				l_subscribers = new Integer(v[7]).intValue();
-				sz_country = no.ums.pas.cellbroadcast.CountryCodes.getCountryByCCode(String.valueOf(l_ccode)).getCountry();
+				sz_country = CountryCodes.getCountryByCCode(String.valueOf(l_ccode)).getCountry();
 				l_operator = new Integer(v[8]).intValue();
 				l_failed += l_unknown;  // this is added so that we dont need an unknown status column
 			}

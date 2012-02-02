@@ -7,7 +7,13 @@ import javax.annotation.Nullable;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.lang.Math;
+import java.lang.Override;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -15,65 +21,107 @@ import java.util.Map;
 public abstract class AbstractTileCache {
 
     private final Map<TileCell, Image> cache;
+    private final HashSet<TileCell> invalidTiles = new HashSet<TileCell>();
 
     private final int maxZoom;
     private final ZoomLookup[] zoomLookups;
     private final int tileSize;
-
-    public AbstractTileCache(final int maxZoom, final int tileSize) {
+    
+    public class InvalidImage extends BufferedImage
+    {
+    	public InvalidImage()
+    	{
+    		super(1, 1, BufferedImage.TYPE_INT_ARGB);
+    	}
+    }
+    
+    public AbstractTileCache(int maxZoom, int tileSize) {
         this.maxZoom = maxZoom;
         this.tileSize = tileSize;
-        zoomLookups = new ZoomLookup[maxZoom + 1];
+        zoomLookups = new ZoomLookup[maxZoom+1];
         for (int i = 0; i < zoomLookups.length; i++) {
             zoomLookups[i] = new ZoomLookup(i, tileSize);
         }
-
-        cache = new MapMaker().softValues().makeComputingMap(new Function<TileCell, Image>() {
-            @Override
-            public Image apply(@Nullable final TileCell input) {
-                return getImage(input);
-            }
+        
+        TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				doInvalidImageCleanup();
+			}
+		};
+        new Timer().scheduleAtFixedRate(task, 5000, 5000);
+        cache = new MapMaker()
+        		.softValues()
+				.makeComputingMap(new Function<TileCell, Image>() {
+		            @Override
+		            public Image apply(@Nullable TileCell input) {
+		                try
+		                {
+		                	Image img = getImage(input);
+		                	if(img==null)
+		                		invalidTiles.add(input);
+		                	else
+		                		invalidTiles.remove(input);
+			                return (img == null ? new InvalidImage() : img);
+		                }
+		                catch(Exception e)
+		                {
+		                	invalidTiles.add(input);
+		                	return new InvalidImage();
+		                }
+	            }
+            
         });
+        
+    }
+    
+    
+    protected void doInvalidImageCleanup()
+    {
+    	for(TileCell cell : invalidTiles)
+    	{
+   			cache.remove(cell);
+    	}
+    	invalidTiles.clear();
     }
 
     protected abstract Image getImage(TileCell input);
 
-    public final int getTileSize() {
+    public int getTileSize() {
         return tileSize;
     }
 
-    public final ZoomLookup getZoomLookup(final int zoom) {
+    public ZoomLookup getZoomLookup(int zoom) {
         return zoomLookups[Math.max(0, Math.min(maxZoom, zoom))];
     }
 
-    public final Image render(final TileData tile) {
+    public Image render(TileData tile) {
         return render(tile.getZoom(), tile.getRow(), tile.getColumn());
     }
 
-    public final Image render(final int zoom, final int row, final int column) {
+    public Image render(int zoom, int row, int column) {
         return cache.get(new TileCell(zoom, row, column));
     }
 
-    public final boolean exists(final TileData tile) {
+    public boolean exists(TileData tile) {
         return exists(tile.getZoom(), tile.getRow(), tile.getColumn());
     }
 
-    public final boolean exists(final int zoom, final int row, final int column) {
+    public boolean exists(int zoom, int row, int column) {
         return cache.containsKey(new TileCell(zoom, row, column));
     }
 
-    public final void clear() {
+    public void clear() {
         cache.clear();
     }
 
-    public final TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight,
-                                                     final Dimension size) {
+    public TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size) {
         for (int i = 0; i < zoomLookups.length; i++) {
             final ZoomLookup zoomLookup = zoomLookups[i];
             final Point p1 = zoomLookup.getPoint(topLeft);
             final Point p2 = zoomLookup.getPoint(bottomRight);
-            if (Math.abs(p1.x - p2.x) > size.width || Math.abs(p1.y - p2.y) > size.height) {
-                return new BoundsMatchImpl(Math.max(0, i - 1), topLeft, bottomRight, size);
+            if (Math.abs(p1.x-p2.x) > size.width || Math.abs(p1.y-p2.y) > size.height) {
+                return new BoundsMatchImpl(Math.max(0, i-1), topLeft, bottomRight, size);
             }
         }
         return new BoundsMatchImpl(maxZoom, topLeft, bottomRight, size);
@@ -84,18 +132,13 @@ public abstract class AbstractTileCache {
         private final LonLat topLeft;
         private final LonLat bottomRight;
 
-        public BoundsMatchImpl(final int zoom, final LonLat topLeft, final LonLat bottomRight,
-                               final Dimension size) {
+        public BoundsMatchImpl(int zoom, LonLat topLeft, final LonLat bottomRight, Dimension size) {
             Point p1 = zoomLookups[zoom].getPoint(topLeft);
             Point p2 = zoomLookups[zoom].getPoint(bottomRight);
 
             this.zoom = zoom;
-            final int topLeftX = (p1.x + p2.x - size.width) / 2;
-            final int topLeftY = (p1.y + p2.y - size.height) / 2;
-            this.topLeft = zoomLookups[zoom].getLonLat(topLeftX, topLeftY);
-            final int bottomRightX = (p1.x + p2.x + size.width) / 2;
-            final int bottomLeftY = (p1.y + p2.y + size.height) / 2;
-            this.bottomRight = zoomLookups[zoom].getLonLat(bottomRightX, bottomLeftY);
+            this.topLeft = zoomLookups[zoom].getLonLat((p1.x+ p2.x- size.width ) / 2 , (p1.y+ p2.y- size.height) /  2);
+            this.bottomRight = zoomLookups[zoom].getLonLat((p1.x+ p2.x+ size.width ) / 2 , (p1.y+ p2.y+ size.height) /  2);
         }
 
         @Override

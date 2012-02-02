@@ -10,6 +10,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.List;
@@ -33,7 +35,10 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 
+import no.ums.pas.core.logon.WmsLayerTree.LayerCheckBoxNode;
+
 import org.geotools.data.ows.Layer;
+import org.geotools.data.ows.StyleImpl;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 public class WmsLayerTree extends JTree
@@ -184,7 +189,7 @@ public class WmsLayerTree extends JTree
         	chk.selected = b;
         }
     }
-	public void populate(List<Layer> layers, List<WmsLayer> check, boolean b_new_url /*check none*/, ActionListener callback)
+	public void populate(final List<Layer> layers, final List<WmsLayer> check, boolean b_new_url /*check none*/, ActionListener callback)
 	{
 		this.setEditable(true);
 		boolean b_topnode_set = false;
@@ -267,7 +272,7 @@ public class WmsLayerTree extends JTree
 			LayerCheckBoxNode chk = new LayerCheckBoxNode(currentlayer.getName(), b.booleanValue(), currentlayer, callback);
 			node = new DefaultMutableTreeNode(chk);
 			int idx = check.indexOf(new WmsLayer(layers.get(i).getName(), false));
-			m_model.insertNodeInto(node, parent, idx>=0 ? idx : 0);
+			m_model.insertNodeInto(node, parent, idx>=0 ? parent.getChildCount() : parent.getChildCount());
 			
 			hash.put(currentlayer, node);
 		}
@@ -301,7 +306,24 @@ public class WmsLayerTree extends JTree
 			Object userobj = node.getUserObject();
 			if(userobj instanceof LayerCheckBoxNode)
 			{
-				return ((LayerCheckBoxNode)userobj).layer.getTitle();
+				LayerCheckBoxNode n = (LayerCheckBoxNode)userobj;
+				StringBuilder toolTip = new StringBuilder();
+				toolTip.append("<html><b>");
+				toolTip.append(n.layer.getTitle());
+				toolTip.append("</b><br>");
+				for(String srs : n.layer.getSrs())
+				{
+					toolTip.append(srs);
+					toolTip.append("<br>");
+				}
+				toolTip.append("<br>");
+				for(StyleImpl s : n.layer.getStyles())
+				{
+					toolTip.append(s.getName());
+					toolTip.append("<br>");
+				}
+				toolTip.append("</html>");
+				return toolTip.toString();
 			}
 		}
 		
@@ -309,8 +331,12 @@ public class WmsLayerTree extends JTree
 	}
 
 
-	public class LayerCheckBoxNode extends CheckBoxNode {
+	public class LayerCheckBoxNode extends CheckBoxNode implements Comparator<LayerCheckBoxNode> {
 		Layer layer;
+		@Override
+		public int compare(LayerCheckBoxNode o1, LayerCheckBoxNode o2) {
+			return o1.selected ? -1 : 1;
+		}
 		ActionListener callback;
 		public LayerCheckBoxNode(String text, boolean selected, Layer layer, ActionListener callback)
 		{

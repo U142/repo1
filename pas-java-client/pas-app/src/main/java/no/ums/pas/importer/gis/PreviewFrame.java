@@ -41,7 +41,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public GISFile m_gis;
 	
 	public PreviewFrame(GISFile gis) {
-		super(PAS.get_pas(), "Import preview", true);
+		super(PAS.get_pas(), Localization.l("common_preview"), true);
 		try {
 			setAlwaysOnTop(true);
 		} catch(Exception e) {
@@ -52,7 +52,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		m_gis = gis;
 		m_options = new PreviewOptions(this, gis.getIsAlert());
 		m_panel = new PreviewPanel(gis, this);
-		m_btn_finish = new JButton("Finish");
+		m_btn_finish = new JButton(Localization.l("common_finish"));
 		//setSize(620, 500);
 		int x = 800;
 		int y = 600;
@@ -107,7 +107,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		}
 	}
 	public PreviewFrame(SendObject so) {
-		super(PAS.get_pas(), "Results", true);
+		super(PAS.get_pas(), Localization.l("importpreview_file_content_tooltip"), true);
 		
 		init_common();
 		try
@@ -164,7 +164,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 				enableControls(false);
 			}
 			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
 		}
 		else if("act_gis_finish".equals(e.getActionCommand())) {
 			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
@@ -175,7 +175,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 				this.setVisible(false);
 			}
 			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
 		}
 		else if("act_set_statistics_view".equals(e.getActionCommand())) {
 			if(m_options!=null) {

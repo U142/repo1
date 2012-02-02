@@ -1,5 +1,7 @@
 package no.ums.pas.pluginbase;
 
+import no.ums.map.tiled.TileData;
+import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
@@ -282,6 +284,23 @@ public interface PasScriptingInterface {
     boolean onAfterLoadMap(Settings settings, Navigation nav, MapFrame frame);
 	
     boolean onWmsLayerListLoaded(List<Layer> layers, List<String> check);
+    
+    /**
+     * Executes when a cell is not loaded yet.
+     * @param g
+     * @param lookup
+     * @param tile
+     * @return
+     */
+    void onMapCellNotLoaded(Graphics g, TileLookup tileLookup, TileData tileData);
+    
+    /**
+     * Cell failed to load image
+     * @param g
+     * @param tileLookup
+     * @param tileData
+     */
+    void onMapCellError(Graphics g, TileLookup tileLookup, TileData tileData);
 	
     /**
      * 

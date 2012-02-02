@@ -953,7 +953,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				send.start();
 			}
 			catch(Exception ex) {
-                JOptionPane.showMessageDialog(this, Localization.l("common_error" + ": ") + ex.getMessage());
+                JOptionPane.showMessageDialog(this, Localization.l("common_error" + ": ") + ex.getMessage(), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				progress.stop_and_hide();
 				m_btn_cancel.setEnabled(true);
 				//m_btn_send.setEnabled(true);

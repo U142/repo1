@@ -125,13 +125,13 @@ public class ImportPolygon implements ActionListener {
 	public static final String MIME_TYPE_PRJ_  = ".prj";
 	
 	public static final String[][] FILE_FILTERS_ = new String[][] {
-			{ "SOSI files", MIME_TYPE_SOSI_ }, 
-			{ "ISO files", MIME_TYPE_ISO_ },
-			{ "GIS files", MIME_TYPE_GIS_ },
-			{ "Gemini files", MIME_TYPE_TXT_ },
-			{ "ESRI Shape files", MIME_TYPE_SHP_ },
-			{ "ESRI DBF files", MIME_TYPE_DBF_ },
-			{ "ESRI Projection files", MIME_TYPE_PRJ_ },
+			{ Localization.l("FileChooser.fileTypeSOSI"), MIME_TYPE_SOSI_ }, 
+			{ Localization.l("FileChooser.fileTypeISO"), MIME_TYPE_ISO_ },
+			{ Localization.l("FileChooser.fileTypeGIS"), MIME_TYPE_GIS_ },
+			{ Localization.l("FileChooser.fileTypeGemini"), MIME_TYPE_TXT_ },
+			{ Localization.l("FileChooser.fileTypeESRIShp"), MIME_TYPE_SHP_ },
+			{ Localization.l("FileChooser.fileTypeESRIDbf"), MIME_TYPE_DBF_ },
+			{ Localization.l("FileChooser.fileTypeESRIPrj"), MIME_TYPE_PRJ_ },
 			
 	};
 	
