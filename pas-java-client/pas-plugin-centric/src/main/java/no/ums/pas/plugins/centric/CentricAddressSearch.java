@@ -70,7 +70,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
                                         10,
                                         spr.get_number(),
                                         spr.get_address(),
-                                        spr.get_postno(),
+                                        spr.get_postno().replaceAll("\\s",""),
                                         spr.get_postarea(),
                                         spr.get_region());
 			List<MapMatches> list = temp_response.getMatches().getMapMatches();
