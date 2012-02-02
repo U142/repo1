@@ -27,7 +27,6 @@ import java.util.List;
 
 public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.DefaultAddressSearch
 {
-
     private static final Log log = UmsLog.getLogger(CentricAddressSearch.class);
 
 	class UGabResultListItem extends UGabResult
