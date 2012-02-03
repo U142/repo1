@@ -15,6 +15,7 @@ import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
+import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
@@ -139,6 +140,8 @@ public interface PasScriptingInterface {
     void startPlugin();
 
     AddressSearch getAddressSearch();
+    
+    AddressSearchCtrl getAddressSearchGui();
 
     boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
 
