@@ -20,7 +20,7 @@ import no.ums.ws.pas.UGabSearchResultList;
 
 public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	private AddressSearchDlg dlg = null;
-	public AddressSearchDlg getDlg() { return dlg; }
+	private AddressSearchDlg getDlg() { return dlg; }
 	public AddressSearchCtrl()
 	{
 		

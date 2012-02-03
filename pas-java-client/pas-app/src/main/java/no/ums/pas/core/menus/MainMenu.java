@@ -152,7 +152,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	{
 		super();
 		//m_searchframe = new SearchFrame();
-		m_addresssearch = new AddressSearchCtrl();
+		m_addresssearch = PAS.pasplugin.getAddressSearchGui();
 
 		//setSize(get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth(), 40);
 		int w = getWidth();

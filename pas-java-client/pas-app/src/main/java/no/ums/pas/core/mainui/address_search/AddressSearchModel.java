@@ -2,6 +2,8 @@ package no.ums.pas.core.mainui.address_search;
 
 import java.util.List;
 
+import javax.swing.JList;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
@@ -71,6 +73,18 @@ public class AddressSearchModel extends AbstractBean {
 			update("Country", oldValue, country);
 			log.debug(country + " " + ((AddressSearchCountry)country).n_cc);
 		}
+	}
+	
+	JList results;
+
+	public JList getResults() {
+		return results;
+	}
+
+	public void setResults(JList results) {
+		final JList oldValue = this.results;
+		this.results = results;
+		update("results", oldValue, this.results);
 	}
 	
 }

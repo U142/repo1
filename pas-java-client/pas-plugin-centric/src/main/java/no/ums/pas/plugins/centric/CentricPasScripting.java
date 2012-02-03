@@ -14,6 +14,7 @@ import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
 import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
@@ -28,6 +29,7 @@ import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.DefaultPasScripting;
+import no.ums.pas.plugins.centric.address_search.CentricAddressSearchCtrl;
 import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
@@ -92,6 +94,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     private final AddressSearch addressSearch = new CentricAddressSearch();
+    private final AddressSearchCtrl addressSearchGui = new CentricAddressSearchCtrl();
 
     @Override
     public void startPlugin() {
@@ -106,10 +109,18 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public AddressSearch getAddressSearch() {
-        return addressSearch;
+    	return this.addressSearch;
     }
+    
+    
 
-    @Override
+
+	@Override
+	public AddressSearchCtrl getAddressSearchGui() {
+		return addressSearchGui;
+	}
+
+	@Override
     protected void setSubPluginNames() {
         log.debug("***Using Plugins (CentricPasScripting)***");
         log.debug((this.plugin_AddressSearch = "no.ums.pas.plugins.centric.CentricAddressSearch"));
