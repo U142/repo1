@@ -2,6 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.component.MapController;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
@@ -868,6 +869,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onSetInitialMapBounds(Navigation nav, UserInfo ui) {
         nav.setNavigation(ui.get_departments().get_combined_restriction_shape().get(0).getFullBBox(), false);
+        MapController.zoomLevel = 7;
         return true;
     }
 
@@ -1571,6 +1573,4 @@ public class CentricPasScripting extends DefaultPasScripting {
     public Dimension getMinMapDimensions() {
         return new Dimension(20000, 20000);
     }
-
-
 }

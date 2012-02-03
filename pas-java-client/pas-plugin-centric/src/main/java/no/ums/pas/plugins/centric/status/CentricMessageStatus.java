@@ -83,10 +83,8 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 
 	protected boolean containsOperator(int pk)
 	{
-		if(hash_operators.containsKey(pk))
-			return true;
-		return false;
-	}
+        return hash_operators.containsKey(pk);
+    }
 	protected void putOperator(int pk, CentricOperatorStatus operator)
 	{
 		hash_operators.put(pk, operator);
@@ -121,97 +119,88 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		setName(lastcbstatus.getSzSendingname());
 		List<ULBASENDING> arr_operators = cbstatus.getOperators().getULBASENDING();
 
-		for(int oper=0; oper < arr_operators.size(); oper++)
-		{
-			ULBASENDING operator = arr_operators.get(oper);
-			CentricOperatorStatus currentoperator = null;
-			if(containsOperator(operator.getLOperator()))
-			{
-				currentoperator = hash_operators.get(operator.getLOperator());
-			}
-			else
-			{
-				currentoperator = new CentricOperatorStatus(this, false, operator);
-				final String szOperator = operator.getSzOperator();
-				final CentricOperatorStatus final_cos = currentoperator;
-				SwingUtilities.invokeLater(new Runnable() {
+        for (ULBASENDING operator : arr_operators) {
+            CentricOperatorStatus currentoperator;
+            currentoperator = null;
+            if (containsOperator(operator.getLOperator())) {
+                currentoperator = hash_operators.get(operator.getLOperator());
+            } else {
+                currentoperator = new CentricOperatorStatus(this, false, operator);
+                final String szOperator = operator.getSzOperator();
+                final CentricOperatorStatus final_cos = currentoperator;
+                SwingUtilities.invokeLater(new Runnable() {
 
-					@Override
-					public void run() {
-						get_tpane().add(szOperator, final_cos);
-					}
-				});
-				putOperator(operator.getLOperator(), currentoperator);
-				//hash_operators.put(operator.getLOperator(), currentoperator);
-			}
-			if(currentoperator!=null)
-				currentoperator.updateStatus(cbstatus, operator, project_timestamp);
+                    @Override
+                    public void run() {
+                        get_tpane().add(szOperator, final_cos);
+                    }
+                });
+                putOperator(operator.getLOperator(), currentoperator);
+                //hash_operators.put(operator.getLOperator(), currentoperator);
+            }
+            if (currentoperator != null)
+                currentoperator.updateStatus(cbstatus, operator, project_timestamp);
 
-			//update label
-			try
-			{
-				final JTabbedPane final_tp = get_tpane();
-				final CentricOperatorStatus final_cms = currentoperator;
-				final String szOperatorName = currentoperator.m_operator.getSzOperator();
-				final String final_lbl = "<html>" + currentoperator.getStatusAbb() + " <font color=black>" + szOperatorName + "</font></html>";
-				final String final_tooltip = currentoperator.getStatusTooltip();
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						int n = final_tp.indexOfComponent(final_cms);
-						if(n>=0)
-						{
-							final_tp.setTitleAt(n, final_lbl);
-							final_tp.setToolTipTextAt(n, final_tooltip);
-						}
-						else
-							log.debug("Component " + final_cms + " not found");
-					}
-				});
-			}
-			catch(Exception e)
-			{
+            //update label
+            try {
+                final JTabbedPane final_tp = get_tpane();
+                final CentricOperatorStatus final_cms = currentoperator;
+                final String szOperatorName = currentoperator.m_operator.getSzOperator();
+                final String final_lbl = "<html>" + currentoperator.getStatusAbb() + " <font color=black>" + szOperatorName + "</font></html>";
+                final String final_tooltip = currentoperator.getStatusTooltip();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        int n = final_tp.indexOfComponent(final_cms);
+                        if (n >= 0) {
+                            final_tp.setTitleAt(n, final_lbl);
+                            final_tp.setToolTipTextAt(n, final_tooltip);
+                        } else
+                            log.debug("Component " + final_cms + " not found");
+                    }
+                });
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
 
-			}
+            /*if(operator.getLStatus()<1000) // All statuses under 1000 are still active
+                   active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
 
-			/*if(operator.getLStatus()<1000) // All statuses under 1000 are still active
-				active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
+               for(int i=0;i<m_tabbed_operators.getComponentCount();++i) {
+                   ms = (CentricMessageStatus)m_tabbed_operators.getComponentAt(i);
 
-			for(int i=0;i<m_tabbed_operators.getComponentCount();++i) {
-				ms = (CentricMessageStatus)m_tabbed_operators.getComponentAt(i);
+                   // Does the message already exist?
+                   if(ms.get_refno() == cbs.getLRefno()) {
+                       ms.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
+                       ms.setName(cbs.getSzSendingname());
 
-				// Does the message already exist?
-				if(ms.get_refno() == cbs.getLRefno()) {
-					ms.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
-					ms.setName(cbs.getSzSendingname());
+                       if(operator.getLStatus() >= 540)  // Active
+                           tp.setTitleAt(i,"A " + cbs.getSzSendingname());
+                       if(operator.getLStatus() == 1000) // Finished
+                           tp.setTitleAt(i,"F " + cbs.getSzSendingname());
 
-					if(operator.getLStatus() >= 540)  // Active
-						tp.setTitleAt(i,"A " + cbs.getSzSendingname());
-					if(operator.getLStatus() == 1000) // Finished
-						tp.setTitleAt(i,"F " + cbs.getSzSendingname());
-
-					CentricOperatorStatus cos;
+                       CentricOperatorStatus cos;
 
 
-					boolean operator_found = false;
-					for(int k=0;k<ms.get_tpane().getComponentCount();++k) {
-						//cos.get_lbl_channel().setText(histcell.g);
-						cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(k);
-						if(cos.get_operator() == operator.getLOperator()) {
-							setOperatorValues(cbp, cbs, operator, cos);
-							operator_found = true;
-						}
-					}
-					if(!operator_found) {
-						cos = new CentricOperatorStatus(ms, false, operator.getLOperator());
-						setOperatorValues(cbp, cbs, operator, cos);
-						ms.get_tpane().add(operator.getSzOperator(), cos);
-					}
+                       boolean operator_found = false;
+                       for(int k=0;k<ms.get_tpane().getComponentCount();++k) {
+                           //cos.get_lbl_channel().setText(histcell.g);
+                           cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(k);
+                           if(cos.get_operator() == operator.getLOperator()) {
+                               setOperatorValues(cbp, cbs, operator, cos);
+                               operator_found = true;
+                           }
+                       }
+                       if(!operator_found) {
+                           cos = new CentricOperatorStatus(ms, false, operator.getLOperator());
+                           setOperatorValues(cbp, cbs, operator, cos);
+                           ms.get_tpane().add(operator.getSzOperator(), cos);
+                       }
 
-					found = true;
-				}
-			}*/
-		}
+                       found = true;
+                   }
+               }*/
+        }
 		updateTotal(project_timestamp);
 
 	}
@@ -241,7 +230,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		}
 		else if(e.getSource().equals(m_btn_confirmation)) {
 			if(lastcbstatus!=null && lastcbstatus.getMessageconfirmation() != null) {
-                JOptionPane.showMessageDialog(this, lastcbstatus.getMessageconfirmation().getSzName(), Localization.l("common_show_message_authorization_text"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, formatText(lastcbstatus.getMessageconfirmation().getSzName()), Localization.l("common_show_message_authorization_text"), JOptionPane.INFORMATION_MESSAGE);
             }
 			else {
                 JOptionPane.showMessageDialog(this, "No info...", Localization.l("common_show_message_authorization_text"), JOptionPane.WARNING_MESSAGE);
@@ -273,9 +262,9 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		}
 		if(e.getActionCommand().equals("act_get_cb_status")) {
 			CBPROJECTSTATUSRESPONSE res = (CBPROJECTSTATUSRESPONSE)e.getSource();
-			CBSTATUS cbs;
+
 			for(int i=0;i<res.getStatuslist().getCBSTATUS().size();++i) {
-				cbs = res.getStatuslist().getCBSTATUS().get(i);
+				CBSTATUS cbs = res.getStatuslist().getCBSTATUS().get(i);
 				for(int j=0;j<m_tabbed_operators.getComponentCount();++j) {
 					CentricOperatorStatus cos = (CentricOperatorStatus)m_tabbed_operators.getComponentAt(j);
 					//if(cos.get_operator == cbs.getLOperator()){
@@ -287,6 +276,18 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			}
 		}
 	}
+
+    private String formatText(String text) {
+        return "<html>" +
+                "<TABLE WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>" +
+                "<TR><TD WIDTH=600>" +
+                "<P ALIGN=LEFT>" +
+                text +
+                "</P>" +
+                "</TD></TR>" +
+                "</TABLE>" +
+                "</html>";
+    }
 
 	private boolean confirmKill() {
 		JFrame frame = get_frame();

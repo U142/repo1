@@ -1,29 +1,26 @@
 package no.ums.pas.core.mainui.address_search;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
-import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
-import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListHeader;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.IAddressSearch;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavPoint;
-import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.ws.pas.UGabSearchResultList;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	private AddressSearchDlg dlg = null;
 	private AddressSearchDlg getDlg() { return dlg; }
 	public AddressSearchCtrl()
 	{
-		
+
 	}
 	
 	public void showGUI()
