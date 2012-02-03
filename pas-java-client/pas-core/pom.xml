@@ -101,7 +101,6 @@
             <plugin>
                 <groupId>no.ums.maven</groupId>
                 <artifactId>maven-ums-plugin</artifactId>
-                <version>1.3.2</version>
                 <executions>
                     <execution>
                         <phase>generate-resources</phase>
