@@ -13,7 +13,7 @@
 			<DeployPassword1>digi20ums</DeployPassword1>
 			<DeployLocation1>$(DeployShare1)$(DeployTargetFolderBeta)</DeployLocation1>
 		</PropertyGroup>
-		<PropertyGroup Condition="$(Configuration) == 'Nlbeta'">
+		<PropertyGroup Condition="$(Configuration) == 'nlbeta'">
 			<DeployShare1>\\192.168.3.40\www</DeployShare1>
 			<DeployUser1>Administrator</DeployUser1>
 			<DeployPassword1>digi20ums</DeployPassword1>
