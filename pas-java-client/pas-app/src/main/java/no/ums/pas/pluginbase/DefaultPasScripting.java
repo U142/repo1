@@ -195,6 +195,45 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
+	
+	
+	@Override
+	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+		menu.change_buttoncolor(menu.get_btn_pan(), false);
+		menu.change_buttoncolor(menu.get_btn_zoom(), false);
+		menu.change_buttoncolor(menu.get_btn_houseeditor(), false);
+		menu.change_buttoncolor(menu.get_btn_showhousedetails(), false);
+		
+		// For native GUI
+		menu.get_btn_pan().setSelected(false);
+		menu.get_btn_zoom().setSelected(false);
+		menu.get_btn_houseeditor().setSelected(false);
+		menu.get_btn_showhousedetails().setSelected(false);
+		
+		switch(Variables.getMapFrame().get_mode())
+		{
+			case PAN:
+				menu.get_btn_pan().setSelected(true);
+			case PAN_BY_DRAG:
+				menu.change_buttoncolor(menu.get_btn_pan(), true);
+				menu.get_btn_pan().setSelected(true);
+				break;
+			case ZOOM:
+				menu.change_buttoncolor(menu.get_btn_zoom(), true);
+				menu.get_btn_zoom().setSelected(true);
+				break;
+			case HOUSESELECT:
+				menu.change_buttoncolor(menu.get_btn_showhousedetails(), true);
+				menu.get_btn_showhousedetails().setSelected(true);
+				break;
+			case HOUSEEDITOR:
+				menu.change_buttoncolor(menu.get_btn_houseeditor(), true);
+				menu.get_btn_houseeditor().setSelected(true);
+				break;
+		}
+		return true;
+	}
+
 	@Override
 	public boolean onAddMainMenuButtons(MainMenu menu)
 	{

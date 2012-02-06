@@ -347,38 +347,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	// Byttet fra private til public
 	public void reset_buttons_foreground()
 	{
-		change_buttoncolor(m_btn_pan, false);
-		change_buttoncolor(m_btn_zoom, false);
-		change_buttoncolor(m_btn_houseeditor, false);
-		change_buttoncolor(m_btn_showhousedetails, false);
-		
-		// For native GUI
-		m_btn_pan.setSelected(false);
-		m_btn_zoom.setSelected(false);
-		m_btn_houseeditor.setSelected(false);
-		m_btn_showhousedetails.setSelected(false);
-		
-		switch(PAS.get_pas().get_mappane().get_mode())
-		{
-			case PAN:
-				m_btn_pan.setSelected(true);
-			case PAN_BY_DRAG:
-				change_buttoncolor(m_btn_pan, true);
-				m_btn_pan.setSelected(true);
-				break;
-			case ZOOM:
-				change_buttoncolor(m_btn_zoom, true);
-				m_btn_zoom.setSelected(true);
-				break;
-			case HOUSESELECT:
-				change_buttoncolor(m_btn_showhousedetails, true);
-				m_btn_showhousedetails.setSelected(true);
-				break;
-			case HOUSEEDITOR:
-				change_buttoncolor(m_btn_houseeditor, true);
-				m_btn_houseeditor.setSelected(true);
-				break;
-		}
+		PAS.pasplugin.onMainMenuButtonClicked(this, this.get_btn_group_navigation());
 	}
 	private void set_houseeditor(String sz_command) {
 		PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);

@@ -36,6 +36,7 @@ import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.geotools.data.ows.Layer;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -175,6 +176,16 @@ public interface PasScriptingInterface {
      * @return
      */
     boolean onAddMainMenuButtons(MainMenu menu);
+    
+    
+    /**
+     * Function to alter buttons
+     * @param menu
+     * @param btnGroup
+     * @return
+     */
+    boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup);
+    
 	
     /**
      * Function to add menu items to JMenu

@@ -178,7 +178,47 @@ public class CentricPasScripting extends DefaultPasScripting {
     private JMenu menu_trainingmode;
 
 
+    
+    
     @Override
+	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+		menu.change_buttoncolor(menu.get_btn_pan(), false);
+		menu.change_buttoncolor(menu.get_btn_zoom(), false);
+		menu.change_buttoncolor(menu_btn_draw_ellipse, false);
+		menu.change_buttoncolor(menu_btn_draw_polygon, false);
+		
+		// For native GUI
+		menu.get_btn_pan().setSelected(false);
+		menu.get_btn_zoom().setSelected(false);
+		menu_btn_draw_ellipse.setSelected(false);
+		menu_btn_draw_polygon.setSelected(false);
+		
+    	switch(Variables.getMapFrame().get_mode())
+		{
+			case PAN:
+				menu.get_btn_pan().setSelected(true);
+			case PAN_BY_DRAG:
+				menu.change_buttoncolor(menu.get_btn_pan(), true);
+				menu.get_btn_pan().setSelected(true);
+				break;
+			case ZOOM:
+				menu.change_buttoncolor(menu.get_btn_zoom(), true);
+				menu.get_btn_zoom().setSelected(true);
+				break;
+			case SENDING_ELLIPSE:
+			case SENDING_ELLIPSE_POLYGON:
+				menu.change_buttoncolor(menu_btn_draw_ellipse, true);
+				menu_btn_draw_ellipse.setSelected(true);
+				break;
+			case SENDING_POLY:
+				menu.change_buttoncolor(menu_btn_draw_polygon, true);
+				menu_btn_draw_polygon.setSelected(true);
+				break;
+		}
+		return true;
+    }
+
+	@Override
     public boolean onAddMainMenuButtons(MainMenu menu) {
         menu.set_gridconst(menu.inc_xpanels(), 0, 15, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu.get_selectmenu().get_bar(), menu.m_gridconst);
@@ -206,6 +246,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         menu.add_spacing(DefaultPanel.DIR_HORIZONTAL, 30);
 
+        
         menu_btn_draw_polygon = new JButton(Localization.l("main_sending_type_polygon"));
         menu_btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_polygon.addActionListener(new ActionListener() {
@@ -242,6 +283,11 @@ public class CentricPasScripting extends DefaultPasScripting {
         });
         menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu_btn_draw_plmn, menu.m_gridconst);
+        
+        menu.get_btn_group_navigation().add(menu_btn_draw_polygon);
+        menu.get_btn_group_navigation().add(menu_btn_draw_ellipse);
+
+        
         enableSendButtons(true);
 
         /*menu_btn_import = new JButton(PAS.l("common_import"));
