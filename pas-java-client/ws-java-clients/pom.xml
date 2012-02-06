@@ -232,6 +232,12 @@
             </properties>
         </profile>
         <profile>
+            <id>nlbeta</id>
+            <properties>
+                <wsdl.base>https://secure.ums2.no/PAS/ws_nlutv/WS</wsdl.base>
+            </properties>
+        </profile>
+        <profile>
             <id>qa</id>
             <properties>
                 <wsdl.base>https://secure.ums.no/PAS/ws_pasqa/WS</wsdl.base>
