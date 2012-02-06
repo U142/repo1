@@ -34,6 +34,7 @@ import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UBBNEWS;
 import no.ums.ws.common.USYSTEMMESSAGES;
@@ -165,6 +166,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     private JButton menu_btn_import;
     private JMenu menu_addressbook;
     private JMenu menu_trainingmode;
+    private StdTextArea menu_txt_project;
 
 
     @Override
@@ -1172,6 +1174,27 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
+    public boolean onPaintMainMenuExtras(DefaultPanel menu, Graphics g) {
+        if(PAS.get_pas().get_current_project() != null) {
+            // Setting eventname far right
+            Project p = PAS.get_pas().get_current_project();
+            String str = String.format("%s %s", p.get_projectpk(), p.get_projectname());
+            g.setFont(UIManager.getFont("InternalFrame.titleFont"));
+
+            int h = menu.getHeight() / 2 + 15;
+
+            g.setColor(Color.black);
+
+            int strwidth = g.getFontMetrics().stringWidth(str);
+            int x = menu.getWidth() - strwidth - 20;
+            g.drawString(str, x, h);
+            return super.onPaintMainMenuExtras(menu, g);
+        }else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g) {
         //MARK LIVE/TRAINING MODE
         //Color c1 = new Color(230, 100, 100, 250);
@@ -1404,6 +1427,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
             PAS.get_pas().get_mappane().load_map(true);
             menu_trainingmode.setEnabled(true);
+            PAS.get_pas().get_mainmenu().repaint();
 
             return true;
         } catch (Exception e) {
@@ -1420,6 +1444,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 	@Override
     public boolean onOpenProject(Project project, long nFromNewRefno) {
         try {
+
             // Does the same thing as after sending a message
             CentricSendOptionToolbar csend = CentricVariables.getCentric_send();
 
@@ -1431,6 +1456,10 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             menu_trainingmode.setEnabled(false);
 
+            // Set current project
+            if(project.get_projectname() != null) {
+                PAS.get_pas().set_current_project(project);
+            }
 
             return true;
 

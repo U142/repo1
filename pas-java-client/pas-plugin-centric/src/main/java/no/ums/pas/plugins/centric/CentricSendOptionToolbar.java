@@ -70,6 +70,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private static final long serialVersionUID = 1L;
 
 	private StdTextLabel m_lbl_event_name;
+    public String getEventName() { return m_txt_event_name.getText(); }
 	private StdTextLabel m_lbl_sender_name;
 	private StdTextLabel m_lbl_date_time;
 	private StdTextLabel m_lbl_message;

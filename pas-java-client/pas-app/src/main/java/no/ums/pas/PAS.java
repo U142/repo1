@@ -9,19 +9,10 @@ import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.logon.Logon;
+import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Logon.Holder;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.RightsManagement;
-import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.core.mainui.GPSFrame;
-import no.ums.pas.core.mainui.HouseEditorDlg;
-import no.ums.pas.core.mainui.InhabitantFrame;
-import no.ums.pas.core.mainui.LoadingFrame;
-import no.ums.pas.core.mainui.SouthContent;
+import no.ums.pas.core.mainui.*;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.StatusActions;
 import no.ums.pas.core.menus.ViewOptions;
@@ -63,31 +54,9 @@ import org.jvnet.substance.theme.ThemeChangeListener;
 import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.Timer;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -237,7 +206,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private StorageController m_storagecontroller = new StorageController();
 	public StorageController get_storagecontroller() { return m_storagecontroller; }
 	public Project get_current_project() { return m_current_project; }
-	protected void set_current_project(Project p) { m_current_project = p; }
+	public void set_current_project(Project p) { m_current_project = p; }
 	private boolean m_keep_sendings = false;
 	public boolean get_keep_sendings() { return m_keep_sendings; }
 	public void set_keep_sendings(boolean value) { m_keep_sendings = value; }

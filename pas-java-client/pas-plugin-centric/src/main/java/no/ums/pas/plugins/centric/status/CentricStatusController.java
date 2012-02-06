@@ -4,6 +4,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.ws.common.cb.CBSENDINGRESPONSE;
@@ -56,17 +57,6 @@ public class CentricStatusController extends StatusController {
 		return true;
 	}
 	
-	/*public boolean openStatus(CBSENDINGRESPONSE sendresponse, CentricSendOptionToolbar centricsend) {
-		set_cbsendingresponse(sendresponse);
-		m_projectpk = sendresponse.getLProjectpk();	
-		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
-		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(centricsend);
-		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
-		// update status ting med CBSendingresponse?
-		runTimer();
-		return true;
-	}*/
-	
 	public boolean openStatus(long l_projectpk, CentricSendOptionToolbar centricsend, long nFromNewRefno) {
 		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 		res.setLProjectpk(l_projectpk);
@@ -78,7 +68,14 @@ public class CentricStatusController extends StatusController {
 		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 		
 		m_projectpk = l_projectpk;
+        
+        // Required to display projectinfo
+        Project p = new Project();
+        p.set_projectpk(String.valueOf(l_projectpk));
+        p.set_projectname(centricsend.getEventName());
+        PAS.get_pas().set_current_project(p);
 		runTimer();
+        PAS.get_pas().get_mainmenu().repaint();
 		return true;
 	}
 	

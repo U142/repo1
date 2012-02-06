@@ -12,35 +12,23 @@ import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.logon.DeptArray;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.Logon;
-import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.menus.FileMenuActions;
-import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
-import no.ums.pas.core.menus.NavigateActions;
-import no.ums.pas.core.menus.OtherActions;
-import no.ums.pas.core.menus.StatusActions;
-import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSDeleteProject;
 import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSDeleteStatus;
+import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
@@ -60,37 +48,12 @@ import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.common.PASVERSION;
 import no.ums.ws.common.USYSTEMMESSAGES;
-import no.ums.ws.pas.Pasws;
-
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.xml.namespace.QName;
+import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -99,14 +62,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
-import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -927,7 +885,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
-	@Override
+    @Override
+    public boolean onPaintMainMenuExtras(DefaultPanel menu, Graphics g) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public boolean onMapCalcNewCoords(Navigation nav, PAS p) {
 		p.get_statuscontroller().calcHouseCoords();
 		p.get_housecontroller().calcHouseCoords();

@@ -5,11 +5,11 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.core.ws.WSProject;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
-import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -19,34 +19,12 @@ import no.ums.ws.common.UDeleteProjectResponse;
 import no.ums.ws.common.UDeleteStatusResponse;
 import no.ums.ws.pas.UPROJECTREQUEST;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 
 //import Core.MainUI.*;
 
@@ -247,6 +225,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 				if(m_proj!=null) {
 					setSelectedAction(ACT_PROJECTDLG_OPEN);
 					openProject(m_proj);
+                    PAS.get_pas().set_current_project(m_proj);
 				}
 			}
 		}
