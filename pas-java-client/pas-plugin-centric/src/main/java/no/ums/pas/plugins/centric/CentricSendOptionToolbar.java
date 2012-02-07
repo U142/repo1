@@ -117,10 +117,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private JButton m_btn_print;
 	private JButton m_btn_cancel;
-	
-	private Calendar c;
-	
-	protected MODE current_mode = MODE.MESSAGE_WRITING;
+
+    protected MODE current_mode = MODE.MESSAGE_WRITING;
 	
 	LoadingFrame progress = new LoadingFrame(Localization.l("main_statustext_lba_sending"), null);
 
@@ -160,35 +158,29 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			PolygonStruct mappoly = mapshape.typecast_polygon();
 			
 			DeptArray da = Variables.getUserInfo().get_departments();
-			for(int i=0; i < da.size(); i++)
-			{
-				DeptInfo di = (DeptInfo)da.get(i);
-				if(di.get_restriction_shapes().size()<=0)
-					continue;
-				ShapeStruct s = di.get_restriction_shapes().get(0);
-				if(!s.getClass().equals(PolygonStruct.class))
-					continue;
-				if(!mappoly.isElliptical())
-				{
-					MapPointLL firstpoint = mappoly.getFirstPoint();
-					if(s.pointInsideShape(firstpoint))
-					{
-						//success
-						setDeptSendOnBehalfOf(di);
-						break;
-					}
-				}
-				else
-				{
-					MapPointLL ll = mappoly.getEllipseCenter().get_mappointll();
-					if(s.pointInsideShape(ll))
-					{
-						//success
-						setDeptSendOnBehalfOf(di);
-						break;
-					}
-				}
-			}
+            for (Object aDa : da) {
+                DeptInfo di = (DeptInfo) aDa;
+                if (di.get_restriction_shapes().size() <= 0)
+                    continue;
+                ShapeStruct s = di.get_restriction_shapes().get(0);
+                if (!s.getClass().equals(PolygonStruct.class))
+                    continue;
+                if (!mappoly.isElliptical()) {
+                    MapPointLL firstpoint = mappoly.getFirstPoint();
+                    if (s.pointInsideShape(firstpoint)) {
+                        //success
+                        setDeptSendOnBehalfOf(di);
+                        break;
+                    }
+                } else {
+                    MapPointLL ll = mappoly.getEllipseCenter().get_mappointll();
+                    if (s.pointInsideShape(ll)) {
+                        //success
+                        setDeptSendOnBehalfOf(di);
+                        break;
+                    }
+                }
+            }
 		}
 		else if(mapshape.getClass().equals(PLMNShape.class))
 		{
@@ -243,10 +235,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public void doInit() {
 		init();
 	}
-	private static int lbl_width = 120;
-	private static int input_width = 260;
+
+    private static int input_width = 260;
 
     public void init() {
+        int lbl_width = 120;
         m_lbl_event_name = new StdTextLabel(Localization.l("main_sending_event_name") + ":",new Dimension(lbl_width,20));
         m_lbl_sender_name = new StdTextLabel(Localization.l("main_sending_lba_sender_text") + ":", new Dimension(lbl_width,20));
         m_lbl_date_time = new StdTextLabel(Localization.l("common_date") + " - " + Localization.l("common_time") + ":", new Dimension(lbl_width,20));
@@ -840,7 +833,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			catch(Exception ex)
 			{
-				
+				log.error(ex.getMessage(), ex);
 			}
 		}
 		else if(e.getActionCommand().equals("act_goto_summary")) {
@@ -917,12 +910,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			List<CBRISK> risk = cbm.getRiskList().getCBRISK();
 			List<CBREACTION> reaction = cbm.getReactionList().getCBREACTION();
 			List<CBORIGINATOR> originator = cbm.getOriginatorList().getCBORIGINATOR();
-			for(int i=0; i < risk.size(); i++)
-				m_cbx_risk.addItem(risk.get(i));
-			for(int i=0; i < reaction.size(); i++)
-				m_cbx_reaction.addItem(reaction.get(i));
-			for(int i=0; i < originator.size(); i++)
-				m_cbx_originator.addItem(originator.get(i));
+            for (CBRISK aRisk : risk) m_cbx_risk.addItem(aRisk);
+            for (CBREACTION aReaction : reaction) m_cbx_reaction.addItem(aReaction);
+            for (CBORIGINATOR anOriginator : originator) m_cbx_originator.addItem(anOriginator);
 		}
 		else if(e.getSource().equals(m_cbx_originator))
 		{
@@ -976,7 +966,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	
 	private String getFormatedDate() {
-		c = new GregorianCalendar();
+        Calendar c = new GregorianCalendar();
 		return String.format("%1$td-%1$tm-%1$tY %1$tH:%1$tM", c);
 	}
 
@@ -1000,35 +990,30 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	protected void updatePreviewText(boolean bRROChanged)
 	{
 		String sz_totalmessage = "";
-		int fieldlengths = 0;
-		
-		String risk = m_cbx_risk.getEditor().getItem().toString();
+
+        String risk = m_cbx_risk.getEditor().getItem().toString();
 		String reaction = m_cbx_reaction.getEditor().getItem().toString();
 		String originator = m_cbx_originator.getEditor().getItem().toString();
 		if(m_txt_sender_name.getText().length()>0)
 			sz_totalmessage += m_txt_sender_name.getText() + " ";
 		sz_totalmessage += m_txt_date_time.getText() + "\n";
-		fieldlengths += TextFormat.GsmStrLen(sz_totalmessage);//sz_totalmessage.length();
-		sz_totalmessage += m_txt_message.getText();
-		String szPad = "";
+        sz_totalmessage += m_txt_message.getText();
+		String szPad;
 		if(risk.length()>0)
 		{
 			szPad = "\n" + risk;
 			sz_totalmessage += szPad;
-			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
-		}
+        }
 		if(reaction.length()>0)
 		{ 
 			szPad = "\n" + reaction;
 			sz_totalmessage += szPad;
-			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
-		}
+        }
 		if(originator.length()>0)
 		{
 			szPad = "\n" + originator;
 			sz_totalmessage += szPad;
-			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
-		}
+        }
 		int total_len = TextFormat.GsmStrLen(sz_totalmessage);
 		if(total_len>MAX_TOTAL_CHARS) //sz_totalmessage.length()
 		{
@@ -1226,7 +1211,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					}
 					catch(Exception err)
 					{
-						
+						log.warn(err.getMessage(), err);
 					}
 				}
 			}

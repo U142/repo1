@@ -33,8 +33,7 @@ public class CentricStatusController extends StatusController {
 	public long getProjectpk() { return m_projectpk; }
 
     public boolean isReady() {
-        boolean ready = true;
-        return ready; }
+        return true; }
 	private CentricStatusTimer m_timer = null;
 	public boolean isStopped()
 	{

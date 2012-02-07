@@ -4,7 +4,7 @@ public final class TextFormat {
 	
 	public synchronized static String format_date(long n)
 	{
-		String s = new Long(n).toString();
+		String s = Long.toString(n);
 		return format_date(s);
 	}
 	
@@ -16,7 +16,7 @@ public final class TextFormat {
 	
 	public synchronized static String format_time(String sz_time, int n_size)
 	{
-		String sz_ret = new String();
+		String sz_ret;
 		if(n_size == 2) //hour only
 		{
 			sz_ret = sz_time+":00";

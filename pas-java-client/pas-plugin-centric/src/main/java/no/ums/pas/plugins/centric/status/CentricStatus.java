@@ -139,9 +139,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		} catch(Exception ex) {
 			ready = true;
 		}
-		finally
-		{			
-		}
 	}
 	
 	public CentricStatus(CBSENDINGRESPONSE res) {
@@ -302,17 +299,13 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				Long.parseLong(cbp.getProject().getLProjectpk()), 
 				cbp.getProject().getSzProjectname());
 
-		CentricMessageStatus ms;
-
-        int n_sendings = 0;
-		int n_sendings_active = 0;
-		Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
+        Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
 		Hashtable<Long, Long> active = new Hashtable<Long, Long>();
 
 		
 		List<CBSTATUS> cbstatuslist = cbp.getStatuslist().getCBSTATUS();
         for (CBSTATUS currentstatus : cbstatuslist) {
-            CentricMessageStatus currentui = null;
+            CentricMessageStatus currentui;
 
             //get or create a UI pane
             if (containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
@@ -391,7 +384,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
                     }
                 });
             } catch (Exception e) {
-
+                log.warn(e.getMessage(), e);
             }
             ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(currentstatus.getShape());
             if (shape != null) {

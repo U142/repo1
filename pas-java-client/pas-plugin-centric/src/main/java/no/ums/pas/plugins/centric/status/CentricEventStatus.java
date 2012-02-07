@@ -35,7 +35,6 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 		add_controls();
 		//m_lbl_refno.setText(m_lbl_refno.getText() + res.getLRefno());
 		m_btn_finish.setEnabled(false);
-        CentricStatus m_parent = status;
         StdTextArea m_refno;
         m_refno = new StdTextArea("", 100);
     }

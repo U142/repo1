@@ -15,7 +15,10 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.ws.common.parm.UBoundingRect;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.ArrayOfUGabResult;
+import no.ums.ws.pas.GABTYPE;
+import no.ums.ws.pas.UGabResult;
+import no.ums.ws.pas.UGabSearchResultList;
 
 import javax.swing.*;
 import javax.xml.namespace.QName;
@@ -153,7 +156,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		if(results.getList()==null || results.getList().getUGabResult()==null)
 			return false;
 		for (UGabResult result : results.getList().getUGabResult()) {
-			Object[] obj_insert = { result, result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
+			Object[] obj_insert = new Object[]{result, result.getRegion(), Float.toString((float) result.getLon()), Float.toString((float) result.getLat())}; //, m_icon_goto };
 			list.insert_row(obj_insert, -1, true);
 		}
 

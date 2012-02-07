@@ -11,38 +11,14 @@ import java.awt.*;
 public class TrainingLookAndFeel extends WindowsLookAndFeel
 {
 
-	private final ColorUIResource primary1 = new ColorUIResource(255, 255, 0);
-	private final ColorUIResource primary2 = new ColorUIResource(0, 255, 255);
-	private final ColorUIResource primary3 = new ColorUIResource(255, 0, 255);
-	
-	private UIDefaults defaults = null;
-	
-	public TrainingLookAndFeel() {
-		super();
-//		Object newSettings [] = {
-//			"TabbedPane.contentOpaque", false,
-//			"TabbedPane.tabAreaBackground", new Color(255, 100, 240),
-//			"TabbedPane.background", new Color(255, 100, 240)
-//		};
-		//setCurrentTheme(new TrainingTheme());
+    private final ColorUIResource primary3;
 
-		/*defaults = UIManager.getDefaults();
-		defaults.putDefaults(newSettings);
-		defaults.put("TabbedPane.contentOpaque", false);
-		defaults.put("TabbedPane.tabAreaBackground", new Color(255, 100, 240));
-		defaults.put("TabbedPane.background", new Color(255, 100, 240));
-		
-		
-		UIDefaults ui = super.getDefaults();
-		Enumeration<Object> en = ui.keys();
-		for(int i=0; i < ui.size(); i++)
-		{
-			Object key = en.nextElement();
-			log.debug("key = " + key + " value = " + ui.get(key));
-		}*/
+    public TrainingLookAndFeel() {
+		super();
 		UIManager.getDefaults().putDefaults(setMyDefaultColors());
 
-	}
+        primary3 = new ColorUIResource(255, 0, 255);
+    }
 	
 	private Object[] setMyDefaultColors() {
 		Color c = new ColorUIResource(new Color(250,220,250));

@@ -274,8 +274,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         final List<UBBNEWS> news = sysmsg.getNews().getNewslist().getUBBNEWS();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                for (int i = 0; i < news.size(); i++) {
-                    UBBNEWS bbnews = news.get(i);
+                for (UBBNEWS bbnews : news) {
                     systemmessagepanel.list.getDefaultModel().handleMessage(bbnews);
                 }
                 systemmessagepanel.list.getDefaultModel().sort();
@@ -581,7 +580,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                         str += Localization.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
                     }
                     for (int i = 0; i < ui.get_departments().size(); i++)
-                        str += " \"" + ((DeptInfo) ui.get_departments().get(i)).get_deptid() + "\"";
+                        str += " \"" + ui.get_departments().get(i).get_deptid() + "\"";
                     break;
                 case 2: //national user
                     str += Localization.l("logon_rights_national_user"); //" - $Regional Super User - ";
@@ -797,7 +796,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                     }
                     break;
             }
-            LookAndFeel laf = (LookAndFeel) cl.newInstance();
+            LookAndFeel laf = cl.newInstance();
             UIManager.setLookAndFeel(laf);
             JDialog.setDefaultLookAndFeelDecorated(false);
             JFrame.setDefaultLookAndFeelDecorated(false);
@@ -891,6 +890,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         try {
             dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return true;
     }
@@ -1028,18 +1028,18 @@ public class CentricPasScripting extends DefaultPasScripting {
                     if (p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape() != null)
                         p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape().calc_coortopix(nav);
                 } catch (Exception e) {
-
+                    log.warn(e.getMessage(), e);
                 }
             }
         }
         try {
             DeptArray depts = p.get_userinfo().get_departments();
-            for (int i = 0; i < depts.size(); i++) {
-                ((DeptInfo) depts.get(i)).CalcCoorRestrictionShapes();
+            for (Object dept : depts) {
+                ((DeptInfo) dept).CalcCoorRestrictionShapes();
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).calc_coortopix(p.get_navigation());
+            for (ShapeStruct aList : list) {
+                aList.calc_coortopix(p.get_navigation());
             }
         } catch (Exception e) {
             log.warn(e.getMessage(), e);
@@ -1047,7 +1047,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         try {
             p.get_mappane().get_active_shape().calc_coortopix(PAS.get_pas().get_navigation());
         } catch (Exception e) {
-
+            log.warn(e.getMessage(), e);
         }
 
         Enumeration<ShapeStruct> en = getShapesToPaint().elements();
@@ -1065,12 +1065,12 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             DeptArray depts = p.get_userinfo().get_departments();
 
-            for (int i = 0; i < depts.size(); i++) {
-                ((DeptInfo) depts.get(i)).drawRestrictionShapes(g, nav);
+            for (Object dept : depts) {
+                ((DeptInfo) dept).drawRestrictionShapes(g, nav);
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
+            for (ShapeStruct aList : list) {
+                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
             }
 
         } catch (Exception e) {
@@ -1096,6 +1096,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                 boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
                 p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
             } catch (Exception e) {
+                log.warn(e.getMessage(), e);
             }
         }
         try {

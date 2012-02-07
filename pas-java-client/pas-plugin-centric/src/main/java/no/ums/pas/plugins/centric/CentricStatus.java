@@ -18,7 +18,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTabbedPane m_status_tabbed;
 
 
     private CBSENDINGRESPONSE res;
@@ -40,8 +39,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 	@Override
 	public void add_controls() {
-		
-		m_status_tabbed = new JTabbedPane();
+
+        JTabbedPane m_status_tabbed = new JTabbedPane();
 		
 		
 		m_gridconst.fill = GridBagConstraints.BOTH;
@@ -58,7 +57,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
         m_status_tabbed.addTab(Localization.l("main_sending_lba_heading_messages"), m_messages);
 
 		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-50,PAS.get_pas().get_eastcontent().getHeight()-50));
-		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width-10,getPreferredSize().height-10));
+		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width - 10, getPreferredSize().height - 10));
 		this.revalidate();
 		repaint();
 		init();
