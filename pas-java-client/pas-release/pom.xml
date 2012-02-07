@@ -72,7 +72,6 @@
                     <artifactId>maven-ums-plugin</artifactId>
                     <configuration>
                         <src>${build.directory}/${project.build.finalName}.zip</src>
-                        <!--<dest>${jnlp.output}</dest>-->
                     </configuration>
                 </plugin>
             </plugins>

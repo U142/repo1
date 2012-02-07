@@ -7,7 +7,9 @@ import nl.bzk.services.nl_alert.mapsearch.MapSearchService;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
@@ -49,13 +51,17 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
         }
     }
 	
+
+
 	/**
 	 * Edit how to search for addresses (e.g. another Web Service)
 	 * Must return a UGabSearchResultList
 	 * Translate return values into a UGabSearchResultList to return
 	 */
 	@Override
-	public UGabSearchResultList onExecSearch(SearchPanelVals spr) throws Exception
+	public UGabSearchResultList onExecSearch(String sz_address, String sz_no,
+			String sz_postno, String sz_postarea, String sz_region,
+			AddressSearchCountry country) throws Exception
 	{
 		//PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch", "ObjectFactory");
 		log.debug("CentricAddressSearch.onExecSearch");
@@ -71,11 +77,11 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 								getMapSearchServiceSoap().
 								doMapSearch(
                                         10,
-                                        spr.get_number(),
-                                        spr.get_address(),
-                                        spr.get_postno().replaceAll("\\s",""),
-                                        spr.get_postarea(),
-                                        spr.get_region());
+                                        sz_no,
+                                        sz_address,
+                                        sz_postno,
+                                        sz_postarea,
+                                        sz_region);
 			List<MapMatches> list = temp_response.getMatches().getMapMatches();
 			UGabSearchResultList response = new UGabSearchResultList();
 			ArrayOfUGabResult arr_res = new ArrayOfUGabResult();
@@ -121,7 +127,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		catch(Exception e)
 		{
 			log.warn(e.getMessage(), e);
-            JOptionPane.showMessageDialog(spr, Localization.l("adrsearch_dlg_general_error"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Variables.getMapFrame(), Localization.l("adrsearch_dlg_general_error"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			return new UGabSearchResultList();
 		}
 		

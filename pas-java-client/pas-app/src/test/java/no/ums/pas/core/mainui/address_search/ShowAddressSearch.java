@@ -14,6 +14,5 @@ public class ShowAddressSearch {
 		Localization.INSTANCE.setLocale(new Locale("no", "NO"));
 		AddressSearchCtrl dlg = new AddressSearchCtrl();
 		dlg.showGUI();
-		dlg.getDlg().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

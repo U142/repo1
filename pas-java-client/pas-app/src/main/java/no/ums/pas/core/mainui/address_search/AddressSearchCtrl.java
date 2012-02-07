@@ -17,7 +17,7 @@ import java.util.List;
 
 public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	private AddressSearchDlg dlg = null;
-	public AddressSearchDlg getDlg() { return dlg; }
+	private AddressSearchDlg getDlg() { return dlg; }
 	public AddressSearchCtrl()
 	{
 

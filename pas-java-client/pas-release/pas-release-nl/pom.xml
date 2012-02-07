@@ -9,14 +9,14 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     <artifactId>pas-release-nl</artifactId>
-    <name>NLAlert - BETA</name>
+    <name>NLAlert - Beta</name>
     <description>NLAlert Beta</description>
     <properties>
         <jnlp.filename>nlalert.jnlp</jnlp.filename>
         <jnlp_title>PAS - DEVEL</jnlp_title>
         <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/	</jnlp_codebase_url>
         <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
-        <jnlp_w>https://secure.ums2.no/PAS/ws_nlalert/WS/</jnlp_w>
+        <jnlp_w>https://secure.ums2.no/PAS/ws_nlutv/WS/</jnlp_w>
         <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
     </properties>
     <dependencies>
@@ -35,14 +35,30 @@
     </build>
     <profiles>
         <profile>
-            <id>nlalert-beta</id>
+            <id>nlbeta</id>
             <properties>
-                <jnlp_title>NLAlert - BETA</jnlp_title>
+                <jnlp_title>NLAlert - Beta</jnlp_title>
                 <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/</jnlp_codebase_url>
                 <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
-                <jnlp_w>https://secure.ums2.no/PAS/ws_nlalert/WS/</jnlp_w>
+                <jnlp_w>https://secure.ums2.no/PAS/ws_nlutv/WS/</jnlp_w>
                 <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
             </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>no.ums.maven</groupId>
+                            <artifactId>maven-ums-plugin</artifactId>
+                            <configuration>
+                                <destinations>
+                                    <destination>smb://Administrator:digi20ums@192.168.3.40/www/PAS/nlalert/
+                                    </destination>
+                                </destinations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
         </profile>
 	</profiles>
 </project>

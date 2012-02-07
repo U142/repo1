@@ -23,7 +23,7 @@
   <application-desc main-class="$mainClass">
     <argument>-cUMS</argument>
     <argument>-shttps://secure.ums2.no/PAS/</argument>
-    <argument>-whttps://secure.ums2.no/PAS/ws_NLAlert/WS/</argument>
+    <argument>-whttps://secure.ums2.no/PAS/ws_nlutv/WS/</argument>
     <argument>-ahttp://94.228.135.15/MapSearchService/</argument>
     <argument>-mdefault</argument>
   </application-desc>

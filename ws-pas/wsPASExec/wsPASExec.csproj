@@ -92,6 +92,16 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nlbeta|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\ExtLib\DotNetZipLib-DevKit-v1.9\Ionic.Zip.Reduced.dll</HintPath>
@@ -318,13 +328,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  
   <Import Project="$(MSBuildProjectDirectory)\ums.targets" />
   <PropertyGroup>
     <DeployTargetFolderBeta>\PAS\ws_pasutv\</DeployTargetFolderBeta>
-	<DeployTargetFolderQa>\www\pas\ws_pasqa</DeployTargetFolderQa>
-	<DeployTargetFolderProd>\www\pas\ws_pasprod</DeployTargetFolderProd>
+    <DeployTargetFolderNlbeta>\PAS\ws_nlutv\</DeployTargetFolderNlbeta>
+    <DeployTargetFolderQa>\www\pas\ws_pasqa</DeployTargetFolderQa>
+    <DeployTargetFolderProd>\www\pas\ws_pasprod</DeployTargetFolderProd>
     <DeployUrl>secure.ums.no/pas/ws_pas</DeployUrl>
   </PropertyGroup>
-  
 </Project>
