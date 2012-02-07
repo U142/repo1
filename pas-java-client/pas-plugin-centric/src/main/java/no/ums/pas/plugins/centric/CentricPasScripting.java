@@ -1149,11 +1149,11 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         p.add_spacing(DefaultPanel.DIR_HORIZONTAL, 75);
 
-        p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+        /*p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
         p.add(p.getLblCompId(), p.m_gridconst);
         p.set_gridconst(5, p.get_panel(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
         p.add(p.getCompId(), p.m_gridconst);
-
+*/
         p.add_spacing(p.DIR_VERTICAL, verticalspacing);
 
         p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
