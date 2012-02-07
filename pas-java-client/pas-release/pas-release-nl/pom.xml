@@ -9,7 +9,7 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     <artifactId>pas-release-nl</artifactId>
-    <name>NLAlert - BETA</name>
+    <name>NLAlert - Beta</name>
     <description>NLAlert Beta</description>
     <properties>
         <jnlp.filename>nlalert.jnlp</jnlp.filename>
@@ -37,7 +37,7 @@
         <profile>
             <id>nlbeta</id>
             <properties>
-                <jnlp_title>NLAlert - BETA</jnlp_title>
+                <jnlp_title>NLAlert - Beta</jnlp_title>
                 <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/</jnlp_codebase_url>
                 <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
                 <jnlp_w>https://secure.ums2.no/PAS/ws_nlutv/WS/</jnlp_w>
