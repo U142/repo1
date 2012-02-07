@@ -19,6 +19,7 @@ import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
 import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
@@ -73,6 +74,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     private static final Log log = UmsLog.getLogger(DefaultPasScripting.class);
 
     private final DefaultAddressSearch addressSearch = new DefaultAddressSearch();
+    private final AddressSearchCtrl addressSearchGui = new AddressSearchCtrl();
 
     @Override
 	public void onMapCellNotLoaded(Graphics g, TileLookup tileLookup,
@@ -105,6 +107,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
     public AddressSearch getAddressSearch() {
         return addressSearch;
+    }
+
+    @Override
+    public AddressSearchCtrl getAddressSearchGui() {
+        return addressSearchGui;
     }
 
     @Override
@@ -171,7 +178,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
-	@Override
+    @Override
+    public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public boolean onAddMainSelectMenu(MainMenuBar menu) {
         final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
         file.add(FileMenuActions.NEW_SENDING);

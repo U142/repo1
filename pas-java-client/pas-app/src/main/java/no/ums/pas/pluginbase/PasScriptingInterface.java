@@ -15,10 +15,7 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
-import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
-import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
-import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.*;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.project.Project;
@@ -57,6 +54,8 @@ public interface PasScriptingInterface {
             return o1.getPriority() - o2.getPriority();
         }
     };
+
+
 
     public enum OperatingSystem {
         WIN,
@@ -139,6 +138,8 @@ public interface PasScriptingInterface {
 
     AddressSearch getAddressSearch();
 
+    AddressSearchCtrl getAddressSearchGui();
+
     boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
 
     /**
@@ -171,7 +172,15 @@ public interface PasScriptingInterface {
      * @return
      */
     boolean onAddMainMenuButtons(MainMenu menu);
-	
+
+    /**
+     * Function to alter buttons
+     * @param menu
+     * @param btnGroup
+     * @return
+     */
+    boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup);
+
     /**
      * Function to add menu items to JMenu
      * @param menu

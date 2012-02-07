@@ -123,9 +123,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     public AddressSearch getAddressSearch() {
     	return this.addressSearch;
     }
-    
-    
-
 
 	@Override
 	public AddressSearchCtrl getAddressSearchGui() {
@@ -172,44 +169,44 @@ public class CentricPasScripting extends DefaultPasScripting {
     private StdTextArea menu_txt_project;
 
 
-    
-    
+
+
     @Override
-	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
-		menu.change_buttoncolor(menu.get_btn_pan(), false);
-		menu.change_buttoncolor(menu.get_btn_zoom(), false);
-		menu.change_buttoncolor(menu_btn_draw_ellipse, false);
-		menu.change_buttoncolor(menu_btn_draw_polygon, false);
-		
-		// For native GUI
-		menu.get_btn_pan().setSelected(false);
-		menu.get_btn_zoom().setSelected(false);
-		menu_btn_draw_ellipse.setSelected(false);
-		menu_btn_draw_polygon.setSelected(false);
-		
-    	switch(Variables.getMapFrame().get_mode())
-		{
-			case PAN:
-				menu.get_btn_pan().setSelected(true);
-			case PAN_BY_DRAG:
-				menu.change_buttoncolor(menu.get_btn_pan(), true);
-				menu.get_btn_pan().setSelected(true);
-				break;
-			case ZOOM:
-				menu.change_buttoncolor(menu.get_btn_zoom(), true);
-				menu.get_btn_zoom().setSelected(true);
-				break;
-			case SENDING_ELLIPSE:
-			case SENDING_ELLIPSE_POLYGON:
-				menu.change_buttoncolor(menu_btn_draw_ellipse, true);
-				menu_btn_draw_ellipse.setSelected(true);
-				break;
-			case SENDING_POLY:
-				menu.change_buttoncolor(menu_btn_draw_polygon, true);
-				menu_btn_draw_polygon.setSelected(true);
-				break;
-		}
-		return true;
+    public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+        menu.change_buttoncolor(menu.get_btn_pan(), false);
+        menu.change_buttoncolor(menu.get_btn_zoom(), false);
+        menu.change_buttoncolor(menu_btn_draw_ellipse, false);
+        menu.change_buttoncolor(menu_btn_draw_polygon, false);
+
+        // For native GUI
+        menu.get_btn_pan().setSelected(false);
+        menu.get_btn_zoom().setSelected(false);
+        menu_btn_draw_ellipse.setSelected(false);
+        menu_btn_draw_polygon.setSelected(false);
+
+        switch(Variables.getMapFrame().get_mode())
+        {
+            case PAN:
+                menu.get_btn_pan().setSelected(true);
+            case PAN_BY_DRAG:
+                menu.change_buttoncolor(menu.get_btn_pan(), true);
+                menu.get_btn_pan().setSelected(true);
+                break;
+            case ZOOM:
+                menu.change_buttoncolor(menu.get_btn_zoom(), true);
+                menu.get_btn_zoom().setSelected(true);
+                break;
+            case SENDING_ELLIPSE:
+            case SENDING_ELLIPSE_POLYGON:
+                menu.change_buttoncolor(menu_btn_draw_ellipse, true);
+                menu_btn_draw_ellipse.setSelected(true);
+                break;
+            case SENDING_POLY:
+                menu.change_buttoncolor(menu_btn_draw_polygon, true);
+                menu_btn_draw_polygon.setSelected(true);
+                break;
+       }
+       return true;
     }
 
 	@Override
@@ -281,7 +278,6 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.get_btn_group_navigation().add(menu_btn_draw_polygon);
         menu.get_btn_group_navigation().add(menu_btn_draw_ellipse);
 
-        
         enableSendButtons(true);
 
         return true;
