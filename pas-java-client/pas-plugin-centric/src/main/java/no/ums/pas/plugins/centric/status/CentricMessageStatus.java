@@ -294,10 +294,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		int answer;
         answer = JOptionPane.showConfirmDialog(frame, Localization.l("common_are_you_sure"), Localization.l("common_kill_sending") + " " + get_refno(), JOptionPane.YES_NO_OPTION);
 		frame.dispose();
-		if(answer == JOptionPane.YES_OPTION)
-			return true;
-		else
-			return false;
+        return answer == JOptionPane.YES_OPTION;
 	}
 
 	private JFrame get_frame() {

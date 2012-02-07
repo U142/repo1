@@ -74,10 +74,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private StdTextLabel m_lbl_sender_name;
 	private StdTextLabel m_lbl_date_time;
 	private StdTextLabel m_lbl_message;
-	//private StdTextLabel m_lbl_channel;
-	//private StdTextLabel m_lbl_duration;
-	//private StdTextLabel m_lbl_date;
-	//private StdTextLabel m_lbl_time;
+
 	private StdTextLabel m_lbl_risk;
 	private StdTextLabel m_lbl_reaction;
 	private StdTextLabel m_lbl_originator;
@@ -93,13 +90,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private JScrollPane m_txt_messagescroll;
 	private JTextArea m_txt_authorization;
 	private JScrollPane m_txt_authorizationscroll;
-	
-	//private JComboBox m_cbx_channel;
-	//private JComboBox m_cbx_duration;
-	//private JComboBox m_cbx_date;
-	//private JComboBox m_cbx_time_hour;
-	//private JComboBox m_cbx_time_minute;
-	
+
 	private StdTextLabel m_lbl_preview;
 	private JTextArea m_txt_preview;
 	private JScrollPane m_txt_previewscroll;
@@ -109,11 +100,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private RROComboBox m_cbx_originator;
 	private JComboBox m_cbx_time_hour;
 	private JComboBox m_cbx_time_minute;
-	
-	/*private StdTextLabel m_lbl_schedule;
-	private JRadioButton m_rad_immediate;
-	private JRadioButton m_rad_schedule;
-	private ButtonGroup m_grp_schedule;*/
 	
 	private JButton m_btn_send;
 	private JButton m_btn_address_book; // Add image/icon
@@ -152,8 +138,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	{
 		return n_parent_refno;
 	}
-	
-	//private CentricStatus m_centricstatus;
 	
 	private DeptInfo m_dept_send_on_behalf_of = null;
 	protected void setDeptSendOnBehalfOf(DeptInfo d)
@@ -213,12 +197,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(m_dept_send_on_behalf_of==null)
 			setDeptSendOnBehalfOf(Variables.getUserInfo().get_default_dept());
 	}
-	//private CentricStatusController m_centricstatuscontroller;
-	
+
 	public CentricStatusController getStatusController() { return (CentricStatusController)PAS.get_pas().get_statuscontroller(); }
-	
-	//public void set_centricController(CentricStatusController controller) { m_centricstatuscontroller = controller; }
-	
+
 	private long m_projectpk = 0;
 	public boolean projectOpen() { return m_projectpk>0; }
 	
@@ -232,7 +213,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		else
 		{
 			m_txt_event_name.setEnabled(false);
-			//m_txt_event_name.setText(sz_projectname);
 			setEventText(sz_projectname);
 		}
 		m_projectpk = projectpk;
@@ -243,8 +223,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_event_name.setText(s);
 		m_txt_event_name.setToolTipText(s);
 	}
-	
-	//public CentricStatusController get_statuscontroller() { return m_centricstatuscontroller; }
 	
 	public CentricSendOptionToolbar() {
 		//super();
@@ -267,18 +245,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	private static int lbl_width = 120;
 	private static int input_width = 260;
-	private static int btn_width = 110;
-	private static int btn_height = 23;
-	
-	public void init() {
+
+    public void init() {
         m_lbl_event_name = new StdTextLabel(Localization.l("main_sending_event_name") + ":",new Dimension(lbl_width,20));
         m_lbl_sender_name = new StdTextLabel(Localization.l("main_sending_lba_sender_text") + ":", new Dimension(lbl_width,20));
         m_lbl_date_time = new StdTextLabel(Localization.l("common_date") + " - " + Localization.l("common_time") + ":", new Dimension(lbl_width,20));
         m_lbl_message = new StdTextLabel(Localization.l("common_message_content") + ":",new Dimension(lbl_width,20));
-		/*m_lbl_channel = new StdTextLabel("Channel:",new Dimension(150,20));
-		m_lbl_duration = new StdTextLabel("Duration:",new Dimension(150,20));
-		m_lbl_date = new StdTextLabel("Date:",new Dimension(150,20));
-		m_lbl_time = new StdTextLabel("Time:",new Dimension(150,20));*/
 
         m_lbl_risk = new StdTextLabel(Localization.l("common_risk") + ":",new Dimension(lbl_width,20));
         m_lbl_reaction = new StdTextLabel(Localization.l("common_reaction") + ":",new Dimension(lbl_width,20));
@@ -304,7 +276,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_date_time.setEnabled(false);
 
         m_btn_update = new JButton(Localization.l("common_update"));
-		m_btn_update.setPreferredSize(new Dimension(btn_width, btn_height));
+        int btn_width = 110;
+        int btn_height = 23;
+        m_btn_update.setPreferredSize(new Dimension(btn_width, btn_height));
 		m_btn_update.addActionListener(this);
 		
 		m_txt_message = new StdTextAreaNoTab(this, "",1,1,"[^A-Za-z0-9]");
@@ -313,36 +287,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_message.addFocusListener(this);
 		m_txt_message.addKeyListener(this);
 		
-		/*m_txt_message.setFocusTraversalKeysEnabled(true);
-		Set<AWTKeyStroke> forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-		Set<AWTKeyStroke> backwardKeys = getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
-		m_txt_message.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
-		m_txt_message.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
-*/
-		//m_txt_message.setPreferredSize(new Dimension(300,200));
-		
 		m_txt_messagescroll = new JScrollPane(m_txt_message);
-		//m_txt_messagescroll.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		m_txt_messagescroll.setPreferredSize(new Dimension(input_width,100));
 		
-		//m_btn_messagelib = new JButton(PAS.l("main_sending_audio_type_library"));
 		ImageIcon ico = ImageLoader.load_icon("messagelibrary.png");
 		m_btn_messagelib = new JButton(ico);
         m_btn_messagelib.setToolTipText(Localization.l("main_sending_audio_type_library"));
 		m_btn_messagelib.setPreferredSize(new Dimension(ico.getIconWidth(), ico.getIconHeight()));
 		m_btn_messagelib.addActionListener(this);
-		
-		//m_btn_messagelib.setPreferredSize(new Dimension(50, 20));
-		
-		
-		/*m_cbx_channel = new JComboBox(new String[] { "Dutch - Channel 1" });
-		m_cbx_channel.setPreferredSize(new Dimension(150,20));
-		m_cbx_duration = new JComboBox(new ExpiryMins[]{ new ExpiryMins("30"), new ExpiryMins("60"), new ExpiryMins("120"), new ExpiryMins("360"), new ExpiryMins("720"), new ExpiryMins("1440") });
-		m_cbx_duration.setPreferredSize(new Dimension(150,20));
-		m_cbx_date = new JComboBox(new String[] { "10.05.2010" });
-		m_cbx_time_hour = new JComboBox(new String[] { "15" });
-		m_cbx_time_minute = new JComboBox(new String[] { "30" });*/
-		
+
 		m_cbx_risk = new RROComboBox(CBRISK.class);
 		m_cbx_risk.setPreferredSize(new Dimension(input_width,20));
 		m_cbx_risk.addFocusListener(this);
@@ -380,17 +333,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_reaction.addActionListener(this);
 		m_cbx_risk.addActionListener(this);
 		
-
-		/*
-		m_lbl_immediate = new StdTextLabel("Immidiately");
-		m_lbl_schedule = new StdTextLabel("Schedule");
-		m_rad_immediate = new JRadioButton();
-		m_rad_schedule = new JRadioButton();
-		m_grp_schedule = new ButtonGroup();
-		m_grp_schedule.add(m_rad_immediate);
-		m_grp_schedule.add(m_rad_schedule);
-		*/
-		
 		//Preview ting
         m_lbl_preview = new StdTextLabel(Localization.l("common_preview"),new Dimension(150,20));
 		m_txt_preview = new JTextArea("",1,1);
@@ -423,15 +365,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
         m_txt_warning = new JTextArea(Localization.l("main_sending_send_warning"),1,1);
 		m_txt_warning.setWrapStyleWord(true);
 		m_txt_warning.setLineWrap(true);
-		//m_txt_warning.setText();
 		m_txt_warningscroll = new JScrollPane(m_txt_warning);
 		m_txt_warningscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		//m_btn_close = new JButton(ImageLoader.load_icon("delete_24.png"));
-		//m_btn_close.addActionListener(this);
-		//m_btn_close.setActionCommand("act_sending_close");
-		//m_btn_close.setToolTipText(PAS.l("main_sending_adr_btn_close_sending"));
-		
 		add_controls();
 		m_txt_event_name.setEditable(true);
 		m_txt_message.setEditable(true);
@@ -441,7 +377,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		Variables.getMapFrame().addMouseListener(this);
 		Variables.getMapFrame().addKeyListener(this);
 		setVisible(true);
-		//m_btn_reset.doClick();
 		autoClickButton(m_btn_reset);
 	}
 	
@@ -468,7 +403,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(b);
 			break;
 		case SHOWING_SUMMARY: //if training mode is off, we may enable send button
-			//m_btn_send.setEnabled(!PAS.TRAINING_MODE);
 			if(PAS.TRAINING_MODE) {
                 m_btn_send.setToolTipText(Localization.l("mainmenu_trainingmode"));
            }
@@ -494,7 +428,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_lbl_event_name, m_gridconst);
 		set_gridconst(1, get_panel(), 7, 1);
 		add(m_txt_event_name, m_gridconst);
-		//m_txt_event_name.setEnabled(true);
 		m_txt_event_name.setEnabled(!projectOpen());
 		
 		
@@ -526,8 +459,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 5);
 		
 		set_gridconst(8, inc_panels(), 1, 1);
-		//add(m_btn_address_book, m_gridconst);
-		
+
 		add_spacing(DIR_VERTICAL, 10);
 		
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -564,54 +496,20 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		set_gridconst(2, get_panel(), 7, 1);
 		add(m_lbl_characters, m_gridconst);
-				
-		/*
-		set_gridconst(1, inc_panels(), 1, 1);
-		add(m_rad_immediate, m_gridconst);
-		set_gridconst(2, get_panel(), 1, 1);		
-		add(m_lbl_immediate, m_gridconst);
-		set_gridconst(3, get_panel(), 2, 1);
-		add(m_rad_schedule, m_gridconst);
-		set_gridconst(4, get_panel(), 2, 1);
-		add(m_lbl_schedule, m_gridconst);
-		
-		add_spacing(DIR_VERTICAL, 5);
-		
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_lbl_date,m_gridconst);
-		set_gridconst(1, get_panel(), 2, 1);
-		add(m_cbx_date,m_gridconst);
-		
-		add_spacing(DIR_HORIZONTAL, 5);
-		
-		set_gridconst(3, get_panel(), 2, 1);
-		add(m_lbl_time, m_gridconst);
-		set_gridconst(4, get_panel(), 1, 1);
-		add(m_cbx_time_hour, m_gridconst);
-		set_gridconst(5, get_panel(), 2, 1);
-		add(m_cbx_time_minute, m_gridconst);
-		
-		add_spacing(DIR_VERTICAL, 15);*/
-		
+
 		set_gridconst(1, inc_panels(), 2, 1);
 		add(m_btn_send, m_gridconst);
 		m_btn_send.setActionCommand("act_goto_summary");
 		m_btn_send.setPreferredSize(new Dimension(input_width,30));
-		//set_gridconst(3, get_panel(), 1, 1);
-		//add(m_btn_close, m_gridconst);
-		
+
 		add_spacing(DIR_VERTICAL, 50);
 		
 		set_gridconst(8, inc_panels(), 1, 1);
 		add(m_btn_reset, m_gridconst);
 		
-		//set_gridconst(2, get_panel(), 1, 1);
-		//add(m_btn_save_message, m_gridconst);
-		
 		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,100));
 		m_txt_event_name.setPreferredSize(new Dimension(input_width, m_lbl_preview.getPreferredSize().height));
 
-		//m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
 		updateCharacters();
 		revalidate();
 		repaint();
@@ -620,8 +518,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private void showSummary() {
 		
 		findDeptSendOnBehalfOf();
-		//if(projectOpen())
-			m_txt_event_name.setEnabled(false);
+        m_txt_event_name.setEnabled(false);
 		removeAll();
 		reset_panels();
 		set_gridconst(0, get_panel(), 1, 1);
@@ -652,8 +549,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 20);
 		
 		
-		//set_gridconst(0, inc_panels(), 8, 1);
-		//add(m_txt_warningscroll, m_gridconst);
 		m_txt_warning.setEnabled(false);
 		Font f = UIManager.getFont("SendingWarningText.font");
 		m_txt_warning.setFont(f);
@@ -664,9 +559,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 5);
 		
 		set_gridconst(0, inc_panels(), 8, 1);
-		//progress.get_progress().setSize(new Dimension(450,25));
         progress.set_totalitems(0, Localization.l("main_statustext_lba_sending"));
-		//progress.get_progress().setPreferredSize(new Dimension(450,25));
 		progress.stop_and_hide();
 		add(progress.get_progress(), m_gridconst);
 		
@@ -690,7 +583,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.setActionCommand("act_goto_authorization");
 		int width_left = 550-100;
 		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
-		//progress.get_progress().setVisible(false);
 		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
 		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,70));
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
@@ -709,8 +601,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private void showAuthorization() {
 		
 		findDeptSendOnBehalfOf();
-		//if(projectOpen())
-			m_txt_event_name.setEnabled(false);
+        m_txt_event_name.setEnabled(false);
 		removeAll();
 		reset_panels();
 		set_gridconst(0, get_panel(), 1, 1);
@@ -725,13 +616,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, get_panel(), 3, 2);
 		add(m_txt_previewscroll, m_gridconst);
 		set_gridconst(0, inc_panels(), 1, 1);
-		/*if(m_btn_print==null) {
-			m_btn_print = new JButton(PAS.l("common_print_summary"));
-			m_btn_print.setActionCommand("act_print_summary");
-			m_btn_print.addActionListener(this);
-		}
-		add(m_btn_print, m_gridconst);
-		*/
+
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_lbl_pages, m_gridconst);
 		set_gridconst(2, get_panel(), 7, 1);
@@ -767,9 +652,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 5);
 		
 		set_gridconst(0, inc_panels(), 8, 1);
-		//progress.get_progress().setSize(new Dimension(450,25));
         progress.set_totalitems(0, Localization.l("main_statustext_lba_sending"));
-		//progress.get_progress().setPreferredSize(new Dimension(450,25));
 		progress.stop_and_hide();
 		add(progress.get_progress(), m_gridconst);
 		
@@ -782,10 +665,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
 		add(m_btn_send, m_gridconst);
-		//set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
-		//add(m_btn_save_message, m_gridconst);
-		//set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
-		//add(m_btn_send_for_auth, m_gridconst);
 		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
 		add(m_btn_cancel, m_gridconst);
 		
@@ -793,7 +672,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.setActionCommand("act_send");
 		int width_left = 550-100;
 		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
-		//progress.get_progress().setVisible(false);
 		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
 		m_txt_warningscroll.setPreferredSize(new Dimension(m_txt_previewscroll.getPreferredSize().width,70));
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
@@ -818,12 +696,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	public void trainingModeChanged()
 	{
-		/*if(PAS.TRAINING_MODE)
-			m_btn_send.setEnabled(false);
-		else
-			m_btn_send.setEnabled(true);*/
 		checkForEnableSendButton();
-		
 	}
 	
 	protected void resetRRO()
@@ -837,11 +710,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getSource().equals(m_btn_update)) {
 			if(!projectOpen())
 			{
-				/*if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
-					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));*/
 				m_sz_date = getFormatedDate();
 				setEventText(PAS.get_pas().get_userinfo().get_organization() + " " + m_sz_date);
-				//setEventText(m_txt_event_name.getText());
 			}
 			else
 				m_sz_date = getFormatedDate();
@@ -864,12 +734,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getActionCommand().equals("act_send")) {
 			// Check if summary is active, create send object, display send object preview
 			trainingModeChanged();
-			if(PAS.TRAINING_MODE)
-			{
-				//m_btn_send.setEnabled(false);
-				//return;
-			}
-			
+
 			CBMESSAGE msg = new CBMESSAGE();
 			msg.setSzText(m_txt_preview.getText());
 			msg.setLChannel(1); // This is stored in userinfo
@@ -926,7 +791,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			operation.setFSimulation(PAS.TRAINING_MODE);
 			operation.setLSchedUtc(0);
 			operation.setTextmessages(msglist);
-			//operation.setSzSender(m_txt_sender_name.getText());
 			operation.setLProjectpk(m_projectpk);
 			operation.setSzProjectname(m_txt_event_name.getText());
 			
@@ -957,12 +821,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
                 JOptionPane.showMessageDialog(this, Localization.l("common_error" + ": ") + ex.getMessage(), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				progress.stop_and_hide();
 				m_btn_cancel.setEnabled(true);
-				//m_btn_send.setEnabled(true);
 				checkForEnableSendButton();
 				current_mode = MODE.SHOWING_AUTHORIZATION;
 			}
 			
-			//m_btn_send.setEnabled(false);
 			checkForEnableSendButton();
 			m_btn_cancel.setEnabled(false);
 			
@@ -987,10 +849,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			current_mode = MODE.SHOWING_SUMMARY;
 			showSummary();
 			checkForEnableSendButton();
-			//Variables.NAVIGATION.setNavigation(Variables.MAPPANE.get_active_shape().calc_bounds());
-			/*PAS.get_pas().actionPerformed(new ActionEvent(Variables.MAPPANE.get_active_shape().calc_bounds(),
-										ActionEvent.ACTION_PERFORMED,
-										"act_map_goto_area"));*/
 			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds());
 		}
 		else if(e.getActionCommand().equals("act_goto_authorization")) {
@@ -998,17 +856,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			current_mode = MODE.SHOWING_AUTHORIZATION;
 			showAuthorization();
 			checkForEnableSendButton();
-			//Variables.NAVIGATION.setNavigation(Variables.MAPPANE.get_active_shape().calc_bounds());
-			/*PAS.get_pas().actionPerformed(new ActionEvent(Variables.MAPPANE.get_active_shape().calc_bounds(),
-										ActionEvent.ACTION_PERFORMED,
-										"act_map_goto_area"));*/
-			//Variables.NAVIGATION.gotoMap(Variables.MAPPANE.get_active_shape().calc_bounds());
 		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
-			//JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 			progress.stop_and_hide();
 			m_btn_cancel.setEnabled(true);
-			//m_btn_send.setEnabled(true);
 			checkForEnableSendButton();
 			add_controls();
 			current_mode = MODE.MESSAGE_WRITING;
@@ -1020,7 +871,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_cancel.setEnabled(true);
 			current_mode = MODE.SHOWING_SUMMARY;
 			checkForEnableSendButton();
-			//m_btn_send.setEnabled(true);
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			//lock the painting
@@ -1043,15 +893,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getSource().equals(m_btn_reset)){
 			if(!projectOpen())
 				setEventText(Variables.getUserInfo().get_organization());
-			//m_txt_sender_name.setText(Variables.USERINFO.get_organization());
+
 			m_txt_sender_name.setText("NL-Alert");
 			m_txt_message.setText("");
-			//m_cbx_risk.setSelectedIndex(0);
-			//m_cbx_reaction.setSelectedIndex(0);
-			//m_cbx_originator.setSelectedIndex(0);
-			//m_txt_preview.setText("");
+
 			resetRRO();
-			//updateCharacters();
+
 			Variables.getMapFrame().set_active_shape(new PolygonStruct(Variables.getNavigation().getDimension()));
 			Variables.getMapFrame().repaint();
 			checkForEnableSendButton();
@@ -1079,7 +926,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_originator))
 		{
-			//log.debug("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
 			if(m_cbx_originator.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -1095,7 +941,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_reaction))
 		{
-			//log.debug("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
 			if(m_cbx_reaction.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -1111,15 +956,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_risk))
 		{
-			//log.debug("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
-			if(e.getActionCommand().equals("comboBoxEdited"))
-			{
-				if(m_cbx_risk.getSelectedIndex()==-1)
-				{
-				}
-				
-			}
-			else if(e.getActionCommand().equals("comboBoxChanged"))
+			if(e.getActionCommand().equals("comboBoxChanged"))
 			{
 				m_cbx_risk.updateEditor();				
 			}
@@ -1127,114 +964,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			updatePreviewText(true);
 		}
 		else if(e.getActionCommand().equals("act_print_summary")) {
-			/*
-			int preferred_resolution = 1920;
-			int actual_screensize = Toolkit.getDefaultToolkit().getScreenSize().width;
-			int width = 800;
-			int height = 800;
-			String timestamp = String.valueOf(Utils.get_current_datetime());
-			
-			// Scales to screen resolution
-			double temp;
-			temp = (double)preferred_resolution/actual_screensize;
-			int lablefont = Math.round(((float)actual_screensize/preferred_resolution) * 5);
-			int textboxfont = Math.round(((float)actual_screensize/preferred_resolution) * 16);
-			width = (int)(((double)actual_screensize/preferred_resolution) * width);
-			height = (int)(((double)actual_screensize/preferred_resolution) * height);
-			JFrame printFrame = new JFrame();
-			
-			Container container = printFrame.getContentPane();
-			printFrame.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
-			
-			JLabel message = new JLabel("<html><font size=" + lablefont + ">--- " + PAS.l("main_sending_message_summary") + " " + Variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---</font></html>");
-			message.setOpaque(false);
-			message.setBackground(new Color(Color.TRANSLUCENT));
-			message.setAlignmentX(LEFT_ALIGNMENT);
-			printFrame.add(message, container);
-			// Space
-			JLabel space = new JLabel(" ");
-			printFrame.add(space, container);
-			// Image goes here
-			JPanel pnl = new JPanel();
-			pnl.setLayout(new BorderLayout());
-			JLabel image = new JLabel();
-			Image img;
-			
-			int actual_width = Variables.DRAW.get_buff_image().getWidth(this);
-			int actual_height = Variables.DRAW.get_buff_image().getHeight(this);
-			
-			if(actual_height < actual_width) {
-				if(actual_width<width) {
-					width = actual_width;
-					height = actual_height;
-					img = Variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_width/(double)width);
-					height = (int)((double)actual_height / percent_of_actual);
-					img = Variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
-				}
-			}
-			else {
-				if(actual_height<height) {
-					width = actual_width;
-					height = actual_height;
-					img = Variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_height/(double)height);
-					width = (int)((double)actual_width / percent_of_actual);
-					img = Variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
-				}
-			}
-			*/
+
 			String timestamp = String.valueOf(Utils.get_current_datetime());
             String m_headerfooter = "--- " + Localization.l("main_sending_message_summary") + " " + Variables.getUserInfo().get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---";
 			String m_message = m_txt_preview.getText();
-			//String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
-			//String m_characters = PAS.l("common_characters") + " " + PAS.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE;
 			String m_characters = m_lbl_pages.getText() + " - " + m_lbl_characters.getText();
-			/*
-			Image img;
-			image.setIcon(new ImageIcon(img));
-			pnl.add(image,BorderLayout.PAGE_START);
-			JTextArea txt = new JTextArea(10,60);
-			txt.setWrapStyleWord(true);
-			txt.setLineWrap(true);
-			txt.setOpaque(false);
-			txt.setFocusable(false);
-			txt.getCaret().setVisible(false);
-			txt.setBackground(new Color(Color.TRANSLUCENT));
-			Font font = new Font(message.getFont().getName(), Font.PLAIN, textboxfont);
-			txt.setFont(font);
-			txt.setText(PAS.l("common_message_content") + ":\n" + m_txt_preview.getText());
-			pnl.add(txt, BorderLayout.LINE_START);
-			pnl.add(new JLabel("<html><font size=" + lablefont + ">" + PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length() + "</font></html>"), BorderLayout.PAGE_END);
-			pnl.setBackground(new Color(Color.TRANSLUCENT));
-			pnl.setOpaque(false);
-			pnl.setAlignmentX(LEFT_ALIGNMENT);
-			printFrame.add(pnl, container);
-			message = new JLabel("<html><font size=" + lablefont + ">--- " + PAS.l("main_sending_message_summary") + " " + Variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---</font></html>");
-			message.setAlignmentX(LEFT_ALIGNMENT);
-			message.setOpaque(false);
-			message.setBackground(new Color(Color.TRANSLUCENT));
-			printFrame.add(message, container);
-			printFrame.pack();
-			container.setBackground(Color.WHITE);
-			printFrame.setSize(printFrame.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height - (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.05));
-			printFrame.setVisible(true);
-			BufferedImage imidj = new BufferedImage(printFrame.getHeight(), printFrame.getWidth(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = imidj.createGraphics();
-			printFrame.printAll(g);*/
-			
+
 			CentricPrintCtrl pctrl = new CentricPrintCtrl(Variables.getDraw().get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
 			pctrl.doPrint();
-			//pctrl.print(g);
-			
 		}
-
 	}
 	
 	private String getFormatedDate() {
@@ -1244,33 +982,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
-		/*
-		if(arg0.getSource().equals(m_txt_event_name)) {
-			if(!projectOpen())
-			{
-				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
-					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));				
-			}
-		}*/
 		checkForEnableSendButton();
-		
-		//updateCharacters();
 		updatePreviewText();
-			
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		/*
-		if(arg0.getSource().equals(m_txt_event_name)) {
-			if(!projectOpen())
-			{
-				setEventText(m_txt_event_name.getText() + " " + m_sz_date);
-			}
-		}*/
-		//checkInputs();
 		checkForEnableSendButton();
-		//updateCharacters();
 		updatePreviewText();
 	}
 	
@@ -1314,7 +1032,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		int total_len = TextFormat.GsmStrLen(sz_totalmessage);
 		if(total_len>MAX_TOTAL_CHARS) //sz_totalmessage.length()
 		{
-			//sz_totalmessage = sz_totalmessage.substring(0, MAX_TOTAL_CHARS);
 			sz_totalmessage = TextFormat.GsmStrMaxLen(sz_totalmessage, MAX_TOTAL_CHARS);
 			
 		}
@@ -1324,12 +1041,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 	protected int getTextLengthOfFields()
 	{
-		/*int total = m_txt_sender_name.getText().length() + 
-				m_txt_date_time.getText().length() + 
-				m_cbx_risk.getEditor().getItem().toString().length() + 
-				m_cbx_reaction.getEditor().getItem().toString().length() +
-				m_cbx_originator.getEditor().getItem().toString().length();*/
-		
 		int total = TextFormat.GsmStrLen(m_txt_sender_name.getText()) +
 						TextFormat.GsmStrLen(m_txt_date_time.getText()) +
 						TextFormat.GsmStrLen(m_cbx_risk.getEditor().getItem().toString()) +
@@ -1358,50 +1069,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 		final int w = getWidth();
 		final int h = getHeight();
-		if(w<=1 || h<=1)
-			return;
-		/*
-		try
-		{
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run()
-				{
-					revalidate();
-					//address_search.get_searchpanelresults().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().get_scrollpane().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().get_scrollpane().setPreferredSize(new Dimension(w-10, 150));
-					//address_search.get_searchpanelresults().setSize(new Dimension(100,100));
-					//address_search.revalidate();
-					//address_search.get_searchpanelresults().get_scrollpane().revalidate();
-				}
-			});
-		}
-		catch(Exception err)
-		{
-			
-		}*/
+		if(w<=1 || h<=1) {
+        }
 
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
-		//int MAX_EVENTNAME_LENGTH = 20;
-		if(e.getSource().equals(m_txt_event_name)) {
-			/*if(!projectOpen())
-			{
-				if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
-					return;
-				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
-					setEventText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));
-			}*/
-		}
-		else if(e.getSource().equals(m_txt_message))
-		{
-		}
-		else if(e.getSource().equals(m_txt_sender_name))
-		{
-			
-		}
 
 	}
 	
@@ -1412,46 +1085,28 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
-//			String temp = m_txt_message.getText();
 			String ch = Character.toString(e.getKeyChar());
 			int len_ch = TextFormat.GsmStrLen(ch);
-
-			//RegExpResult res = RegExpGsm(temp);
-			//if(!res.valid)
-			//	m_txt_message.setText(res.resultstr);
 
 			updatePreviewText();
 			int n_total_len = TextFormat.GsmStrLen(m_txt_preview.getText());//m_txt_preview.getText().length();
 			if(e.getSource().equals(m_txt_message))// || e.getSource().equals(m_txt_sender_name))
 			{
-				//int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
-//				int len_of_message = TextFormat.GsmStrLen(c.getText()); //c.getText().length();
-				//if(len_of_message<n_chars_left_for_message)
-				{
-					/*if(c.getText().length() >= n_chars_left_for_message-1) {
-						c.setText(c.getText().substring(0, n_chars_left_for_message-1));
-						return false;
-					}*/
-					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
-					
-					//if(TextFormat.GsmStrLen(c.getText()) >= n_chars_left_for_message-len_ch) {
-					if(n_chars_left_for_message<=len_ch)
-					{
-						//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
-						//c.setText(TextFormat.GsmStrMaxLen(c.getText(), n_chars_left_for_message-len_ch));
-						//c.setText(temp);
-						e.consume();
-						return false;						
-					}
-					return true;
-				}
+                int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
+
+                if(n_chars_left_for_message<=len_ch)
+                {
+                    e.consume();
+                    return false;
+                }
+                return true;
 			}
 			else if(e.getSource().equals(m_txt_sender_name))
 			{
 				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected - len_ch)
 				{
 					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
-					//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
+
 					if(n_chars_left_for_message<=len_ch)
 					{
 						e.consume();
@@ -1463,14 +1118,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			else
 			{
 				//combobox
-				/*if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
-				{
-					return false;
-				}*/
 				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected - len_ch)
 				{
 					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
-					//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
+
 					if(n_chars_left_for_message<=len_ch)
 					{
 						e.consume();
@@ -1483,9 +1134,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_txt_event_name))
 		{
-//			int n_total_len = m_txt_event_name.getText().length();
 			int n_chars_left_for_eventname = MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length()-1 + num_chars_selected;
-//			int len_of_event = m_txt_event_name.getText().length();
 			if(m_txt_event_name.getText().length() >= n_chars_left_for_eventname-1) {
 				return false;
 			}
@@ -1496,39 +1145,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		/*if(e.getSource().equals(m_txt_message) || 
-				e.getSource().equals(m_txt_sender_name) || 
-				e.getSource().equals(m_cbx_risk) ||
-				e.getSource().equals(m_cbx_reaction) ||
-				e.getSource().equals(m_cbx_originator)) {
-			updatePreviewText();
-			int n_total_len = m_txt_preview.getText().length();
-			if(e.getSource().equals(m_txt_message))
-			{
-				int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields();
-				int len_of_message = m_txt_message.getText().length();
-				//if(len_of_message<n_chars_left_for_message)
-				{
-					if(m_txt_message.getText().length() >= n_chars_left_for_message) {
-						m_txt_message.setText(m_txt_message.getText().substring(0, n_chars_left_for_message-1));
-					}
-				}
-			}
-			else if(e.getSource().equals(m_txt_sender_name))
-			{
-			}
-		}*/
 		if(e.getSource().equals(m_txt_event_name))
 		{
-			//setEventText(m_txt_event_name.getText());
 		}
 		else
 		{
 			updatePreviewText();
 			checkForEnableSendButton();
 		}
-
-		//checkInputs();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -1556,30 +1180,26 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			int before = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
 			int txt_before = TextFormat.GsmStrLen(m_txt_message.getText()); //m_txt_message.getText().length();
 			int char_selection = TextFormat.GsmStrLen(c.getText().substring(c.getSelectionStart(), c.getSelectionEnd())); //c.getSelectionEnd()-c.getSelectionStart();
-			//log.debug("c="+char_selection);
+
 			boolean b = checkIfInputAllowed(e, char_selection);
 			int after = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
-			//int txt_after = TextFormat.GsmStrLen(c.getText());//c.getText().length();
+
 			int txt_after = TextFormat.GsmStrLen(m_txt_message.getText()) + getTextLengthOfFields() + 1;
-//			int number_of_chars = after-before;
+
 			if(!b)
 			{
 				e.consume();
-				//return;
 			}
 			{
-				//remove chars if > max
 				if(txt_after>MAX_TOTAL_CHARS)
 				{
 					try
 					{
 						int diff = txt_after-(MAX_TOTAL_CHARS);
-//						int current_len = c.getText().length();
 						String cut = TextFormat.GsmStrMaxLen(c.getText(), txt_before-diff);
 						c.setText(cut);
 						c.setSelectionStart(selectionStart);
 						c.setSelectionEnd(selectionEnd);
-						//c.setText(c.getText().substring(0, current_len-diff));
 					}
 					catch(Exception err)
 					{
@@ -1587,31 +1207,22 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					}
 				}
 			}
-			//log.debug("Before="+before+" After="+after);
 		}
 		else if(e.getSource().equals(m_txt_event_name)) {
 			if(!projectOpen())
 			{
-				/*if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
-					return;
-				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
-					setEventText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));*/
+
 				JTextComponent c = (JTextComponent)e.getSource();
-				int before = c.getText().length();
-				int char_selection = c.getSelectionEnd()-c.getSelectionStart();
-				//log.debug("c="+char_selection);
+                int char_selection = c.getSelectionEnd()-c.getSelectionStart();
 				boolean b = checkIfInputAllowed(e, char_selection);
 				int after = c.getText().length() + m_txt_date_time.getText().length() + 1;
-//				int number_of_chars = after-before;
 				if(!b)
 					e.consume();
 				if(after>=MAX_EVENTNAME_LENGTH)
 				{
 					try
 					{
-						int diff = after-MAX_EVENTNAME_LENGTH;
-//						int current_len = c.getText().length();
-						setEventText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
+                        setEventText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
 					}
 					catch(Exception err)
 					{
@@ -1629,22 +1240,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public void onSendFinished(ActionEvent e) {
 		// Start update timer
 		CBSENDINGRESPONSE response = (CBSENDINGRESPONSE)e.getSource();
-		//set_projectpk(response.getLProjectpk(), "");
-		//if(m_centricstatuscontroller == null)
-		//	m_centricstatuscontroller = new CentricStatusController(e, this);
-		//else {
-		{
-			getStatusController().set_cbsendingresponse(response, true);
-			//getStatusController().openStatus((CBSENDINGRESPONSE)e.getSource(), this);
-			Project p = new Project();
-			p.set_projectpk(Long.toString(response.getLProjectpk()));
-			PAS.pasplugin.onOpenProject(p, response.getLRefno());
-			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
-			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
-			Variables.getMapFrame().set_active_shape(null);
-			Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
-			autoClickButton(m_btn_reset);
-		}
+
+        getStatusController().set_cbsendingresponse(response, true);
+        Project p = new Project();
+        p.set_projectpk(Long.toString(response.getLProjectpk()));
+        PAS.pasplugin.onOpenProject(p, response.getLRefno());
+        PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+        Variables.getMapFrame().set_active_shape(null);
+        Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
+        autoClickButton(m_btn_reset);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -1669,29 +1273,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		boolean enable_send = true;
 		if(m_txt_event_name.getText().length()<1)
 			enable_send = false;
-		//if(m_txt_sender_name.getText().length()<1)
-		//	enable_send = false;
 		if(m_txt_message.getText().length()<1)
 			enable_send = false;
-		//if(Variables.MAPPANE.get_active_shape()==null)
-		//	enable_send = false;
-		//if(m_cbx_originator.getSelectedItem().toString().length()<=0)
-		//	enable_send = false;
-		//if(m_cbx_risk.getSelectedItem().toString().length()<=0)
-		//	enable_send = false;
-		//if(m_cbx_reaction.getSelectedItem().toString().length()<=0)
-		//	enable_send = false;
-		//else
-		{
-			if(Variables.getMapFrame().get_active_shape()!=null &&
-					!Variables.getMapFrame().get_active_shape().can_lock(Variables.getUserInfo().get_departments().get_combined_restriction_shape()))
-				enable_send = false;
-		}
+
+        if(Variables.getMapFrame().get_active_shape()!=null &&
+                !Variables.getMapFrame().get_active_shape().can_lock(Variables.getUserInfo().get_departments().get_combined_restriction_shape()))
+            enable_send = false;
+
 		return enable_send;
 	}
 	
 	private void updateCharacters() {
-		//int chars = m_txt_preview.getText().length();
 		String str = m_txt_preview.getText();
 		
 		int chars = TextFormat.GsmStrLen(str);
@@ -1704,21 +1296,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_risk.setCharsAvailable(total_chars_left + chars_risk); //m_cbx_risk.getEditor().getItem().toString().length());
 		m_cbx_reaction.setCharsAvailable(total_chars_left + chars_reaction); //m_cbx_reaction.getEditor().getItem().toString().length());
 		m_cbx_originator.setCharsAvailable(total_chars_left + chars_originator); //m_cbx_originator.getEditor().getItem().toString().length());
-		/*switch(current_mode)
-		{
-		case INITIALIZING:
-		case MESSAGE_WRITING:
-			m_lbl_characters.setText(PAS.l("common_characters") + " " + chars + "/" + MAX_TOTAL_CHARS);
-			m_lbl_pages.setText(PAS.l("common_page") + " " + pageno + " (" + MAX_PAGES + ")");
-			break;
-		case SENDING:
-		case SHOWING_SUMMARY:
-			//int chars_left = ((chars / MAX_PAGES) % MAX_MESSAGELENGTH_PR_PAGE);
-			int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
-			
-			m_lbl_characters.setText(pageno + " " + PAS.l("common_pages") + " (" + chars_left + " " + PAS.l("common_characters") + " " + PAS.l("common_remaining") + ")");
-			break;
-		}*/
+
         m_lbl_pages.setText(Localization.l("common_page") + " " + pageno + "/" + MAX_PAGES);
         m_lbl_characters.setText(Localization.l("common_characters") + " " + Localization.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE);
 	}
@@ -1754,7 +1332,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 		checkForEnableSendButton();
 		int l_group = (int)cb.getMdv().getLGroup();
-		//MDVSENDINGINFOGROUP group = Enum.valueOf(MDVSENDINGINFOGROUP.class, new Long(l_group).toString());
 		if(cb.getShape()!=null)
 		{
 			boolean b_poly_is_elliptical = false;

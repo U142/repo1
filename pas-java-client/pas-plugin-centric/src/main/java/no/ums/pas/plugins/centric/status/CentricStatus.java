@@ -57,8 +57,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	
 	private boolean ready = true;
 	public boolean isReady() { return ready; }
-	private WSCentricStatus ws;
-	private boolean b_active = true;
+
+    private boolean b_active = true;
 	public void setClosed() { b_active = false; }
 	public boolean isClosed() { return !b_active; }
 	
@@ -132,7 +132,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				ready = true;
 				return;
 			}
-			ws = new WSCentricStatus(this,"act_status_downloaded",cbsreq);
+            WSCentricStatus ws = new WSCentricStatus(this, "act_status_downloaded", cbsreq);
 			ws.start();
 			//WSCentricStatus getStatus = new WSCentricStatus(this,"act_status_downloaded",cbsreq,this);
 			//getStatus.start();
@@ -226,10 +226,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	
 	public boolean containsMessageStatus(long refno)
 	{
-		if(hash_messagestatus.containsKey(refno))
-			return true;
-		return false;
-	}
+        return hash_messagestatus.containsKey(refno);
+    }
 
 	@Override
 	public void add_controls() {
@@ -260,36 +258,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		m_messages = new CentricMessages(this);
         m_status_tabbed.addTab(Localization.l("main_sending_lba_heading_messages"), m_messages);
 		
-		/*
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_lbl_message, m_gridconst);
-		set_gridconst(1, get_panel(), 2, 1);
-		add(m_txt_message, m_gridconst);
-		
-		set_gridconst(0, inc_panels(), 2, 1);
-		add(m_message_tabbed, m_gridconst);
-		
-		set_gridconst(0, inc_panels(), 2, 1);
-		add(m_lbl_status, m_gridconst);
-		set_gridconst(1, get_panel(), 2, 1);
-				
-		set_gridconst(0, inc_panels(), 1, 1); //5
-		m_btn_kill.setPreferredSize(new Dimension(30,20));
-		add(m_btn_kill, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(1, get_panel(), 1, 1);
-		m_btn_update.setPreferredSize(new Dimension(50,20));
-		add(m_btn_update, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(2, get_panel(), 1, 1);
-		m_btn_resend.setPreferredSize(new Dimension(50,20));
-		add(m_btn_resend, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(3, get_panel(), 1, 1);
-		m_btn_send_to_address_book.setPreferredSize(new Dimension(150,20));
-		add(m_btn_send_to_address_book, m_gridconst);
-		*/
-		
 		this.revalidate();
 		repaint();
 		init();
@@ -310,8 +278,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 				for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 					m_status_tabbed.setIconAt(i, null);
-				//log.debug("Status update complete");
-				
+
 			}
 			else
 			{
@@ -336,10 +303,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				cbp.getProject().getSzProjectname());
 
 		CentricMessageStatus ms;
-		//CBSTATUS cbs;
-		
-		boolean found;
-		int n_sendings = 0;
+
+        int n_sendings = 0;
 		int n_sendings_active = 0;
 		Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
 		Hashtable<Long, Long> active = new Hashtable<Long, Long>();
@@ -412,7 +377,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
             try {
                 final JTabbedPane final_tp = tp;
                 final CentricMessageStatus final_cms = currentui;
-                final String szSendingName = currentstatus.getSzSendingname();
                 final String final_lbl = lbl_pane;
                 final String final_tooltip = tooltip_pane;
                 SwingUtilities.invokeLater(new Runnable() {
@@ -444,7 +408,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 		//do gui stuff if status was opened due to a new sending. Flip to sending-panels and the new mesage
 		final JTabbedPane final_tp = tp;
-		//setFlipToNewSending();
+
 		if(getFlipToNewSending())
 		{
 			SwingUtilities.invokeLater(new Runnable() {

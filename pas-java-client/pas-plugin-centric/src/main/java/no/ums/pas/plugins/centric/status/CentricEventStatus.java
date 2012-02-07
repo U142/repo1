@@ -26,7 +26,6 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 	private StdTextArea m_active = new StdTextArea("",100);
 	
 	private JButton m_btn_finish = new JButton(Localization.l("main_status_finish_project"));
-    private CentricStatus m_parent;
 
     public StdTextArea get_sent() { return m_sent; }
 	public StdTextArea get_active() { return m_active; }
@@ -36,7 +35,7 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 		add_controls();
 		//m_lbl_refno.setText(m_lbl_refno.getText() + res.getLRefno());
 		m_btn_finish.setEnabled(false);
-		m_parent = status;
+        CentricStatus m_parent = status;
         StdTextArea m_refno;
         m_refno = new StdTextArea("", 100);
     }

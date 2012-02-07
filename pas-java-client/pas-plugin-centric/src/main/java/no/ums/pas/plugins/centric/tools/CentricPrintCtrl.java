@@ -29,9 +29,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	PrintCanvas m_canvas;
 	BufferedImage m_img_offscreen = null;
 	private Component componentToBePrinted;
-	private Image m_image;
-	private int numPages = 0;
-	static int ExtPageIndex = 0;
+    static int ExtPageIndex = 0;
 	private PageFormat format;
 	
 	private PRINTMODE current_mode = PRINTMODE.PAGECOUNT;
@@ -59,7 +57,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		format = new PageFormat();
 	}
 	public CentricPrintCtrl(Image i, Frame f) {
-		m_image = i;
+        Image m_image = i;
 		m_frame = f;
 	}
 	
@@ -102,7 +100,8 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				break;
 			}
 		}
-		return numPages = pageno;
+        int numPages = 0;
+        return numPages = pageno;
 	}
 	@Override
 	public PageFormat getPageFormat(int pageNum) throws IndexOutOfBoundsException {
@@ -222,19 +221,19 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		int maph = m_mapimage.getHeight(null);
 		float maxmaph = 300.0f;
 		float factor = maxmaph / maph;
-		
-		float scale = factor;//(float)(mapw*1.0 / maxwh);
-		float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
-		g.scale(scale, scale);
+
+        float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
+		g.scale(factor, factor);
 		g.drawImage(m_mapimage, 0, 0, null);
 		g.scale(scalerev, scalerev);
-		return (int)(maph*scale);
+		return (int)(maph* factor);
 	}
 	
 	private int printText(Graphics2D g, PageFormat pageFormat, int pageIndex)
 	{
-		int height = 0;
-		return height;
+		int height;
+        height = 0;
+        return height;
 	}
 	
 	private int printFooter(Graphics2D g, PageFormat pageFormat, int pageIndex)

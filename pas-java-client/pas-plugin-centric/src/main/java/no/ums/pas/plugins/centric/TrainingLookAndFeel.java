@@ -95,7 +95,7 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 		return "Centric Training Look And Feel";
 	}
 
-	@Override
+	@Override()
 	public UIDefaults getDefaults() {
 		return super.getDefaults();
 	}
@@ -103,7 +103,7 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 	class TrainingTheme extends DefaultMetalTheme
 	{
 		
-		@Override
+		@Override()
 		public FontUIResource getControlTextFont() {
 			// TODO Auto-generated method stub
 			return super.getControlTextFont();
@@ -114,64 +114,64 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 			return new FontUIResource(new Font("Arial", Font.BOLD, 14));
 		}
 	
-		@Override
+		@Override()
 		public String getName() {
 			// TODO Auto-generated method stub
 			return super.getName();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getPrimary1() {
 			return super.getPrimary1();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getPrimary2() {
 			return super.getPrimary2();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getPrimary3() {
 			return super.getPrimary3();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getSecondary1() {
 			// TODO Auto-generated method stub
 			return super.getSecondary1();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getSecondary2() {
 			// TODO Auto-generated method stub
 			return super.getSecondary2();
 		}
 	
-		@Override
+		@Override()
 		protected ColorUIResource getSecondary3() {
 			// TODO Auto-generated method stub
 			return super.getSecondary3();
 		}
 	
-		@Override
+		@Override()
 		public FontUIResource getSubTextFont() {
 			// TODO Auto-generated method stub
 			return super.getSubTextFont();
 		}
 	
-		@Override
+		@Override()
 		public FontUIResource getSystemTextFont() {
 			// TODO Auto-generated method stub
 			return super.getSystemTextFont();
 		}
 	
-		@Override
+		@Override()
 		public FontUIResource getUserTextFont() {
 			// TODO Auto-generated method stub
 			return super.getUserTextFont();
 		}
 	
-		@Override
+		@Override()
 		public FontUIResource getWindowTitleFont() {
 			// TODO Auto-generated method stub
 			return super.getWindowTitleFont();
@@ -207,19 +207,19 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 			return new ColorUIResource(new Color(255,200,255));
 		}
 
-		@Override
+		@Override()
 		public void addCustomEntriesToTable(UIDefaults arg0) {
 			// TODO Auto-generated method stub
 			super.addCustomEntriesToTable(arg0);
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getAcceleratorForeground() {
 			// TODO Auto-generated method stub
 			return super.getAcceleratorForeground();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getAcceleratorSelectedForeground() {
 			// TODO Auto-generated method stub
 			return super.getAcceleratorSelectedForeground();
@@ -265,19 +265,19 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 			return new ColorUIResource(new Color(200,200,0));
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getHighlightedTextColor() {
 			// TODO Auto-generated method stub
 			return super.getHighlightedTextColor();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getInactiveControlTextColor() {
 			// TODO Auto-generated method stub
 			return super.getInactiveControlTextColor();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getInactiveSystemTextColor() {
 			// TODO Auto-generated method stub
 			return super.getInactiveSystemTextColor();
@@ -308,77 +308,78 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 			return getBlack();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getPrimaryControl() {
 			// TODO Auto-generated method stub
 			return super.getPrimaryControl();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getPrimaryControlDarkShadow() {
 			// TODO Auto-generated method stub
 			return super.getPrimaryControlDarkShadow();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getPrimaryControlHighlight() {
 			// TODO Auto-generated method stub
 			return super.getPrimaryControlHighlight();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getPrimaryControlInfo() {
 			// TODO Auto-generated method stub
 			return super.getPrimaryControlInfo();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getPrimaryControlShadow() {
 			// TODO Auto-generated method stub
 			return super.getPrimaryControlShadow();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getSeparatorBackground() {
 			// TODO Auto-generated method stub
 			return super.getSeparatorBackground();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getSeparatorForeground() {
 			// TODO Auto-generated method stub
 			return super.getSeparatorForeground();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getSystemTextColor() {
 			// TODO Auto-generated method stub
 			return super.getSystemTextColor();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getTextHighlightColor() {
 			// TODO Auto-generated method stub
 			return super.getTextHighlightColor();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getUserTextColor() {
 			// TODO Auto-generated method stub
 			return super.getUserTextColor();
 		}
 
-		@Override
+
+        @Override()
 		protected ColorUIResource getWhite() {
 			// TODO Auto-generated method stub
 			return super.getWhite();
 		}
 
-		@Override
+		@Override()
 		public ColorUIResource getWindowTitleInactiveForeground() {
 			// TODO Auto-generated method stub
 			return super.getWindowTitleInactiveForeground();
 		}
-	};
-	
+	}
+
 }
