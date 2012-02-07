@@ -35,6 +35,7 @@ import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UBBNEWS;
@@ -178,7 +179,24 @@ public class CentricPasScripting extends DefaultPasScripting {
     private JMenu menu_trainingmode;
 
 
-    
+    protected interface CustomButtons
+    {
+    	Action ELLIPSE = new UmsAction("main_sending_type_ellipse") {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+	            PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_ELLIPSE_POLYGON);
+			    PAS.get_pas().get_mainmenu().reset_buttons_foreground();				
+			}
+		};
+		Action POLYGON = new UmsAction("main_sending_type_polygon") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+	            PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
+			    PAS.get_pas().get_mainmenu().reset_buttons_foreground();								
+			}			
+		};
+    }
     
     @Override
 	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
@@ -247,7 +265,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.add_spacing(DefaultPanel.DIR_HORIZONTAL, 30);
 
         
-        menu_btn_draw_polygon = new JButton(Localization.l("main_sending_type_polygon"));
+        menu_btn_draw_polygon = new JButton(CustomButtons.POLYGON);//new JButton(Localization.l("main_sending_type_polygon"));
         menu_btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_polygon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -260,7 +278,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu_btn_draw_polygon, menu.m_gridconst);
 
-        menu_btn_draw_ellipse = new JButton(Localization.l("main_sending_type_ellipse"));
+        menu_btn_draw_ellipse = new JButton(CustomButtons.ELLIPSE);//new JButton(Localization.l("main_sending_type_ellipse"));
         menu_btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_ellipse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1149,11 +1167,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         p.add_spacing(DefaultPanel.DIR_HORIZONTAL, 75);
 
-        /*p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
-        p.add(p.getLblCompId(), p.m_gridconst);
-        p.set_gridconst(5, p.get_panel(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
-        p.add(p.getCompId(), p.m_gridconst);
-*/
         p.add_spacing(p.DIR_VERTICAL, verticalspacing);
 
         p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
@@ -1359,7 +1372,8 @@ public class CentricPasScripting extends DefaultPasScripting {
             try {
                 boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
                 boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
-                p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+                //paint polygon as final if it's either marked as final or if we're not in edit-mode
+                p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized || !b_editmode, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
             } catch (Exception e) {
             }
         }
@@ -1576,10 +1590,13 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
         CentricVariables.getCentric_send().lockSending(bLock);
-        if (bLock)
-            Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
-        else
-            Variables.getMapFrame().set_prev_paintmode();
+        if (bLock) {
+            //Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
+        	PAS.get_pas().get_mainmenu().get_btn_pan().doClick();
+        }
+        else {
+            //Variables.getMapFrame().set_prev_paintmode();
+        }
         enableSendButtons(!bLock);
         PAS.get_pas().kickRepaint();
         return bLock;
