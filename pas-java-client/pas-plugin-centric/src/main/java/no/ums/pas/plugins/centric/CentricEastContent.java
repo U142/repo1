@@ -117,7 +117,7 @@ public class CentricEastContent extends EastContent
 				super.ensure_added(n_leaf);
 		}
 		catch (Exception e) {
-			
+			log.error(e.getMessage(),e);
 		}
 	}
 	

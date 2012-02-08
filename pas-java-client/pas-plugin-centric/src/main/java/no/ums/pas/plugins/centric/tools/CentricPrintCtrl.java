@@ -1,6 +1,8 @@
 package no.ums.pas.plugins.centric.tools;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.localization.Localization;
@@ -23,24 +25,24 @@ import java.text.BreakIterator;
 //import java.awt.PrintCanvas;
 
 public class CentricPrintCtrl implements Printable, Pageable {
-	Graphics m_graph;
+
+    private static final Log log = UmsLog.getLogger(CentricPrintCtrl.class);
+
+    Graphics m_graph;
 	//PAS m_pas;
 	Frame m_frame;
 	PrintCanvas m_canvas;
 	BufferedImage m_img_offscreen = null;
-	private Component componentToBePrinted;
-	private Image m_image;
-	private int numPages = 0;
-	static int ExtPageIndex = 0;
+    static int ExtPageIndex = 0;
 	private PageFormat format;
 	
 	private PRINTMODE current_mode = PRINTMODE.PAGECOUNT;
 	private enum PRINTMODE {
 		PAGECOUNT,
 		PRINTING,
-	};
-	
-	String m_header;
+	}
+
+    String m_header;
 	Image m_mapimage;
 	String m_message;
 	String m_charachers;
@@ -54,13 +56,12 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	{
 		//super("Print");
 		//setVisible(false);
-		componentToBePrinted = c;
+        Component componentToBePrinted = c;
 		m_frame = frame;
 		format = new PageFormat();
 	}
 	public CentricPrintCtrl(Image i, Frame f) {
-		m_image = i;
-		m_frame = f;
+        m_frame = f;
 	}
 	
 	public CentricPrintCtrl(Image i, String header, String message, String characters, String footer) {
@@ -102,7 +103,8 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				break;
 			}
 		}
-		return numPages = pageno;
+        int numPages = 0;
+        return numPages = pageno;
 	}
 	@Override
 	public PageFormat getPageFormat(int pageNum) throws IndexOutOfBoundsException {
@@ -222,19 +224,19 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		int maph = m_mapimage.getHeight(null);
 		float maxmaph = 300.0f;
 		float factor = maxmaph / maph;
-		
-		float scale = factor;//(float)(mapw*1.0 / maxwh);
-		float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
-		g.scale(scale, scale);
+
+        float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
+		g.scale(factor, factor);
 		g.drawImage(m_mapimage, 0, 0, null);
 		g.scale(scalerev, scalerev);
-		return (int)(maph*scale);
+		return (int)(maph* factor);
 	}
 	
 	private int printText(Graphics2D g, PageFormat pageFormat, int pageIndex)
 	{
-		int height = 0;
-		return height;
+		int height;
+        height = 0;
+        return height;
 	}
 	
 	private int printFooter(Graphics2D g, PageFormat pageFormat, int pageIndex)
@@ -261,17 +263,12 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	    else 
 	    {
 	        int pagewidth = (int)pageFormat.getImageableWidth();
-//	        int pageheight = (int)pageFormat.getImageableHeight();
 	        int printHeight = 0;
 	    	
-//	    	int width = m_mapimage.getWidth(null);
-//			int height = m_mapimage.getHeight(null);
 
 			
 	        Graphics2D g2d = (Graphics2D)g;
 	        double scale = pageFormat.getImageableWidth() / (pageFormat.getWidth());
-	        //PAS.get_pas().add_event("Scale: " + scale, null);
-	    	//printTranslate(g2d, (int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
 	    	g2d.scale(scale, scale);
         	
 	        
@@ -283,12 +280,8 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	        
 	        //PRINT TITLE
 	        printHeight = printTitle(g2d, pageFormat, pageIndex);
-	        //g2d.translate(0, printHeight);
-	        //printTranslate(g2d, 0, printHeight);
-	        
-	        g2d.drawLine(0, 0, (int)(pagewidth), 0);
-	        //g2d.translate(margins.width, printHeight);
-	        //printTranslate(g2d, margins.width, printHeight);
+
+	        g2d.drawLine(0, 0, pagewidth, 0);
 	        printTranslate(g2d, 0, 20);
 	        
 	        
@@ -301,14 +294,11 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	        printTranslate(g2d, 0, printHeight);
 			
 			//MESSAGE HEADER AND CONTENT
-            //float drawPosY = (float)m_mapimage.getHeight(null) + 40;
-            //float drawPosX = (float)10;
 
 			Font fontMessageHeader = UIManager.getFont("PrintJobMedium.font");
 			g2d.setFont(fontMessageHeader);
 	        printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
             g2d.drawString(Localization.l("common_message_content"), 0, 0);
-			//drawPosY += g2d.getFontMetrics().getAscent();
 			printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
 			
 			Font fontMessageText = UIManager.getFont("PrintJobSmall.font");//new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 12);
@@ -326,7 +316,6 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	            if(linesplit[i].length()==0)
 	            {
 	            	linesplit[i] = "\n";
-	            	//drawPosY += g2d.getFontMetrics().getAscent();
 	            	printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
 	            	continue;
 	            }
@@ -336,7 +325,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	            }
 	            catch(Exception err)
 	            {
-	            	
+
 	            }
 	            AttributedCharacterIterator paragraph = string.getIterator();
 	            int paragraphStart = paragraph.getBeginIndex();
@@ -349,20 +338,18 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	            lineMeasurer.setPosition(paragraphStart);
 	            while (lineMeasurer.getPosition() < paragraphEnd) {
 	                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
-	                //drawPosY += layout.getAscent();
 	                printTranslate(g2d, 0, (int)layout.getAscent());
 	                layout.draw(g2d, 0, 0);
 	
 	                printTranslate(g2d, 0, (int)(layout.getDescent() + layout.getLeading()));
-	                //drawPosY += layout.getDescent() + layout.getLeading();
-	            }    
+	            }
 			}
 
 			g2d.setFont(fontMessageHeader);
 			printTranslate(g2d, 0, g2d.getFontMetrics().getAscent()*2);
 			g2d.drawString("(" + m_charachers + ")", 0, 0);
             
-	        printTranslate(g2d, 0, (int)g.getFontMetrics().getAscent()*3);
+	        printTranslate(g2d, 0, g.getFontMetrics().getAscent() *3);
 
 			printFooter(g2d, pageFormat, pageIndex);
 	        return(PAGE_EXISTS);

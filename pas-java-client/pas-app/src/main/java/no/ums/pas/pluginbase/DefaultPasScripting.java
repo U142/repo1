@@ -12,36 +12,24 @@ import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.logon.DeptArray;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.Logon;
-import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Logon.Holder;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
-import no.ums.pas.core.menus.FileMenuActions;
-import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
-import no.ums.pas.core.menus.NavigateActions;
-import no.ums.pas.core.menus.OtherActions;
-import no.ums.pas.core.menus.StatusActions;
-import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSDeleteProject;
 import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSDeleteStatus;
+import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
@@ -61,37 +49,12 @@ import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.common.PASVERSION;
 import no.ums.ws.common.USYSTEMMESSAGES;
-import no.ums.ws.pas.Pasws;
-
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.xml.namespace.QName;
+import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -100,14 +63,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
-import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -115,7 +73,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 {
     private static final Log log = UmsLog.getLogger(DefaultPasScripting.class);
 
-    private final AddressSearch addressSearch = new DefaultAddressSearch();
+    private final DefaultAddressSearch addressSearch = new DefaultAddressSearch();
     private final AddressSearchCtrl addressSearchGui = new AddressSearchCtrl();
 
     @Override
@@ -148,17 +106,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
     @Override
     public AddressSearch getAddressSearch() {
-    	return addressSearch;
+        return addressSearch;
     }
-    
-    
 
     @Override
-	public AddressSearchCtrl getAddressSearchGui() {
-    	return addressSearchGui;
-	}
+    public AddressSearchCtrl getAddressSearchGui() {
+        return addressSearchGui;
+    }
 
-	@Override
+    @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
 		if(ws.getResult()==WSRESULTCODE.OK) {
 			dlg.setExtendedTitleLangID("logon_ws_active");
@@ -195,45 +151,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
-	
-	
-	@Override
-	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
-		menu.change_buttoncolor(menu.get_btn_pan(), false);
-		menu.change_buttoncolor(menu.get_btn_zoom(), false);
-		menu.change_buttoncolor(menu.get_btn_houseeditor(), false);
-		menu.change_buttoncolor(menu.get_btn_showhousedetails(), false);
-		
-		// For native GUI
-		menu.get_btn_pan().setSelected(false);
-		menu.get_btn_zoom().setSelected(false);
-		menu.get_btn_houseeditor().setSelected(false);
-		menu.get_btn_showhousedetails().setSelected(false);
-		
-		switch(Variables.getMapFrame().get_mode())
-		{
-			case PAN:
-				menu.get_btn_pan().setSelected(true);
-			case PAN_BY_DRAG:
-				menu.change_buttoncolor(menu.get_btn_pan(), true);
-				menu.get_btn_pan().setSelected(true);
-				break;
-			case ZOOM:
-				menu.change_buttoncolor(menu.get_btn_zoom(), true);
-				menu.get_btn_zoom().setSelected(true);
-				break;
-			case HOUSESELECT:
-				menu.change_buttoncolor(menu.get_btn_showhousedetails(), true);
-				menu.get_btn_showhousedetails().setSelected(true);
-				break;
-			case HOUSEEDITOR:
-				menu.change_buttoncolor(menu.get_btn_houseeditor(), true);
-				menu.get_btn_houseeditor().setSelected(true);
-				break;
-		}
-		return true;
-	}
-
 	@Override
 	public boolean onAddMainMenuButtons(MainMenu menu)
 	{
@@ -261,7 +178,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
-	@Override
+    @Override
+    public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public boolean onAddMainSelectMenu(MainMenuBar menu) {
         final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
         file.add(FileMenuActions.NEW_SENDING);
@@ -975,7 +897,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
-	@Override
+    @Override
+    public boolean onPaintMainMenuExtras(DefaultPanel menu, Graphics g) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public boolean onMapCalcNewCoords(Navigation nav, PAS p) {
 		p.get_statuscontroller().calcHouseCoords();
 		p.get_housecontroller().calcHouseCoords();
@@ -1387,12 +1314,52 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	public int onInvokeProject() {
-		return PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+        PAS pas = PAS.get_pas();
+        int answer = JOptionPane.YES_OPTION;
+        
+        if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
+              return ProjectDlg.ACT_PROJECTDLG_CANCEL;
+          else {
+              if(pas.get_current_project()!=null) {
+                  Object[] options;
+                  if(pas.get_userinfo().get_current_department().get_pas_rights() == 4) {
+                      options = new Object[] {Localization.l("common_yes")};
+                  }
+                  else {
+                      options = new Object[] {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
+                  }
+
+                  Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("project_ask_close_current_project") +" <" + pas.get_current_project().get_projectname() + ">", Localization.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                  if(input != null) {
+                      if(input.equals(Localization.l("common_keep_sendings"))) {
+                          pas.set_keep_sendings(true);
+                          log.debug("m_keep_sendings=" + pas.get_keep_sendings());
+                      }
+                      else
+                          pas.set_keep_sendings(false);
+                  }
+                  else
+                      return ProjectDlg.ACT_PROJECTDLG_CANCEL;
+              }
+
+              if(pas.get_eastcontent().get_taspanel() != null && pas.get_current_project() != null) {
+                  PAS.get_pas().askAndCloseActiveProject(new PAS.IAskCloseStatusComplete() {
+
+                      @Override
+                      public void Complete(boolean bStatusClosed) {
+
+                      }
+                  });
+              }
+
+          }
+
+		return answer; /*PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
 			@Override
 			public void Complete(boolean bStatusClosed) {
 				
 			}
-		});
+		});*/
 	}
 
 

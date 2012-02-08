@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSThread;
@@ -14,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class WSCentricRRO extends WSThread {
+
+    private static final Log log = UmsLog.getLogger(WSCentricRRO.class);
 
 	CBMESSAGEFIELDS ret;
 	String action;
@@ -50,6 +54,7 @@ public class WSCentricRRO extends WSThread {
 		}
 		catch(Exception e)
 		{
+            log.error(e.getMessage(),e);
 			throw e;
 		}
 	}

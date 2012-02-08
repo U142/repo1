@@ -6,6 +6,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.LogonInfo;
@@ -14,19 +15,14 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
-import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
-import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
-import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
-import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
-import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.*;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
-import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
+import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.NavStruct;
@@ -36,20 +32,12 @@ import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.geotools.data.ows.Layer;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.LookAndFeel;
+import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
@@ -66,6 +54,8 @@ public interface PasScriptingInterface {
             return o1.getPriority() - o2.getPriority();
         }
     };
+
+
 
     public enum OperatingSystem {
         WIN,
@@ -92,6 +82,12 @@ public interface PasScriptingInterface {
          * @param list Populate this list
          * @return true if ok
          * @throws Exception
+         * @param sz_address
+         * @param sz_no
+         * @param sz_postarea
+         * @param sz_postarea
+         * @param sz_postarea
+         * @param sz_country
          */
         
         UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, AddressSearchCountry sz_country) throws Exception;
@@ -141,7 +137,7 @@ public interface PasScriptingInterface {
     void startPlugin();
 
     AddressSearch getAddressSearch();
-    
+
     AddressSearchCtrl getAddressSearchGui();
 
     boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
@@ -176,8 +172,7 @@ public interface PasScriptingInterface {
      * @return
      */
     boolean onAddMainMenuButtons(MainMenu menu);
-    
-    
+
     /**
      * Function to alter buttons
      * @param menu
@@ -185,8 +180,7 @@ public interface PasScriptingInterface {
      * @return
      */
     boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup);
-    
-	
+
     /**
      * Function to add menu items to JMenu
      * @param menu
@@ -396,6 +390,13 @@ public interface PasScriptingInterface {
      */
     boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g);
 
+    /**
+     * After paint is called from JMenuBar
+     * @param menu pointer to the main menu
+     * @param g Graphics context for the DefaultPanel
+     * @return
+     */
+    boolean onPaintMainMenuExtras(DefaultPanel menu, Graphics g);
     /**
      * After map navigation we need to recalc coors to pix
      * @param nav current Navigation class

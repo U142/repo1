@@ -5,9 +5,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.defines.SearchPanelResults.AdressTblListener;
 import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
-import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.themes.ThemeColorComponent;
 import no.ums.pas.localization.Localization;
@@ -17,19 +15,8 @@ import no.ums.pas.ums.errorhandling.Error;
 import org.jvnet.substance.SubstanceImageCreator;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -167,7 +154,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		addComponentListener(this);
 		//setBackground(new Color(191, 191, 191)); //Color.white);		
 	}
-	
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        PAS.pasplugin.onPaintMainMenuExtras(this, g);
+    }
 	
 	@Override
 	public int getWantedHeight() {

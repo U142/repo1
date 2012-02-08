@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.localization.Localization;
@@ -10,6 +12,8 @@ import java.awt.event.ComponentEvent;
 
 public class CentricInfoPanel extends InfoPanel
 {
+    private static final Log log = UmsLog.getLogger(CentricInfoPanel.class);
+    
 	protected AddressSearchPanel address_search = new AddressSearchPanel();
 	
 	protected class CentricCoorInfoUI extends CoorInfoUI
@@ -173,19 +177,12 @@ public class CentricInfoPanel extends InfoPanel
 					address_search.get_searchpanelresults().getLayeredPane().setPreferredSize(new Dimension(w, 150));
 					address_search.get_searchpanelresults().validate();
 					revalidate();
-					//address_search.get_searchpanelresults().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().get_scrollpane().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().setPreferredSize(new Dimension(w, 200));
-					//address_search.get_searchpanelresults().get_scrollpane().setPreferredSize(new Dimension(w-10, 150));
-					//address_search.get_searchpanelresults().setSize(new Dimension(100,100));
-					//address_search.revalidate();
-					//address_search.get_searchpanelresults().get_scrollpane().revalidate();
 				}
 			});
 		}
 		catch(Exception err)
 		{
-			
+			log.error(err.getMessage(), err);
 		}
 
 	}

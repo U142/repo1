@@ -37,6 +37,7 @@ import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UBBNEWS;
 import no.ums.ws.common.USYSTEMMESSAGES;
@@ -60,6 +61,16 @@ public class CentricPasScripting extends DefaultPasScripting {
     WMSLayerSelectorPanel wms_layer_selector = new WMSLayerSelectorPanel();
 
     MenuTimer m_menutimer = new MenuTimer();
+
+    public CentricPasScripting() {
+
+    }
+
+    public CentricPasScripting(JMenu menu_addressbook, JButton menu_btn_import, StdTextArea menu_txt_project) {
+        this.menu_addressbook = menu_addressbook;
+        this.menu_btn_import = menu_btn_import;
+        this.menu_txt_project = menu_txt_project;
+    }
 
     class MenuTimer extends Timer implements ActionListener {
         boolean flip = false;
@@ -113,9 +124,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     public AddressSearch getAddressSearch() {
     	return this.addressSearch;
     }
-    
-    
-
 
 	@Override
 	public AddressSearchCtrl getAddressSearchGui() {
@@ -150,24 +158,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onShowMainWindow() {
         super.onShowMainWindow();
-        /*new Thread()
-          {
-              public void run()
-              {
-                  try
-                  {
-                      while(true)
-                      {
-                          Thread.sleep(10000);
-                          log.debug("TRALLALA");
-                      }
-                  }
-                  catch(Exception e)
-                  {
-
-                  }
-              }
-          }.start();*/
         return true;
     }
 
@@ -177,6 +167,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     private JButton menu_btn_import;
     private JMenu menu_addressbook;
     private JMenu menu_trainingmode;
+    private StdTextArea menu_txt_project;
 
 
     protected interface CustomButtons
@@ -197,43 +188,43 @@ public class CentricPasScripting extends DefaultPasScripting {
 			}			
 		};
     }
-    
+
     @Override
-	public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
-		menu.change_buttoncolor(menu.get_btn_pan(), false);
-		menu.change_buttoncolor(menu.get_btn_zoom(), false);
-		menu.change_buttoncolor(menu_btn_draw_ellipse, false);
-		menu.change_buttoncolor(menu_btn_draw_polygon, false);
-		
-		// For native GUI
-		menu.get_btn_pan().setSelected(false);
-		menu.get_btn_zoom().setSelected(false);
-		menu_btn_draw_ellipse.setSelected(false);
-		menu_btn_draw_polygon.setSelected(false);
-		
-    	switch(Variables.getMapFrame().get_mode())
-		{
-			case PAN:
-				menu.get_btn_pan().setSelected(true);
-			case PAN_BY_DRAG:
-				menu.change_buttoncolor(menu.get_btn_pan(), true);
-				menu.get_btn_pan().setSelected(true);
-				break;
-			case ZOOM:
-				menu.change_buttoncolor(menu.get_btn_zoom(), true);
-				menu.get_btn_zoom().setSelected(true);
-				break;
-			case SENDING_ELLIPSE:
-			case SENDING_ELLIPSE_POLYGON:
-				menu.change_buttoncolor(menu_btn_draw_ellipse, true);
-				menu_btn_draw_ellipse.setSelected(true);
-				break;
-			case SENDING_POLY:
-				menu.change_buttoncolor(menu_btn_draw_polygon, true);
-				menu_btn_draw_polygon.setSelected(true);
-				break;
-		}
-		return true;
+    public boolean onMainMenuButtonClicked(MainMenu menu, ButtonGroup btnGroup) {
+        menu.change_buttoncolor(menu.get_btn_pan(), false);
+        menu.change_buttoncolor(menu.get_btn_zoom(), false);
+        menu.change_buttoncolor(menu_btn_draw_ellipse, false);
+        menu.change_buttoncolor(menu_btn_draw_polygon, false);
+
+        // For native GUI
+        menu.get_btn_pan().setSelected(false);
+        menu.get_btn_zoom().setSelected(false);
+        menu_btn_draw_ellipse.setSelected(false);
+        menu_btn_draw_polygon.setSelected(false);
+
+        switch(Variables.getMapFrame().get_mode())
+        {
+            case PAN:
+                menu.get_btn_pan().setSelected(true);
+            case PAN_BY_DRAG:
+                menu.change_buttoncolor(menu.get_btn_pan(), true);
+                menu.get_btn_pan().setSelected(true);
+                break;
+            case ZOOM:
+                menu.change_buttoncolor(menu.get_btn_zoom(), true);
+                menu.get_btn_zoom().setSelected(true);
+                break;
+            case SENDING_ELLIPSE:
+            case SENDING_ELLIPSE_POLYGON:
+                menu.change_buttoncolor(menu_btn_draw_ellipse, true);
+                menu_btn_draw_ellipse.setSelected(true);
+                break;
+            case SENDING_POLY:
+                menu.change_buttoncolor(menu_btn_draw_polygon, true);
+                menu_btn_draw_polygon.setSelected(true);
+                break;
+       }
+       return true;
     }
 
 	@Override
@@ -305,35 +296,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.get_btn_group_navigation().add(menu_btn_draw_polygon);
         menu.get_btn_group_navigation().add(menu_btn_draw_ellipse);
 
-        
         enableSendButtons(true);
-
-        /*menu_btn_import = new JButton(PAS.l("common_import"));
-          menu_btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
-          menu_btn_import.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e)
-              {
-                  if(e.getSource().equals(menu_btn_import))
-                  {
-                      SwingUtilities.invokeLater(new Runnable() {
-                          public void run()
-                          {
-                              ImportPolygon i = new ImportPolygon(null, "act_polygon_imported", false, null);
-                          }
-                      });
-                  }
-                  else if(e.getActionCommand().equals("act_polygon_imported"))
-                  {
-
-                  }
-                  else if(e.getActionCommand().equals("act_set_shape"))
-                  {
-
-                  }
-              }
-          });
-          //menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
-          //menu.add(menu_btn_import, menu.m_gridconst);*/
 
         return true;
     }
@@ -344,24 +307,18 @@ public class CentricPasScripting extends DefaultPasScripting {
         ViewOptions.TOGGLE_HOUSES.setSelected(false);
 
         final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
-        //file.add(FileMenuActions.NEW_SENDING);
         file.add(FileMenuActions.OPEN_PROJECT);
         file.add(FileMenuActions.CLOSE_PROJECT);
         file.addSeparator();
-        //file.add(FileMenuActions.FILE_IMPORT);
-        //file.add(FileMenuActions.PRINT_MAP);
-        //file.add(FileMenuActions.SAVE_MAP);
         file.add(FileMenuActions.EXIT);
 
         JMenu addressBook = menu.add(new JMenu(Localization.l("common_address_book")));
         addressBook.add(menu.get_item_address_book());
         menu.get_item_address_book().setEnabled(false);
-        //menu_trainingmode.add(menu.get_item_training_mode());
 		menu.add((menu_trainingmode= new JMenu(Localization.l("mainmenu_trainingmode"))));
 		menu_trainingmode.add(menu.get_item_training_mode());
         final JMenu help = menu.add(new JMenu(Localization.l("mainmenu_help")));
         help.add(OtherActions.HELP_ABOUT);
-        //help.add(OtherActions.SHOW_CONTACT_INFO);
         return true;
     }
 
@@ -372,7 +329,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
 	@Override
     public boolean onAddSendOptionToolbar(SendOptionToolbar toolbar) {
-        //CentricSendOptionToolbar ctoolbar = new CentricSendOptionToolbar(new SendObject(PAS.get_pas(),PAS.get_pas().get_pasactionlistener()),PAS.get_pas().get_pasactionlistener(),toolbar.get_sendingid());
         toolbar.show_buttons(
                 SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_ |
                         SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_ |
@@ -389,9 +345,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         final List<UBBNEWS> news = sysmsg.getNews().getNewslist().getUBBNEWS();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                for (int i = 0; i < news.size(); i++) {
-                    UBBNEWS bbnews = news.get(i);
-                    //systemmessagepanel.list.getDefaultModel().addOnTop(bbnews);
+                for (UBBNEWS bbnews : news) {
                     systemmessagepanel.list.getDefaultModel().handleMessage(bbnews);
                 }
                 systemmessagepanel.list.getDefaultModel().sort();
@@ -419,7 +373,6 @@ public class CentricPasScripting extends DefaultPasScripting {
                     UBBNEWS b1 = (UBBNEWS) list[i];
                     for (int j = i + 1; j < list.length; j++) {
                         UBBNEWS b2 = (UBBNEWS) list[j];
-                        //if(b1.getLTimestampDb()<b2.getLTimestampDb())
                         boolean b_doswitch = false;
                         if (b1.getLIncidentStart() < b2.getLIncidentStart())
                             b_doswitch = true;
@@ -439,7 +392,6 @@ public class CentricPasScripting extends DefaultPasScripting {
                 for (int i = 0; i < list.length; i++) {
                     UBBNEWS bbn = (UBBNEWS) list[i];
                     this.setElementAt(bbn, i);
-                    //log.debug("setElementAt " + i + " " + bbn.getLNewspk());
                     recordset.put(genHashKey(bbn), bbn);
                 }
             }
@@ -449,7 +401,6 @@ public class CentricPasScripting extends DefaultPasScripting {
             public void handleMessage(UBBNEWS b) {
                 if (b.getFActive() >= 1) //insert/update
                 {
-                    //log.debug("newspk="+b.getLNewspk());
                     if (recordset.containsKey(genHashKey(b))) {
                         update(b);
                     } else {
@@ -498,46 +449,11 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             @Override
             public void add(int arg0, Object arg1) {
-                /*if(recordset.containsKey(key))
-                    {
-                        UBBNEWS original = (UBBNEWS)recordset.get(key);
-                        int n = super.indexOf(original);
-                        if(n!=-1)
-                        {
-                            UBBNEWS news = (UBBNEWS)arg1;
-                            if(news.getFActive()>=1)
-                            {
-                                super.set(n, news);
-                                recordset.put(((UBBNEWS)arg1).getLNewspk(), arg1);
-                                log.debug("newspk " + original.getLNewspk() + " updated");
-                            }
-                            else
-                            {
-                                //to be deleted
-                                super.remove(n);
-                                recordset.remove(original.getLNewspk());
-                                log.debug("newspk " + original.getLNewspk() + " deleted");
-                            }
-                        }
-                        else
-                        {
-                            log.debug("news " + original + " not found in list");
-                        }
-                    }
-                    else*/
-                {
-                    recordset.put(genHashKey((UBBNEWS) arg1), arg1);
-                    //list.getDefaultModel().add(arg0, arg1);
-                    super.add(arg0, arg1);
-                    log.debug("newspk " + ((UBBNEWS) arg1).getLNewspk() + " inserted");
-                }
-            }
 
-            /*@Override
-               public void addElement(Object arg0) {
-                   //super.addElement(arg0);
-                   add(0, arg0);
-               }*/
+                recordset.put(genHashKey((UBBNEWS) arg1), arg1);
+                super.add(arg0, arg1);
+                log.debug("newspk " + ((UBBNEWS) arg1).getLNewspk() + " inserted");
+            }
 
         }
 
@@ -548,7 +464,6 @@ public class CentricPasScripting extends DefaultPasScripting {
                 super(new UMSListModel());
                 setCellRenderer(renderer);
                 setVisibleRowCount(1);
-                //setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
             }
 
             UMSListModel getDefaultModel() {
@@ -578,25 +493,15 @@ public class CentricPasScripting extends DefaultPasScripting {
 
                         String[] vals = (String[]) value;
                         lbl_renderer.setText(vals[0] + "    " + vals[1]);
-                        //cols[0].setText(vals[0]);
-                        //cols[1].setText(vals[1]);
                     } else if (value.getClass().equals(UBBNEWS.class)) {
                         UBBNEWS news = (UBBNEWS) value;
-                        //lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
                         String text_to_write = news.getNewstext().getSzNews();
-//                        int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
-                        //if(text_width>=width)
-                        //	text_to_write = text_to_write.substring(0, Math.min(text_to_write.length()-1, 70));
                         lbl_renderer.setText(text_to_write);
                         lbl_renderer.setPreferredSize(new Dimension(width, getHeight()));
                     } else {
                         lbl_renderer.setText("NA");
-                        //cols[0].setText("None");
-                        //cols[1].setText("None");
                     }
                     return lbl_renderer;
-                    //return super.getListCellRendererComponent(list, value, index, isSelected,
-                    //		cellHasFocus);
                 }
 
                 @Override
@@ -620,7 +525,6 @@ public class CentricPasScripting extends DefaultPasScripting {
                 if (location >= 0) {
                     UBBNEWS b = (UBBNEWS) list.getDefaultModel().getElementAt(location);
                     String html = "<html><table width=300>";
-                    //html += "<tr><td colspan=1><b>" + PAS.l("common_updated") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLTimestampDb()) + "</td></tr>";
                     html += "<tr><td colspan=1><b>" + Localization.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
                     html += "<tr><td colspan=1><b>" + Localization.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
                     html += "<tr><td colspan=2 style=\"word-wrap: break-word\">" + b.getNewstext().getSzNews() + "</td></tr>";
@@ -648,8 +552,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             Font f = new Font(UIManager.getString("Common.Fontface"), Font.PLAIN, 14);
             list.setFont(f);
-            int height = list.getFontMetrics(f).getHeight();
-            n_current_height = height;
+            n_current_height = list.getFontMetrics(f).getHeight();
             n_min = n_current_height;
 
             btn_expand.addActionListener(this);
@@ -702,20 +605,9 @@ public class CentricPasScripting extends DefaultPasScripting {
             int set_height = n_current_height;
             n_min = 22;
             list.setFixedCellHeight(n_min);
-//            int w = getWidth();
-//            int btn_size = getWantedHeight();
             scrollpane.setPreferredSize(new Dimension(getWidth() - n_min, getHeight()));
             btn_expand.setPreferredSize(new Dimension(n_min, getHeight()));
-//            int scroll_width = 0;
-//            int scroll_height = 0;
-            if (this.scrollpane.getVerticalScrollBar().isVisible()) {
-//                scroll_width = this.scrollpane.getVerticalScrollBar().getWidth();
-            }
-            if (this.scrollpane.getHorizontalScrollBar().isVisible()) {
-//                scroll_height = this.scrollpane.getHorizontalScrollBar().getHeight();
-                //set_height = n_current_height+scroll_height;
-            }
-//            scroll_width -= 5;
+
             SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), set_height));
             scrollpane.revalidate();
             revalidate();
@@ -735,11 +627,8 @@ public class CentricPasScripting extends DefaultPasScripting {
         UserInfoPane() {
             super();
             setLayout(new BorderLayout());
-            //setPreferredSize(new Dimension(10,getWantedHeight()));
-            //setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
             lbl_userinfo.setBackground(Color.white);
             lbl_userinfo.setVerticalTextPosition(JLabel.CENTER);
-            //lbl_userinfo.setHorizontalAlignment(SwingConstants.LEFT);
             addComponentListener(this);
             add_controls();
         }
@@ -750,15 +639,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         public void updateUserInfo(UserInfo ui) {
             String str = " " + ui.get_realname();
-            /*switch(ui.get_departments().size())
-               {
-               case 1:
-                   str+=PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
-                   break;
-               default:
-                   str+=PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
-                   break;
-               }*/
+
             str += " - ";
             int member_of_dept = ui.get_departments().size();
             switch (ui.get_current_department().get_userprofile().get_send()) {
@@ -770,7 +651,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                         str += Localization.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
                     }
                     for (int i = 0; i < ui.get_departments().size(); i++)
-                        str += " \"" + ((DeptInfo) ui.get_departments().get(i)).get_deptid() + "\"";
+                        str += " \"" + ui.get_departments().get(i).get_deptid() + "\"";
                     break;
                 case 2: //national user
                     str += Localization.l("logon_rights_national_user"); //" - $Regional Super User - ";
@@ -782,8 +663,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         @Override
         public void add_controls() {
-            //set_gridconst(0, 0, 1, 1);
-            //add(lbl_userinfo, m_gridconst);
             add(lbl_userinfo);
         }
 
@@ -794,12 +673,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         @Override
         public void componentResized(ComponentEvent e) {
             int w = getWidth();
-//            int h = getHeight();
-            //if(w<=0 || h<=0)
-            //	return;
-            //if(w>5000 || h>5000)
-            //	return;
-//            int x = w;
+
             lbl_userinfo.setPreferredSize(new Dimension(w, getWantedHeight()));
             lbl_userinfo.revalidate();
             super.componentResized(e);
@@ -831,10 +705,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             super.componentResized(e);
             int w = getWidth();
             int h = getHeight();
-            /*for(int i=0; i < getComponentCount(); i++)
-               {
-                   getComponent(i).setPreferredSize(new Dimension(w,h/2));
-               }*/
+
             PAS.get_pas().get_mainmenu().setPreferredSize(new Dimension(w, h));
         }
     }
@@ -860,7 +731,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         @Override
         public void componentResized(ComponentEvent e) {
-            //super.componentResized(e);
             DefaultPanel p = (DefaultPanel) e.getComponent();
             int w = p.getWidth();
             int h = p.getHeight();
@@ -869,10 +739,8 @@ public class CentricPasScripting extends DefaultPasScripting {
             PAS.get_pas().get_mappane().set_dimension(new Dimension(w, h - sysmsg_height - userinfo_height));
             systemmessagepanel.setPreferredSize(new Dimension(w, sysmsg_height));
             userinfopane.setPreferredSize(new Dimension(w, userinfo_height));
-            //PAS.get_pas().get_mappane().revalidate();
             systemmessagepanel.revalidate();
             userinfopane.revalidate();
-            //PAS.get_pas().applyResize();
         }
 
     }
@@ -888,36 +756,18 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         log.debug("onAddPASComponents");
 
-        /*centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
-          centerpane.add(systemmessagepanel, centerpane.get_gridconst());
-
-          centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
-          centerpane.add(PAS.get_pas().get_mappane(), centerpane.get_gridconst());
-
-          centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
-          centerpane.add(userinfopane, centerpane.get_gridconst());*/
-
         centerpane.add(systemmessagepanel, BorderLayout.NORTH);
         centerpane.add(PAS.get_pas().get_mappane(), BorderLayout.CENTER);
         centerpane.add(userinfopane, BorderLayout.SOUTH);
 
         p.getContentPane().add(centerpane, BorderLayout.CENTER);
-        //p.getContentPane().add(p.get_mappane(), BorderLayout.CENTER);
 
-
-        //p.add(p.get_mainmenu(), BorderLayout.NORTH);
         northpane.set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
         northpane.add(p.get_mainmenu(), northpane.get_gridconst());
-        //northpane.set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTH);
-        //northpane.add(systemmessagepanel, northpane.get_gridconst());
         p.getContentPane().add(northpane, BorderLayout.NORTH);
 
         p.getContentPane().add(p.get_southcontent(), BorderLayout.SOUTH);
         p.getContentPane().add(p.get_eastcontent(), BorderLayout.EAST);
-
-
-        //p.get_mappane().add(wms_layer_selector, BorderLayout.WEST);
-        //wms_layer_selector.setVisible(false);
 
         return true;
     }
@@ -925,8 +775,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onFrameResize(JFrame f, ComponentEvent e) {
-        //northpane.setPreferredSize(new Dimension(f.getWidth(), 52));
-        //centerpane.setPreferredSize(new Dimension(f.getWidth(), f.getHeight()));
         return super.onFrameResize(f, e);
     }
 
@@ -939,21 +787,18 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onStartParm() {
-        //return super.onStartParm();
         log.debug("onStartParm - PARM is invalid in this plugin");
         return false;
     }
 
     @Override
     public boolean onCloseParm() {
-        //return super.onCloseParm();
         log.debug("onCloseParm - PARM is invalid in this plugin");
         return false;
     }
 
     @Override
     public boolean onRefreshParm() {
-        //return super.onRefreshParm();
         log.debug("onRefreshParm - PARM is invalid in this plugin");
         return false;
     }
@@ -962,13 +807,11 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onDepartmentChanged(PAS pas) {
         super.onDepartmentChanged(pas);
         userinfopane.updateUserInfo(pas.get_userinfo());
-        //PAS.get_pas().setAppTitle("UMS/Centric - " + pas.get_userinfo().get_current_department().get_deptid());
         return true;
     }
 
     @Override
     public boolean onSetAppTitle(PAS pas, String s, UserInfo userinfo) {
-//        boolean trainingmode = IsInTrainingMode(userinfo);
         log.debug("onSetAppTitle");
         String maintitle = Localization.l("common_app_title");
         CentricStatusController sc = (CentricStatusController) PAS.get_pas().get_statuscontroller();
@@ -983,18 +826,12 @@ public class CentricPasScripting extends DefaultPasScripting {
             }
         }
         pas.setMainTitle(maintitle);
-        //pas.get_userinfo().get_current_department().get_deptid());
-        //+(trainingmode ? "  [" + PAS.l("mainmenu_trainingmode").toUpperCase() + "] " : " ") + s);
         pas.setTitle(pas.getMainTitle());
         return true;
     }
 
     @Override
     public InfoPanel onCreateInfoPanel() {
-        //CentricSendOptionToolbar ctoolbar = new CentricSendOptionToolbar();
-        //ctoolbar.doInit();
-        //return ctoolbar;
-
         InfoPanel panel = new CentricInfoPanel();
         panel.doInit();
         return panel;
@@ -1002,17 +839,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public ImageIcon onLoadAppIcon() {
-        //return super.onLoadAppIcon();
         return no.ums.pas.ums.tools.ImageLoader.load_icon("no/ums/pas/plugins/centric/", "centiccLogo16.png", getClass().getClassLoader());
-        /*try
-          {
-              //return new ImageIcon(getClass().getClassLoader().getResource("no/ums/pas/plugins/centric/alert-icon.png"));
-          }
-          catch(Exception e)
-          {
-              log.warn(e.getMessage(), e);
-              return null;
-          }*/
     }
 
     @Override
@@ -1038,10 +865,9 @@ public class CentricPasScripting extends DefaultPasScripting {
                         }
                         UIManager.getDefaults().putDefaults(defaults.toArray());
                     }
-                    //cl = (Class<LookAndFeel>)classloader.loadClass(UIManager.getCrossPlatformLookAndFeelClassName());
                     break;
             }
-            LookAndFeel laf = (LookAndFeel) cl.newInstance();
+            LookAndFeel laf = cl.newInstance();
             UIManager.setLookAndFeel(laf);
             JDialog.setDefaultLookAndFeelDecorated(false);
             JFrame.setDefaultLookAndFeelDecorated(false);
@@ -1073,18 +899,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onSetUserLookAndFeel(Settings settings, final UserInfo userinfo) {
         try {
             onGetInitialUIDefaults();
-            /*if(IsInTrainingMode(userinfo))
-               {
-                   ClassLoader classloader = settings.getClass().getClassLoader();
-                   Class cl = classloader.loadClass("no.ums.pas.plugins.centric.TrainingLookAndFeel");
-                   LookAndFeel laf = (LookAndFeel)cl.newInstance();
-                   UIManager.setLookAndFeel(laf);
-                   SwingUtilities.updateComponentTreeUI(PAS.get_pas());
-               }
-               else
-               {
-                   onSetInitialLookAndFeel(this.getClass().getClassLoader());
-               }*/
             onSetInitialLookAndFeel(this.getClass().getClassLoader());
 
         } catch (Exception e) {
@@ -1101,18 +915,11 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onBeforeLoadMap(Settings settings) {
-        /*if(settings.getMapServer()==MAPSERVER.WMS)
-          {
-              wms_layer_selector.setVisible(true);
-          }
-          else
-              wms_layer_selector.setVisible(false);*/
         return true;
     }
 
     @Override
     public boolean onWmsLayerListLoaded(List<Layer> layers, List<String> check) {
-        //wms_layer_selector.populate(layers, check);
         return true;
     }
 
@@ -1139,7 +946,6 @@ public class CentricPasScripting extends DefaultPasScripting {
             log.warn(e.getMessage(), e);
         }
         PAS.get_pas().repaint();
-        //onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
         return super.onTrainingMode(b);
     }
 
@@ -1155,6 +961,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         try {
             dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return true;
     }
@@ -1201,9 +1008,6 @@ public class CentricPasScripting extends DefaultPasScripting {
         p.set_gridconst(0, p.inc_panels(), 7, 1, GridBagConstraints.CENTER);
         p.add(p.getLblError(), p.m_gridconst);
 
-
-        //p.set_gridconst(0,p.inc_panels(),7,1);
-        //p.add(p.getNSList(), p.m_gridconst);
         return true;
 
     }
@@ -1215,37 +1019,33 @@ public class CentricPasScripting extends DefaultPasScripting {
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);
         dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("common_ok"));
-
-        /*dlg.get_logonpanel().get_gridconst().anchor = GridBagConstraints.CENTER;
-          dlg.get_logonpanel().add_spacing(DefaultPanel.DIR_VERTICAL, 10);
-          dlg.get_logonpanel().set_gridconst(0, dlg.get_logonpanel().inc_panels(), 7, 1);
-          try
-          {
-              ImageIcon img = new ImageIcon(this.getClass().getResource("icons/logo.jpg")); //logo.png"));
-              JLabel lbl = new JLabel(img);
-
-              dlg.get_logonpanel().add(lbl, dlg.get_logonpanel().get_gridconst());
-              dlg.get_logonpanel().revalidate();
-          }
-          catch(Exception e)
-          {
-              log.warn(e.getMessage(), e);
-          }*/
-
-        /*dlg.get_logonpanel().getNSList().setVisible(false);
-          dlg.get_logonpanel().getCompId().setEditable(false);
-          dlg.get_logonpanel().getCompId().setText("UMS");
-          dlg.get_logonpanel().getLblLanguage().setVisible(false);
-          dlg.get_logonpanel().getLanguageCombo().setVisible(false);
-          dlg.get_logonpanel().getLblUserId().setPreferredSize(new Dimension(150, 30));*/
         return super.onCustomizeLogonDlg(dlg);
+    }
+
+    @Override
+    public boolean onPaintMainMenuExtras(DefaultPanel menu, Graphics g) {
+        if(PAS.get_pas().get_current_project() != null) {
+            // Setting eventname far right
+            Project p = PAS.get_pas().get_current_project();
+            String str = String.format("%s %s", p.get_projectpk(), p.get_projectname());
+            g.setFont(UIManager.getFont("InternalFrame.titleFont"));
+
+            int h = menu.getHeight() / 2 + 15;
+
+            g.setColor(Color.black);
+
+            int strwidth = g.getFontMetrics().stringWidth(str);
+            int x = menu.getWidth() - strwidth - 20;
+            g.drawString(str, x, h);
+            return super.onPaintMainMenuExtras(menu, g);
+        }else {
+            return false;
+        }
     }
 
     @Override
     public boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g) {
         //MARK LIVE/TRAINING MODE
-        //Color c1 = new Color(230, 100, 100, 250);
-        //Color c2 = new Color(0, 0, 0, 250);
 
         Color ctext = m_menutimer.col_text;
         Color cbg = m_menutimer.col_bg;
@@ -1272,8 +1072,6 @@ public class CentricPasScripting extends DefaultPasScripting {
         str = Localization.l("common_helpdesk_contact");
         strwidth = g.getFontMetrics().stringWidth(str);
         x = bar.getWidth() - strwidth - 20;
-//        w = strwidth;
-        //g.drawRoundRect(x-5, y, w+10, h, 2, 2);
         g.drawString(str, x, h);
         return super.onPaintMenuBarExtras(bar, g);
     }
@@ -1281,17 +1079,14 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
         boolean ret = true;
-        //ret = super.onAddInfoTab(tab, panel);
         CentricSendOptionToolbar send = new CentricSendOptionToolbar();
         CentricVariables.setCentric_send(send);
-        //((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(send);
         tab.addTab(Localization.l("mainmenu_file_newsending"), null, send, Localization.l("main_parmtab_popup_generate_sending"));
         return ret;
     }
 
     @Override
     public boolean onMapCalcNewCoords(Navigation nav, PAS p) {
-        //return super.onMapCalcNewCoords(nav, p);
         p.get_statuscontroller().calcHouseCoords();
         if (p.get_statuscontroller().get_sendinglist() != null) {
             for (int i = 0; i < p.get_statuscontroller().get_sendinglist().size(); i++) {
@@ -1299,33 +1094,28 @@ public class CentricPasScripting extends DefaultPasScripting {
                     if (p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape() != null)
                         p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape().calc_coortopix(nav);
                 } catch (Exception e) {
-
+                    log.warn(e.getMessage(), e);
                 }
             }
         }
         try {
             DeptArray depts = p.get_userinfo().get_departments();
-            for (int i = 0; i < depts.size(); i++) {
-                ((DeptInfo) depts.get(i)).CalcCoorRestrictionShapes();
+            for (Object dept : depts) {
+                ((DeptInfo) dept).CalcCoorRestrictionShapes();
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).calc_coortopix(p.get_navigation());
+            for (ShapeStruct aList : list) {
+                aList.calc_coortopix(p.get_navigation());
             }
-            //get_pas().get_userinfo().get_current_department().CalcCoorRestrictionShapes();
         } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }
         try {
             p.get_mappane().get_active_shape().calc_coortopix(PAS.get_pas().get_navigation());
         } catch (Exception e) {
-
+            log.warn(e.getMessage(), e);
         }
-        /*for(int i=0; i < getShapesToPaint().size(); i++)
-          {
-              if(getShapesToPaint().get(i)!=null)
-                  getShapesToPaint().get(i).calc_coortopix(nav);
-          }*/
+
         Enumeration<ShapeStruct> en = getShapesToPaint().elements();
         while (en.hasMoreElements()) {
             en.nextElement().calc_coortopix(nav);
@@ -1340,15 +1130,13 @@ public class CentricPasScripting extends DefaultPasScripting {
         try {
 
             DeptArray depts = p.get_userinfo().get_departments();
-            //depts.ClearCombinedRestrictionShapelist();
-            //depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
-            //depts.test();
-            for (int i = 0; i < depts.size(); i++) {
-                ((DeptInfo) depts.get(i)).drawRestrictionShapes(g, nav);
+
+            for (Object dept : depts) {
+                ((DeptInfo) dept).drawRestrictionShapes(g, nav);
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
+            for (ShapeStruct aList : list) {
+                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
             }
 
         } catch (Exception e) {
@@ -1375,6 +1163,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                 //paint polygon as final if it's either marked as final or if we're not in edit-mode
                 p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized || !b_editmode, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
             } catch (Exception e) {
+                log.warn(e.getMessage(), e);
             }
         }
         try {
@@ -1401,7 +1190,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onMapKeyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_T:
-                //PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
                 Variables.getMapFrame().get_active_shape().typecast_polygon().ellipseToRestrictionlines(Variables.getUserInfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
                 break;
         }
@@ -1427,13 +1215,11 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public String getDefaultLocale(Settings s) {
         return "nl_NL";
-        //return "en_GB";
     }
 
     @Override
     public String getUserLocale(LogonInfo l, Settings s) {
         return "nl_NL";
-        //return "en_GB";
     }
 
     @Override
@@ -1464,17 +1250,17 @@ public class CentricPasScripting extends DefaultPasScripting {
             ((CentricStatusController) Variables.getStatusController()).stopUpdates();
             PAS.pasplugin.clearShapesToPaint();
             PAS.get_pas().kickRepaint();
-            ((CentricEastContent) PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
+            PAS.get_pas().get_eastcontent().remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
             ((CentricEastContent) PAS.get_pas().get_eastcontent()).set_centricstatus(null);
 
-            ((CentricSendOptionToolbar) ((CentricEastContent) PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0, "");
-            //((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
-            ((CentricSendOptionToolbar) ((CentricEastContent) PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
+            ((CentricSendOptionToolbar) PAS.get_pas().get_eastcontent().get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0, "");
+            ((CentricSendOptionToolbar) PAS.get_pas().get_eastcontent().get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
             FileMenuActions.CLOSE_PROJECT.setEnabled(false);
             onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
             onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
             PAS.get_pas().get_mappane().load_map(true);
             menu_trainingmode.setEnabled(true);
+            PAS.get_pas().get_mainmenu().repaint();
 
             return true;
         } catch (Exception e) {
@@ -1491,6 +1277,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 	@Override
     public boolean onOpenProject(Project project, long nFromNewRefno) {
         try {
+
             // Does the same thing as after sending a message
             CentricSendOptionToolbar csend = CentricVariables.getCentric_send();
 
@@ -1502,6 +1289,10 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             menu_trainingmode.setEnabled(false);
 
+            // Set current project only if it has name otherwise it's the same
+            if(project.get_projectname() != null) {
+                PAS.get_pas().set_current_project(project);
+            }
 
             return true;
 
@@ -1515,7 +1306,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     public int onInvokeProject() {
         try {
             int answer = 0;
-            if (((CentricEastContent) PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSTATUS_) != null) {
+            if (PAS.get_pas().get_eastcontent().get_tab(CentricEastContent.PANEL_CENTRICSTATUS_) != null) {
                 // Inform and close open status
                 answer = confirmClosing();
                 if (answer == JOptionPane.YES_OPTION)
@@ -1578,7 +1369,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         int send = Variables.getUserInfo().get_current_department().get_userprofile().get_send();
         menu_btn_draw_plmn.setVisible(b && send >= 2);
-        //menu_btn_import.setVisible(b);
     }
 
     @Override
@@ -1628,7 +1418,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         final Smtp smtp = new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concatErrorlist, callback);
         PasApplication.getInstance().getExecutor().submit(smtp);
-        //new MailCtrl(newaccount.get_helo(), newaccount.get_mailserver(), newaccount.get_port(), newaccount.get_displayname(), newaccount.get_mailaddress(), arr_adr, callback, "PAS error", concatErrorlist);
         return arr_adr;
     }
 

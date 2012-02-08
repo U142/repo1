@@ -18,15 +18,9 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTabbedPane m_status_tabbed;
-		
-	private CentricEventStatus m_event;
-	private JPanel m_messages;
-	
-	
-	
-	
-	private CBSENDINGRESPONSE res;
+
+
+    private CBSENDINGRESPONSE res;
 	
 	public void set_cbsendingresponse(CBSENDINGRESPONSE res) { 
 		this.res = res;
@@ -45,8 +39,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 	@Override
 	public void add_controls() {
-		
-		m_status_tabbed = new JTabbedPane();
+
+        JTabbedPane m_status_tabbed = new JTabbedPane();
 		
 		
 		m_gridconst.fill = GridBagConstraints.BOTH;
@@ -54,45 +48,16 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_status_tabbed, m_gridconst);
-		
-		m_event = new CentricEventStatus();
+
+        CentricEventStatus m_event = new CentricEventStatus();
         m_status_tabbed.addTab(Localization.l("projectdlg_projectname"), m_event);
-		
-		
-		m_messages = new JPanel();
+
+
+        JPanel m_messages = new JPanel();
         m_status_tabbed.addTab(Localization.l("main_sending_lba_heading_messages"), m_messages);
-		
-		/*
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_lbl_message, m_gridconst);
-		set_gridconst(1, get_panel(), 2, 1);
-		add(m_txt_message, m_gridconst);
-		
-		set_gridconst(0, inc_panels(), 2, 1);
-		add(m_message_tabbed, m_gridconst);
-		
-		set_gridconst(0, inc_panels(), 2, 1);
-		add(m_lbl_status, m_gridconst);
-		set_gridconst(1, get_panel(), 2, 1);
-				
-		set_gridconst(0, inc_panels(), 1, 1); //5
-		m_btn_kill.setPreferredSize(new Dimension(30,20));
-		add(m_btn_kill, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(1, get_panel(), 1, 1);
-		m_btn_update.setPreferredSize(new Dimension(50,20));
-		add(m_btn_update, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(2, get_panel(), 1, 1);
-		m_btn_resend.setPreferredSize(new Dimension(50,20));
-		add(m_btn_resend, m_gridconst);
-		add_spacing(DIR_HORIZONTAL, 10);
-		set_gridconst(3, get_panel(), 1, 1);
-		m_btn_send_to_address_book.setPreferredSize(new Dimension(150,20));
-		add(m_btn_send_to_address_book, m_gridconst);
-		*/
+
 		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-50,PAS.get_pas().get_eastcontent().getHeight()-50));
-		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width-10,getPreferredSize().height-10));
+		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width - 10, getPreferredSize().height - 10));
 		this.revalidate();
 		repaint();
 		init();
@@ -191,9 +156,7 @@ class CentricMessagesStatus extends DefaultPanel {
 		add(m_lbl_message, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_txt_message, m_gridconst);
-		//set_gridconst(0, inc_panels(), 3, 1);
-		//add(m_tabbed_operators);
-		
+
 		m_tabbed_operators.add("KPN",new CentricOperatorStatus());
 		m_tabbed_operators.add("Vodafone",new CentricOperatorStatus());
 		m_tabbed_operators.add("T-Mobile",new CentricOperatorStatus());
@@ -231,7 +194,6 @@ class CentricOperatorStatus extends DefaultPanel {
 	private StdTextLabel m_lbl_percent = new StdTextLabel("");
 	
 	public CentricOperatorStatus() {
-		// Operator
 	}
 	
 	@Override

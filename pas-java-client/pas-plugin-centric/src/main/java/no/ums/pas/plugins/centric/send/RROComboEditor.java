@@ -24,7 +24,6 @@ public class RROComboEditor extends BasicComboBoxEditor
 	@Override
 	public Component getEditorComponent() {
 		return super.getEditorComponent();
-		//return field;
 	}
 	@Override
 	public Object getItem() {
@@ -44,7 +43,6 @@ public class RROComboEditor extends BasicComboBoxEditor
 		super.setItem(anObject);
 		if(anObject==null)
 		{
-			//field.setValue("");
 			return;
 		}
 		if(anObject.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class))

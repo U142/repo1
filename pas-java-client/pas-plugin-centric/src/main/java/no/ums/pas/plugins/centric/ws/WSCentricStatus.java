@@ -42,7 +42,6 @@ public class WSCentricStatus extends WSThread {
 		}
 		
 		if(m_callback!=null && cbpres!=null) {
-			//cbpreq.setLTimefilter(cbpres.getLDbTimestamp());
 			m_callback.actionPerformed(new ActionEvent(cbpres, ActionEvent.ACTION_PERFORMED, action));
 
 		}
