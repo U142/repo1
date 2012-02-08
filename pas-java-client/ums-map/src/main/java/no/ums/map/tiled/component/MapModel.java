@@ -8,7 +8,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class MapModel {
+public final class MapModel {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
