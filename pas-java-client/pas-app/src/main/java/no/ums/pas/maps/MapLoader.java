@@ -12,11 +12,7 @@ import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
 import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.ws.pas.ObjectFactory;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UMapInfo;
-import no.ums.ws.pas.UMapInfoLayerCellVision;
-import no.ums.ws.pas.UPASMap;
+import no.ums.ws.pas.*;
 import org.geotools.data.ows.Layer;
 import org.geotools.data.ows.WMSCapabilities;
 import org.geotools.data.wms.WMSUtils;
@@ -25,27 +21,15 @@ import org.geotools.data.wms.response.GetMapResponse;
 
 import javax.imageio.ImageIO;
 import javax.xml.namespace.QName;
-import java.awt.AlphaComposite;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ComponentColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapLoader {
+public class MapLoader implements Serializable {
 
     private static final Log log = UmsLog.getLogger(MapLoader.class);
 

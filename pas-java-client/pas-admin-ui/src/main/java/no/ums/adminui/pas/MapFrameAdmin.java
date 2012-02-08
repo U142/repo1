@@ -38,10 +38,10 @@ public class MapFrameAdmin extends MapFrame {
 				public void run()
 				{
 					//b_loading_in_progress = true;
-					SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
+					setIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
 					kickRepaint();
 					load_map();
-					SetIsLoading(false, "");
+					setIsLoading(false, "");
 					/*while(get_mapimage()==null)
 					{
 						try

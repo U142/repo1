@@ -29,13 +29,14 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public class MapFrame extends JPanel implements ActionListener {
+public class MapFrame extends JPanel implements ActionListener, Serializable {
     private static final Log log = UmsLog.getLogger(MapFrame.class);
 
     public MapModel getMapModel() {
@@ -119,7 +120,6 @@ public class MapFrame extends JPanel implements ActionListener {
     private void navigationChanged()
     {
         final TileLookup tileLookup = getTileLookup();
-        final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
         final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
         get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
         Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
@@ -134,15 +134,10 @@ public class MapFrame extends JPanel implements ActionListener {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
     			navigationChanged();
-            	//if(mapModel.getZoom()>=17)
-            	{
-        			PAS.get_pas().download_houses();
-                    PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
-            	}
-            	//else
-            	{
 
-            	}
+                PAS.get_pas().download_houses();
+                PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
+
             	PAS.get_pas().kickRepaint();
             }
         });
@@ -614,7 +609,7 @@ public class MapFrame extends JPanel implements ActionListener {
         if (get_actionhandler().get_isdragging() && get_mode() == MapMode.ZOOM) {
             draw_dragging_square(gfx);
         }
-        if (IsLoading()) {
+        if (isLoading()) {
             draw_loading_image(gfx);
         }
     }
@@ -744,11 +739,11 @@ public class MapFrame extends JPanel implements ActionListener {
 
     int b_loading_in_progress = 0;
 
-    public boolean IsLoading() {
+    public boolean isLoading() {
         return b_loading_in_progress > 0;
     }
 
-    public void SetIsLoading(boolean b, String what_is_loading) {
+    public void setIsLoading(boolean b, String what_is_loading) {
 
         //b_loading_in_progress += (b ? 1 : (b_loading_in_progress>=1 ? -1 : 0));
         if (b)
@@ -839,8 +834,9 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    private TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
-    private TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+    private final TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    private final TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+
         private String lastLookup = null;
         private String scheme;
         private String host;

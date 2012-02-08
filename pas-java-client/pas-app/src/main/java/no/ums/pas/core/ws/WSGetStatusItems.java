@@ -12,7 +12,6 @@ import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.MunicipalStruct;
-import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.TasStruct;
@@ -93,7 +92,7 @@ public class WSGetStatusItems extends WSThread
 		finally
 		{
 			if(b_use_loading_image)
-				PAS.get_pas().get_mappane().SetIsLoading(false, "");			
+				PAS.get_pas().get_mappane().setIsLoading(false, "");
 		}
 		
 	}
@@ -102,7 +101,7 @@ public class WSGetStatusItems extends WSThread
 	public void call() throws Exception {
 		if(sz_datefilter<=0 && sz_timefilter<=0)
 		{
-            PAS.get_pas().get_mappane().SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("mainmenu_status"));
+            PAS.get_pas().get_mappane().setIsLoading(true, Localization.l("common_loading") + " " + Localization.l("mainmenu_status"));
 			b_use_loading_image = true;
 			set_datetimefilter(1, 1);
 		}
@@ -156,7 +155,7 @@ public class WSGetStatusItems extends WSThread
 					no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), "Automatic retry will start. Failed to get statusitems", e, 1);
 					*/
 				if(b_use_loading_image)
-					PAS.get_pas().get_mappane().SetIsLoading(false, "");
+					PAS.get_pas().get_mappane().setIsLoading(false, "");
 				throw e;
 			}
 		}

@@ -253,7 +253,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
 		m_mappane.addActionListener(this);
 		m_mappane.set_mode(MapFrame.MapMode.ZOOM);
-		//m_mappane.SetIsLoading(false, "map");
+		//m_mappane.setIsLoading(false, "map");
 		//put("38");
 	}
 	

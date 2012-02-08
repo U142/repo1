@@ -1,9 +1,11 @@
 package no.ums.map.tiled;
 
+import java.io.Serializable;
+
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class LonLat {
+public class LonLat implements Serializable {
 
     public static final LonLat NONE = new LonLat(Double.NaN, Double.NaN);
 

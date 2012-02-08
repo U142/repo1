@@ -52,7 +52,7 @@ public class AdminDraw extends PASDraw {
 		{
 			super.get_mappane().drawOnEvents(Variables.MAPPANE.getGraphics());
 		}
-		if(Variables.MAPPANE.IsLoading())
+		if(Variables.MAPPANE.isLoading())
 		{
 			super.get_mappane().drawOnEvents(Variables.MAPPANE.getGraphics());
 		}*/

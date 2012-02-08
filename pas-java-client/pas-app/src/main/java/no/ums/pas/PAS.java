@@ -1713,7 +1713,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		@Override
 		protected Object doInBackground() throws Exception {
 			final Timeout time = new Timeout(10, 200);
-            get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
+            get_mappane().setIsLoading(true, Localization.l("main_status_closing"));
 			while(Variables.getStatusController().get_updates_in_progress() && !time.timer_exceeded()) {
 				try { 
 					Thread.sleep(time.get_msec_interval()); 
@@ -1741,7 +1741,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				PAS.pasplugin.onCloseProject();
 				m_current_project = null;
 			}
-			get_mappane().SetIsLoading(false, "");	
+			get_mappane().setIsLoading(false, "");
 			b_running = false;
 			super.done();
 			callback.Complete(true);
@@ -1763,7 +1763,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			final Timeout time = new Timeout(10, 50);
 			try
 			{
-                get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
+                get_mappane().setIsLoading(true, Localization.l("main_status_closing"));
 				while(get_statuscontroller().isOpen() && get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
 					try { 
 						Thread.sleep(time.get_msec_interval()); 
@@ -1786,7 +1786,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
 					m_current_project = null;
 				}
-				get_mappane().SetIsLoading(false, "");
+				get_mappane().setIsLoading(false, "");
 				b_running = false;
 			}
 			catch(Exception e)

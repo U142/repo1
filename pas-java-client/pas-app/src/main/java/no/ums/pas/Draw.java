@@ -187,7 +187,7 @@ import java.awt.image.ImageObserver;
 		public void create_image() {
 			try
 			{
-			if(m_b_needrepaint>=0 || m_mappane.IsLoading())//&& !m_b_imageupdate)
+			if(m_b_needrepaint>=0 || m_mappane.isLoading())//&& !m_b_imageupdate)
 			{
 				//if(!get_suspended()) 
 				{

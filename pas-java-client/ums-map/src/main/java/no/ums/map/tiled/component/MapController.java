@@ -4,13 +4,13 @@ import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileLookup;
 import no.ums.map.tiled.ZoomLookup;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
+import java.io.Serializable;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public final class MapController implements MapComponent.Controller {
+public final class MapController implements MapComponent.Controller, Serializable {
 
     public static int zoomLevel = 1;
     
