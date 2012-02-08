@@ -111,7 +111,7 @@ public class MapFrame extends JPanel implements ActionListener {
     private ImageIcon m_icon_pinpoint = ImageFetcher.getIcon("pinpoint_blue.png");
     private ImageIcon m_icon_adredit = ImageFetcher.getIcon("pinpoint.png");
 
-    private final MapModel mapModel = new MapModel();
+    private final transient MapModel mapModel = new MapModel();
     final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
 
     private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
@@ -833,8 +833,8 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    private final TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
-    private final TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
 
         private String lastLookup = null;
         private String scheme;
