@@ -114,6 +114,8 @@ public class MapFrame extends JPanel implements ActionListener {
     private final transient MapModel mapModel = new MapModel();
     final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
 
+    public no.ums.map.tiled.component.MapController getMapController() { return controller; }
+
     private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
 
     private void navigationChanged()

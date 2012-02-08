@@ -5,14 +5,17 @@ import no.ums.map.tiled.TileLookup;
 import no.ums.map.tiled.ZoomLookup;
 
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public final class MapController implements MapComponent.Controller, Serializable {
+public final class MapController implements MapComponent.Controller {
 
-    public static int zoomLevel = 1;
+    public int zoomLevel = 1;
+    
+    public void setZoomLevel(int zoomLevel) {
+        this.zoomLevel = zoomLevel;
+    }
     
     @Override
     public void onZoomIn(final MapModel model, final TileLookup tileLookup, final Dimension size,
