@@ -98,28 +98,6 @@
                        <dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory> <!-- required, you have to specify this path -->
                    </configuration>
                </plugin>
-            <plugin>
-                <groupId>no.ums.maven</groupId>
-                <artifactId>maven-ums-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                        <configuration>
-                            <dest>${project.build.outputDirectory}/build.properties</dest>
-                            <props>
-                                <revision.number>${git.commit.id}</revision.number>
-                                <build.number>${build.number}</build.number>
-                                <build.user>${user.name}</build.user>
-                                <build.version>${version}</build.version>
-                                <build.timestamp>${maven.build.timestamp}</build.timestamp>
-                            </props>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>
