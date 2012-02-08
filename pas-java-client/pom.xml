@@ -316,7 +316,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
