@@ -1162,8 +1162,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				c.setSelectionEnd(selectionEnd);
 				e.consume();
 			}
-			int before = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
-			int txt_before = TextFormat.GsmStrLen(m_txt_message.getText()); //m_txt_message.getText().length();
+            int txt_before = TextFormat.GsmStrLen(m_txt_message.getText()); //m_txt_message.getText().length();
 			int char_selection = TextFormat.GsmStrLen(c.getText().substring(c.getSelectionStart(), c.getSelectionEnd())); //c.getSelectionEnd()-c.getSelectionStart();
 
 			boolean b = checkIfInputAllowed(e, char_selection);
