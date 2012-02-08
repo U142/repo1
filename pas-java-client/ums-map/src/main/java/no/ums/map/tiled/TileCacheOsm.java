@@ -2,6 +2,7 @@ package no.ums.map.tiled;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Random;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -38,7 +39,9 @@ public final class TileCacheOsm extends AbstractTileCacheUri {
     @Override
     protected URI createUri(final int zoom, final int row, final int column) {
         try {
-            final String host = HOST_NAMES.charAt((int) (HOST_NAMES.length() * Math.random())) + layer.hostPostfix;
+            java.util.Random r = new Random();
+
+            final String host = HOST_NAMES.charAt((int) (HOST_NAMES.length() * r.nextDouble())) + layer.hostPostfix;
             return new URI("http", host, String.format(layer.pathFormat, zoom, column, row), null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);

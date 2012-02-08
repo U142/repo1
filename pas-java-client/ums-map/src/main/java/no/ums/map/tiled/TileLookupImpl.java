@@ -2,14 +2,13 @@ package no.ums.map.tiled;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public final class TileLookupImpl implements TileLookup, Serializable {
+public final class TileLookupImpl implements TileLookup {
 
     private final AbstractTileCache tileCache;
 

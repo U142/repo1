@@ -446,7 +446,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	{
 		if(m_dim_cursorpos==null)
 			return false;
-		if(Variables.getMapFrame().get_maploader().IsLoadingMapImage())
+		if(Variables.getMapFrame().get_maploader().isLoadingMapImage())
 			return false;
 		//intersects.clear();
 		intersects = new ArrayList<MapPointLL>();

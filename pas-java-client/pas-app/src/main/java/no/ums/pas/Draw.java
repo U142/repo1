@@ -253,7 +253,7 @@ import java.awt.image.ImageObserver;
 												
 
 						//if(get_suspended())
-						if(!get_mappane().getMapLoader().IsLoadingMapImage() && !b_firstmap)
+						if(!get_mappane().getMapLoader().isLoadingMapImage() && !b_firstmap)
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
 							g2d.drawString(Localization.l("maps_error_loading"), 20, 50);

@@ -29,14 +29,13 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public class MapFrame extends JPanel implements ActionListener, Serializable {
+public class MapFrame extends JPanel implements ActionListener {
     private static final Log log = UmsLog.getLogger(MapFrame.class);
 
     public MapModel getMapModel() {
@@ -687,7 +686,7 @@ public class MapFrame extends JPanel implements ActionListener, Serializable {
         log.debug("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
         PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
         PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer() == MAPSERVER.DEFAULT ? true : false));
-        if (m_maploader.IsLoadingMapImage())
+        if (m_maploader.isLoadingMapImage())
             return;
 
         set_cursor(new Cursor(Cursor.WAIT_CURSOR));

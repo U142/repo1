@@ -27,7 +27,7 @@ public abstract class AbstractTileCache {
     private final ZoomLookup[] zoomLookups;
     private final int tileSize;
     
-    public class InvalidImage extends BufferedImage
+    public static class InvalidImage extends BufferedImage
     {
     	public InvalidImage()
     	{

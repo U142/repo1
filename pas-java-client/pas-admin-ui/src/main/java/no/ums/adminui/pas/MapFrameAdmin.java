@@ -64,7 +64,7 @@ public class MapFrameAdmin extends MapFrame {
 
 		if(PAS.get_pas() != null)
 			PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer()==MAPSERVER.DEFAULT ? true : false));
-		if(m_maploader.IsLoadingMapImage())
+		if(m_maploader.isLoadingMapImage())
 			return;
 
         set_cursor(new Cursor(Cursor.WAIT_CURSOR));
