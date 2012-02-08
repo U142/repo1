@@ -1314,12 +1314,52 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	public int onInvokeProject() {
-		return PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+        PAS pas = PAS.get_pas();
+        int answer = JOptionPane.YES_OPTION;
+        
+        if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
+              return ProjectDlg.ACT_PROJECTDLG_CANCEL;
+          else {
+              if(pas.get_current_project()!=null) {
+                  Object[] options;
+                  if(pas.get_userinfo().get_current_department().get_pas_rights() == 4) {
+                      options = new Object[] {Localization.l("common_yes")};
+                  }
+                  else {
+                      options = new Object[] {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
+                  }
+
+                  Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("project_ask_close_current_project") +" <" + pas.get_current_project().get_projectname() + ">", Localization.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                  if(input != null) {
+                      if(input.equals(Localization.l("common_keep_sendings"))) {
+                          pas.set_keep_sendings(true);
+                          log.debug("m_keep_sendings=" + pas.get_keep_sendings());
+                      }
+                      else
+                          pas.set_keep_sendings(false);
+                  }
+                  else
+                      return ProjectDlg.ACT_PROJECTDLG_CANCEL;
+              }
+
+              if(pas.get_eastcontent().get_taspanel() != null && pas.get_current_project() != null) {
+                  PAS.get_pas().askAndCloseActiveProject(new PAS.IAskCloseStatusComplete() {
+
+                      @Override
+                      public void Complete(boolean bStatusClosed) {
+
+                      }
+                  });
+              }
+
+          }
+
+		return answer; /*PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
 			@Override
 			public void Complete(boolean bStatusClosed) {
 				
 			}
-		});
+		});*/
 	}
 
 

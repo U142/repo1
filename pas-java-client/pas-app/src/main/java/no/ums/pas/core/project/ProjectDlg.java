@@ -259,8 +259,6 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			add(m_project_list.get_scrollpane(), get_gridconst());
 			set_gridconst(0, inc_panels(), 2, 1);
 			add(m_btn_open, get_gridconst());
-			//set_gridconst(0, 2, 2, 2, GridBagConstraints.SOUTH);
-			//add(m_loader, m_gridconst);
 		}
 		public void init() {
 			pack();

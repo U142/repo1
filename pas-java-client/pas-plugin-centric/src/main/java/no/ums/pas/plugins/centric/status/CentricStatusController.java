@@ -87,17 +87,13 @@ public class CentricStatusController extends StatusController {
 			if(m_centricstatus.isReady() && getProjectpk()>0) {
 				CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 				res.setLProjectpk(m_projectpk);
-				
-				//m_centricstatus.set_cbsendingresponse(res);
 				m_centricstatus.getCBStatus();
 				log.debug("CentricStatusControl update...");
-				//log.debug("CentricStatusControl updates - timer="+m_timer.toString());
 			}
 			else
 			{
 				log.debug("CentricStatusControl busy...");
 			}
-			//m_timer.setDelay(m_timer.getRecurringDelay());
 		}
 	};
 	protected class CentricStatusTimer extends Timer

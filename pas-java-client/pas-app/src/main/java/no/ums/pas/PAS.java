@@ -1438,54 +1438,24 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public synchronized void kickRepaint()
 	{
-		//if(get_drawthread().m_b_needrepaint)
-		//	return;
-		try
-		{
-			if(get_drawthread()!=null) {
-//			m_mapimg = img;
-                //if(m_b_needrepaint==0)
-                //m_b_needrepaint ++;
-            }
-		}
-		catch(Exception e)
-		{
-			
-		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-				//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-				//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 				get_mappane().repaint();
 				get_mappane().validate();
 			}
 		});
-		/*if(m_n_repaints % 20 == 0) {
-			this.repaint();
-			m_n_repaints = 0;
-		}
-		else {
-			get_mappane().repaint();
-		}*/
 		m_n_repaints ++;
 	}
 	public synchronized void kickRepaint(Rectangle r)
 	{
 		if(r!=null)
 		{
-            //			m_mapimg = img;
-            //if(m_b_needrepaint==0)
-            //m_b_needrepaint ++;
             get_mappane().repaint(r.x, r.y, r.width, r.height);
 		}
 	}
 	public synchronized void kickRepaint(int x, int y, int width, int height)
 	{
-        //			m_mapimg = img;
-        //if(m_b_needrepaint==0)
-        //m_b_needrepaint ++;
         get_mappane().repaint(x, y, width, height);
 	}
 
@@ -1528,9 +1498,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public void download_houses() {
 		boolean b_width_exceeded = false;
-		/*if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
-			b_width_exceeded = true;
-		}*/
+
 		int zoomLevel = Variables.getMapFrame().getMapModel().getZoom();
 		b_width_exceeded = zoomLevel<=16;
 		
@@ -1545,7 +1513,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		get_housecontroller().set_visibility(!b_width_exceeded);
 
-		//get_drawthread().set_neednewcoors(true);
 		PAS.get_pas().kickRepaint();
 	}
 	public void printStackTrace(StackTraceElement [] ste) {
@@ -1570,32 +1537,29 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void activateProject(final Project p) {
 		try
 		{
-			//SwingUtilities.invokeLater(new Runnable() {
-			//	public void run()
-				{
-					if(m_current_project!=null) {
-						if(m_current_project.equals(p))
-							return;
-					}
-					m_current_project = p;
-                    setTitle(m_sz_maintitle + "        " + Localization.l("projectdlg_project") + " - <" + m_current_project.get_projectname() + ">");
-					switch(get_userinfo().get_current_department().get_pas_rights())
-					{
-					case 4: //dont enable sendpane on TAS
-						break;
-					default:
-						get_eastcontent().flip_to(EastContent.PANEL_SENDING_);
-						get_eastcontent().ensure_added(EastContent.PANEL_SENDING_);
-                        get_eastcontent().set_tabtext(EastContent.PANEL_SENDING_, Localization.l("projectdlg_project") + " - " + get_current_project().get_projectname());
-						break;
-					}
-					get_sendcontroller().setActiveProject(p);
-				}
-			//});
+			
+            if(m_current_project!=null) {
+                if(m_current_project.equals(p))
+                    return;
+            }
+            m_current_project = p;
+            setTitle(m_sz_maintitle + "        " + Localization.l("projectdlg_project") + " - <" + m_current_project.get_projectname() + ">");
+            switch(get_userinfo().get_current_department().get_pas_rights())
+            {
+            case 4: //dont enable sendpane on TAS
+                break;
+            default:
+                get_eastcontent().flip_to(EastContent.PANEL_SENDING_);
+                get_eastcontent().ensure_added(EastContent.PANEL_SENDING_);
+                get_eastcontent().set_tabtext(EastContent.PANEL_SENDING_, Localization.l("projectdlg_project") + " - " + get_current_project().get_projectname());
+                break;
+            }
+                get_sendcontroller().setActiveProject(p);
+			
 		}
 		catch(Exception e)
 		{
-			
+			log.warn(e.getMessage(),e);
 		}
 	}
 	
@@ -1635,7 +1599,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						}
 						catch(Exception e)
 						{
-							
+							log.warn(e.getMessage(), e);
 						}
 					}
 
@@ -1651,49 +1615,19 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public int invoke_project(boolean bNewSending) {
         log.debug(Localization.l("project_ask_new_project"));
+        int answer;
 
-		//int answer = PAS.pasplugin.onInvokeProject();
-        int answer = JOptionPane.YES_OPTION;
-		if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
-			return ProjectDlg.ACT_PROJECTDLG_CANCEL;
-		else {
-			if(this.m_current_project!=null) {
-				Object[] options;
-				if(get_userinfo().get_current_department().get_pas_rights() == 4) {
-                    options = new Object[] {Localization.l("common_yes")};
-                }
-				else {
-                    options = new Object[] {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
-                }
+		answer = PAS.pasplugin.onInvokeProject();
 
-                Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("project_ask_close_current_project") +" <" + m_current_project.get_projectname() + ">", Localization.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-				if(input != null) {
-                    if(input.equals(Localization.l("common_keep_sendings"))) {
-						m_keep_sendings = true;
-						log.debug("m_keep_sendings=" + m_keep_sendings);
-					}
-					else
-						m_keep_sendings = false;
-				}
-				else
-					return ProjectDlg.ACT_PROJECTDLG_CANCEL;
-			}
-			
-			if(get_eastcontent().get_taspanel() != null && this.m_current_project != null) {
-				PAS.get_pas().askAndCloseActiveProject(new IAskCloseStatusComplete() {
-					
-					@Override
-					public void Complete(boolean bStatusClosed) {
-						
-					}
-				});
-			}
-				
-		}
-		ProjectDlg dlg = PAS.pasplugin.onCreateOpenProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
-		//new ProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
-		dlg.setVisible(true);
-		return dlg.getSelectedAction();
+
+
+        if(answer == JOptionPane.YES_OPTION) {
+            ProjectDlg dlg = PAS.pasplugin.onCreateOpenProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
+
+		    dlg.setVisible(true);
+		    return dlg.getSelectedAction();
+        }
+        return ProjectDlg.ACT_PROJECTDLG_CANCEL;
 	}
 	
 	public boolean keep_using_current_tas() {
@@ -1707,10 +1641,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					
 				}
 			});
-			//ProjectDlg dlg = new ProjectDlg(this, PAS.get_pas().get_pasactionlistener(), "act_project_saved", true);
-			//dlg.setVisible(true);
-			//while(get_current_project() != null)
-			//	;
+
 			return false;
 		}
 	}
@@ -1720,10 +1651,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		int ret_answer = JOptionPane.YES_OPTION;
 		boolean b_status_is_open = (m_statuscontroller.isOpen() || m_statuscontroller.get_sendinglist().size() > 0) || (m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()); 
 		if(b_status_is_open) {
-			boolean b_ask = m_sendcontroller.hasAlerts();
-            ret_answer = b_ask ? JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION) : JOptionPane.YES_OPTION;
+            ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION);
 		}
-		close_active_project(callback, ret_answer);
+        if(ret_answer == JOptionPane.YES_OPTION) {
+		    close_active_project(callback, ret_answer);
+        }
 		return ret_answer;
 	}
 	
@@ -1752,29 +1684,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 
 			PAS.pasplugin.onStopStatusUpdates();
-			//else
-			//	thread = new WaitForStatusThread(b_close_all_gui);
+
+
 			if(thread!=null)
 			{
-				//thread.doInBackground();
-				//thread.done();
 				thread.execute();
 			}
-			/*while(!thread.isDone())
-			{
-				log.debug("Waiting for status thread");
-				Thread.sleep(100);
-			}*/
-			if(thread!=null)
-			{
-				//thread.waitToFinish();
-			}
-			/*if(b_close_all_gui && b_confirmed_close)
-				PAS.pasplugin.onCloseProject();
-			PAS.get_pas().get_sendcontroller().reset_send_id(); // Resets the send id, alerts in a new project should now start from beginning
-			Variables.setStatusController(null);
-			m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-			Variables.setStatusController(PAS.get_pas().m_statuscontroller);*/
+
 			return answer;
 		}
 		catch(Exception e)
@@ -1789,7 +1705,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		boolean b_close_all = false;
 		IAskCloseStatusComplete callback;
 		WaitForStatusThread(boolean close_all, IAskCloseStatusComplete callback) {
-			//super("WaitForStatus Thread");
 			super();
 			this.callback = callback;
 			b_running = true;

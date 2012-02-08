@@ -83,14 +83,9 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	
 	@Override
 	public void componentResized(ComponentEvent e) {
-		//super.componentResized(e);
-		if(getWidth()<=0||getHeight()<=0) {
-			
-		}
 		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-10,PAS.get_pas().get_eastcontent().getHeight()-30));
 		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width-10,getPreferredSize().height-10));
 		m_event.componentResized(e);
-		//m_messages.componentResized(e);
 	}
 
 	private CBSENDINGRESPONSE last_sendingresult;
@@ -104,14 +99,9 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			return true;
 		}
 		return false;
-		// update infoting
-		//getCBStatus(res); //wait for timer
 	}
 	
 	public void getCBStatus() {
-		//ImageIcon icon = ImageLoader.load_icon("remembermilk_orange.gif");
-		//for(int i=0;i<m_status_tabbed.getComponentCount();++i)
-		//	m_status_tabbed.setIconAt(i, icon);
 		ready = false;
 
 		ULOGONINFO l = new ULOGONINFO();
