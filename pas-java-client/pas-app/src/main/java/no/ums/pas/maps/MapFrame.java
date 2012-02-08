@@ -112,7 +112,7 @@ public class MapFrame extends JPanel implements ActionListener {
     private ImageIcon m_icon_adredit = ImageFetcher.getIcon("pinpoint.png");
 
     private final transient MapModel mapModel = new MapModel();
-    final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
+    final transient no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
 
     public no.ums.map.tiled.component.MapController getMapController() { return controller; }
 
