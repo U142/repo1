@@ -80,24 +80,4 @@
             <version>1.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                   <groupId>pl.project13.maven</groupId>
-                   <artifactId>git-commit-id-plugin</artifactId>
-                   <version>1.5</version>
-                   <executions>
-                       <execution>
-                           <phase>initialize</phase>
-                           <goals>
-                               <goal>revision</goal>
-                           </goals>
-                       </execution>
-                   </executions>
-                   <configuration>
-                       <dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory> <!-- required, you have to specify this path -->
-                   </configuration>
-               </plugin>
-        </plugins>
-    </build>
 </project>
