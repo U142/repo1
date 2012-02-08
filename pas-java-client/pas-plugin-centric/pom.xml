@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pas-plugin-centric</artifactId>
     <name>PAS - Plugin Centric</name>
-	<version>1.0.2</version>
     <dependencies>
         <dependency>
             <groupId>no.ums</groupId>
