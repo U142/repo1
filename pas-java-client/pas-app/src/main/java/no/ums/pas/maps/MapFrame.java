@@ -7,15 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.map.tiled.AbstractTileCache;
-import no.ums.map.tiled.AbstractTileCacheWms;
-import no.ums.map.tiled.LonLat;
-import no.ums.map.tiled.TileCacheFleximap;
-import no.ums.map.tiled.TileData;
-import no.ums.map.tiled.TileInfo;
-import no.ums.map.tiled.TileLookup;
-import no.ums.map.tiled.TileLookupImpl;
-import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.*;
 import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
@@ -25,55 +17,22 @@ import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.icons.ImageFetcher;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.HouseItem;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.MapSite;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PLMNShape;
-import no.ums.pas.maps.defines.PolySnapStruct;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.TasStruct;
-import no.ums.pas.maps.defines.UMSMapObject;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.tools.PrintCtrl;
 import org.geotools.data.wms.WebMapServer;
 import org.geotools.ows.ServiceException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JToolTip;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 public class MapFrame extends JPanel implements ActionListener {
@@ -880,8 +839,8 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    private final TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
-    private final TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+    private TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    private TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
         private String lastLookup = null;
         private String scheme;
         private String host;
