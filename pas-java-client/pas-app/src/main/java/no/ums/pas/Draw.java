@@ -187,7 +187,7 @@ import java.awt.image.ImageObserver;
 		public void create_image() {
 			try
 			{
-			if(m_b_needrepaint>=0 || m_mappane.IsLoading())//&& !m_b_imageupdate)
+			if(m_b_needrepaint>=0 || m_mappane.isLoading())//&& !m_b_imageupdate)
 			{
 				//if(!get_suspended()) 
 				{
@@ -253,7 +253,7 @@ import java.awt.image.ImageObserver;
 												
 
 						//if(get_suspended())
-						if(!get_mappane().getMapLoader().IsLoadingMapImage() && !b_firstmap)
+						if(!get_mappane().getMapLoader().isLoadingMapImage() && !b_firstmap)
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
 							g2d.drawString(Localization.l("maps_error_loading"), 20, 50);

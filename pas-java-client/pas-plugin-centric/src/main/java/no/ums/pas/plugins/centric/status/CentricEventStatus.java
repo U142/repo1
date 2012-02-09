@@ -35,8 +35,6 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 		add_controls();
 		//m_lbl_refno.setText(m_lbl_refno.getText() + res.getLRefno());
 		m_btn_finish.setEnabled(false);
-        StdTextArea m_refno;
-        m_refno = new StdTextArea("", 100);
     }
 
 	@Override
@@ -52,17 +50,10 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 
 	@Override
 	public void add_controls() {
-		//m_gridconst.fill = GridBagConstraints.BOTH;
+
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_status, m_gridconst);
-		//set_gridconst(1, get_panel(), 1, 1);
-		//add(m_status, m_gridconst);
-		/*
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_lbl_refno, m_gridconst);
-		set_gridconst(1, get_panel(), 1, 1);
-		add(m_refno, m_gridconst);
-		*/
+
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_sent, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);

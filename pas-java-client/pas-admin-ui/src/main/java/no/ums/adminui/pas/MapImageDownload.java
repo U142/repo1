@@ -93,7 +93,7 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		
 		//Variables.DRAW.get_buff_image();
 		//Variables.MAPPANE.initialize();
-		//Variables.MAPPANE.SetIsLoading(false, "map");
+		//Variables.MAPPANE.setIsLoading(false, "map");
 		
 		//Container contentpane = getContentPane();
 		//contentpane.setLayout(new FlowLayout());
@@ -170,7 +170,7 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			
 			//Variables.DRAW.get_buff_image();
 			//Variables.MAPPANE.initialize();
-			//Variables.MAPPANE.SetIsLoading(false, "map");
+			//Variables.MAPPANE.setIsLoading(false, "map");
 			
 			//Container contentpane = getContentPane();
 			//contentpane.setLayout(new FlowLayout());

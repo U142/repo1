@@ -12,11 +12,7 @@ import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
 import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.ws.pas.ObjectFactory;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UMapInfo;
-import no.ums.ws.pas.UMapInfoLayerCellVision;
-import no.ums.ws.pas.UPASMap;
+import no.ums.ws.pas.*;
 import org.geotools.data.ows.Layer;
 import org.geotools.data.ows.WMSCapabilities;
 import org.geotools.data.wms.WMSUtils;
@@ -25,22 +21,9 @@ import org.geotools.data.wms.response.GetMapResponse;
 
 import javax.imageio.ImageIO;
 import javax.xml.namespace.QName;
-import java.awt.AlphaComposite;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ComponentColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,19 +32,18 @@ public class MapLoader {
 
     private static final Log log = UmsLog.getLogger(MapLoader.class);
 
-	Image m_img_load = null;
+	transient Image m_img_load = null;
 	MediaTracker m_mtracker;
-	MapFrame m_mappane;
-	//LoadingFrame m_loadingframe = null;
-	Component m_mapcomponent;
+
+    Component m_mapcomponent;
 	boolean b_loading_overlay_in_progress = false;
 	boolean b_loading_mapimage = false;
-	public boolean IsLoadingOverlay() { return b_loading_overlay_in_progress; }
-	public boolean IsLoadingMapImage() { return b_loading_mapimage; }
+
+    public boolean isLoadingMapImage() { return b_loading_mapimage; }
 	protected String sz_errormsg = "";
 	protected int m_n_wait_for_mediatracker_ms = 5000;
 	public String getErrorMsg() {return sz_errormsg; }
-	//protected MediaTracker tracker;
+
 	public MediaTracker getMediaTracker() {
 		return m_mtracker;
 	}
@@ -267,6 +249,7 @@ public class MapLoader {
 		}
 		catch(Exception e)
 		{
+            log.warn(e.getMessage(), e);
 		}
 		b_loading_overlay_in_progress = false;
 		return null;
@@ -293,16 +276,16 @@ public class MapLoader {
 	    c[3] = ((rgb ) & 0xff);
 	    return c;
 	}
-	WebMapServer wms = null;
-	org.geotools.data.wms.request.GetMapRequest request;
+	transient WebMapServer wms = null;
+	transient org.geotools.data.wms.request.GetMapRequest request;
 	String m_sz_wms_url = "";
 	public String getWmsUrl() { return m_sz_wms_url; }
 	WMSCapabilities capabilities = null;
 	boolean m_wms_server_changed = true;
 	java.util.List<Layer> m_selected_layers = new ArrayList<Layer>();
 	public List<String> m_wms_formats;
-	public WebMapServer wmstest;
-	public WMSCapabilities capabilitiestest;
+	public transient WebMapServer wmstest;
+	public transient WMSCapabilities capabilitiestest;
 	public boolean testWmsUrl(String sz_url, String usr, char [] pass) throws Exception
 	{
 		try
@@ -653,23 +636,18 @@ public class MapLoader {
 			m_img_load =  null;
 		}
 
-		//loadingframe(false);
-		//m_pas.get_drawthread().set_neednewcoors(true);
-		//m_pas.get_drawthread().add_image(m_img_load);
 		if(m_img_load==null)
 		{
-			if(PAS.get_pas() == null)
-				Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
-			else
-				Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
-			if(m_retry==null)
+            Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
+
+            if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
 		}
 		b_loading_mapimage = false;
 
 		return m_img_load;
 	}
-	protected AutoLoadRetry m_retry = null;
+	protected transient AutoLoadRetry m_retry = null;
 	protected int n_seconds_to_reload = 0;
 	public int getSecondsToReload() { return n_seconds_to_reload; }
 	

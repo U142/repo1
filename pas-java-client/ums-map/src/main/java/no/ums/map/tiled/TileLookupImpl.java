@@ -1,8 +1,6 @@
 package no.ums.map.tiled;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;

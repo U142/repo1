@@ -111,15 +111,16 @@ public class MapFrame extends JPanel implements ActionListener {
     private ImageIcon m_icon_pinpoint = ImageFetcher.getIcon("pinpoint_blue.png");
     private ImageIcon m_icon_adredit = ImageFetcher.getIcon("pinpoint.png");
 
-    private final MapModel mapModel = new MapModel();
-    final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
+    private final transient MapModel mapModel = new MapModel();
+    final transient no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
+
+    public no.ums.map.tiled.component.MapController getMapController() { return controller; }
 
     private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
 
     private void navigationChanged()
     {
         final TileLookup tileLookup = getTileLookup();
-        final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
         final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
         get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
         Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
@@ -134,15 +135,10 @@ public class MapFrame extends JPanel implements ActionListener {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
     			navigationChanged();
-            	//if(mapModel.getZoom()>=17)
-            	{
-        			PAS.get_pas().download_houses();
-                    PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
-            	}
-            	//else
-            	{
 
-            	}
+                PAS.get_pas().download_houses();
+                PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
+
             	PAS.get_pas().kickRepaint();
             }
         });
@@ -614,7 +610,7 @@ public class MapFrame extends JPanel implements ActionListener {
         if (get_actionhandler().get_isdragging() && get_mode() == MapMode.ZOOM) {
             draw_dragging_square(gfx);
         }
-        if (IsLoading()) {
+        if (isLoading()) {
             draw_loading_image(gfx);
         }
     }
@@ -692,7 +688,7 @@ public class MapFrame extends JPanel implements ActionListener {
         log.debug("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
         PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
         PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer() == MAPSERVER.DEFAULT ? true : false));
-        if (m_maploader.IsLoadingMapImage())
+        if (m_maploader.isLoadingMapImage())
             return;
 
         set_cursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -744,11 +740,11 @@ public class MapFrame extends JPanel implements ActionListener {
 
     int b_loading_in_progress = 0;
 
-    public boolean IsLoading() {
+    public boolean isLoading() {
         return b_loading_in_progress > 0;
     }
 
-    public void SetIsLoading(boolean b, String what_is_loading) {
+    public void setIsLoading(boolean b, String what_is_loading) {
 
         //b_loading_in_progress += (b ? 1 : (b_loading_in_progress>=1 ? -1 : 0));
         if (b)
@@ -839,8 +835,9 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    private TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
-    private TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+
         private String lastLookup = null;
         private String scheme;
         private String host;

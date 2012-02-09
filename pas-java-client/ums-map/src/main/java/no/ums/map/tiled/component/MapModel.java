@@ -1,5 +1,7 @@
 package no.ums.map.tiled.component;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 
 import java.beans.PropertyChangeListener;
@@ -9,7 +11,7 @@ import java.beans.PropertyChangeSupport;
  * @author Ståle Undheim <su@ums.no>
  */
 public final class MapModel {
-
+    private static final Log log = UmsLog.getLogger(MapModel.class);
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 //    private MapBounds bounds;

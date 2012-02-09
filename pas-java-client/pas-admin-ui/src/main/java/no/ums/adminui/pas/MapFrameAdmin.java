@@ -38,10 +38,10 @@ public class MapFrameAdmin extends MapFrame {
 				public void run()
 				{
 					//b_loading_in_progress = true;
-					SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
+					setIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
 					kickRepaint();
 					load_map();
-					SetIsLoading(false, "");
+					setIsLoading(false, "");
 					/*while(get_mapimage()==null)
 					{
 						try
@@ -64,7 +64,7 @@ public class MapFrameAdmin extends MapFrame {
 
 		if(PAS.get_pas() != null)
 			PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer()==MAPSERVER.DEFAULT ? true : false));
-		if(m_maploader.IsLoadingMapImage())
+		if(m_maploader.isLoadingMapImage())
 			return;
 
         set_cursor(new Cursor(Cursor.WAIT_CURSOR));
