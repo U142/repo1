@@ -36,6 +36,14 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 
     private static final Log log = UmsLog.getLogger(ShapeStruct.class);
 	
+    public enum ShapeIntegrity
+    {
+    	OK,
+    	POLY_LAST_TO_FIRST_INTERSECTION,
+    	POLY_SPLIT,
+    }
+
+    
 	public static final int SHAPE_UNKNOWN = -1;
 	public static final int SHAPE_ELLIPSE = 0;
 	public static final int SHAPE_POLYGON = 1;
@@ -74,7 +82,16 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	protected boolean m_b_obsolete = false;
 	protected double m_f_area_sqm = 0;
 	protected boolean m_b_editable = true;
+	private ShapeIntegrity integrity = ShapeIntegrity.OK;
 	
+	
+	
+	public ShapeIntegrity getIntegrity() {
+		return integrity;
+	}
+	public void setIntegrity(ShapeIntegrity integrity) {
+		this.integrity = integrity;
+	}
 	/**
 	 * set if the shape is locked for further editing
 	 * @param b true to lock this shape

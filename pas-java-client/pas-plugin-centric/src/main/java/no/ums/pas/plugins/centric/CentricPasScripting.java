@@ -25,10 +25,13 @@ import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.pluginbase.DefaultPasScripting;
 import no.ums.pas.plugins.centric.address_search.CentricAddressSearchCtrl;
 import no.ums.pas.plugins.centric.send.CentricProjectDlg;
@@ -1161,7 +1164,31 @@ public class CentricPasScripting extends DefaultPasScripting {
                 boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
                 boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
                 //paint polygon as final if it's either marked as final or if we're not in edit-mode
-                p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized || !b_editmode, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+                ShapeStruct shape = p.get_mappane().get_active_shape();
+                if(shape!=null)
+                {
+	                shape.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized || !b_editmode, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+	                
+	        		switch(shape.getIntegrity())
+	        		{
+		        		case POLY_LAST_TO_FIRST_INTERSECTION: //click on first point to finalize
+		        			PolygonStruct poly = shape.typecast_polygon();
+		        			MapPoint mp = new MapPoint(nav, poly.getFirstPoint());
+		        			g.setColor(Color.red);
+		        			Font oldFont = g.getFont();
+		        			g.setFont(g.getFont().deriveFont(20.0f));
+		        			int size = 10;
+		        			g.fillOval(mp.get_x()-size/2, mp.get_y()-size/2, size, size);
+		        			g.drawString(Localization.l("common_click_to_finalize"), mp.get_x()-size, mp.get_y()+g.getFont().getSize()+size);
+		        			g.setFont(oldFont);
+		        			break;
+		        		case POLY_SPLIT:
+		        			break;
+		        		case OK:
+		        			break;
+	        		}
+                }
+
             } catch (Exception e) {
                 log.warn(e.getMessage(), e);
             }
@@ -1425,4 +1452,12 @@ public class CentricPasScripting extends DefaultPasScripting {
     public Dimension getMinMapDimensions() {
         return new Dimension(20000, 20000);
     }
+
+	@Override
+	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
+			ShapeIntegrity integrity) {
+		log.debug("shape-integrity reports %s", integrity.toString());
+	}
+    
+    
 }

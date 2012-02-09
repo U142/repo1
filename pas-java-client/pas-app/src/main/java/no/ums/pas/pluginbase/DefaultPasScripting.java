@@ -40,6 +40,7 @@ import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
@@ -1030,6 +1031,14 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		shapes_to_paint.clear();
 	}
 	
+	
+	
+	@Override
+	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
+			ShapeIntegrity integrity) {
+		
+	}
+
 	@Override
 	public Hashtable<String, ShapeStruct> getShapesToPaint() {
 		return shapes_to_paint;

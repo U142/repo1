@@ -28,6 +28,7 @@ import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.geotools.data.ows.Layer;
@@ -439,6 +440,13 @@ public interface PasScriptingInterface {
     boolean removeShapeToPaint(long id);
 	
     void clearShapesToPaint();
+    
+    /**
+     * When a shape is edited, it's integrity will be checked and reported here
+     * @param shape Shape that's edited
+     * @param integrity
+     */
+    void onShapeIntegrityAfterEdit(ShapeStruct shape, ShapeIntegrity integrity);
 	
     Hashtable<String, ShapeStruct> getShapesToPaint(); 
 	

@@ -18,6 +18,7 @@ import no.ums.pas.maps.defines.MapPointPix;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import org.jdesktop.beansbinding.AbstractBean;
@@ -247,9 +248,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				if(b_down) {
 					if(get_mappane().get_mode()== MapFrame.MapMode.SENDING_POLY ||
 						get_mappane().get_mode()== MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
-						//ActionEvent action = new ActionEvent(new String(""), ActionEvent.ACTION_PERFORMED, "act_rem_polypoint");
-						//PAS.get_pas().get_sendcontroller().actionPerformed(action);
 						addAction("act_rem_polypoint", new String(""));
+						checkAndSetShapeIntegrity();					
 					}
 				}
 				break;
@@ -372,14 +372,14 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					//check_snap(e);
 					//execMouseOver(e);
 				}
-				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
+				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
 				break;
 			case PAINT_RESTRICTIONAREA:
-				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_OUTSIDE, -1);
+				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_OUTSIDE, -1, null, null, true);
 				break;
 			case SENDING_ELLIPSE_POLYGON:
 				if(get_isdragging())
-					checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
+					checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
 				break;
 			case SENDING_ELLIPSE:
 				break;
@@ -415,6 +415,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	List<MapPointLL> intersects_last = new ArrayList<MapPointLL>();
 	List<MapPointLL> intersects_first = new ArrayList<MapPointLL>();
 	
+	List<MapPointLL> intersects_first_to_last = new ArrayList<MapPointLL>();
+	
 	enum PAINTMODE
 	{
 		NORMAL,
@@ -435,6 +437,122 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		FORCE_OUTSIDE,
 	};
 	
+	
+	protected List<ShapeStruct> getRestrictionShapeList(int nDeptPk)
+	{
+		List<ShapeStruct> list = new ArrayList<ShapeStruct>();
+		DeptArray depts = Variables.getUserInfo().get_departments();
+		if(nDeptPk<1) //use combined restriction area
+		{
+			list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
+			if(list==null)
+				return new ArrayList<ShapeStruct>();
+			if(list.isEmpty())
+				return list;
+			if(list.get(0).typecast_polygon().get_size()<=3)
+				return list;
+		}
+		else //use specified department's restriction area
+		{
+            for (Object dept : depts) {
+                DeptInfo department = (DeptInfo) dept;
+                if (nDeptPk == department.get_deptpk()) {
+                    list.addAll(((DeptInfo) dept).get_restriction_shapes());
+                    break;
+                }
+            }
+		}
+        return list;
+	}
+	
+	protected ShapeStruct getActiveShape()
+	{
+		ShapeStruct ss = null;
+		try
+		{
+			ss = get_mappane().get_active_shape().typecast_polygon();
+			return ss;
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
+		try
+		{
+			ss = PAS.get_pas().get_parmcontroller().get_shape().typecast_polygon();
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
+		return ss;
+	}
+	
+	protected int checkRestrictionsBetweenFirstAndLast(int nDeptPk, PolygonStruct poly)
+	{
+		List<ShapeStruct> list = getRestrictionShapeList(nDeptPk);
+		if(list.isEmpty())
+			return 0;
+
+		PolygonStruct current_polygon = poly;
+		if(current_polygon==null)
+			return 0;
+		for(int i=0; i < list.size(); i++)
+		{
+			MapPointLL ll1 = current_polygon.getLastPoint();
+			MapPointLL ll2 = current_polygon.getFirstPoint();
+			if(ll1!=null && ll2!=null)
+			{
+				intersects_first_to_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, 0, ll1, false);
+				log.debug("Intersects between first and last: " + intersects_first_to_last.size());
+				return intersects_first_to_last.size();
+			}
+		}
+		return 0;
+	}
+	
+	
+	protected void checkAndSetShapeIntegrity()
+	{
+		ShapeStruct.ShapeIntegrity integrity = ShapeIntegrity.OK;
+		ShapeStruct s = getActiveShape();
+		if(s!=null && s instanceof PolygonStruct)
+		{
+			PolygonStruct p = (PolygonStruct)getActiveShape().typecast_polygon();
+			if(analyzeSplitPolygon(p))
+			{
+				integrity = ShapeIntegrity.POLY_SPLIT;
+			}
+			else if(checkRestrictionsBetweenFirstAndLast(-1, p)>0)
+			{
+				integrity = ShapeIntegrity.POLY_LAST_TO_FIRST_INTERSECTION;
+			}
+			p.setIntegrity(integrity);
+		}
+		PAS.pasplugin.onShapeIntegrityAfterEdit(s, integrity);
+	}
+	
+	/***
+	 * Check if a single polygon is split into multiple by restrictionlines 
+	 * @return if polygon is split
+	 */
+	protected boolean analyzeSplitPolygon(PolygonStruct s)
+	{
+		try
+		{
+			PolygonStruct p = (PolygonStruct)s.clone();
+			MapPoint mapPoint = new MapPoint(Variables.getNavigation(), 
+					new MapPointLL(p.getFirstPoint().get_lon(), p.getFirstPoint().get_lat()));
+			checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, p, mapPoint, true);
+			return p.twoNeighbouringPointHasDuplicates();
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
+		return false;
+	}
+	
 	/**
 	 * 
 	 * @param b_click - if called from mouse click
@@ -442,72 +560,42 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	 * @param n_deptpk - specify department restriction polygons. if <1, use the combined restriction polygon
 	 * @return true if legal action, else return false
 	 */
-	protected boolean checkSendingRestriction(boolean b_click, RESTRICTION_MODE mode, int n_deptpk)
+	protected boolean checkSendingRestriction(boolean b_click, RESTRICTION_MODE mode, int n_deptpk, ShapeStruct shape, MapPoint mapPoint,
+			boolean bAllowDuplicates)
 	{
 		if(m_dim_cursorpos==null)
 			return false;
 		if(Variables.getMapFrame().get_maploader().IsLoadingMapImage())
 			return false;
-		//intersects.clear();
 		intersects = new ArrayList<MapPointLL>();
-		//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
         LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), m_dim_cursorpos.width, m_dim_cursorpos.height);
-        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+        MapPoint p;
+        if(mapPoint!=null)
+        	p = mapPoint;
+        else
+        	p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 
-		//log.debug("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
-		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
-		//List<ShapeStruct> list = PAS.get_pas().get_userinfo().get_current_department().get_restriction_shapes();
 
-		List<ShapeStruct> list;
-		DeptArray depts = Variables.getUserInfo().get_departments();
-		if(n_deptpk<1) //use combined restriction area
+		List<ShapeStruct> list = getRestrictionShapeList(n_deptpk);
+		if(list.isEmpty())
+			return true;
 		{
-			list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
-			if(list==null)
-				return true;
-			if(list.isEmpty())
-				return true;
-			if(list.get(0).typecast_polygon().get_size()<=3)
-				return true;
-			//if(list.size()<=3)
-			//	return true;
-		}
-		else //use specified department's restriction area
-		{
-            list = new ArrayList<ShapeStruct>();
-            for (Object dept : depts) {
-                DeptInfo department = (DeptInfo) dept;
-                if (n_deptpk == department.get_deptpk()) {
-                    list.addAll(((DeptInfo) dept).get_restriction_shapes());
-                    break;
-                }
-            }
-		}
-		//for(int n_dept = 0; n_dept < depts.size(); n_dept++)
-		{
-			//List<ShapeStruct> list = ((DeptInfo)depts.get(n_dept)).get_restriction_shapes();
-			//List<ShapeStruct> list = ;
 			
 			for(int i=0;i < list.size(); i++)
 			{
-				/*if(list.get(i).isHidden())
-				{
-					if(list.size() == 1)
-						return true; //
-					continue;
-				}*/
-				
+
 				//check line intersects with last line (last polypoint and mouse pos)
 				PolygonStruct current_polygon = null;
 				try
 				{
-					current_polygon = get_mappane().get_active_shape().typecast_polygon();
-					//current_polygon = Variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
+					if(shape!=null)
+						current_polygon = shape.typecast_polygon();
+					else
+						current_polygon = get_mappane().get_active_shape().typecast_polygon();
 				}
 				catch(Exception e)
 				{
 					return true;
-					//current_polygon = Variables.PARMCONTROLLER.get_shape().typecast_polygon();
 				}
 				try
 				{
@@ -531,9 +619,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					b = !b;
 					break;
 				}
-				//b=true; //to paint outside
 				MapPointLL nearest_point = list.get(i).typecast_polygon().findNearestPolypoint(p.get_mappointll());
-				//Variables.NAVIGATION.
 				if(b)
 				{
 	
@@ -550,11 +636,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 							{
 								paintmode = PAINTMODE.PIN_TO_BORDER;
 							}
-							//this variant will obey restrictions, but will draw a straight line within the restriction polygon
-							/*for(int point=0; point < intersects_last.size() && (intersects_last.size() % 2)==0; point+=2)
-							{
-								PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().FollowRestrictionLines(p.get_mappointll(), intersects_last.get(point), intersects_last.get(point+1), list.get(i).typecast_polygon());
-							}*/
 							//this variant will obey restrictions and follow the polygons borders
 							MapPointLL prev_polypoint = new MapPointLL(current_polygon.get_coor_lon(current_polygon.get_size()-1),
 									current_polygon.get_coor_lat(current_polygon.get_size()-1));
@@ -574,20 +655,13 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 										list.get(i).typecast_polygon(),
 										false,
 										false,
-										true);
+										true,
+										bAllowDuplicates);
 									return false;
 							default:
 								if((intersects_last.size() % 2)==0 && intersects_last.size()>0)
 								{
 									Collections.sort(intersects_last);
-									/*current_polygon.FollowRestrictionLines(
-											p.get_mappointll(), 
-											intersects_last.get(0), 
-											intersects_last.get(1),//intersects_last.size()-1), 
-											list.get(i).typecast_polygon(),
-											true,
-											true,
-											false);*/
 									for(int isect=0; isect < intersects_last.size(); isect++)
 									{
 										if((isect % 2)==0) //going outside
@@ -599,7 +673,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 											list.get(i).typecast_polygon(),
 											true,
 											true,
-											false);											
+											false, true);											
 										}
 										else
 										{
@@ -617,7 +691,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 											list.get(i).typecast_polygon(),
 											false,
 											true,
-											false);	
+											false, true);	
 								}
 								break;
 							}
@@ -795,7 +869,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						addAction("act_set_polygon_ellipse_corner", p);
 						if(get_isdragging())
 						{
-							checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
+							checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
 							//log.debug("Checking");
 						}
 					}
@@ -858,25 +932,18 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					addAction("act_search_houses", p);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY) {
-			        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
-			        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
-					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1))
+					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true))
 					{
 						addAction("act_add_polypoint", p);
 					}
+					checkAndSetShapeIntegrity();					
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {
-                        //			m_mapimg = img;
-                        //if(m_b_needrepaint==0)
-                        //m_b_needrepaint ++;
                         SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
-								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 								get_mappane().repaint();
 								get_mappane().validate();
 							}
@@ -885,24 +952,17 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
-					//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 			        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 			        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
-					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_OUTSIDE, -1))
+					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_OUTSIDE, -1, null, null, true))
 					{
 						addAction("act_add_polypoint", p);
 					}
 					if(PAS.get_pas() == null)
 					{
-                        //			m_mapimg = img;
-                        //if(m_b_needrepaint==0)
-                        //m_b_needrepaint ++;
                         SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
-								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 								get_mappane().repaint();
 								get_mappane().validate();
 							}
@@ -913,7 +973,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE) {
 					try {
-						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 			            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 			            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_ellipse_center", p);
@@ -927,7 +986,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON)
 				{
 					try {
-						//MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 				        MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						addAction("act_set_polygon_ellipse_corner", p);
@@ -943,7 +1001,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					get_mappane().get_current_object().setMoving(false);
 					get_mappane().set_current_object(null);
 					get_mappane().set_prev_mode();
-					//get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);					
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSEEDITOR) {
 					//new or edit object
@@ -955,15 +1012,9 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					}
 					else 
 					{
-						//p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 				        p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					}
-					/*if(m_houseeditordlg==null)
-						m_houseeditordlg = new HouseEditorDlg(PAS.get_pas(), PAS.get_pas(), p, get_mappane().get_mouseoverhouse());
-					else {
-						m_houseeditordlg.reinit(p, get_mappane().get_mouseoverhouse());
-					}*/
 					addAction("set_houseeditor_coor", p);
 					get_mappane().set_adredit(p.get_mappointll());
 					PAS.get_pas().kickRepaint();
@@ -971,7 +1022,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE) {
 					MapPoint p;
 					if(get_mappane().get_active_shape() != null) {
-						//p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 				        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 				        p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 						get_mappane().get_active_shape().set_epicentre(p);
@@ -995,11 +1045,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
 						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
-			        //LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
-			        //MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
 					addAction("act_mouse_rightclick", p);
-					//ActionEvent action = new ActionEvent(p, ActionEvent.ACTION_PERFORMED, "act_mouse_rightclick");
-					//PAS.get_pas().get_sendcontroller().actionPerformed(action);					
 				}
 				break;
 		}
@@ -1046,7 +1092,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					addAction("act_set_ellipse_complete", this);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON) {
-					checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1);
+					checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.PAN_BY_DRAG && false) {
 
