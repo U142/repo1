@@ -75,6 +75,11 @@
         </asp:TableCell>
     </asp:TableRow>
 </asp:Table>
+<asp:Table>
+    <asp:TableRow>
+        <asp:TableCell><asp:Label ID="Label2" runat="server" Text="To start press aquire lock and then right click on a node to create child node or in the overview rectangle to create a root node"></asp:Label></asp:TableCell>
+    </asp:TableRow>
+</asp:Table>
 <asp:TextBox ID="txt_parent" runat="server" style="visibility:hidden"></asp:TextBox>
 <asp:TextBox ID="txt_id" runat="server" style="visibility:hidden"></asp:TextBox>
 <div ID="Panel2" runat="server" style="visibility:hidden" bordercolor="Black" onmouseover="highlightie5(event)" onmouseout="lowlightie5(event)" onclick="jumptoie5(event)"> 

@@ -88,11 +88,19 @@ namespace com.ums.PAS.messagelib
                                     msg.n_categorypk,
                                     msg.n_parentpk,
                                     msg.n_messagepk);
+                // This only returns one record
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                
                 if (rs.Read())
                 {
                     msg.n_messagepk = rs.GetInt64(0);
-                    msg.n_timestamp = rs.GetInt64(1);
+                    if (rs.FieldCount > 1)
+                    {
+                        msg.n_timestamp = Int64.Parse(rs.GetString(1));
+                    }
+                }
+                rs.Close();
+                if(msg.n_categorypk != -1) {
                     // Delete existing messages
                     szSQL = String.Format("sp_prep_message_smscontent {0}", msg.n_messagepk);
                     ExecNonQuery(szSQL);
@@ -110,7 +118,7 @@ namespace com.ums.PAS.messagelib
                     msg.b_valid = false;
                 }
 
-                rs.Close();
+                
 
                 if (UCommon.USETTINGS.b_write_messagelib_to_file)
                 {
@@ -126,7 +134,7 @@ namespace com.ums.PAS.messagelib
                 }
                 return msg;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 msg.n_messagepk = -1;
                 msg.b_valid = false;
