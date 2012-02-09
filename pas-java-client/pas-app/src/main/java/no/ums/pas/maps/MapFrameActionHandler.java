@@ -565,8 +565,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	{
 		if(m_dim_cursorpos==null)
 			return false;
-		if(Variables.getMapFrame().get_maploader().IsLoadingMapImage())
-			return false;
 		intersects = new ArrayList<MapPointLL>();
         LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), m_dim_cursorpos.width, m_dim_cursorpos.height);
         MapPoint p;

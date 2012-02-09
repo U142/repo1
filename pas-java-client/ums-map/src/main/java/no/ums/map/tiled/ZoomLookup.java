@@ -65,6 +65,12 @@ public final class ZoomLookup {
         int g = (int) Math.round(maxPos / 2 + 0.5 * Math.log((1 + f) / (1 - f)) * -cc);
         return new Point(e, g);
     }
+    
+    public Point getScreenPoint(LonLat topLeftLL, LonLat ll) {
+    	Point topLeft = getPoint(topLeftLL);
+    	Point point = getPoint(ll);
+    	return new Point(point.x - topLeft.x, point.y - topLeft.y);
+    }
 
     public int getZoomLevel() {
         return zoomLevel;

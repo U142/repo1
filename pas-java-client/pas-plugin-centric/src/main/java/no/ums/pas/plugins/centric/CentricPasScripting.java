@@ -2,6 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.LonLat;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
@@ -1172,18 +1173,23 @@ public class CentricPasScripting extends DefaultPasScripting {
 	        		{
 		        		case POLY_LAST_TO_FIRST_INTERSECTION: //click on first point to finalize
 		        			PolygonStruct poly = shape.typecast_polygon();
-		        			MapPoint mp = new MapPoint(nav, poly.getFirstPoint());
+		        			Point mp = Variables.getMapFrame().getZoomLookup().getScreenPoint(
+		        																		Variables.getMapFrame().getMapModel().getTopLeft(),
+		        																		new LonLat(poly.getFirstPoint().get_lon(),
+		        																				poly.getFirstPoint().get_lat()));
 		        			g.setColor(Color.red);
 		        			Font oldFont = g.getFont();
 		        			g.setFont(g.getFont().deriveFont(20.0f));
 		        			int size = 10;
-		        			g.fillOval(mp.get_x()-size/2, mp.get_y()-size/2, size, size);
-		        			g.drawString(Localization.l("common_click_to_finalize"), mp.get_x()-size, mp.get_y()+g.getFont().getSize()+size);
+		        			g.fillOval(mp.x-size/2, mp.y-size/2, size, size);
+		        			g.drawString(Localization.l("common_click_to_finalize"), mp.x-size, mp.y+g.getFont().getSize()+size);
 		        			g.setFont(oldFont);
 		        			break;
 		        		case POLY_SPLIT:
+		        			CentricVariables.getCentric_send().setShapeErrorText(Localization.l("common_area_split_warning_message"));
 		        			break;
 		        		case OK:
+		        			CentricVariables.getCentric_send().setShapeErrorText("");
 		        			break;
 	        		}
                 }
