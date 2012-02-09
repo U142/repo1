@@ -26,6 +26,7 @@ public class PolygonStruct extends ShapeStruct {
 
     private static final Log log = UmsLog.getLogger(PolygonStruct.class);
 
+    
     enum PolyType {
 		NORMAL,
 		ELLIPSE_PARENT,
@@ -39,6 +40,7 @@ public class PolygonStruct extends ShapeStruct {
 	private ArrayList<Double> m_ellipse_coor_lon = new ArrayList<Double>(), m_ellipse_coor_lat = new ArrayList<Double>();
 	private ArrayList<Boolean> m_b_isadded = new ArrayList<Boolean>();
 	private Hashtable<Integer, String> hash_coors_added = new Hashtable<Integer, String>(); 
+	private Hashtable<String, Integer> hashSameCoorAdded = new Hashtable<String, Integer>();
 	private int [] m_int_x;
 	private int [] m_int_y;
 
@@ -146,7 +148,7 @@ public class PolygonStruct extends ShapeStruct {
 	}
 
     public boolean FollowRestrictionLines(MapPointLL reference_point, MapPointLL p1, MapPointLL p2, PolygonStruct restrict,
-			boolean add_first_point, boolean add_last_point, boolean b_force_follow_border) {
+			boolean add_first_point, boolean add_last_point, boolean b_force_follow_border, boolean b_allow_duplicates) {
 		int startat = p1.getPointReference();
 		int stopat = p2.getPointReference();
 		
@@ -286,7 +288,7 @@ public class PolygonStruct extends ShapeStruct {
 			int n_1 = (it % restrict.get_size());
 			if(n_1<0)
 				n_1 = restrict.get_size()+n_1;
-			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1), true, POINT_PRECISION, false);			
+			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1), b_allow_duplicates, POINT_PRECISION, false);			
 			count++;
 			it+=dir;
 			if(count >= iterations)
@@ -443,6 +445,75 @@ public class PolygonStruct extends ShapeStruct {
 	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision, boolean auto_finalize) {
 		add_coor(lon, lat, -1, b_allow_duplicates, precision, auto_finalize);
 	}
+	
+	public boolean twoNeighbouringPointHasDuplicates()
+	{
+		int duplicates = 0;
+		for(int i=0; i < get_size(); i++)
+		{
+			int tmp = pointHasDuplicate(i);
+			if(tmp>0 && duplicates>0) //if previous check had duplicates and this one
+			{
+				log.debug("Point duplicates found at index %d", i);
+				return true;
+			}
+			if(tmp==0) //no duplicates here, reset counter
+			{
+				duplicates = 0;
+				continue;
+			}
+			duplicates = tmp;
+		}
+		return false;
+	}
+	
+	private int pointHasDuplicate(int idx)
+	{
+		double dlon = ((int)(get_coor_lon(idx) * POINT_PRECISION))/POINT_PRECISION;
+		double dlat = ((int)(get_coor_lat(idx) * POINT_PRECISION))/POINT_PRECISION;
+		String id = dlon+"_"+dlat;
+		if(hashSameCoorAdded.containsKey(id))
+		{
+			return hashSameCoorAdded.get(id);
+		}
+		return -1;
+	}
+	
+	/***
+	 * When adding a coordinate, check if it's been added before.
+	 * @param idx Check at index
+	 * @return True if the same coordinate already exists
+	 */
+	private boolean addSameCoorAdded(int idx)
+	{
+		double dlon = ((int)(get_coor_lon(idx) * POINT_PRECISION))/POINT_PRECISION;
+		double dlat = ((int)(get_coor_lat(idx) * POINT_PRECISION))/POINT_PRECISION;
+		String id = dlon+"_"+dlat;
+		if(hashSameCoorAdded.containsKey(id))
+		{
+			hashSameCoorAdded.put(id, ((int)hashSameCoorAdded.get(id))+1);
+			return true;
+		}
+		else
+		{
+			hashSameCoorAdded.put(id, 0);
+			return false;
+		}
+	}
+	private boolean subSameCoorAdded(int idx)
+	{
+		double dlon = ((int)(get_coor_lon(idx) * POINT_PRECISION))/POINT_PRECISION;
+		double dlat = ((int)(get_coor_lat(idx) * POINT_PRECISION))/POINT_PRECISION;
+		String id = dlon+"_"+dlat;
+		if(hashSameCoorAdded.containsKey(id))
+		{
+			hashSameCoorAdded.put(id, ((int)hashSameCoorAdded.get(id))-1);
+			return true;
+		}
+		else
+			log.error("Coordinate with ID %s not found in hashSameCoorAdded", id);
+		return false;
+	}
 
 	public void add_coor(Double lon, Double lat, int pointref, boolean b_allow_duplicates, double precision, boolean auto_finalize) {
 		if(!isEditable())
@@ -453,6 +524,17 @@ public class PolygonStruct extends ShapeStruct {
 		String id = dlon+"_"+dlat;
 		if(!b_allow_duplicates && hash_coors_added.contains(id) && !isElliptical())
 			return;
+		
+		//check if previous point is a duplicate, never allow
+		if(index>0)
+		{
+			if(hash_coors_added.containsKey(index-1))
+			{
+				if(hash_coors_added.get(index-1).equals(id))
+					return;
+			}
+		}
+		
 		//if(hash_coors_added.contains(id))
 		//	log.debug("contains point");
 		m_coor_lon.add(dlon);
@@ -460,6 +542,10 @@ public class PolygonStruct extends ShapeStruct {
 		m_coor_pointref.add(pointref);
 		m_b_isadded.add(false);
 		hash_coors_added.put(index, id);
+		if(addSameCoorAdded(index))
+		{
+			//log.debug("Same coordinate");
+		}
 		if(auto_finalize)
 			finalizeShape();
     }
@@ -518,7 +604,8 @@ public class PolygonStruct extends ShapeStruct {
 	}
 	public void remove_at(int n_index) {
 		if(n_index>=0)
-		{
+		{			
+			subSameCoorAdded(n_index);
 			m_coor_lon.remove(n_index);
 			m_coor_lat.remove(n_index);
 			m_coor_pointref.remove(n_index);
@@ -534,9 +621,11 @@ public class PolygonStruct extends ShapeStruct {
 		
 	}
 	public void set_at(int n_index, double lon, double lat) {
+		subSameCoorAdded(n_index);
 		m_coor_lon.set(n_index, lon);
 		m_coor_lat.set(n_index, lat);
 		hash_coors_added.put(n_index, lon+"_"+lat);
+		addSameCoorAdded(n_index);
 		finalizeShape();
 	}
 	public NavStruct calc_bounds() {
@@ -1371,7 +1460,7 @@ public class PolygonStruct extends ShapeStruct {
 				{
 					newpoly.FollowRestrictionLines(intersects.get(i+1), 
 							intersects.get(i), intersects.get(i+1), 
-													restrict, false, false, false);
+													restrict, false, false, false, true);
 				}
 			}
 			for(int i=0; i < intersects.size(); i++)
@@ -1393,7 +1482,7 @@ public class PolygonStruct extends ShapeStruct {
 					ll_temp.setPointReference(next_ref);
 					newpoly.FollowRestrictionLines(ll_temp, 
 							prev_intersect_in, ll_temp, 
-													restrict, false, false, false);
+													restrict, false, false, false, true);
 				}
 				newpoly.add_coor(intersects.get(i).get_lon(), intersects.get(i).get_lat());
 
@@ -1421,7 +1510,7 @@ public class PolygonStruct extends ShapeStruct {
 					{
 						newpoly.FollowRestrictionLines(intersects.get(i+1), 
 								intersects.get(i), intersects.get(i+1), 
-														restrict, false, false, false);
+														restrict, false, false, false, true);
 					}
 					else if(i+1<intersects.size()-1)
 					{
@@ -1436,7 +1525,7 @@ public class PolygonStruct extends ShapeStruct {
 				{
 					newpoly.FollowRestrictionLines(intersects.get(0), 
 							prev_intersect_out, intersects.get(0), 
-													restrict, false, false, false);
+													restrict, false, false, false, true);
 				}
 			}
 			iterateEllipse(newpoly, restrict, ++n_ell_point, b_next_inside, prev_intersect_out, prev_intersect_in);			
@@ -1493,7 +1582,8 @@ public class PolygonStruct extends ShapeStruct {
 			c.m_int_y = m_int_y;
 			c.set_fill_color(new Color(m_fill_color.getRed(), m_fill_color.getGreen(), m_fill_color.getBlue(), m_fill_color.getAlpha()));
 			c.m_border_color = new Color(m_border_color.getRed(), m_border_color.getGreen(), m_border_color.getBlue(), m_border_color.getAlpha());
-			c.hash_coors_added = hash_coors_added;
+			c.hash_coors_added = (Hashtable<Integer, String>)hash_coors_added.clone();
+			c.hashSameCoorAdded = (Hashtable<String, Integer>)hashSameCoorAdded.clone();
 		} catch(Exception e) {
 			Error.getError().addError("PolyStruct","Exception in clone",e,1);
 			throw new CloneNotSupportedException("Could not clone Navigation class");

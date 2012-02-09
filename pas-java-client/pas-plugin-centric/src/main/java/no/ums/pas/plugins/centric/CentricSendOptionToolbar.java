@@ -25,6 +25,7 @@ import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 import no.ums.ws.common.MDVSENDINGINFOGROUP;
 import no.ums.ws.common.UBBMESSAGE;
 import no.ums.ws.common.cb.*;
@@ -81,6 +82,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private StdTextLabel m_lbl_pages;
 	private StdTextLabel m_lbl_characters;
 	private StdTextLabel m_lbl_warning;
+	private JLabel m_lbl_shape_error_text;
 		
 	private StdTextArea m_txt_event_name;
 	private String m_sz_date;
@@ -135,6 +137,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public long getParentRefno()
 	{
 		return n_parent_refno;
+	}
+	
+	public void setShapeErrorText(String s)
+	{
+		m_lbl_shape_error_text.setText(s);
 	}
 	
 	private DeptInfo m_dept_send_on_behalf_of = null;
@@ -495,6 +502,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.setActionCommand("act_goto_summary");
 		m_btn_send.setPreferredSize(new Dimension(input_width,30));
 
+		m_lbl_shape_error_text = new JLabel("");
+		set_gridconst(0, inc_panels(), 8, 1, GridBagConstraints.WEST);
+		add(m_lbl_shape_error_text, m_gridconst);
+
 		add_spacing(DIR_VERTICAL, 50);
 		
 		set_gridconst(8, inc_panels(), 1, 1);
@@ -633,6 +644,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
         m_lbl_warning = new StdTextLabel(Localization.l("common_show_message_authorization_text"));
 		add(m_lbl_warning, m_gridconst);
 		
+				
 		m_txt_authorization = new JTextArea("",1,1);
 		m_txt_authorization.setWrapStyleWord(true);
 		m_txt_authorization.setLineWrap(true);
@@ -655,6 +667,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
             m_btn_cancel = new JButton(Localization.l("common_cancel"));
 			m_btn_cancel.addActionListener(this);
 		}
+		
 		
 		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
 		add(m_btn_send, m_gridconst);
