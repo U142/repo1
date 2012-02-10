@@ -272,6 +272,7 @@
     </Content>
     <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
