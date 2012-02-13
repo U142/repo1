@@ -390,18 +390,6 @@
     <Compile Include="MasterPage.master.designer.cs">
       <DependentUpon>MasterPage.master</DependentUpon>
     </Compile>
-    <Compile Include="Old_App_Code\Channel.cs" />
-    <Compile Include="Old_App_Code\Db.cs" />
-    <Compile Include="Old_App_Code\Duration.cs" />
-    <Compile Include="Old_App_Code\Helper.cs" />
-    <Compile Include="Old_App_Code\Operator.cs" />
-    <Compile Include="Old_App_Code\PAUser.cs" />
-    <Compile Include="Old_App_Code\PredefinedArea.cs" />
-    <Compile Include="Old_App_Code\PredefinedText.cs" />
-    <Compile Include="Old_App_Code\RestrictionArea.cs" />
-    <Compile Include="Old_App_Code\SysMessage.cs" />
-    <Compile Include="Old_App_Code\Type.cs" />
-    <Compile Include="Old_App_Code\Util.cs" />
     <Compile Include="area_edit.aspx.cs">
       <DependentUpon>area_edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -440,6 +428,18 @@
       <DependentUpon>MasterPage.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="code\Channel.cs" />
+    <Compile Include="code\Db.cs" />
+    <Compile Include="code\Duration.cs" />
+    <Compile Include="code\Helper.cs" />
+    <Compile Include="code\Operator.cs" />
+    <Compile Include="code\PAUser.cs" />
+    <Compile Include="code\PredefinedArea.cs" />
+    <Compile Include="code\PredefinedText.cs" />
+    <Compile Include="code\RestrictionArea.cs" />
+    <Compile Include="code\SysMessage.cs" />
+    <Compile Include="code\Type.cs" />
+    <Compile Include="code\Util.cs" />
     <Compile Include="parameters.aspx.cs">
       <DependentUpon>parameters.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

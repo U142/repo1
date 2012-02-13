@@ -1,5 +1,5 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true" Inherits="main" Codebehind="main.aspx.cs" %>
-<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
    
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
@@ -144,7 +144,7 @@
                 <asp:Label ID="lbl_activate_on" runat="server" Text="Activate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                 <asp:CalendarExtender ID="CalendarExtender1" runat="server" PopupPosition="BottomRight" PopupButtonID="Image1" TargetControlID="txt_activate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+                <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" PopupPosition="BottomRight" PopupButtonID="Image1" TargetControlID="txt_activate" Format="dd-MM-yyyy"><//ajaxToolkit:CalendarExtender>
                 <asp:TextBox ID="txt_activate" runat="server" Width="70px" ></asp:TextBox>&nbsp;<asp:Image ID="Image1" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ErrorMessage="Date has to be blank, 0 or in this format dd-MM-yyyy" Text="*" ControlToValidate="txt_activate" ValidationExpression="(\d{2}-\d{2}-\d{4})|([0])"></asp:RegularExpressionValidator>
                 <asp:CustomValidator ClientValidationFunction="validateActivate" ControlToValidate="txt_activate" runat="server" id="activate_validate" Text="*" ErrorMessage="Please make sure the date is correct"></asp:CustomValidator>
@@ -199,7 +199,7 @@
                 <asp:Label ID="lbl_deactivate_on" runat="server" Text="Deactivate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:CalendarExtender ID="CalendarExtender2" runat="server" PopupPosition="BottomRight" PopupButtonID="Image2" TargetControlID="txt_deactivate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+                <ajaxToolkit:CalendarExtender ID="CalendarExtender2" runat="server" PopupPosition="BottomRight" PopupButtonID="Image2" TargetControlID="txt_deactivate" Format="dd-MM-yyyy"></ajaxToolkit:CalendarExtender>
                 <asp:TextBox ID="txt_deactivate" runat="server" Width="70px" ></asp:TextBox>&nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Date has to be blank, 0 or in this format dd-MM-yyyy" Text="*" ControlToValidate="txt_deactivate" ValidationExpression="(\d{2}-\d{2}-\d{4})|([0])"></asp:RegularExpressionValidator>
                 <asp:CustomValidator ClientValidationFunction="validateDeactivate" ControlToValidate="txt_deactivate" runat="server" id="deactivate_validate" Text="*" ErrorMessage="Please make sure the date is correct"></asp:CustomValidator>
