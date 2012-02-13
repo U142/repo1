@@ -99,7 +99,7 @@
                 </asp:ListBox>
             </asp:TableCell>
             <asp:TableCell VerticalAlign="Top">
-                <asp:TextBox ID="txt_view_message" runat="server" TextMode="MultiLine" Width="305px" Height="100" onFocus="javascript:this.blur();"></asp:TextBox>
+                <asp:TextBox ID="txt_view_message" runat="server" TextMode="MultiLine" Width="305px" Height="100" onFocus="javascript:this.blur();" AutoCompleteType="JobTitle"></asp:TextBox>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
