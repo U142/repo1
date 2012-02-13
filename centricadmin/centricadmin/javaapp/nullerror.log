@@ -1,0 +1,14 @@
+Thu May 27 14:55:45 CEST 2010
+Heading: [NO STRING]
+Description: Could not set default locale
+StackTrace: java.util.MissingResourceException: Can't find bundle for base name localization/lang, locale en_GB
+	at java.util.ResourceBundle.throwMissingResourceException(Unknown Source)
+	at java.util.ResourceBundle.getBundleImpl(Unknown Source)
+	at java.util.ResourceBundle.getBundle(Unknown Source)
+	at PAS.PAS.setLocale(PAS.java:373)
+	at Maps.MapApplet.init(MapApplet.java:73)
+	at sun.plugin2.applet.Plugin2Manager$AppletExecutionRunnable.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+
+***********************
+

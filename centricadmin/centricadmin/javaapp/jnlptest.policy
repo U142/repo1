@@ -1,0 +1,7 @@
+/* AUTOMATICALLY GENERATED ON Fri May 28 14:32:06 CEST 2010*/
+/* DO NOT EDIT */
+
+grant signedBy "svein" {
+  permission java.io.FilePermission "<<ALL FILES>>", "read,write", signedBy "svein";
+};
+

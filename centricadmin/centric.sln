@@ -1,55 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "centric", "centric\", "{AF913756-2F8B-488C-A985-ED9035A11328}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
-		Debug.AspNetCompiler.VirtualPath = "/centric"
-		Debug.AspNetCompiler.PhysicalPath = "centric\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\centric\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/centric"
-		Release.AspNetCompiler.PhysicalPath = "centric\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\centric\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "1823"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "centric.test", "centric.test\centric.test.csproj", "{EF13F1C8-2A49-452A-8724-204DB14E2B34}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1ACB9CA3-4D07-44F6-9F71-BAD40DDA5373}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "centricadmin", "centricadmin\centricadmin.csproj", "{B29E201F-AF47-4B25-A4A4-8F338195B4AC}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = centric.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU
-		Release|.NET = Release|.NET
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Debug|.NET.ActiveCfg = Debug|.NET
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Debug|.NET.Build.0 = Debug|.NET
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Release|.NET.ActiveCfg = Debug|.NET
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Release|.NET.Build.0 = Debug|.NET
-		{AF913756-2F8B-488C-A985-ED9035A11328}.Release|Any CPU.ActiveCfg = Debug|.NET
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Release|.NET.ActiveCfg = Release|Any CPU
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF13F1C8-2A49-452A-8724-204DB14E2B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29E201F-AF47-4B25-A4A4-8F338195B4AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29E201F-AF47-4B25-A4A4-8F338195B4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29E201F-AF47-4B25-A4A4-8F338195B4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29E201F-AF47-4B25-A4A4-8F338195B4AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

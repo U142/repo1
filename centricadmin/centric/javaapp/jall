@@ -1,7 +1,0 @@
-/* AUTOMATICALLY GENERATED ON Fri May 28 13:31:27 CEST 2010*/
-/* DO NOT EDIT */
-
-grant signedBy "svein" {
-  permission java.io.FilePermission "S:\\Projects\\cdm\\trunk\\WebSites\\centric\\javaapp\\", "read", signedBy "svein";
-};
-

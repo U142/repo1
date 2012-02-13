@@ -1,0 +1,1045 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://ums.no/ws/pas/admin" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s1="http://ums.no/ws/common" xmlns:s3="http://ums.no/ws/common/parm" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s2="http://ums.no/ws/common/admin" targetNamespace="http://ums.no/ws/pas/admin" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/pas/admin">
+      <s:import namespace="http://ums.no/ws/common" />
+      <s:import namespace="http://ums.no/ws/common/admin" />
+      <s:import namespace="http://ums.no/ws/common/parm" />
+      <s:element name="doDeactivateMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_newspk" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doDeactivateMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doDeactivateMessageResult" type="tns:DeactivateMessageResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeactivateMessageResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="l_newspk" type="s:long" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doStoreUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s1:UBBUSER" />
+            <s:element minOccurs="0" maxOccurs="1" name="deptk" type="tns:ArrayOfInt" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="doStoreUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doStoreUserResult" type="tns:StoreUserResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="StoreUserResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="user" type="s1:UBBUSER" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doGetUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetUsersResult" type="tns:GetUsersResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetUsersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="user" type="tns:ArrayOfUBBUSER" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUBBUSER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UBBUSER" nillable="true" type="s1:UBBUSER" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="doPasLogon">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doPasLogonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doPasLogonResult" type="tns:PasLogonResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PasLogonResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="logon" type="s3:UPASLOGON" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doSetPAShapeObsolete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="department" type="s3:UDEPARTMENT" />
+            <s:element minOccurs="0" maxOccurs="1" name="shape" type="s3:UShape" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doSetPAShapeObsoleteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doSetPAShapeObsoleteResult" type="tns:SetPAShapeObsoleteResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SetPAShapeObsoleteResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="shape" type="s3:UShape" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doGetTotalNumberOfMessages">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_period" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetTotalNumberOfMessagesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetTotalNumberOfMessagesResult" type="tns:GetTotalNumberOfMessagesResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetTotalNumberOfMessagesResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="total_events" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="total_regional" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="total_national" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="total_test" type="s:long" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doGetRestrictionAreas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="type" type="s1:PASHAPETYPES" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetRestrictionAreasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetRestrictionAreasResult" type="tns:GetRestrictionAreasResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetRestrictionAreasResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="restrictions" type="tns:ArrayOfUDEPARTMENT" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UDEPARTMENT" nillable="true" type="s3:UDEPARTMENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="doGetUserActivity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="period" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="users" type="tns:ArrayOfUBBUSER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetUserActivityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetUserActivityResult" type="tns:GetUserActivityResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetUserActivityResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="log" type="tns:ArrayOfUPASLOG" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUPASLOG">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UPASLOG" nillable="true" type="s2:UPASLOG" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="doGetSingleRestricion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="areaid" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetSingleRestricionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetSingleRestricionResult" type="tns:GetSingleRestricionResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSingleRestricionResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="restriction" type="s3:UDEPARTMENT" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doSetOccupied">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="accesspage" type="s2:ACCESSPAGE" />
+            <s:element minOccurs="1" maxOccurs="1" name="occupied" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doSetOccupiedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doSetOccupiedResult" type="tns:CheckAccessResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CheckAccessResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="granted" type="s:boolean" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doFindPolysWithSharedBorder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s1:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="department" type="s3:UDEPARTMENT" />
+            <s:element minOccurs="0" maxOccurs="1" name="possible_neighbours" type="tns:ArrayOfUDEPARTMENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doFindPolysWithSharedBorderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doFindPolysWithSharedBorderResult" type="tns:FindPolysWithSharedBorderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FindPolysWithSharedBorderResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="deptlist" type="tns:ArrayOfUDEPARTMENT" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="doGetOperators">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s1:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doGetOperatorsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doGetOperatorsResult" type="tns:GetOperatorsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetOperatorsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="oplist" type="tns:ArrayOfLBAOPERATOR" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBAOPERATOR">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBAOPERATOR" nillable="true" type="s2:LBAOPERATOR" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="doIsShapeActiveInPeriod">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s1:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="shapepk" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_period" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="doIsShapeActiveInPeriodResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="doIsShapeActiveInPeriodResult" type="tns:IsShapeActiveInPeriodResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IsShapeActiveInPeriodResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="s2:Response">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="shapepk" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common">
+      <s:complexType name="ULOGONINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_priserver" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altservers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="onetimekey" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UBBUSER">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_surname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profilepk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_bdate" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_disabled" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_logontries" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_nopasswd_change" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_ivrlogon" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_language" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_adrlistserie" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_adrlist_sort" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_adrlist_search" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_statusserie" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_sort" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_search" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_keepalive" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_recprpage" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_audiosetup" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_owned_groups" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_paspassword" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_allow_nondept_resend" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_timezone" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_blocklist_default" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_session_expires_sec" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_hash_paspwd" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_deptpklist" type="s1:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_organization" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_reasoncode" type="s1:BBUSER_BLOCK_REASONS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="BBUSER_BLOCK_REASONS">
+        <s:restriction base="s:string">
+          <s:enumeration value="NONE" />
+          <s:enumeration value="REACHED_RETRY_LIMIT" />
+          <s:enumeration value="BLOCKED_BY_ADMIN" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="UNSLOOKUP">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_domain" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_ip" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lastdatetime" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_location" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_success" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalname" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PASHAPETYPES">
+        <s:restriction base="s:string">
+          <s:enumeration value="PAALERT" />
+          <s:enumeration value="PAEVENT" />
+          <s:enumeration value="PAOBJECT" />
+          <s:enumeration value="PAUSERRESTRICTION" />
+          <s:enumeration value="PADEPARTMENTRESTRICTION" />
+          <s:enumeration value="PASENDING" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common/admin">
+      <s:complexType name="Response">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="successful" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="errorCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="reason" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UPASLOG">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_id" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operation" type="s:short" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_desc" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ACCESSPAGE">
+        <s:restriction base="s:string">
+          <s:enumeration value="RESTRICTIONAREA" />
+          <s:enumeration value="PREDEFINEDTEXT" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="LBAOPERATOR">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operatorname" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common/parm">
+      <s:import namespace="http://ums.no/ws/common" />
+      <s:complexType name="UPASLOGON">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="f_granted" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_surname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_language" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="nslookups" type="s3:ArrayOfUNSLOOKUP" />
+          <s:element minOccurs="0" maxOccurs="1" name="departments" type="s3:ArrayOfUDEPARTMENT" />
+          <s:element minOccurs="0" maxOccurs="1" name="uisettings" type="s3:UPASUISETTINGS" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="reason" type="s1:BBUSER_BLOCK_REASONS" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_organization" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="default_oadc" type="s3:MDSOADC_DEFAULT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUNSLOOKUP">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UNSLOOKUP" nillable="true" type="s1:UNSLOOKUP" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UDEPARTMENT" nillable="true" type="s3:UDEPARTMENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="lbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="rbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="ubo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="bbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_default" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxalloc" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofilename" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofiledesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_newsending" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parm" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_fleetcontrol" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lba" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_houseeditor" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_defaultnumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_map" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_sms" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pas" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_langpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_messagelib" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_phonebook" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lists" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_modules" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profiles" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_phonebook_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lists_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_modules_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profiles_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pb_name" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pb_phone" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pb_pin" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pb_locality" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_locality" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sched" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sched_retry" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sched_cancel" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sched_pause" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sched_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_messagelib_share" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_superuser" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_resource" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_email" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="municipals" type="s3:ArrayOfUMunicipalDef" />
+          <s:element minOccurs="0" maxOccurs="1" name="restrictionShapes" type="s3:ArrayOfUShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UMunicipalDef" nillable="true" type="s1:UMunicipalDef" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUShape">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="s3:UShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UShape" abstract="true">
+        <s:attribute name="col_red" type="s:float" use="required" />
+        <s:attribute name="col_green" type="s:float" use="required" />
+        <s:attribute name="col_blue" type="s:float" use="required" />
+        <s:attribute name="col_alpha" type="s:float" use="required" />
+        <s:attribute name="f_disabled" type="s:int" use="required" />
+        <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="UEllipse">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:UShape">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="x" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="y" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="s3:UPolypoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPolypoint">
+        <s:attribute name="lon" type="s:double" use="required" />
+        <s:attribute name="lat" type="s:double" use="required" />
+      </s:complexType>
+      <s:complexType name="UBoundingRect">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:UShape">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="_left" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_right" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_top" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_bottom" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPASUISETTINGS">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="initialized" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_languageid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_mapinit_lbo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_mapinit_rbo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_mapinit_ubo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_mapinit_bbo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_autostart_fleetcontrol" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_autostart_parm" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_window_fullscreen" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_winpos_x" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_winpos_y" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_win_width" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_win_height" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_gis_max_for_details" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_skin_class" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_theme_class" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_watermark_class" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_buttonshaper_class" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_gradient_class" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_title_class" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_mapserver" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_site" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_layers" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_format" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_wms_epsg" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_drag_mode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_zoom_mode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_email_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_emailserver" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_mailport" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lba_update_percent" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sending_autochannel" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sending_autoshape" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MDSOADC_DEFAULT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_type" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="doDeactivateMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:doDeactivateMessage" />
+  </wsdl:message>
+  <wsdl:message name="doDeactivateMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:doDeactivateMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="doStoreUserSoapIn">
+    <wsdl:part name="parameters" element="tns:doStoreUser" />
+  </wsdl:message>
+  <wsdl:message name="doStoreUserSoapOut">
+    <wsdl:part name="parameters" element="tns:doStoreUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:doGetUsers" />
+  </wsdl:message>
+  <wsdl:message name="doGetUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:doGetUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="doPasLogonSoapIn">
+    <wsdl:part name="parameters" element="tns:doPasLogon" />
+  </wsdl:message>
+  <wsdl:message name="doPasLogonSoapOut">
+    <wsdl:part name="parameters" element="tns:doPasLogonResponse" />
+  </wsdl:message>
+  <wsdl:message name="doSetPAShapeObsoleteSoapIn">
+    <wsdl:part name="parameters" element="tns:doSetPAShapeObsolete" />
+  </wsdl:message>
+  <wsdl:message name="doSetPAShapeObsoleteSoapOut">
+    <wsdl:part name="parameters" element="tns:doSetPAShapeObsoleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetTotalNumberOfMessagesSoapIn">
+    <wsdl:part name="parameters" element="tns:doGetTotalNumberOfMessages" />
+  </wsdl:message>
+  <wsdl:message name="doGetTotalNumberOfMessagesSoapOut">
+    <wsdl:part name="parameters" element="tns:doGetTotalNumberOfMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetRestrictionAreasSoapIn">
+    <wsdl:part name="parameters" element="tns:doGetRestrictionAreas" />
+  </wsdl:message>
+  <wsdl:message name="doGetRestrictionAreasSoapOut">
+    <wsdl:part name="parameters" element="tns:doGetRestrictionAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetUserActivitySoapIn">
+    <wsdl:part name="parameters" element="tns:doGetUserActivity" />
+  </wsdl:message>
+  <wsdl:message name="doGetUserActivitySoapOut">
+    <wsdl:part name="parameters" element="tns:doGetUserActivityResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetSingleRestricionSoapIn">
+    <wsdl:part name="parameters" element="tns:doGetSingleRestricion" />
+  </wsdl:message>
+  <wsdl:message name="doGetSingleRestricionSoapOut">
+    <wsdl:part name="parameters" element="tns:doGetSingleRestricionResponse" />
+  </wsdl:message>
+  <wsdl:message name="doSetOccupiedSoapIn">
+    <wsdl:part name="parameters" element="tns:doSetOccupied" />
+  </wsdl:message>
+  <wsdl:message name="doSetOccupiedSoapOut">
+    <wsdl:part name="parameters" element="tns:doSetOccupiedResponse" />
+  </wsdl:message>
+  <wsdl:message name="doFindPolysWithSharedBorderSoapIn">
+    <wsdl:part name="parameters" element="tns:doFindPolysWithSharedBorder" />
+  </wsdl:message>
+  <wsdl:message name="doFindPolysWithSharedBorderSoapOut">
+    <wsdl:part name="parameters" element="tns:doFindPolysWithSharedBorderResponse" />
+  </wsdl:message>
+  <wsdl:message name="doGetOperatorsSoapIn">
+    <wsdl:part name="parameters" element="tns:doGetOperators" />
+  </wsdl:message>
+  <wsdl:message name="doGetOperatorsSoapOut">
+    <wsdl:part name="parameters" element="tns:doGetOperatorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="doIsShapeActiveInPeriodSoapIn">
+    <wsdl:part name="parameters" element="tns:doIsShapeActiveInPeriod" />
+  </wsdl:message>
+  <wsdl:message name="doIsShapeActiveInPeriodSoapOut">
+    <wsdl:part name="parameters" element="tns:doIsShapeActiveInPeriodResponse" />
+  </wsdl:message>
+  <wsdl:portType name="PasAdminSoap">
+    <wsdl:operation name="doDeactivateMessage">
+      <wsdl:input message="tns:doDeactivateMessageSoapIn" />
+      <wsdl:output message="tns:doDeactivateMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doStoreUser">
+      <wsdl:input message="tns:doStoreUserSoapIn" />
+      <wsdl:output message="tns:doStoreUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetUsers">
+      <wsdl:input message="tns:doGetUsersSoapIn" />
+      <wsdl:output message="tns:doGetUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doPasLogon">
+      <wsdl:input message="tns:doPasLogonSoapIn" />
+      <wsdl:output message="tns:doPasLogonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doSetPAShapeObsolete">
+      <wsdl:input message="tns:doSetPAShapeObsoleteSoapIn" />
+      <wsdl:output message="tns:doSetPAShapeObsoleteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetTotalNumberOfMessages">
+      <wsdl:input message="tns:doGetTotalNumberOfMessagesSoapIn" />
+      <wsdl:output message="tns:doGetTotalNumberOfMessagesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetRestrictionAreas">
+      <wsdl:input message="tns:doGetRestrictionAreasSoapIn" />
+      <wsdl:output message="tns:doGetRestrictionAreasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetUserActivity">
+      <wsdl:input message="tns:doGetUserActivitySoapIn" />
+      <wsdl:output message="tns:doGetUserActivitySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetSingleRestricion">
+      <wsdl:input message="tns:doGetSingleRestricionSoapIn" />
+      <wsdl:output message="tns:doGetSingleRestricionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doSetOccupied">
+      <wsdl:input message="tns:doSetOccupiedSoapIn" />
+      <wsdl:output message="tns:doSetOccupiedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doFindPolysWithSharedBorder">
+      <wsdl:input message="tns:doFindPolysWithSharedBorderSoapIn" />
+      <wsdl:output message="tns:doFindPolysWithSharedBorderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doGetOperators">
+      <wsdl:input message="tns:doGetOperatorsSoapIn" />
+      <wsdl:output message="tns:doGetOperatorsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="doIsShapeActiveInPeriod">
+      <wsdl:input message="tns:doIsShapeActiveInPeriodSoapIn" />
+      <wsdl:output message="tns:doIsShapeActiveInPeriodSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PasAdminSoap" type="tns:PasAdminSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="doDeactivateMessage">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doDeactivateMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doStoreUser">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doStoreUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetUsers">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doPasLogon">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doPasLogon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSetPAShapeObsolete">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doSetPAShapeObsolete" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetTotalNumberOfMessages">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetTotalNumberOfMessages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetRestrictionAreas">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetUserActivity">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetUserActivity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetSingleRestricion">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetSingleRestricion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSetOccupied">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doSetOccupied" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doFindPolysWithSharedBorder">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doFindPolysWithSharedBorder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetOperators">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doGetOperators" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doIsShapeActiveInPeriod">
+      <soap:operation soapAction="http://ums.no/ws/pas/admin/doIsShapeActiveInPeriod" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="PasAdminSoap12" type="tns:PasAdminSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="doDeactivateMessage">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doDeactivateMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doStoreUser">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doStoreUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetUsers">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doPasLogon">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doPasLogon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSetPAShapeObsolete">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doSetPAShapeObsolete" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetTotalNumberOfMessages">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetTotalNumberOfMessages" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetRestrictionAreas">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetUserActivity">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetUserActivity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetSingleRestricion">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetSingleRestricion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSetOccupied">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doSetOccupied" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doFindPolysWithSharedBorder">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doFindPolysWithSharedBorder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGetOperators">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doGetOperators" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doIsShapeActiveInPeriod">
+      <soap12:operation soapAction="http://ums.no/ws/pas/admin/doIsShapeActiveInPeriod" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PasAdmin">
+    <wsdl:port name="PasAdminSoap" binding="tns:PasAdminSoap">
+      <soap:address location="http://localhost:8080/WS/PasAdmin.asmx" />
+    </wsdl:port>
+    <wsdl:port name="PasAdminSoap12" binding="tns:PasAdminSoap12">
+      <soap12:address location="http://localhost:8080/WS/PasAdmin.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
