@@ -10,27 +10,27 @@ background-color: #f3f3f3;
 
 /* TABLES ------------------------ */
 
-#ctl00_table {
+#table {
 background: #fff url(../images/nl_alert_admin.png) 243px 29px no-repeat;
 margin: 0 auto;
 min-width:900px;
 padding:25px;
 border:1px #a6a6a6 solid;
 }
-table#ctl00_table td {
+table#table td {
 vertical-align:top;
 }
 /* Users, Authorization Areas */
-table#ctl00_body_tbl_users, table#ctl00_body_tbl_areas {
+table#body_tbl_users, table#body_tbl_areas {
 background-color:#fff;
 margin-bottom:10px;
 border: none !important;
 }
-table#ctl00_body_tbl_users td, table#ctl00_body_tbl_areas td {
+table#body_tbl_users td, table#body_tbl_areas td {
 padding:3px;
 border: 1px solid #ccc !important;
 }
-table#ctl00_body_tbl_users th, table#ctl00_body_tbl_areas th {
+table#body_tbl_users th, table#body_tbl_areas th {
 padding:10px 6px 10px 3px ;
 text-transform: uppercase;
 background-color: #eee;
@@ -40,10 +40,10 @@ border: 1px solid #ccc !important;
 
 /*Report tables*/
 
-#ctl00_body_tbl_total_messages,
-#ctl00_body_tbl_output,
-#ctl00_body_tbl_operatorperformance,
-#ctl00_body_tbl_sysmessages {
+#body_tbl_total_messages,
+#body_tbl_output,
+#body_tbl_operatorperformance,
+#body_tbl_sysmessages {
 margin-bottom: 25px;
 max-width: 800px !important;
 border-spacing:0px;
@@ -54,10 +54,10 @@ font-size: 90%;
 line-height:normal;
 }
 
-#ctl00_body_tbl_total_messages tr:first-child,
-#ctl00_body_tbl_output tr:first-child,
-#ctl00_body_tbl_operatorperformance tr:first-child,
-#ctl00_body_tbl_sysmessages tr:first-child {
+#body_tbl_total_messages tr:first-child,
+#body_tbl_output tr:first-child,
+#body_tbl_operatorperformance tr:first-child,
+#body_tbl_sysmessages tr:first-child {
 text-transform: uppercase;
 background-color: #eee;
 letter-spacing:1px;
@@ -65,18 +65,18 @@ font-weight:bold;
 }
 
 
-#ctl00_body_tbl_total_messages td:first-child,
-#ctl00_body_tbl_output td:first-child,
-#ctl00_body_tbl_operatorperformance td:first-child,
-#ctl00_body_tbl_sysmessages td:first-child {
+#body_tbl_total_messages td:first-child,
+#body_tbl_output td:first-child,
+#body_tbl_operatorperformance td:first-child,
+#body_tbl_sysmessages td:first-child {
 min-width:100px;
 }
 
 
-#ctl00_body_tbl_total_messages td,
-#ctl00_body_tbl_output td,
-#ctl00_body_tbl_operatorperformance td,
-#ctl00_body_tbl_sysmessages td {
+#body_tbl_total_messages td,
+#body_tbl_output td,
+#body_tbl_operatorperformance td,
+#body_tbl_sysmessages td {
 border-top: 1px solid #ccc;
 border-right: none;
 border-bottom: none;
@@ -95,17 +95,17 @@ a:active {color: #006699;text-decoration:none; border:none;}
 /* MAIN MENUE -------------------- */
 
 
-#ctl00_Menu1 {
+#Menu1 {
 border: 1px solid #99cc00;
 background-color:#ACE600;
 padding: 10px 30px 10px 5px;;
 margin:0px 0 35px 0px;
 }
-#ctl00_Menu1 td {
+#Menu1 td {
 vertical-align:middle !important;
 }
 
-.ctl00_Menu1_0 { 
+.Menu1_0 { 
 background-color:white;
 visibility:hidden;
 display:none;
@@ -114,30 +114,30 @@ left:0px;top:0px;
 border:1px solid #99cc00;
 padding: 5px; 
 }
-.ctl00_Menu1_1 { 
+.Menu1_1 { 
 text-decoration:none;
 padding: 0px;
 /*background-color:pink;*/
 }
-.ctl00_Menu1_2 {
+.Menu1_2 {
 padding: 0px;
 /*background-color:#F1FFC7;*/
 }
-.ctl00_Menu1_3 { 
+.Menu1_3 { 
 padding:3px;
 /*background-color:aqua;*/
 }
 
-a.ctl00_Menu1_1:link {color:#000;display:block; padding-left:10px;} 
-a.ctl00_Menu1_1:visited {color:#000;display:block;padding-left:10px;} 
-a.ctl00_Menu1_1:hover {color:#000; background-color:#99cc00; display:block;padding-left:10px;} 
-a.ctl00_Menu1_1:active {color:#000;display:block;padding-left:10px;}
+a.Menu1_1:link {color:#000;display:block; padding-left:10px;} 
+a.Menu1_1:visited {color:#000;display:block;padding-left:10px;} 
+a.Menu1_1:hover {color:#000; background-color:#99cc00; display:block;padding-left:10px;} 
+a.Menu1_1:active {color:#000;display:block;padding-left:10px;}
 
 
 /* HEADINGS ---------------------- */
 
 
-#ctl00_body_lbl_new_sysm, #ctl00_body_lbl_active_sysm, #ctl00_body_lbl_overview {
+#body_lbl_new_sysm, #body_lbl_active_sysm, #body_lbl_overview {
 font-size: 130%;
 letter-spacing: 1px;
 color: #333;
@@ -145,13 +145,13 @@ text-transform: uppercase;
 }
 
 
-#ctl00_body_Table1 span#ctl00_body_lbl_new_sysm, #ctl00_body_Table2 tr th span#ctl00_body_lbl_new_sysm {
+#body_Table1 span#body_lbl_new_sysm, #body_Table2 tr th span#body_lbl_new_sysm {
 display:block;
 margin-top:25px;
 }
 
 /* Parameter H and fix for Users */
- #ctl00_body_Label4  {
+ #body_Label4  {
 letter-spacing:normal;
 text-transform:none;
 font: 100% Arial, Helvetica, Verdana, sans-serif;
@@ -159,7 +159,7 @@ line-height: 1.5em;
 color: #505367;
 }
 
-#ctl00_body_Table2 #ctl00_body_Label4 {
+#body_Table2 #body_Label4 {
 display:block;
 margin-bottom:5px;
 font-size: 130%;
@@ -169,7 +169,7 @@ color: #333;
 text-transform: uppercase;
 }
 /* User details */
-#ctl00_body_lbl_userdetails {
+#body_lbl_userdetails {
 margin-top: 20px;
 padding:  5px 0 10px 0;
 display:block;
@@ -187,7 +187,7 @@ textarea {
 padding:2px;
 }
 
-#ctl00_body_txt_view_message {
+#body_txt_view_message {
 color: #666;
 border: 1px dotted #ccc;
 font-style: italic;
