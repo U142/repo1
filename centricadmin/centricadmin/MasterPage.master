@@ -270,7 +270,7 @@
     <asp:Table ID="table" runat="server">
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" StaticDisplayLevels="1">
+                <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" StaticDisplayLevels="1" RenderingMode="Table">
                     <DynamicMenuStyle CssClass="IE8Fix" />
                     <Items>
                         <asp:MenuItem Text="File">

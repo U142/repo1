@@ -570,6 +570,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\ums.targets" />
+  <PropertyGroup>
+    <DeployUrl>secure.ums.no/centricadmin</DeployUrl>
+    <DeployTargetFolderBeta>\Secure\centricadmin</DeployTargetFolderBeta>
+    <DeployTargetFolderQa>\www\Secure\centricadmin</DeployTargetFolderQa>
+    <DeployTargetFolderProd>\www\Secure\centricadmin</DeployTargetFolderProd>
+  </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
