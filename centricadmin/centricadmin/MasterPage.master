@@ -29,17 +29,17 @@
 	            
             //alert("target: " + targ.id);
             if(isNaN(targ.id.substring(2))) {
-                document.getElementById("ctl00_body_txt_parent").value = "false";
-                document.getElementById("ctl00_body_txt_id").value = -1;
+                document.getElementById("body_txt_parent").value = "false";
+                document.getElementById("body_txt_id").value = -1;
             }
             else {
-                document.getElementById("ctl00_body_txt_parent").value = "true";
-                document.getElementById("ctl00_body_txt_id").value = targ.id.substring(2);
+                document.getElementById("body_txt_parent").value = "true";
+                document.getElementById("body_txt_id").value = targ.id.substring(2);
             }
             
             if (ie5||ns6) {
-                menuobj=document.getElementById('ctl00_body_Panel2');
-                //alert("Jall: " + findhead1('ctl00_body_Panel2'));
+                menuobj=document.getElementById('body_Panel2');
+                //alert("Jall: " + findhead1('body_Panel2'));
             }
             //Find out how close the mouse is to the corner of the window 
             var rightedge=ie5?document.body.clientWidth-event.clientX:window.innerWidth-e.clientX;
@@ -179,10 +179,10 @@
            if (xmlhttp.readyState == 4) {
                if (xmlhttp.status == 200) {
                    try {
-                       if (document.getElementById("ctl00_bd") != null)
-                           document.getElementById("ctl00_bd").removeAttribute("onbeforeunload");
-                       if(document.getElementById("ctl00_body_bd") != null)
-                           document.getElementById("ctl00_body_bd").removeAttribute("onbeforeunload");
+                       if (document.getElementById("bd") != null)
+                           document.getElementById("bd").removeAttribute("onbeforeunload");
+                       if(document.getElementById("body_bd") != null)
+                           document.getElementById("body_bd").removeAttribute("onbeforeunload");
                    }
                    catch (e) {
                        alert('Error: ' + e.getMessage());

@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
     <script type="text/javascript">
         function passwordValidator(oSrc, args) {
-            if (document.getElementById("ctl00_body_selected").value.length == 0) {
+            if (document.getElementById("body_selected").value.length == 0) {
                 args.isValid = false;
             }
         }

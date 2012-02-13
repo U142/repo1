@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<jnlp spec="1.0+" codebase="https://secure.ums2.no/centricadmin/javaapp/">
+  <information>
+    <title>MapDownload</title>
+    <vendor>Unified Messaging Systems AS</vendor>
+    <homepage href="www.ums.no" />
+    <description>Downloads map with polygon</description>
+  </information>
+  <offline-allowed />
+  <security>
+    <j2ee-application-client-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.2+" />
+    <jar href="admin.jar"/>
+    <jar href="Maps.jar"/>
+    <jar href="Core.jar"/>
+    <jar href="PAS.jar"/>
+    <jar href="UMS.jar"/>
+    <jar href="Send.jar"/>
+    <jar href="substance.3.3.0.1.jar" />
+    <jar href="substance.jar" />
+    <jar href="PASIcons.jar" />
+    <jar href="no.ums.jar" />
+    <jar href="Importer.jar" />
+    <jar href="localization.jar" />
+    <jar href="plugins.jar" />
+    <jar href="geoapi-2.2.0.jar" />
+    <jar href="gt-api-2.5.5.jar" />
+    <jar href="gt-main-2.5.5.jar" />
+    <jar href="gt-metadata-2.5.5.jar" />
+    <jar href="gt-referencing-2.5.5.jar" />
+    <jar href="gt-shapefile-2.5.5.jar" />
+    <jar href="gt-wms-2.5.5.jar" />
+    <jar href="gt-xml-2.5.5.jar" />
+    <jar href="jfreechart-1.0.13.jar" />
+    <jar href="roxes-win32forjava-1.0.2.jar" />
+    <jar href="jdom-1.0.jar" />
+    <jar href="jts-1.9.jar" />
+    <jar href="common-2.2.1.jar" />
+    <jar href="jcommon-1.0.16.jar" />
+    <jar href="commons-lang-2.1.jar" />
+  </resources>
+  <applet-desc documentBase="\javaapp\admin.jar"
+      name="MapDownload"
+      main-class="no.ums.adminui.pas.MapImageDownload"
+      width="40"
+      height="20">
+    </applet-desc>
+</jnlp>

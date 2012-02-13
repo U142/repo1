@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
 <script language="javascript" type="text/javascript">
     function launchApplet(applet) {
-        document.getElementById("ctl00_body_applet").innerHTML = applet;    
+        document.getElementById("body_applet").innerHTML = applet;
     }
 </script>
 <div>

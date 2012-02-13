@@ -44,7 +44,7 @@ public partial class predefine_text : System.Web.UI.Page
 
 
             
-            btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
+            btn_save.Attributes.Add("onclick", "findhead1('body_Panel2')");
 
             ht = new Hashtable();
 

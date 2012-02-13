@@ -6,30 +6,30 @@
     <script type="text/javascript">
        
         function validateActivate(oSrc, args) {
-            if (document.getElementById("ctl00_body_txt_activate").value.length > 1) {
+            if (document.getElementById("body_txt_activate").value.length > 1) {
                 // Sjekk format
                 //alert("test");
                 
-                if (!validateDate(document.getElementById("ctl00_body_txt_activate").value)) {
-                    document.getElementById("ctl00_body_activate_validate").setAttribute("errorMessage", "Incorrect date");
+                if (!validateDate(document.getElementById("body_txt_activate").value)) {
+                    document.getElementById("body_activate_validate").setAttribute("errorMessage", "Incorrect date");
                     args.IsValid = false;
                     return;
                 }
                 else {
                     //catch(err) {
-                    //    document.getElementById("ctl00_body_activate_validate").setAttribute("errorMessage", "Invalid date format");
+                    //    document.getElementById("body_activate_validate").setAttribute("errorMessage", "Invalid date format");
                     //    args.IsValid = false;
                     //}
                     // Før nåtid?
                     //alert("test");
                     var date = new Date();
                     var now = parseInt("" + date.getFullYear() + padLeft(date.getMonth() + 1, 2) + padLeft(date.getDate(), 2) + padLeft(date.getHours(), 2) + padLeft(date.getMinutes(), 2) + "");
-                    var activatetext = document.getElementById("ctl00_body_txt_activate").value;
-                    var activate = parseInt(activatetext.substr(6, 4) + activatetext.substr(3, 2) + activatetext.substr(0, 2) + document.getElementById("ctl00_body_ddl_activate_h").value + document.getElementById("ctl00_body_ddl_activate_m").value);
+                    var activatetext = document.getElementById("body_txt_activate").value;
+                    var activate = parseInt(activatetext.substr(6, 4) + activatetext.substr(3, 2) + activatetext.substr(0, 2) + document.getElementById("body_ddl_activate_h").value + document.getElementById("body_ddl_activate_m").value);
                     //alert("date: " + activate);
                     //alert(activate + " < " + now);
                     if (activate < now) {
-                        document.getElementById("ctl00_body_activate_validate").setAttribute("errorMessage", "Cannot set activation date earlier than current date and time");
+                        document.getElementById("body_activate_validate").setAttribute("errorMessage", "Cannot set activation date earlier than current date and time");
                         args.IsValid = false;
                     }
                 }
@@ -38,24 +38,24 @@
         }
         function validateDeactivate(oSrc, args) {
             
-            if (document.getElementById("ctl00_body_txt_deactivate").value.length > 1) {
-                if (!validateDate(document.getElementById("ctl00_body_txt_deactivate").value)) {
-                    document.getElementById("ctl00_body_deactivate_validate").setAttribute("errorMessage", "Incorrect date");
+            if (document.getElementById("body_txt_deactivate").value.length > 1) {
+                if (!validateDate(document.getElementById("body_txt_deactivate").value)) {
+                    document.getElementById("body_deactivate_validate").setAttribute("errorMessage", "Incorrect date");
                     args.IsValid = false;
                 }
                 else {
                     var activate;
                     // Se om activate er satt
-                    if (document.getElementById("ctl00_body_txt_activate").value.length > 1) {
+                    if (document.getElementById("body_txt_activate").value.length > 1) {
                         // Sjekk format
-                        var activatetext = document.getElementById("ctl00_body_txt_activate").value;
-                        if (!validateDate(document.getElementById("ctl00_body_txt_activate").value)) {
-                            document.getElementById("ctl00_body_activate_validate").setAttribute("errorMessage", "Incorrect date");
+                        var activatetext = document.getElementById("body_txt_activate").value;
+                        if (!validateDate(document.getElementById("body_txt_activate").value)) {
+                            document.getElementById("body_activate_validate").setAttribute("errorMessage", "Incorrect date");
                             args.IsValid = false;
                             return;
                         }
                         else
-                            activate = parseInt(activatetext.substr(6, 4) + activatetext.substr(3, 2) + activatetext.substr(0, 2) + document.getElementById("ctl00_body_ddl_activate_h").value + document.getElementById("ctl00_body_ddl_activate_m").value);
+                            activate = parseInt(activatetext.substr(6, 4) + activatetext.substr(3, 2) + activatetext.substr(0, 2) + document.getElementById("body_ddl_activate_h").value + document.getElementById("body_ddl_activate_m").value);
                     }
                     else {
                         // Activate ikke satt
@@ -63,11 +63,11 @@
                         var date = new Date();
                         activate = parseInt("" + date.getFullYear() + padLeft(date.getMonth() + 1, 2) + padLeft(date.getDate(), 2) + padLeft(date.getHours(), 2) + padLeft(date.getMinutes(),2) + "");
                     }
-                    var deactivatetext = document.getElementById("ctl00_body_txt_deactivate").value;
-                    var deactivate = parseInt(deactivatetext.substr(6, 4) + deactivatetext.substr(3, 2) + deactivatetext.substr(0, 2) + document.getElementById("ctl00_body_ddl_deactivate_h").value + document.getElementById("ctl00_body_ddl_deactivate_m").value);
+                    var deactivatetext = document.getElementById("body_txt_deactivate").value;
+                    var deactivate = parseInt(deactivatetext.substr(6, 4) + deactivatetext.substr(3, 2) + deactivatetext.substr(0, 2) + document.getElementById("body_ddl_deactivate_h").value + document.getElementById("body_ddl_deactivate_m").value);
                     //alert(deactivate + " < " + activate);
                     if (deactivate <= activate) {
-                        document.getElementById("ctl00_body_deactivate_validate").setAttribute("errorMessage", "Deactivation date has to be after current date and time and activation time");
+                        document.getElementById("body_deactivate_validate").setAttribute("errorMessage", "Deactivation date has to be after current date and time and activation time");
                         args.IsValid = false;
                         return;
                         //alert("Activate after deactivate");

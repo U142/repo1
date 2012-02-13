@@ -5,8 +5,8 @@
 <script type="text/javascript">
     function ValidateStringLength(source, arguments)   
     {
-         var slen = document.getElementById("ctl00_body_txt_message").value.length;
-         var text = document.getElementById("ctl00_body_txt_message").value;
+         var slen = document.getElementById("body_txt_message").value.length;
+         var text = document.getElementById("body_txt_message").value;
          var num_char = 1302;
          
          // alert(arguments.Value + '\n' + slen);
@@ -18,8 +18,8 @@
          
      }
      function getLength() {
-        var slen = document.getElementById("ctl00_body_txt_message").value.length;
-        var text = document.getElementById("ctl00_body_txt_message").value;
+        var slen = document.getElementById("body_txt_message").value.length;
+        var text = document.getElementById("body_txt_message").value;
         var num_char = 1302;
         var i;
         var tot = 0;
@@ -36,7 +36,7 @@
             tot++;
         }
         //alert(tot + " of " + num_char);
-        document.getElementById("ctl00_body_lbl_count").innerHTML = tot + " of " + num_char + "&nbsp;&nbsp";
+        document.getElementById("body_lbl_count").innerHTML = tot + " of " + num_char + "&nbsp;&nbsp";
                 
         return tot;
      }  
