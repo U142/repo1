@@ -24,6 +24,7 @@ public partial class logoff : System.Web.UI.Page
         }
         catch (Exception err)
         {
+
         }
         try
         {

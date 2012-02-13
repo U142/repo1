@@ -75,7 +75,7 @@
         </asp:TableCell>
     </asp:TableRow>
 </asp:Table>
-<asp:Table>
+<asp:Table runat="server">
     <asp:TableRow>
         <asp:TableCell><asp:Label ID="Label2" runat="server" Text="To start press aquire lock and then right click on a node to create child node or in the overview rectangle to create a root node"></asp:Label></asp:TableCell>
     </asp:TableRow>

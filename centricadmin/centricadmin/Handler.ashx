@@ -7,7 +7,7 @@ using System.Web.SessionState;
 using System.Configuration;
 
 using System.Collections.Specialized;
-using com.ums.ws.pas.admin;
+using centric.com.ums.ws.pas.admin;
 
 
 public class Handler : IHttpHandler, IRequiresSessionState {

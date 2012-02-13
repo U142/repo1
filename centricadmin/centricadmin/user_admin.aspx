@@ -136,7 +136,7 @@
                     <asp:TableRow>
                         <asp:TableCell ColumnSpan="3"><asp:ValidationSummary ID="ValidationSummary1" runat="server" /></asp:TableCell>
                     </asp:TableRow>
-                </asp:table>
+                </asp:Table>
             </asp:TableCell>
         </asp:TableRow>
     </asp:Table>
