@@ -1013,6 +1013,10 @@ public class PolygonStruct extends ShapeStruct {
 		return (ellipse_polygon!=null ? true : false);
 	}
 	PolygonStruct ellipse_polygon = null;
+	public PolygonStruct getEllipsePolygon()
+	{
+		return ellipse_polygon;
+	}
 	public void recalc_shape(Navigation nav)
 	{
 		m_b_recalcing = true;
@@ -1558,6 +1562,8 @@ public class PolygonStruct extends ShapeStruct {
 		newpoly.finalizeShape();
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;
+		this.hash_coors_added = (Hashtable<Integer, String>)newpoly.hash_coors_added.clone();
+		this.hashSameCoorAdded = (Hashtable<String, Integer>)newpoly.hashSameCoorAdded.clone();
 		this.m_coor_pointref = newpoly.m_coor_pointref;
         calc_coortopix(Variables.getNavigation());
 	}
@@ -1584,6 +1590,9 @@ public class PolygonStruct extends ShapeStruct {
 			c.m_border_color = new Color(m_border_color.getRed(), m_border_color.getGreen(), m_border_color.getBlue(), m_border_color.getAlpha());
 			c.hash_coors_added = (Hashtable<Integer, String>)hash_coors_added.clone();
 			c.hashSameCoorAdded = (Hashtable<String, Integer>)hashSameCoorAdded.clone();
+			c.m_p_center = m_p_center;
+			c.m_p_corner = m_p_corner;
+			c.ellipse_polygon = ellipse_polygon;
 		} catch(Exception e) {
 			Error.getError().addError("PolyStruct","Exception in clone",e,1);
 			throw new CloneNotSupportedException("Could not clone Navigation class");

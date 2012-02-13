@@ -1223,6 +1223,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_T:
                 Variables.getMapFrame().get_active_shape().typecast_polygon().ellipseToRestrictionlines(Variables.getUserInfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+                Variables.getMapFrame().get_actionhandler().checkAndSetShapeIntegrity();
                 break;
         }
         return true;

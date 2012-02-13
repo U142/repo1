@@ -11,6 +11,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
+import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
@@ -379,7 +380,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				break;
 			case SENDING_ELLIPSE_POLYGON:
 				if(get_isdragging())
-					checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
+				{
+				}
 				break;
 			case SENDING_ELLIPSE:
 				break;
@@ -512,23 +514,29 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	}
 	
 	
-	protected void checkAndSetShapeIntegrity()
+	public void checkAndSetShapeIntegrity()
 	{
 		ShapeStruct.ShapeIntegrity integrity = ShapeIntegrity.OK;
 		ShapeStruct s = getActiveShape();
+		PolygonStruct poly = null;
 		if(s!=null && s instanceof PolygonStruct)
 		{
-			PolygonStruct p = (PolygonStruct)getActiveShape().typecast_polygon();
-			if(analyzeSplitPolygon(p))
-			{
-				integrity = ShapeIntegrity.POLY_SPLIT;
-			}
-			else if(checkRestrictionsBetweenFirstAndLast(-1, p)>0)
-			{
-				integrity = ShapeIntegrity.POLY_LAST_TO_FIRST_INTERSECTION;
-			}
-			p.setIntegrity(integrity);
+			poly = s.typecast_polygon();
+			//if(poly.isElliptical())
+			//	poly = poly.getEllipsePolygon();
+			log.debug("points=%s", poly.get_size());
 		}
+		else
+			return;
+		if(analyzeSplitPolygon(poly))
+		{
+			integrity = ShapeIntegrity.POLY_SPLIT;
+		}
+		else if(checkRestrictionsBetweenFirstAndLast(-1, poly)>0)
+		{
+			integrity = ShapeIntegrity.POLY_LAST_TO_FIRST_INTERSECTION;
+		}
+		s.setIntegrity(integrity);
 		PAS.pasplugin.onShapeIntegrityAfterEdit(s, integrity);
 	}
 	
@@ -543,7 +551,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			PolygonStruct p = (PolygonStruct)s.clone();
 			MapPoint mapPoint = new MapPoint(Variables.getNavigation(), 
 					new MapPointLL(p.getFirstPoint().get_lon(), p.getFirstPoint().get_lat()));
-			checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, p, mapPoint, true);
+			if(!p.isElliptical())
+				checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, p, mapPoint, true);
 			return p.twoNeighbouringPointHasDuplicates();
 		}
 		catch(Exception e)
@@ -868,7 +877,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						if(get_isdragging())
 						{
 							checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
-							//log.debug("Checking");
+							checkAndSetShapeIntegrity();	
 						}
 					}
 					catch(Exception err)
