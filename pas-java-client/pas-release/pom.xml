@@ -20,6 +20,7 @@
     <modules>
         <module>pas-release-nl</module>
         <module>pas-release-ums</module>
+        <module>centric-admin</module>
     </modules>
 
     <build>
