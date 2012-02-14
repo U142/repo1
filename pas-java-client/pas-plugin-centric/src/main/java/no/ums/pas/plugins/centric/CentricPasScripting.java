@@ -1139,7 +1139,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
             for (ShapeStruct aList : list) {
-                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
+                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, false, 2, false);
             }
 
         } catch (Exception e) {

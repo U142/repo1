@@ -521,7 +521,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			return true;
 		for(int i=0; i < list.size(); i++)
 		{
-			if(list.get(i).typecast_polygon().pointIsOnLine(poly.getLastPoint(), 0.0001))
+			if(list.get(i).typecast_polygon().pointIsOnLine(poly.getLastPoint(), 0.001))
 				return true;
 		}		
 		return false;
@@ -539,7 +539,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		}
 		else
 			return;
-		if(analyzeSplitPolygon(poly))
+		if(!poly.isElliptical() && analyzeSplitPolygon(poly))
 		{
 			integrity = ShapeIntegrity.POLY_SPLIT;
 		}
@@ -547,7 +547,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		{
 			integrity = ShapeIntegrity.POLY_LAST_TO_FIRST_INTERSECTION;
 		}
-		else if(poly.isElliptical() && (!checkLastPointInside(-1, poly) || poly.isShapeSplit())) //if the shape have a move-to segment
+		else if(poly.isElliptical() && poly.isShapeSplit()) //if the shape have a move-to segment
 		{
 			integrity = ShapeIntegrity.POLY_SPLIT;
 		}
