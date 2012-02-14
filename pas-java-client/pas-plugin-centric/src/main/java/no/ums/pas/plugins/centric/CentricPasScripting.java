@@ -1135,7 +1135,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             DeptArray depts = p.get_userinfo().get_departments();
 
             for (Object dept : depts) {
-                ((DeptInfo) dept).drawRestrictionShapes(g, nav);
+                //((DeptInfo) dept).drawRestrictionShapes(g, nav);
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
             for (ShapeStruct aList : list) {
@@ -1172,18 +1172,25 @@ public class CentricPasScripting extends DefaultPasScripting {
 	        		switch(shape.getIntegrity())
 	        		{
 		        		case POLY_LAST_TO_FIRST_INTERSECTION: //click on first point to finalize
-		        			PolygonStruct poly = shape.typecast_polygon();
-		        			Point mp = Variables.getMapFrame().getZoomLookup().getScreenPoint(
-		        																		Variables.getMapFrame().getMapModel().getTopLeft(),
-		        																		new LonLat(poly.getFirstPoint().get_lon(),
-		        																				poly.getFirstPoint().get_lat()));
-		        			g.setColor(Color.red);
-		        			Font oldFont = g.getFont();
-		        			g.setFont(g.getFont().deriveFont(20.0f));
-		        			int size = 10;
-		        			g.fillOval(mp.x-size/2, mp.y-size/2, size, size);
-		        			g.drawString(Localization.l("common_click_to_finalize"), mp.x-size, mp.y+g.getFont().getSize()+size);
-		        			g.setFont(oldFont);
+			                PolygonStruct poly = shape.typecast_polygon();
+			                if(!poly.isElliptical())
+			                {
+			        			Point mp = Variables.getMapFrame().getZoomLookup().getScreenPoint(
+			        																		Variables.getMapFrame().getMapModel().getTopLeft(),
+			        																		new LonLat(poly.getFirstPoint().get_lon(),
+			        																				poly.getFirstPoint().get_lat()));
+			        			g.setColor(Color.red);
+			        			Font oldFont = g.getFont();
+			        			g.setFont(g.getFont().deriveFont(20.0f));
+			        			int size = 10;
+			        			g.fillOval(mp.x-size/2, mp.y-size/2, size, size);
+			        			g.drawString(Localization.l("common_click_to_finalize"), mp.x-size, mp.y+g.getFont().getSize()+size);
+			        			g.setFont(oldFont);
+			                }
+			                else
+			                {
+			        			CentricVariables.getCentric_send().setShapeErrorText(Localization.l("common_area_split_warning_message"));			                	
+			                }
 		        			break;
 		        		case POLY_SPLIT:
 		        			CentricVariables.getCentric_send().setShapeErrorText(Localization.l("common_area_split_warning_message"));
@@ -1462,7 +1469,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 	@Override
 	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
 			ShapeIntegrity integrity) {
-		log.debug("shape-integrity reports %s", integrity.toString());
+		//log.debug("shape-integrity reports %s", integrity.toString());
 	}
     
     

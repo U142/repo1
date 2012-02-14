@@ -15,7 +15,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.geom.Area;
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -43,6 +46,17 @@ public class PolygonStruct extends ShapeStruct {
 	private Hashtable<String, Integer> hashSameCoorAdded = new Hashtable<String, Integer>();
 	private int [] m_int_x;
 	private int [] m_int_y;
+	private int shapeMoveToCount = 0;
+	
+	protected void setMoveToCount(int n)  {
+		shapeMoveToCount = n;
+	}
+	
+	public boolean isShapeSplit()
+	{
+		return shapeMoveToCount >= 2;
+	}
+	
 
     private Dimension m_dim_mapsize;
 	public Dimension get_mapsize() { return m_dim_mapsize; }
@@ -369,9 +383,41 @@ public class PolygonStruct extends ShapeStruct {
 		return ret;
 	}
 	
+	/**
+	 * Check if a given point is on any of the polygon lines
+	 * @param p Point to check
+	 * @return true if point is on a poly line
+	 */
+	public boolean pointIsOnLine(MapPointLL p, double epsilon) {
+        if (m_coor_lon == null || m_coor_lat == null)
+            return false;
+        if(m_bounds==null)
+        	calc_bounds();
+        if(p==null)
+        	return false;
+        if(!m_bounds.pointInside(p))
+        	return false;
+        for(int i=0; i <= m_coor_lon.size(); i++)
+        {
+        	double lon1 = m_coor_lon.get((i % m_coor_lon.size()));
+        	double lat1 = m_coor_lat.get((i % m_coor_lat.size()));
+        	double lon2 = m_coor_lon.get(((i+1) % m_coor_lon.size()));
+        	double lat2 = m_coor_lat.get(((i+1) % m_coor_lat.size()));
+        	
+        	double A = p.get_lon() - lon1;
+        	double B = p.get_lat() - lat1;
+        	double C = lon2 - lon1;
+        	double D = lat2 - lat1;
+        	double dist = Math.abs(A * D - C * B) / Math.sqrt(C * C + D * D);
+        	if(dist<=epsilon)
+        		return true;
+        }
+        return false;
+	}
+	
 	@Override
 	public boolean pointInsideShape(MapPointLL p) {
-		int modificator = 1;
+		double modificator = 1d;
         if (m_coor_lon == null || m_coor_lat == null)
             return false;
         if (get_size() < 3)
@@ -454,7 +500,6 @@ public class PolygonStruct extends ShapeStruct {
 			int tmp = pointHasDuplicate(i);
 			if(tmp>0 && duplicates>0) //if previous check had duplicates and this one
 			{
-				log.debug("Point duplicates found at index %d", i);
 				return true;
 			}
 			if(tmp==0) //no duplicates here, reset counter
@@ -719,6 +764,8 @@ public class PolygonStruct extends ShapeStruct {
 			
 		}
 		calc_bounds();
+		
+
 		m_b_recalcing = false;
 
 	}
@@ -869,6 +916,21 @@ public class PolygonStruct extends ShapeStruct {
 		if(bEditmode && ellipse_polygon!=null) {
             ellipse_polygon.draw(g, mapModel, zoomLookup, true, true, true, p, bBorder, false, 1, false);
 		}
+		if(get_size()<=0)
+			return;
+		
+		/**
+		 * if shape integrity is not ok on an ellipse,
+		 */
+		if(isElliptical() && getIntegrity()!=ShapeIntegrity.OK)
+		{
+			for(PolygonStruct splitPoly : splitPartPolygons) {
+				splitPoly.draw(g, mapModel, zoomLookup, false, true, false, p, true, true, 3, bPaintShapeName, bHasFocus);
+			}
+			return;
+		}
+		//if(isElliptical() && getIntegrity()!=ShapeIntegrity.OK)
+		//	return;
 		
 		Graphics2D g2d = (Graphics2D)g;
 		if(get_size() >= 1) {
@@ -877,8 +939,8 @@ public class PolygonStruct extends ShapeStruct {
                 final Path2D path = new Path2D.Double();
                 final Point topLeft = zoomLookup.getPoint(mapModel.getTopLeft());
                 Point lastPoint = null;
-                for (int i=0; i<get_size(); i++) {
-                    final Point lineTo = zoomLookup.getPoint(new LonLat(get_coor_lon(i), get_coor_lat(i)));
+                for (int i=0; i<=get_size(); i++) {
+                    final Point lineTo = zoomLookup.getPoint(new LonLat(get_coor_lon(i % get_size()), get_coor_lat(i % get_size())));
                     if (lastPoint == null) {
                         lastPoint = lineTo;
                         path.moveTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
@@ -923,7 +985,7 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_x()!=m_p_corner.get_x() && m_p_center.get_y()!=m_p_corner.get_y())
 			{
-				if(get_size()>3)
+				if(get_size()>3 && getIntegrity()==ShapeIntegrity.OK)
 				{
 					setCanLock(true);
 					return;
@@ -1167,7 +1229,10 @@ public class PolygonStruct extends ShapeStruct {
 		if(n_ell_point==n_size && !b_cur_inside && first_added_point!=null && last_added_point!=null)
 		{
 			//newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference()+1, first_added_point.getPointReference());
-			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), first_added_point.getPointReference(), first_added_point.getPointReference()-last_added_point.getPointReference());
+			int start = last_added_point.getPointReference();
+			int stop = first_added_point.getPointReference();
+			int dir = 1;
+			newpoly.followRestrictionLines(newpoly, restrict, start, stop, dir);
 			RestrictionStage++;
 			b_marked_as_finalized = true;
 			//newpoly.FollowRestrictionLines(first_added_point, last_added_point, first_added_point, restrict, false, false, true);
@@ -1556,19 +1621,79 @@ public class PolygonStruct extends ShapeStruct {
 	{
 		PolygonStruct newpoly = new PolygonStruct();
 		newpoly.polytype = PolyType.ELLIPSE_RECALCULATED;
-		//iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
 		RestrictionStage = 0;
-		iterateEllipse(newpoly, restrict, 0, null, false, false);
+		//iterateEllipse(newpoly, restrict, 0, null, false, false);
+		newpoly = testAreaToPoly(restrict);
 		newpoly.finalizeShape();
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;
 		this.hash_coors_added = (Hashtable<Integer, String>)newpoly.hash_coors_added.clone();
 		this.hashSameCoorAdded = (Hashtable<String, Integer>)newpoly.hashSameCoorAdded.clone();
 		this.m_coor_pointref = newpoly.m_coor_pointref;
+		this.shapeMoveToCount = newpoly.shapeMoveToCount;
         calc_coortopix(Variables.getNavigation());
 	}
 	
 	
+	List<PolygonStruct> splitPartPolygons = new ArrayList<PolygonStruct>();
+	
+	protected PolygonStruct testAreaToPoly(PolygonStruct restrict)
+	{
+		splitPartPolygons.clear();
+		PolygonStruct newpoly = new PolygonStruct();
+		newpoly.polytype = PolyType.ELLIPSE_RECALCULATED;
+		Polygon p = new Polygon();
+		Polygon r = new Polygon();
+		double PREC = POINT_PRECISION * 10.0f;
+		for(int i=0; i < ellipse_polygon.get_size(); i++)
+		{
+			p.addPoint((int)(ellipse_polygon.get_coor_lon(i) * PREC), (int)(ellipse_polygon.get_coor_lat(i) * PREC));
+		}
+		for(int i=0; i < restrict.get_size(); i++)
+		{
+			r.addPoint((int)(restrict.get_coor_lon(i) * PREC), (int)(restrict.get_coor_lat(i) * PREC));
+		}
+		Area areaPoly = new Area(p);
+		Area areaRestrict = new Area(r);
+		areaPoly.intersect(areaRestrict);
+		PathIterator it = areaPoly.getPathIterator(null);
+		int numMoveTo = 0;
+		PolygonStruct polyPart = null;
+		while(!it.isDone())
+		{
+			double [] coords = new double[2];
+			int modus = it.currentSegment(coords);
+			switch(modus)
+			{
+			case PathIterator.SEG_LINETO:
+				newpoly.add_coor(coords[0]/PREC, coords[1]/(PREC), true, PREC, false);
+				if(polyPart!=null)
+					polyPart.add_coor(coords[0]/PREC, coords[1]/(PREC), true, PREC, false);
+				break;
+			case PathIterator.SEG_MOVETO:
+				++numMoveTo;
+				polyPart = new PolygonStruct();
+				polyPart.set_border_color(Color.red);
+				polyPart.set_fill_color(Color.red);
+				splitPartPolygons.add(polyPart);
+				newpoly.setMoveToCount(numMoveTo);
+				newpoly.add_coor(coords[0]/PREC, coords[1]/(PREC), true, PREC, false);
+				polyPart.add_coor(coords[0]/PREC, coords[1]/(PREC), true, PREC, false);
+				break;
+			case PathIterator.SEG_CLOSE:
+				break;
+			default:
+				log.debug("Unknown modus=%d",modus);
+				break;
+			}
+			it.next();
+		}
+		//if(newpoly.get_size()>0)
+		//	newpoly.add_coor(newpoly.getFirstPoint().get_lon(), newpoly.getLastPoint().get_lat());
+		
+		return newpoly;
+		
+	}
  
 	@Override
 	public void set_fill_color(Color col) {
@@ -1593,6 +1718,7 @@ public class PolygonStruct extends ShapeStruct {
 			c.m_p_center = m_p_center;
 			c.m_p_corner = m_p_corner;
 			c.ellipse_polygon = ellipse_polygon;
+			c.setMoveToCount(shapeMoveToCount);
 		} catch(Exception e) {
 			Error.getError().addError("PolyStruct","Exception in clone",e,1);
 			throw new CloneNotSupportedException("Could not clone Navigation class");

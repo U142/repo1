@@ -26,7 +26,7 @@ public final class MapController implements MapComponent.Controller {
     @Override
     public void onZoomOut(final MapModel model, final TileLookup tileLookup, final Dimension size,
                           final Point point) {
-        onZoom(model, tileLookup, point, -1);
+        onZoom(model, tileLookup, new Point(size.width-point.x/2, size.height-point.y/2), -1);
     }
 
     private void onZoom(final MapModel model, final TileLookup tileLookup, final Point point, final int delta) {

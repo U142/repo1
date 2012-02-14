@@ -506,11 +506,25 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			if(ll1!=null && ll2!=null)
 			{
 				intersects_first_to_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, 0, ll1, false);
-				log.debug("Intersects between first and last: " + intersects_first_to_last.size());
 				return intersects_first_to_last.size();
 			}
 		}
 		return 0;
+	}
+	
+	protected boolean checkLastPointInside(int nDeptPk, PolygonStruct poly)
+	{
+		List<ShapeStruct> list = getRestrictionShapeList(nDeptPk);
+		if(list.isEmpty())
+			return true;
+		if(poly.get_size()<=0)
+			return true;
+		for(int i=0; i < list.size(); i++)
+		{
+			if(list.get(i).typecast_polygon().pointIsOnLine(poly.getLastPoint(), 0.0001));
+				return true;
+		}		
+		return false;
 	}
 	
 	
@@ -522,9 +536,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		if(s!=null && s instanceof PolygonStruct)
 		{
 			poly = s.typecast_polygon();
-			//if(poly.isElliptical())
-			//	poly = poly.getEllipsePolygon();
-			log.debug("points=%s", poly.get_size());
 		}
 		else
 			return;
@@ -532,9 +543,13 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		{
 			integrity = ShapeIntegrity.POLY_SPLIT;
 		}
-		else if(checkRestrictionsBetweenFirstAndLast(-1, poly)>0)
+		else if(!poly.isElliptical() && checkRestrictionsBetweenFirstAndLast(-1, poly)>0)
 		{
 			integrity = ShapeIntegrity.POLY_LAST_TO_FIRST_INTERSECTION;
+		}
+		else if(poly.isElliptical() && (!checkLastPointInside(-1, poly) || poly.isShapeSplit())) //if the shape have a move-to segment
+		{
+			integrity = ShapeIntegrity.POLY_SPLIT;
 		}
 		s.setIntegrity(integrity);
 		PAS.pasplugin.onShapeIntegrityAfterEdit(s, integrity);
@@ -549,6 +564,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		try
 		{
 			PolygonStruct p = (PolygonStruct)s.clone();
+			if(p.get_size()<2)
+				return false;
 			MapPoint mapPoint = new MapPoint(Variables.getNavigation(), 
 					new MapPointLL(p.getFirstPoint().get_lon(), p.getFirstPoint().get_lat()));
 			if(!p.isElliptical())
@@ -1099,7 +1116,11 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					addAction("act_set_ellipse_complete", this);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON) {
+		            LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+		            MapPoint p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+					addAction("act_set_polygon_ellipse_corner", p);
 					checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1, null, null, true);
+					checkAndSetShapeIntegrity();	
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.PAN_BY_DRAG && false) {
 
