@@ -110,8 +110,6 @@
     <Content Include="logoff.aspx" />
     <Content Include="logon.aspx" />
     <Content Include="main.aspx" />
-    <Content Include="obj\Debug\TempPE\App_WebReferences.com.ums.ws.pas.admin.Reference.cs.dll" />
-    <Content Include="obj\Debug\TempPE\App_WebReferences.com.ums.ws.pas.Reference.cs.dll" />
     <Content Include="parameters.aspx" />
     <Content Include="predefine_area.aspx" />
     <Content Include="predefine_text.aspx" />
@@ -548,6 +546,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
+    <Folder Include="obj\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Account\Web.config" />
@@ -567,7 +566,6 @@
     <None Include="javaapp\xUTV_jar.bat" />
     <Content Include="MasterPage.master" />
     <Content Include="packages.config" />
-    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
