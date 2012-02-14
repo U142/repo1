@@ -20,8 +20,6 @@ using System.ServiceModel;
 
 public partial class main : System.Web.UI.Page 
 {
-    private USYSTEMMESSAGES messages;
-
     protected void Page_Load(object sender, EventArgs e)
     {
         USYSTEMMESSAGES messages = (USYSTEMMESSAGES)Session["messages"];
@@ -110,25 +108,15 @@ public partial class main : System.Web.UI.Page
             catch (Exception ex)
             {
                 // skriv ut i validate
+                activate_validate.Text = ex.Message;
             }
 
             
         }
         if (txt_deactivate.Text.Length > 0)
         {
-            //sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
             sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_deactivate.Text.Substring(6, 4) + txt_deactivate.Text.Substring(3, 2) + txt_deactivate.Text.Substring(0, 2) + ddl_deactivate_h.SelectedValue + ddl_deactivate_m.SelectedValue + "00");
-            //IFormatProvider format = new CultureInfo("nb-NO");
-            /*IFormatProvider format = new CultureInfo("nl-NL");
-            String ting = txt_deactivate.Text + " " + ddl_deactivate_h.SelectedValue + ":" + ddl_deactivate_m.SelectedValue;
-            try
-            {
-                sm.DateDeactivate = DateTime.Parse(txt_deactivate.Text + " " + ddl_deactivate_h.SelectedValue + ":" + ddl_deactivate_m.SelectedValue, format, DateTimeStyles.None);
-            }
-            catch (Exception ex)
-            {
-                // skriv ut i validate
-            }*/
+            
         }
         paswsSoapClient ws = new paswsSoapClient();
         ws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
@@ -142,10 +130,9 @@ public partial class main : System.Web.UI.Page
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)
             lst_messages.Items.Remove(lst_messages.SelectedItem);
-        //lst_messages.Items.Add(new ListItem(sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname + " " + sysm.news.newslist[sysm.news.newslist.Length - 1].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start) + (sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end)), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
+        
         lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[sysm.news.newslist.Length - 1]), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
-        //messages.Remove(tsm);
-        //messages.Add(sm);
+        
         Session["messages"] = sysm;
         reset();
         Session.Remove("edit");
@@ -162,37 +149,6 @@ public partial class main : System.Web.UI.Page
         {
             Session["edit"] = news;
             Server.Transfer("systemmessages.aspx");
-            /*
-           
-            ddl_operator.SelectedValue = news.l_operator.ToString();
-            ddl_type.SelectedValue = news.l_type.ToString();
-            txt_message.Text = news.newstext.sz_news;
-
-            if (news.l_incident_start == 0)
-            {
-                txt_activate.Text = "";
-                ddl_activate_h.SelectedValue = "00";
-                ddl_activate_m.SelectedValue = "00";
-            }
-            else
-            {
-                txt_activate.Text = Helper.FormatDate(news.l_incident_start).Substring(0,10);
-                ddl_activate_h.SelectedValue = news.l_incident_start.ToString().Substring(8,2);
-                ddl_activate_m.SelectedValue = news.l_incident_start.ToString().Substring(10,2);
-            }
-
-            if (news.l_incident_end == 0)
-            {
-                txt_deactivate.Text = "";
-                ddl_deactivate_h.SelectedValue = "00";
-                ddl_deactivate_m.SelectedValue = "00";
-            }
-            else
-            {
-                txt_deactivate.Text = Helper.FormatDate(news.l_incident_end).Substring(0, 10);
-                ddl_deactivate_h.SelectedValue = news.l_incident_end.ToString().Substring(8, 2);
-                ddl_deactivate_m.SelectedValue = news.l_incident_end.ToString().Substring(10, 2);
-            }*/
         }
 
     }

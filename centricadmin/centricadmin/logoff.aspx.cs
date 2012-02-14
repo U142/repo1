@@ -24,19 +24,24 @@ public partial class logoff : System.Web.UI.Page
         }
         catch (Exception err)
         {
-
+            lbl_err.Text = err.Message;
         }
         try
         {
             paswsSoapClient ws = new paswsSoapClient();
             ws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
             bool success = ws.PasLogoff(Util.convertLogonInfoPas((centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"]));
+            Server.Transfer("logon.aspx");
         }
         catch (Exception err)
         {
-
+            lbl_err.Text = err.Message;
         }
         Session.RemoveAll();
+    }
+
+    protected void btn_gotologon_Click(object sender, EventArgs e)
+    {
         Server.Transfer("logon.aspx");
     }
 }

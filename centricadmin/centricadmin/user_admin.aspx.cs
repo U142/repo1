@@ -20,11 +20,6 @@ using System.ServiceModel;
 
 public partial class user_admin : System.Web.UI.Page
 {
-    private PAOBJECT[] objects;
-    private PAUser pau = null;
-
-    List<centric.com.ums.ws.pas.admin.UBBUSER> users;
-
     protected Table Table
     {
         get
@@ -459,7 +454,7 @@ public partial class user_admin : System.Web.UI.Page
     }
     protected void region_select(object sender, EventArgs e)
     {
-        if (Session["sregion"] != "true")
+        if (Session["sregion"].ToString() != "true")
         {
             centric.com.ums.ws.pas.admin.ULOGONINFO li = (centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
@@ -467,31 +462,12 @@ public partial class user_admin : System.Web.UI.Page
             pa.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["PasAdmin"]);
             int[] indices = lst_regions.GetSelectedIndices();
             centric.com.ums.ws.pas.admin.UDEPARTMENT dept = null;
-            centric.com.ums.ws.pas.admin.UPolygon poly = null;
             List<centric.com.ums.ws.pas.admin.UPolygon> comparepoly = new List<centric.com.ums.ws.pas.admin.UPolygon>();
             centric.com.ums.ws.pas.admin.UDEPARTMENT[] depts = (centric.com.ums.ws.pas.admin.UDEPARTMENT[])Session["regions"];
 
             foreach (centric.com.ums.ws.pas.admin.UDEPARTMENT d in depts)
                 if (d.l_deptpk == int.Parse(lst_regions.SelectedValue))
                     dept = d;
-            /*
-            foreach (int ind in indices)
-            {
-                // Selected restriction area
-                dept = depts[int.Parse(lst_regions.Items[ind].Value)];
-                foreach (com.ums.ws.pas.admin.UShape shape in dept.restrictionShapes)
-                {
-                    poly = (com.ums.ws.pas.admin.UPolygon)shape;
-                }
-            }
-
-            foreach (com.ums.ws.pas.admin.UDEPARTMENT comparedept in depts)
-            {
-                foreach (com.ums.ws.pas.admin.UShape shape in comparedept.restrictionShapes)
-                {
-                    comparepoly.Add((com.ums.ws.pas.admin.UPolygon)shape);
-                }
-            }*/
 
             FindPolysWithSharedBorderResponse res = pa.doFindPolysWithSharedBorder(li, dept, depts);
             if (res.successful)

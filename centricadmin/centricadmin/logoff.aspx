@@ -10,7 +10,10 @@
 <body>
     <form id="form1" runat="server">
     <div>
-    
+        <asp:Label ID="lbl_err" runat="server" Text="" ForeColor="Red"></asp:Label>
+        <br />
+        <asp:Button ID="btn_gotologon" runat="server" Text="Go to logon" 
+            onclick="btn_gotologon_Click" />
     </div>
     </form>
 </body>
