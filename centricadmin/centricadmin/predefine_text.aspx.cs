@@ -24,7 +24,6 @@ public partial class predefine_text : System.Web.UI.Page
 {
 
     private Hashtable ht;
-    private Db db;
     private paswsSoapClient pws;
     private System.Drawing.Color disabled_color;
 
@@ -34,16 +33,13 @@ public partial class predefine_text : System.Web.UI.Page
 
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
-        //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=predefine_text')");
 
         if (!IsPostBack)
         {
             centric.com.ums.ws.pas.admin.ULOGONINFO l = (centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (l == null)
                 Server.Transfer("logoff.aspx");
-
-
-            
+                        
             btn_save.Attributes.Add("onclick", "findhead1('body_Panel2')");
 
             ht = new Hashtable();
@@ -52,26 +48,7 @@ public partial class predefine_text : System.Web.UI.Page
 
 
             UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
-            //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
             f.n_timefilter = 0;
-
-            /*
-            
-            //List<PredefinedText> pdt = db.getPredefinedText();
-
-            for (int i = 0; i < list.list.Length; ++i)
-            {
-                if (list.list[i].n_parentpk > 0)
-                {
-                    TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
-                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
-                }
-                else
-                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
-
-                
-            }
-            */
 
             rebuildTree(false);
         }
@@ -84,7 +61,6 @@ public partial class predefine_text : System.Web.UI.Page
         TreeView1.Nodes.Clear();
 
         UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
-        //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
         f.n_timefilter = 0;
 
         pws = new paswsSoapClient();
@@ -93,7 +69,6 @@ public partial class predefine_text : System.Web.UI.Page
 
 
         UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
-        //List<PredefinedText> pdt = db.getPredefinedText();
 
         for (int i = 0; i < list.list.Length; ++i)
         {
@@ -119,7 +94,6 @@ public partial class predefine_text : System.Web.UI.Page
 
     private char[] validateMessage(String text)
     {
-        //UnicodeEncoding ue = new UnicodeEncoding();
         Regex re = Util.GSM_Alphabet_Regex;
         MatchCollection mc = re.Matches(text);
         char[] ret = new char[mc.Count];
@@ -179,10 +153,6 @@ public partial class predefine_text : System.Web.UI.Page
                 message.sz_message = txt_message.Text;
                 pdt.ccmessage = new UCCMessage[] { message };
 
-                //PredefinedText pdt = new PredefinedText(txt_message.Text, ht.Count, txt_name.Text, int.Parse(parent));
-
-
-
                 if (pws == null)
                 {
                     pws = new paswsSoapClient();
@@ -202,7 +172,6 @@ public partial class predefine_text : System.Web.UI.Page
 
 
                 id = (int)pdt.n_messagepk;
-                //int id = db.addPredefinedText(pdt);
 
                 TreeNode tn = getNode(TreeView1.Nodes, pdt.n_parentpk.ToString());
 
@@ -219,7 +188,6 @@ public partial class predefine_text : System.Web.UI.Page
                     txt_message.Text = "";
                     txt_name.Enabled = false;
                     txt_message.ForeColor = disabled_color;
-                    //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
                     btn_save.Enabled = false;
                 }
@@ -231,7 +199,6 @@ public partial class predefine_text : System.Web.UI.Page
                     txt_name.Text = "";
                     txt_message.Text = "";
                     txt_name.Enabled = false;
-                    //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
                     txt_message.ForeColor = disabled_color;
                     btn_save.Enabled = false;
@@ -242,9 +209,7 @@ public partial class predefine_text : System.Web.UI.Page
                     ht.Add(pdt.n_messagepk, pdt);
                     TreeNode tmptn = getNode(TreeView1.Nodes, pdt.n_messagepk.ToString());
                     tmptn.Text = addJavaScript(pdt.sz_name, id);
-                    //TreeView1.Nodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
                     txt_parent.Text = "";
-                    //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
                     txt_message.ForeColor = disabled_color;
                     txt_name.Enabled = false;
@@ -312,7 +277,6 @@ public partial class predefine_text : System.Web.UI.Page
         UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(TreeView1.SelectedNode.Value)];
         txt_message.Text = pdt.ccmessage[0].sz_message;
         txt_name.Text = pdt.sz_name;
-        //txt_message.Enabled = false;
         txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
         txt_message.ForeColor = disabled_color;
         txt_name.Enabled = false;
@@ -379,7 +343,6 @@ public partial class predefine_text : System.Web.UI.Page
                 UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(txt_id.Text)];
                 txt_name.Text = pdt.sz_name;
                 txt_message.Text = pdt.ccmessage[0].sz_message;
-                //txt_message.Enabled = true;
                 txt_message.Attributes.Remove("onFocus");
                 txt_name.Enabled = true;
                 txt_message.Enabled = true;
@@ -421,7 +384,6 @@ public partial class predefine_text : System.Web.UI.Page
         {
             rebuildTree(false);
             TreeView1.Attributes.Remove("oncontextmenu");
-            //TreeView1.Enabled = false;
             txt_message.Enabled = false;
             txt_message.ForeColor = disabled_color;
             txt_name.Enabled = false;
@@ -439,10 +401,6 @@ public partial class predefine_text : System.Web.UI.Page
         {
             rebuildTree(true);
             TreeView1.Attributes.Add("oncontextmenu", "return showmenuie5(event)");
-            //TreeView1.Enabled = true;
-            //txt_message.Enabled = true;
-            //txt_name.Enabled = true;
-            //txt_message.ForeColor = System.Drawing.Color.Black;
             lbl_error.Text = "";
         }
         else

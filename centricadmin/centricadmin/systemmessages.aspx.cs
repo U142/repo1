@@ -31,8 +31,6 @@ public partial class systemmessages : System.Web.UI.Page
         
         if (!IsPostBack)
         {
-            //txt_activate.Attributes.Add("readonly","readonly");
-            //txt_deactivate.Attributes.Add("readonly", "readonly");
             paswsSoapClient pws = new paswsSoapClient();
             pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
             centric.com.ums.ws.pas.admin.ULOGONINFO logon = (centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
@@ -46,12 +44,7 @@ public partial class systemmessages : System.Web.UI.Page
             {
                 lst_messages.Items.Add(new ListItem(Util.padForListBox(n), n.l_newspk.ToString()));
             }
-            /*
-            for (int i = 0; i < sysm.news.newslist.Length; ++i)
-            {
-                //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
-                lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
-            }*/
+            
 
             UBBNEWS news = (UBBNEWS)Session["edit"];
             if (news != null)
@@ -102,7 +95,6 @@ public partial class systemmessages : System.Web.UI.Page
         sysm.news.newslist[sysm.news.newslist.Length - 1].l_type = int.Parse(ddl_type.SelectedItem.Value);
         if (txt_activate.Text.Length > 0)
         {
-            //IFormatProvider format = new CultureInfo("nb-NO");
             IFormatProvider format = new CultureInfo("nl-NL");
             String ting = txt_activate.Text + " " + ddl_activate_h.SelectedValue + ":" + ddl_activate_m.SelectedValue;
             try
@@ -111,7 +103,7 @@ public partial class systemmessages : System.Web.UI.Page
             }
             catch (Exception ex)
             {
-                // skriv ut i validate
+                activate_validate.Text = ex.Message;
             }
 
 
@@ -119,24 +111,11 @@ public partial class systemmessages : System.Web.UI.Page
         if (txt_deactivate.Text.Length > 0)
         {
             sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
-            //IFormatProvider format = new CultureInfo("nb-NO");
-            /*IFormatProvider format = new CultureInfo("nl-NL");
-            String ting = txt_deactivate.Text + " " + ddl_deactivate_h.SelectedValue + ":" + ddl_deactivate_m.SelectedValue;
-            try
-            {
-                sm.DateDeactivate = DateTime.Parse(txt_deactivate.Text + " " + ddl_deactivate_h.SelectedValue + ":" + ddl_deactivate_m.SelectedValue, format, DateTimeStyles.None);
-            }
-            catch (Exception ex)
-            {
-                // skriv ut i validate
-            }*/
         }
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)
             lst_messages.Items.Remove(lst_messages.SelectedItem);
         lst_messages.Items.Add(new ListItem(sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname + " " + sysm.news.newslist[sysm.news.newslist.Length - 1].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start) + (sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end)), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
-        //messages.Remove(tsm);
-        //messages.Add(sm);
         Session["messages"] = messages;
         reset();
         Session.Remove("edit");
