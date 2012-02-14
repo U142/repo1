@@ -521,7 +521,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			return true;
 		for(int i=0; i < list.size(); i++)
 		{
-			if(list.get(i).typecast_polygon().pointIsOnLine(poly.getLastPoint(), 0.0001));
+			if(list.get(i).typecast_polygon().pointIsOnLine(poly.getLastPoint(), 0.0001))
 				return true;
 		}		
 		return false;
