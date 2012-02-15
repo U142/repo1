@@ -505,7 +505,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			MapPointLL ll2 = current_polygon.getFirstPoint();
 			if(ll1!=null && ll2!=null)
 			{
-				intersects_first_to_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, 0, ll1, false);
+				intersects_first_to_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, 0, ll1, true);
 				return intersects_first_to_last.size();
 			}
 		}
@@ -652,7 +652,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					MapPointLL ll2 = p.get_mappointll();
 					if(ll1!=null && ll2!=null)
 					{
-						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1, false);
+						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1, true);
 						//the user clicked, we need to configure polygon automatically to obay restriction area
 						if((intersects_last.size()>0 || isKeyHot(HOTKEYS.CTRL)) && b_click) 
 						{
