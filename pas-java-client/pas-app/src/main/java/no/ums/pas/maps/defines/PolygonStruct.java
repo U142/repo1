@@ -291,7 +291,7 @@ public class PolygonStruct extends ShapeStruct {
 
 		if(add_first_point)
 		{
-			this.add_coor(p1.get_lon(), p1.get_lat());
+			this.add_coor(p1.get_lon(), p1.get_lat(), b_allow_duplicates, POINT_PRECISION, false);
 		}
 
 		count = 0;
@@ -310,7 +310,7 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		if(add_last_point)
 		{
-			this.add_coor(p2.get_lon(), p2.get_lat(), true, POINT_PRECISION, true);
+			this.add_coor(p2.get_lon(), p2.get_lat(), b_allow_duplicates, POINT_PRECISION, true);
 		}
 		else
 			this.finalizeShape();
@@ -352,7 +352,7 @@ public class PolygonStruct extends ShapeStruct {
 			//check if the line starts or ends where the intersection is
 			if(DOINTERSECT == CommonFunc.DO_INTERSECT && b_exclude_tangent_points)
 			{
-				double epsilon = 1/POINT_PRECISION;
+				double epsilon = 100/POINT_PRECISION;
 				if( (Math.abs(intersect.get_lat()-p1.get_lat())<epsilon && Math.abs(intersect.get_lon()-p1.get_lon())<epsilon) || 
 						(Math.abs(intersect.get_lat()-p2.get_lat())<epsilon && Math.abs(intersect.get_lon()-p2.get_lon())<epsilon) )
 				{
@@ -1000,7 +1000,7 @@ public class PolygonStruct extends ShapeStruct {
 				return;
 			}
 			if(get_size() >= 3) {
-				if(restrictionShapes!=null && restrictionShapes.size()>0)
+				/*if(restrictionShapes!=null && restrictionShapes.size()>0)
 				{
 					//also check if all points are inside poly and no polyline crosses restriction area
 					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
@@ -1022,7 +1022,7 @@ public class PolygonStruct extends ShapeStruct {
 						return;
 					}
 
-				}
+				}*/
 				setCanLock(true);
 				return;
 			}

@@ -1263,7 +1263,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onMapKeyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_T:
-                Variables.getMapFrame().get_active_shape().typecast_polygon().ellipseToRestrictionlines(Variables.getUserInfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+                //Variables.getMapFrame().get_active_shape().typecast_polygon().ellipseToRestrictionlines(Variables.getUserInfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
                 Variables.getMapFrame().get_actionhandler().checkAndSetShapeIntegrity();
                 break;
         }
@@ -1503,7 +1503,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 	@Override
 	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
 			ShapeIntegrity integrity) {
-		//log.debug("shape-integrity reports %s", integrity.toString());
+		log.debug("shape-integrity reports %s", integrity.toString());
 	}
     
     
