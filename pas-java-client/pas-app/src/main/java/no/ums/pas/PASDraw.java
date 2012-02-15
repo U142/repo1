@@ -35,6 +35,8 @@ public class PASDraw extends Draw {
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			PAS.pasplugin.onMapDrawLayers(PAS.get_pas().get_navigation(), g, PAS.get_pas());
 		}
 		super.draw_layers(g);

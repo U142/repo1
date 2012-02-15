@@ -1140,9 +1140,9 @@ public class CentricPasScripting extends DefaultPasScripting {
                 //((DeptInfo) dept).drawRestrictionShapes(g, nav);
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            for (ShapeStruct aList : list) {
-                //aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, false, 2, false);
-            }
+            /*for (ShapeStruct aList : list) {
+                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, false, 1, false);
+            }*/
             
             
             
@@ -1156,11 +1156,11 @@ public class CentricPasScripting extends DefaultPasScripting {
             Area areaScreen = new Area(polyScreen);
 
             final Point topLeft = Variables.getMapFrame().getZoomLookup().getPoint(Variables.getMapFrame().getMapModel().getTopLeft());
-            PolygonStruct poly = list.get(0).typecast_polygon();
             Polygon polyRestrict = new Polygon();
             for (ShapeStruct aList : list) {
             	if(aList instanceof PolygonStruct)
             	{
+                    PolygonStruct poly = aList.typecast_polygon();
 		            for (int i=0; i<=poly.get_size(); i++) {
 		                final Point lineTo = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(poly.get_coor_lon(i % poly.get_size()), poly.get_coor_lat(i % poly.get_size())));
 		                polyRestrict.addPoint(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
