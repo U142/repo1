@@ -5,6 +5,7 @@
     <formats>
         <format>zip</format>
     </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}</directory>
@@ -28,6 +29,7 @@
             <outputDirectory>/</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <scope>runtime</scope>
+            <unpack>false</unpack>
         </dependencySet>
     </dependencySets>
 </assembly>

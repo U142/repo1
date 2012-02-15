@@ -18,33 +18,36 @@
         </dependency>
     </dependencies>
     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/src.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.3</version>
-                    <configuration>
-                        <descriptors>
-                            <descriptor>src/main/assembly/src.xmlfjas</descriptor>
-                        </descriptors>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                            <phase>package</phase> <!-- append to the packaging phase. -->
-                            <goals>
-                                <goal>single</goal> <!-- goals == mojos -->
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
                 <plugin>
                     <groupId>no.ums.maven</groupId>
                     <artifactId>maven-ums-plugin</artifactId>
                     <configuration>
+                        <src>${project.build.directory}/${project.build.finalName}-bin.zip</src>
                         <destinations>
-                            <!--<destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp/</destination>-->
-                            <destination>file://c:/ums/</destination>
+                            <destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp-test/</destination>
+                            <!--<destination>file:///c:/ums/</destination>-->
                         </destinations>
                     </configuration>
                 </plugin>
