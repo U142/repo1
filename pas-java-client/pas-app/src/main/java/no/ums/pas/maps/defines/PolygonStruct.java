@@ -925,7 +925,7 @@ public class PolygonStruct extends ShapeStruct {
 		if(isElliptical() && getIntegrity()!=ShapeIntegrity.OK)
 		{
 			for(PolygonStruct splitPoly : splitPartPolygons) {
-				splitPoly.draw(g, mapModel, zoomLookup, false, true, false, p, true, true, 3, bPaintShapeName, bHasFocus);
+				splitPoly.draw(g, mapModel, zoomLookup, false, true, false, p, true, true, 3, false, false);
 			}
 			return;
 		}
@@ -994,6 +994,11 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		else if(getPolyType()==PolyType.NORMAL)
 		{
+			if(getIntegrity()!=ShapeIntegrity.OK)
+			{
+				setCanLock(false);
+				return;
+			}
 			if(get_size() >= 3) {
 				if(restrictionShapes!=null && restrictionShapes.size()>0)
 				{
