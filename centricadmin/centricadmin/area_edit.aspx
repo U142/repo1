@@ -81,7 +81,11 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695">
+                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/admin.jar, javaapp/common-2.2.1.jar, javaapp/commons-lang-2.1.jar, javaapp/Core.jar, javaapp/geoapi-2.2.0.jar, javaapp/gt-api-2.5.5.jar, javaapp/gt-main-2.5.5.jar,
+                javaapp/gt-metadata-2.5.5.jar, javaapp/gt-referencing-2.5.5.jar, javaapp/gt-shapefile-2.5.5.jar, javaapp/gt-wms-2.5.5.jar, javaapp/gt-xml-2.5.5.jar, javaapp/Importer.jar, javaapp/jcommon-1.0.16.jar,
+                javaapp/jdom-1.0.jar, javaapp/jfreechart-1.0.13.jar, javaapp/jts-1.9.jar, javaapp/localization.jar, javaapp/Maps.jar, javaapp/no.ums.jar, javaapp/PAS.jar, javaapp/PASIcons.jar, javaapp/plugins.jar,
+                javaapp/roxes-win32forjava-1.0.2.jar, javaapp/Send.jar, javaapp/substance.3.3.0.1.jar, javaapp/substance.4.3.11.jar, javaapp/substance.5.0.01.jar, javaapp/substance.jar, javaapp/UMS.jar"
+                 code="no/ums/adminui/pas/MapApplet.class" main-class="no.ums.adminui.pas.MapApplet">
                     <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
                     <param id="compid" name="compid" runat="server" value="dette er noe tekst" />
                     <param id="deptid" name="deptid" runat="server" value="dette er noe tekst" />
@@ -93,7 +97,7 @@
                     <param id="c" name="c" runat="server" />
                     <param id="applet_height" name="applet_height" runat="server" />
                     <param id="applet_width" name="applet_width" runat="server" />
-                    <param name="jnlp_href" value="javaapp/mapapplet.jnlp" />
+                    <!--<param name="jnlp_href" value="javaapp/mapapplet.jnlp"--> />
                 </applet>
                 <!--
                 <script type="text/javascript">

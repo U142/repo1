@@ -106,15 +106,31 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                     lon += "|";
                             }
                         }
+
+                        string archive = "javaapp/admin.jar, " +
+                                        "javaapp/common-2.2.1.jar, javaapp/commons-lang-2.1.jar, javaapp/Core.jar, javaapp/geoapi-2.2.0.jar, javaapp/gt-api-2.5.5.jar, " + 
+                                        "javaapp/gt-main-2.5.5.jar, javaapp/gt-metadata-2.5.5.jar, javaapp/gt-referencing-2.5.5.jar, javaapp/gt-shapefile-2.5.5.jar, javaapp/gt-wms-2.5.5.jar, " +
+                                        "javaapp/gt-xml-2.5.5.jar, javaapp/Importer.jar, javaapp/jcommon-1.0.16.jar, javaapp/jdom-1.0.jar, javaapp/jfreechart-1.0.13.jar, javaapp/jts-1.9.jar, " + 
+                                        "javaapp/localization.jar, javaapp/Maps.jar, javaapp/no.ums.jar, javaapp/PAS.jar, javaapp/PASIcons.jar, javaapp/plugins.jar, " +
+                                        "javaapp/roxes-win32forjava-1.0.2.jar, javaapp/Send.jar, javaapp/substance.3.3.0.1.jar, javaapp/substance.4.3.11.jar, javaapp/substance.5.0.01.jar, " +
+                                        "javaapp/substance.jar, javaapp/UMS.jar";
+
+                        string code = "no/ums/adminui/pas/MapImageDownload.class";
+
+                        string mainclass = "no.ums.adminui.pas.MapImageDownload";
+
                         txt.Text = "<input type=\"button\" onclick=\"javascript:launchApplet('" +
-                                        "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1> " +
+                                        "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1 archive=" + 
+                                        getUrlEncodedDoubleQuote() + archive + getUrlEncodedDoubleQuote() +
+                                            " code=" + code +
+                                            " main-class=" + mainclass + " > " +
                                             "<param name=lat value=" + lat + " >" +
                                             "<param name=lon value=" + lon + " >" +
                                             "<param name=mapinfo value=" + ConfigurationManager.AppSettings["mapinfo"] + " >" +
                                             "<param name=w value=" + ConfigurationManager.AppSettings["w"] + " >" +
                                             "<param name=applet_width value=" + ConfigurationManager.AppSettings["applet_width"] + " >" +
                                             "<param name=applet_height value=" + ConfigurationManager.AppSettings["applet_height"] + " >" +
-                                            "<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
+                                            //"<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
                                        "</applet>" +
                                     "')\" value=\"Save\" />";
                         cell.Controls.Add(txt);
@@ -126,6 +142,11 @@ public partial class report_authorizationarea : System.Web.UI.Page
                 }
             }
         }
+    }
+
+    private string getUrlEncodedDoubleQuote()
+    {
+        return Server.HtmlEncode("\"");
     }
 
     private void fillDropDown()
