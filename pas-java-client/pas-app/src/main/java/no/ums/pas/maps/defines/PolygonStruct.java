@@ -352,7 +352,7 @@ public class PolygonStruct extends ShapeStruct {
 			//check if the line starts or ends where the intersection is
 			if(DOINTERSECT == CommonFunc.DO_INTERSECT && b_exclude_tangent_points)
 			{
-				double epsilon = 100/POINT_PRECISION;
+				double epsilon = 10/POINT_PRECISION;
 				if( (Math.abs(intersect.get_lat()-p1.get_lat())<epsilon && Math.abs(intersect.get_lon()-p1.get_lon())<epsilon) || 
 						(Math.abs(intersect.get_lat()-p2.get_lat())<epsilon && Math.abs(intersect.get_lon()-p2.get_lon())<epsilon) )
 				{
