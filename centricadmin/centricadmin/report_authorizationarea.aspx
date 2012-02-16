@@ -45,8 +45,9 @@
             <asp:Button ID="btn_show" runat="server" Text="Show" OnClick="btn_showClick"/>
         </asp:TableCell>
     </asp:TableRow>
-</asp:Table> 
+</asp:Table>
 <table id="tbl_output" runat="server">
+    
 </table>
 
 </div>
