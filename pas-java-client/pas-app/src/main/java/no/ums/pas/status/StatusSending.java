@@ -1255,7 +1255,7 @@ public class StatusSending {
 
         public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
-				Variables.getNavigation().gotoMap(get_shape().calc_bounds());
+				Variables.getNavigation().gotoMap(get_shape().calc_bounds(),null);
 			} else if(e.getSource().equals(m_btn_cancel_lba_sending))
 			{
 				//CANCEL

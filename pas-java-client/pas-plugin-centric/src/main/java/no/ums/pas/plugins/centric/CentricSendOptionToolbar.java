@@ -855,7 +855,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			current_mode = MODE.SHOWING_SUMMARY;
 			showSummary();
 			checkForEnableSendButton();
-			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds());
+			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds(),null);
 		}
 		else if(e.getActionCommand().equals("act_goto_authorization")) {
 			PAS.pasplugin.onLockSending(null, true);

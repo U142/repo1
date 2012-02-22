@@ -6,16 +6,16 @@ import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.menus.ViewOptions;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.ws.common.UMapPoint;
+import org.jdesktop.beansbinding.AbstractBean;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import org.jdesktop.beansbinding.AbstractBean;
 
 //import PAS.*;
 
@@ -54,55 +54,6 @@ public class Navigation extends AbstractBean{
 	
 	public static final NavStruct NAV_WORLD = new NavStruct(-180, 180, 90, -90);
 
-	/*public class MapPoint {
-		MapPointLL m_ll;
-		MapPointPix m_pix;
-		public int get_x() { return m_pix.get_x(); }
-		public int get_y() { return m_pix.get_y(); }
-		public double get_lon() { return m_ll.get_lon(); }
-		public double get_lat() { return m_ll.get_lat(); }
-		public MapPointLL get_mappointll() { return m_ll; }
-		public MapPointPix get_mappointpix() { return m_pix; }
-		public MapPoint(Navigation nav, MapPointLL point_ll) {
-			m_ll = point_ll;
-			m_pix = new MapPointPix(nav.coor_to_screen(m_ll.get_lon(), m_ll.get_lat(), false));
-		}
-		public MapPoint(Navigation nav, MapPointPix pix) {
-			m_pix = pix;
-			m_ll  = new MapPointLL(nav.screen_to_coor(m_pix.get_x(), m_pix.get_y()));
-		}
-	}
-
-	public class MapPointLL {
-		private double m_lon;
-		private double m_lat;
-		public MapPointLL(double lon, double lat) {
-			m_lon = lon;
-			m_lat = lat;
-		}
-		public MapPointLL(MapPointLL ll) {
-			m_lon = ll.get_lon();
-			m_lat = ll.get_lat();
-		}
-		public double get_lon() { return m_lon; }
-		public double get_lat() { return m_lat; }
-	}
-	public class MapPointPix {
-		private Dimension m_dim;
-		public MapPointPix(int x, int y) {
-			m_dim = new Dimension(x, y);
-		}
-		public MapPointPix(Dimension dim) {
-			m_dim = new Dimension(dim);
-		}
-		public int get_x() { return m_dim.width; }
-		public int get_y() { return m_dim.height; }
-	}
-	*/
-	
-	
-	
-	
 	Double m_f_lbo, m_f_rbo, m_f_ubo, m_f_bbo;
 	double m_f_nav_lbo, m_f_nav_rbo, m_f_nav_ubo, m_f_nav_bbo;
 	public Double get_lbo() { return m_f_lbo; }
@@ -116,6 +67,19 @@ public class Navigation extends AbstractBean{
 	Double m_f_mapwidthmeters, m_f_mapheightmeters;
 	Double m_f_zoom_multiplier;
 	ActionListener m_callback = null;
+
+    private MapFrame mapFrame;
+    private Settings.MAPSERVER mapserver;
+    
+    public void setMapFrame(MapFrame mapframe) {
+        this.mapFrame = mapframe;
+    }
+    
+    public void setMapserver(Settings.MAPSERVER mapserver) {
+        this.mapserver = mapserver;
+    }
+    
+    
 
 	public Navigation(ActionListener callback, int x, int y)
 	{
@@ -194,12 +158,6 @@ public class Navigation extends AbstractBean{
 			ubo = bbo;
 			bbo = tmp;
 		}
-		{
-			//lbo-=0.001;
-			//rbo+=0.001;
-			//ubo+=0.001;
-			//bbo-=0.001;
-		}
 		if(lbo>rbo) //switch
 		{
 			double tmp = lbo;
@@ -212,7 +170,8 @@ public class Navigation extends AbstractBean{
 			ubo = bbo;
 			bbo = tmp;
 		}
-        final TileLookup.BoundsMatch bounds = PAS.get_pas().get_mappane().getTileLookup().getBestMatch(new LonLat(lbo, ubo), new LonLat(rbo, bbo), m_dimension);
+
+        final TileLookup.BoundsMatch bounds = mapFrame.getTileLookup(mapserver).getBestMatch(new LonLat(lbo, ubo), new LonLat(rbo, bbo), m_dimension);
         m_f_nav_lbo = bounds.getTopLeft().getLon();
         m_f_nav_rbo = bounds.getBottomRight().getLon();
         m_f_nav_ubo = bounds.getTopLeft().getLat();
@@ -224,41 +183,11 @@ public class Navigation extends AbstractBean{
         m_f_bbo = m_f_nav_bbo;
         calc_prpix();
         calc_mapmeters();
-        PAS.get_pas().get_mappane().getMapModel().setTopLeft(bounds.getTopLeft());
-        PAS.get_pas().get_mappane().getMapModel().setZoom(bounds.getZoom());
+        mapFrame.setMapserver(mapserver);
+        mapFrame.getMapModel().setTopLeft(bounds.getTopLeft());
+        mapFrame.getMapModel().setZoom(bounds.getZoom());
 
         return true;
-//
-//		if(b_check_zoom_level)
-//		{
-//			NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
-//			//Dimension dim = getDimensionFromBounds(nav);
-//			//if(too_small(nav))
-//
-//			{
-//				//setNavigation(calcMinBounds(nav));
-//				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, Variables.getMapFrame().get_dimension());
-//				NavStruct newnav = calcMinBounds(nav, gesture);
-//				//if(newnav.equals(nav))
-//				if(newnav!=null)
-//				{
-//					m_f_nav_lbo = newnav._lbo; m_f_nav_rbo = newnav._rbo; m_f_nav_ubo = newnav._ubo; m_f_nav_bbo = newnav._bbo;
-//					return true;
-//				}
-//				else
-//					return false;
-//				//else
-//				//	return false;
-//			}
-//				//exec_zoom_in(dim, dim);
-//		}
-//		else
-//		{
-//			m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
-//			return true;
-//		}
-		//load_map();
-
 	}
 	public String toString() {
 		return "lbo: " + m_f_nav_lbo + " rbo: " + m_f_nav_rbo + " ubo: " + m_f_nav_ubo + " bbo: " + m_f_nav_bbo;
@@ -283,18 +212,12 @@ public class Navigation extends AbstractBean{
 	protected boolean setNavigation(NavStruct nav, NAVIGATION_GESTURE gesture) {
 		return setNavigation(nav, true, gesture);
 	}
-	public void gotoMap(NavStruct nav) {
+	public void gotoMap(NavStruct nav, MapFrame mapFrame) {
 		Dimension dim;
-		//setNavigation(nav, false);
-		//dim = getDimensionFromBounds(nav);
-		//if(too_small(nav))
-		{
-			//exec_zoom_in(dim, dim);
-			setNavigation(nav, true);
-			load_map();
-		}
-		//else
-		//	load_map();
+
+        setNavigation(nav, true);
+        load_map();
+
 		
 	}
 	public void reloadMap()

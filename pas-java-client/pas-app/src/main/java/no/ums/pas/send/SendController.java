@@ -20,18 +20,10 @@ import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.GISShape;
-import no.ums.pas.maps.defines.MunicipalStruct;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.PolySnapStruct;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.TasStruct;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.sendpanels.SendWindow;
-import no.ums.pas.send.sendpanels.SendingResultsController;
 import no.ums.pas.send.sendpanels.SendingResultsView;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.status.StatusSending;
@@ -46,18 +38,9 @@ import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.Parmws;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.xml.namespace.QName;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -605,7 +588,7 @@ public class SendController implements ActionListener {
 		}
 		else if("act_polygon_imported_eof".equals(e.getActionCommand())) {
 			SosiFile f = (SosiFile)e.getSource();
-			Variables.getNavigation().gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds());
+			Variables.getNavigation().gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds(),null);
 		}
 		else if("act_gis_imported_eof".equals(e.getActionCommand())) {
 			PAS.get_pas().add_event("act_gis_imported_eof", null);

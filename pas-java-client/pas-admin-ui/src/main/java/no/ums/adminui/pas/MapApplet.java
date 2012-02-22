@@ -75,17 +75,9 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		vars.init(getParameter("w"));
 		PAS.setLocale("en","GB");
-		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
-		//WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
+
 		ULOGONINFO logon = new ULOGONINFO();
-		/*
-		String session = "9235035e-f6f8-413c-b921-059f78f8516c";
-		logon.setLDeptpk(1);
-		logon.setLComppk(1);
-		logon.setLUserpk(7);
-		logon.setSzPassword("614b5c970633ec4ac2ee96f98f6fdeb04e4fb0e0b13dc9401b674bb8c4a41ee96b67ce39491a716776ca81a4b58a7b47434aef0195c90241856fe065a476adcb");
-		logon.setSessionid(session);
-		*/
+
 		applet_height = Integer.parseInt(getParameter("applet_height"));
 		applet_width = Integer.parseInt(getParameter("applet_width"));
 		logon.setLDeptpk(Integer.parseInt(getParameter("deptid")));
@@ -107,12 +99,11 @@ public class MapApplet extends JApplet implements ActionListener {
 			if(arr!=null && arr.length>=3)
 			{
 				m_settings.setMapServer(MAPSERVER.WMS);
-				//ui.setSzWmsSite(arr[0]);
+
 				m_settings.setWmsSite(arr[0]);
 				m_settings.setSelectedWmsFormat(arr[1]);
 				m_settings.setSelectedWmsLayers(arr[2]);
-				//ui.setSzWmsFormat(arr[1]);
-				//ui.setSzWmsLayers(arr[2]);
+
 				if(arr.length>=4)
 					m_settings.setWmsEpsg(arr[3]);
 				else
@@ -125,11 +116,7 @@ public class MapApplet extends JApplet implements ActionListener {
 					m_settings.setWmsPassword(arr[5]);
 				else
 					m_settings.setWmsPassword("");
-				/*m_settings.setWmsSite(ui.getSzWmsSite());
-				m_settings.setWmsUsername(ui.getSzWmsUsername());
-				m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());
-				m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
-				m_settings.setWmsPassword(ui.getSzWmsPassword());*/
+
 			}
 		}
 		
@@ -138,6 +125,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
 		resize(applet_width,applet_height);
 		m_navigation = new Navigation(this,applet_width,applet_height);
+        m_navigation.setMapserver(m_settings.getMapServer());
 		Variables.setNavigation(m_navigation);
 		
 		try {
@@ -317,8 +305,9 @@ public class MapApplet extends JApplet implements ActionListener {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
 			}
 			Variables.setUserInfo(m_info);
-			Variables.getNavigation().setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144), false);
 			m_mappane = new MapFrameAdmin(applet_width, applet_height, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true);
+            Variables.getNavigation().setMapFrame(m_mappane);
+            Variables.getNavigation().setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144), false);
 			Variables.setMapFrame(m_mappane);
 			m_mappane.load_map();
 			m_drawthread.set_mappane(m_mappane);

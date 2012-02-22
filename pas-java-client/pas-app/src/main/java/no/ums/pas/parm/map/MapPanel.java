@@ -5,28 +5,14 @@ import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapitemProperties;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.tools.ImageLoader;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 //import java.util.logging.ConsoleHandler;
 
@@ -97,7 +83,8 @@ public class MapPanel extends JPanel implements ActionListener {
 
 	void exec() {
 		m_draw = new DrawPoly(this, Thread.NORM_PRIORITY, 1024, 768);
-		m_nav = new Navigation(this, 1024, 768);
+        m_nav = new Navigation(this, 1024, 768);
+
 		m_http = new HTTPReq(m_sz_sitename, m_nav);
 
 		ImageLoader.setClassLoader(getClass().getClassLoader());
@@ -163,7 +150,7 @@ public class MapPanel extends JPanel implements ActionListener {
 			clear();
 		}else if(e.getSource()==btn4){ //Toolbar gotTo
 			NavStruct struct = m_shape.typecast_polygon().calc_bounds();
-			m_nav.gotoMap(struct);
+			m_nav.gotoMap(struct,null);
 		}
 	}
 	public Navigation getM_navigation(){
