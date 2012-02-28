@@ -272,7 +272,6 @@
     </Content>
     <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -281,6 +280,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.NLAlert.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Nlbeta.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
