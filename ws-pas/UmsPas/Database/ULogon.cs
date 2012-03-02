@@ -94,6 +94,7 @@ namespace com.ums.PAS.Database
 
         protected bool SaveNsLookup(long n_userpk, ref UNSLOOKUP ns)
         {
+            UmsDb dbNsLookup = new UmsDb();
             OdbcDataReader rs = null;
             try
             {
@@ -101,7 +102,7 @@ namespace com.ums.PAS.Database
                                             "sz_ip='{1}'",
                                             n_userpk, ns.sz_ip);
 
-                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = dbNsLookup.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     rs.Close();
@@ -129,6 +130,7 @@ namespace com.ums.PAS.Database
             {
                 if (rs != null && !rs.IsClosed)
                     rs.Close();
+                dbNsLookup.close();
             }
         }
 
