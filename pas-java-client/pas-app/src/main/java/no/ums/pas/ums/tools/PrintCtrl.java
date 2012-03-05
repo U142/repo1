@@ -14,31 +14,11 @@ import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.imageio.ImageIO;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.ImageIcon;
-import javax.swing.RepaintManager;
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.renderable.RenderableImage;
-import java.awt.print.PageFormat;
-import java.awt.print.Pageable;
-import java.awt.print.Paper;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterGraphics;
-import java.awt.print.PrinterJob;
+import java.awt.print.*;
 import java.io.File;
 import java.util.HashSet;
 import java.util.ListIterator;
@@ -181,14 +161,17 @@ public class PrintCtrl implements Printable, Pageable {
 				StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
 				"Save As", FILE_FILTERS_, FilePicker.MODE_SAVE_);
 		File f = picker.getSelectedFile();
-		String sz_filetype = picker.getFileType().toLowerCase();
-		if(f!=null) {
-			try {
-				ImageIO.write(img, sz_filetype, f);
-			} catch(Exception e) {
-				
-			}
-		}
+        if(f != null) {
+		    String sz_filetype = picker.getFileType().toLowerCase();
+
+            if(f!=null) {
+                try {
+                    ImageIO.write(img, sz_filetype, f);
+                } catch(Exception e) {
+
+                }
+            }
+        }
 	}
 	
 	public int print(Graphics g) {
