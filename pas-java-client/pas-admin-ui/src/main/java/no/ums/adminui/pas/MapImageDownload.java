@@ -35,7 +35,8 @@ public class MapImageDownload extends JApplet {
     private int applet_width;
     private int applet_height;
 
-	public void init() {
+    public void start() {
+        System.out.println("Denne er oppdatert");
 
         applet_height = Integer.parseInt(getParameter("applet_height"));
         applet_width = Integer.parseInt(getParameter("applet_width"));
@@ -86,20 +87,22 @@ public class MapImageDownload extends JApplet {
         String[] clat = lat.split("\\|");
         String[] clon = lon.split("\\|");
 
-        List<LonLat> shape = addLonLatToShape(clon,clat);
-        LonLat[] bounds = getBounds(shape);
+
 
         mapComponent = new MapComponent();
         mapComponent.setPreferredSize(new Dimension(applet_width,applet_height));
         final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
         mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
 
+        List<LonLat> shape = addLonLatToShape(clon,clat);
+        LonLat[] bounds = mapComponent.getBounds(shape);
+
         final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
         Variables.setZoomLevel(tileLookup.getZoom());
 
         mapComponent.getModel().setTopLeft(bounds[0]);
         mapComponent.getModel().setZoom(tileLookup.getZoom());
-        
+
         mapComponent.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(final MouseEvent e) {
@@ -126,29 +129,21 @@ public class MapImageDownload extends JApplet {
 
         Thread thread = new WaitThread(this, mapComponent.getDrawlayLayer());
         thread.start();
+    }
+    
+	public void init() {
+        try {
+			System.setSecurityManager(null);
+		}
+		catch(Exception e) {
+
+		}
+
+
 
 	}
 	
-    private LonLat[] getBounds(List<LonLat> shape) {
-        LonLat topLeft = new LonLat(180,-90), bottomRight = new LonLat(-180,90);
-        
-        for(LonLat lonLat: shape) {
-            if(topLeft.getLon() > lonLat.getLon()) {
-                topLeft = new LonLat(lonLat.getLon(), topLeft.getLat());
-            }
-            if(topLeft.getLat() < lonLat.getLat()) {
-                topLeft = new LonLat(topLeft.getLon(), lonLat.getLat());
-            }
-            if(bottomRight.getLon() < lonLat.getLon()) {
-                bottomRight = new LonLat(lonLat.getLon(), bottomRight.getLat());
-            }
-            if(bottomRight.getLat() > lonLat.getLat()) {
-                bottomRight = new LonLat(bottomRight.getLon(), lonLat.getLat());
-            }
-        }
-        
-        return new LonLat[] { topLeft, bottomRight };
-    }
+
     
 	public void paint(Graphics g) {
 		super.paint(g);

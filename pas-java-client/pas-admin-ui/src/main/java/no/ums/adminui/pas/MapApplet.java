@@ -305,12 +305,34 @@ public class MapApplet extends JApplet implements ActionListener {
 			Variables.setUserInfo(m_info);
             mapComponent = new MapComponent();
             mapComponent.setPreferredSize(new Dimension(applet_width,applet_height));
+
+            // Sets the map somewhere just to be able to calculate restriction area
             mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
             mapComponent.getModel().setZoom(Variables.getZoomLevel());
+
             final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
             mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
 
             zoomLookup = mapComponent.getTileLookup().getZoomLookup(Variables.getZoomLevel());
+
+            Path2D.Double restrictionShapesPath = null;
+            List<LonLat> lonLats = null;
+            if(m_info.get_departments().get_combined_restriction_shape() != null) {
+                List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
+                lonLats = convertCombinedRestrictionShapeCoordinatesToLonLat(list);
+                restrictionShapesPath = mapComponent.convertLonLatToPath2D(lonLats, zoomLookup);
+            }
+
+            LonLat[] bounds = mapComponent.getBounds(lonLats);
+
+            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
+            Variables.setZoomLevel(tileLookup.getZoom());
+
+            // Sets bounds based on restriction area
+            mapComponent.getModel().setTopLeft(bounds[0]);
+            mapComponent.getModel().setZoom(tileLookup.getZoom());
+
+
 
 
             mapComponent.addMouseMotionListener(new MouseAdapter() {
@@ -325,13 +347,7 @@ public class MapApplet extends JApplet implements ActionListener {
                 }
             });
 
-            Path2D.Double restrictionShapesPath = null;
-            List<LonLat> lonLats = null;
-            if(m_info.get_departments().get_combined_restriction_shape() != null) {
-                List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
-                lonLats = convertCombinedRestrictionShapeCoordinatesToLonLat(list);
-                restrictionShapesPath = mapComponent.convertLonLatToPath2D(lonLats, zoomLookup);
-            }
+
 
             MapComponent.DrawingLayer drawingLayer = new MapComponent.DrawingLayer(mapComponent);
 

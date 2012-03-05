@@ -632,7 +632,28 @@ public final class MapComponent extends JComponent {
         }
         return null;
     }
-    
+
+    public LonLat[] getBounds(List<LonLat> shape) {
+        LonLat topLeft = new LonLat(180,-90), bottomRight = new LonLat(-180,90);
+
+        for(LonLat lonLat: shape) {
+            if(topLeft.getLon() > lonLat.getLon()) {
+                topLeft = new LonLat(lonLat.getLon(), topLeft.getLat());
+            }
+            if(topLeft.getLat() < lonLat.getLat()) {
+                topLeft = new LonLat(topLeft.getLon(), lonLat.getLat());
+            }
+            if(bottomRight.getLon() < lonLat.getLon()) {
+                bottomRight = new LonLat(lonLat.getLon(), bottomRight.getLat());
+            }
+            if(bottomRight.getLat() > lonLat.getLat()) {
+                bottomRight = new LonLat(bottomRight.getLon(), lonLat.getLat());
+            }
+        }
+
+        return new LonLat[] { topLeft, bottomRight };
+    }
+
     public Point getCoordinateToPoint(LonLat lonLat) {
         return this.getTileLookup().getZoomLookup(getModel().getZoom()).getScreenPoint(
                 model.getTopLeft(), lonLat);
