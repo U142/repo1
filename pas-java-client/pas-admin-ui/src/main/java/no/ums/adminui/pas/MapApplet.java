@@ -3,9 +3,10 @@ package no.ums.adminui.pas;
 import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.*;
+import no.ums.map.tiled.component.MapComponent;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
-import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
@@ -33,6 +34,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +48,10 @@ public class MapApplet extends JApplet implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public MapFrameAdmin m_mappane;
+    private ZoomLookup zoomLookup;
+
+    public MapFrameAdmin m_mappane;
+    public MapComponent mapComponent;
 	public AdminDraw m_drawthread;
 	public Navigation m_navigation;
 	public Image m_image;
@@ -89,9 +96,11 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", logon.getSessionid(), "", -1, "");
 		Settings m_settings = new Settings();
+        
 		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{
-			m_settings.setMapServer(MAPSERVER.DEFAULT);
+			//m_settings.setMapServer(MAPSERVER.DEFAULT);
+
 		}
 		else
 		{
@@ -122,15 +131,11 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		Variables.setSettings(m_settings);
 	
-		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
+		WSGetRestrictionShapes wsGetRestrictionShapes = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
 		resize(applet_width,applet_height);
-		m_navigation = new Navigation(this,applet_width,applet_height);
-        m_navigation.setMapserver(m_settings.getMapServer());
-		Variables.setNavigation(m_navigation);
 		
 		try {
-			ting.run();
-			//PAS.pasplugin = new PAS_Scripting();
+            wsGetRestrictionShapes.run();
 		} catch(Exception e) {
 			log.warn(e.getMessage(), e);
 		}
@@ -226,23 +231,18 @@ public class MapApplet extends JApplet implements ActionListener {
 				
 				
 				Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();
-				//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}});
 		
 		Container contentpane = getContentPane();
 		contentpane.setLayout(new FlowLayout());
-		//contentpane.add(pnl_buttons, BorderLayout.PAGE_START);
-		contentpane.add(m_mappane, BorderLayout.PAGE_END);
+
+		contentpane.add(mapComponent, BorderLayout.PAGE_END);
 		contentpane.setSize(applet_width, applet_height);
-		//add(m_mappane);
-		//m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By");
-		//m_drawthread.setRepaint(m_image);
-		//m_drawthread.setNeedRepaint();
-		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
-		m_mappane.addActionListener(this);
-		m_mappane.set_mode(MapFrame.MapMode.ZOOM);
-		//m_mappane.setIsLoading(false, "map");
-		//put("38");
+
+        /*m_mappane.addActionListener(this);
+		m_mappane.set_mode(MapFrame.MapMode.ZOOM);*/
+        mapComponent.repaint();
+
 	}
 	
 	private void add_controls(){
@@ -301,10 +301,63 @@ public class MapApplet extends JApplet implements ActionListener {
 
 
 			m_info.get_departments().CreateCombinedRestrictionShape();
-			if(m_info.get_departments().get_combined_restriction_shape() != null) {
-				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
-			}
+			
 			Variables.setUserInfo(m_info);
+            mapComponent = new MapComponent();
+            mapComponent.setPreferredSize(new Dimension(applet_width,applet_height));
+            mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
+            mapComponent.getModel().setZoom(Variables.getZoomLevel());
+            final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
+            mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
+
+            zoomLookup = mapComponent.getTileLookup().getZoomLookup(Variables.getZoomLevel());
+
+
+            mapComponent.addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void mouseMoved(final MouseEvent e) {
+                    final MapComponent map = (MapComponent) e.getComponent();
+                    map.setSize(applet_width,applet_height);
+                    final ZoomLookup zoomLookup = map.getTileLookup().getZoomLookup(map.getModel().getZoom());
+                    final LonLat ll = zoomLookup.getLonLat(map.getModel().getTopLeft(), e.getX(), e.getY());
+                    final TileLookup tileLookup = map.getTileLookup();
+                    //final TileInfo tileInfo = tileLookup.getTileInfo(map.getModel().getZoom(), map.getModel().getTopLeft(), new Dimension(applet_width,applet_height));
+                }
+            });
+
+            Path2D.Double restrictionShapesPath = null;
+            List<LonLat> lonLats = null;
+            if(m_info.get_departments().get_combined_restriction_shape() != null) {
+                List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
+                lonLats = convertCombinedRestrictionShapeCoordinatesToLonLat(list);
+                restrictionShapesPath = mapComponent.convertLonLatToPath2D(lonLats, zoomLookup);
+            }
+
+            MapComponent.DrawingLayer drawingLayer = new MapComponent.DrawingLayer(mapComponent);
+
+            mapComponent.addLayer(drawingLayer);
+            
+            mapComponent.addLayer(new MapComponent.RestrictionLayer(mapComponent, restrictionShapesPath, lonLats));
+
+
+            for(DeptInfo dept: m_info.get_departments()) {
+                for(ShapeStruct shape: dept.get_restriction_shapes()) {
+                    if(!shape.isObsolete()) {
+                        List<ShapeStruct> tmpShape = new ArrayList<ShapeStruct>();
+                        tmpShape.add(shape);
+                        List<LonLat> tmplls = convertCombinedRestrictionShapeCoordinatesToLonLat(tmpShape);
+                        Path2D.Double tmpPath = mapComponent.convertLonLatToPath2D(tmplls, zoomLookup);
+                        shape.calc_bounds();
+                        MapPointLL ll = shape.getCenter();
+
+                        mapComponent.addLayer(new MapComponent.IndividualRestriction(mapComponent,tmpPath, tmplls,
+                                shape.shapeName, new LonLat(ll.get_lon(),ll.get_lat())));
+                    }
+                }
+            }
+
+            
+            /*
 			m_mappane = new MapFrameAdmin(applet_width, applet_height, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true);
             Variables.getNavigation().setMapFrame(m_mappane);
             Variables.getNavigation().setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144), false);
@@ -312,8 +365,8 @@ public class MapApplet extends JApplet implements ActionListener {
 			m_mappane.load_map();
 			m_drawthread.set_mappane(m_mappane);
 			
-			m_mappane.initialize();
-			add(m_mappane);
+			m_mappane.initialize();*/
+			add(mapComponent);
 			b_results_ready = true;
 			afterAfterLogon();
 		}
@@ -648,8 +701,25 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			
 		}
-		
-	public void put(String id) {
+
+    private List<LonLat> convertCombinedRestrictionShapeCoordinatesToLonLat(List<ShapeStruct> combinedRestrictionShape) {
+        List<LonLat> lonLats = new ArrayList<LonLat>();
+        
+        if(combinedRestrictionShape.get(0) instanceof PolygonStruct) {
+            PolygonStruct polygonStruct = (PolygonStruct) combinedRestrictionShape.get(0);
+            polygonStruct.POINT_PRECISION = Double.MAX_VALUE;
+
+            for(int i=0;i<polygonStruct.get_coors_lat().size();i++) {
+
+                lonLats.add(new LonLat(polygonStruct.get_coors_lon().get(i),polygonStruct.get_coors_lat().get(i)));
+            }
+        }
+        return lonLats;
+    }
+
+
+
+    public void put(String id) {
 		PolygonStruct s = null; 
 		for(int i=0;i< Variables.getUserInfo().get_departments().size();++i){
 			DeptInfo deptinfo = (DeptInfo)m_info.get_departments().get(i);
