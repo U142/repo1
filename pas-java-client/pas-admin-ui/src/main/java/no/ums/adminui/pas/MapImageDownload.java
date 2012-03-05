@@ -117,7 +117,6 @@ public class MapImageDownload extends JApplet {
                 final TileLookup tileLookup = map.getTileLookup();
             }
         });
-
         mapComponent.addLayer(new MapComponent.DrawingLayer(mapComponent));
 
         ZoomLookup zoomLookup = mapComponent.getTileLookup().getZoomLookup(Variables.getZoomLevel());
@@ -132,7 +131,8 @@ public class MapImageDownload extends JApplet {
         mapComponent.repaint();
         mapComponent.getDrawlayLayer().recalculate();
 
-        new WaitThread(this, mapComponent.getDrawlayLayer()).start();
+        Thread thread = new WaitThread(this, mapComponent.getDrawlayLayer());
+        thread.start();
 
 	}
 	
@@ -167,8 +167,8 @@ public class MapImageDownload extends JApplet {
     }
     
     public boolean mapDownloaded(MapComponent mapComponent) {
-        ImmutableList<TileData> tileDataList = mapComponent.getTileLookup().getTileInfo(Variables.getZoomLevel(),mapComponent.getModel().getTopLeft(),
-                new Dimension(applet_width,applet_height)).getTileData();
+        ImmutableList<TileData> tileDataList = mapComponent.getTileLookup().getTileInfo(Variables.getZoomLevel(),
+                mapComponent.getModel().getTopLeft(), new Dimension(applet_width,applet_height)).getTileData();
 
         boolean downloaded = true;
 
@@ -178,6 +178,10 @@ public class MapImageDownload extends JApplet {
             }
         }
 
+        if(downloaded) {
+            mapComponent.repaint();
+        }
+        
         return downloaded;
     }
     
