@@ -65,27 +65,6 @@ public class DeptArray extends ArrayList<DeptInfo> {
 
 	public void CreateCombinedRestrictionShape()
 	{
-		/*Polygon shape1 = new Polygon();
-		Polygon shape2 = new Polygon();
-		shape1.addPoint(4, 58);
-		shape1.addPoint(4, 59);
-		shape1.addPoint(6, 59);
-		shape1.addPoint(6, 58);
-		shape2.addPoint(4, 58);
-		shape2.addPoint(5, 60);
-		shape2.addPoint(7, 60);
-		shape2.addPoint(6, 58);
-		
-		Area area1 = new Area(shape1);
-		Area area2 = new Area(shape2);*/
-		
-		/*if(size()==1)
-		{
-			m_combined_shapestruct_list.add((PolygonStruct)((DeptInfo)this.get(0)).get_restriction_shapes().get(0));
-			return;
-		}*/
-
-		
 		int int_mod = 10000;
 		
 		Area combined = new Area();
@@ -94,8 +73,8 @@ public class DeptArray extends ArrayList<DeptInfo> {
 		for(int j=0; j < this.size(); j++)
 		{
 			PolygonStruct poly = (PolygonStruct)((DeptInfo)this.get(j)).get_restriction_shapes().get(0);
-			
-			if(poly.isHidden() && size()>1)
+            
+			if(poly.isHidden() && size()>1 || poly.isObsolete())
 				continue;
 			Polygon javapoly = new Polygon();
 			int c;
@@ -120,32 +99,6 @@ public class DeptArray extends ArrayList<DeptInfo> {
 		}
 		log.debug(n_total_points + " points in " + size() + " shapes");
 
-		//temp
-		//test ellipse
-		/*Ellipse2D.Double ell = new Ellipse2D.Double();
-		ell.x = 6.22478;
-		ell.y = 58.84978;
-		ell.width = 0.8;
-		ell.height = 0.2;
-		PolygonStruct poly_ellipse = new PolygonStruct(null);
-		Utils.ConvertEllipseToPolygon(ell.x, ell.y, ell.x+ell.width, ell.y+ell.height, 40, 360, poly_ellipse);
-
-		Polygon javapoly = new Polygon();
-		int c;
-		for(c = 0; c < poly_ellipse.get_size(); c++)
-		{
-			int x = (int)(poly_ellipse.get_coor_lon(c % poly_ellipse.get_size())*int_mod);
-			int y = (int)(poly_ellipse.get_coor_lat(c % poly_ellipse.get_size())*int_mod);
-			javapoly.addPoint(x, y);
-		}
-		Area ellipse_area = new Area(javapoly);
-		combined.intersect(ellipse_area);*/
-		//temp
-		
-		
-		//combined.add(area1);
-		//combined.add(area2);
-		
 		
 		PathIterator it = combined.getPathIterator(new AffineTransform());
 		PolygonStruct combined_shapestruct = new PolygonStruct(null, Color.black, new Color(0,0,0,0));
@@ -209,108 +162,6 @@ public class DeptArray extends ArrayList<DeptInfo> {
 
 		m_combined_shapestruct_list.add(combined_shapestruct);
 	}
-	
-	/**
-	 * Get all restriction shapes and combine those who are sharing borders
-	 */
-	/*public void CreateCombinedRestrictionShape(PolygonStruct combined_shapestruct, ShapeStruct next, int start_at_point, POINT_DIRECTION direction, int combo_id)
-	{
-		if(combined_shapestruct==null)
-		{
-			combined_shapestruct = new PolygonStruct(null, Color.black, new Color(0,0,0,0));
-			m_combined_shapestruct_list.add(combined_shapestruct);
-		}
-		if(combo_id<=0)
-			combo_id = 1;
-		if(start_at_point<0)
-			start_at_point = 0;
-		//start at polygon 0
-		//loop points in polygon 0
-		//add every point to the combined polygon
-		//check every point if it's overlapping
-		//if yes, jump into next polygon at the polypoint number
-		
-		//int combo_id = 1;
-		//for(int i=0; i < this.size(); i++)
-		{
-			
-			PolygonStruct source_polygon;
-			if(next==null)
-			{
-				List<ShapeStruct> l = ((DeptInfo)this.get(0)).get_restriction_shapes();
-				source_polygon = (PolygonStruct)l.get(0);
-			}
-			else
-				source_polygon = (PolygonStruct)next;
-			
-			if(source_polygon.combination_id<=0) //only combine polygons that are not already combined
-			{
-				source_polygon.combination_id = combo_id;
-				PolygonStruct next_poly = null;
-				boolean b_found_valid_next = false;
-				for(int j=0; j < this.size(); j++)
-				{
-					next_poly = (PolygonStruct)((DeptInfo)this.get(j)).get_restriction_shapes().get(0);
-					if(next_poly==source_polygon) //don't compare a polygon to itself
-						continue;
-					if(next_poly.combination_id<0 || next_poly.combination_id==source_polygon.combination_id)
-					{
-						b_found_valid_next = true;
-						break;
-					}
-				}
-				//start parsing from the first polypoint
-				//for(int source_points = 0; source_points < source_polygon.get_size(); source_points++)
-				boolean b_cont = true;
-				int source_points = 0;
-				if(direction==POINT_DIRECTION.DOWN)
-					source_points = source_polygon.get_size()-1;
-				while(b_cont)
-				{
-					if(direction==POINT_DIRECTION.UP)
-					{
-						if(source_points >= source_polygon.get_size())
-							break;
-					}
-					else
-					{
-						if(source_points<0)
-							break;
-					}
-					//firstly, add the point
-					MapPointLL source_point = new MapPointLL(source_polygon.get_coor_lon(((source_points + start_at_point) % source_polygon.get_size())), source_polygon.get_coor_lat(((source_points + start_at_point) % source_polygon.get_size())));
-					//if(next_poly!=null && b_found_valid_next) //only check point-to-point if there are more polygons to be tested
-					{
-						for(int dest_points = 0; dest_points < next_poly.get_size(); dest_points++)
-						{
-							MapPointLL dest_point = new MapPointLL(next_poly.get_coor_lon(dest_points), next_poly.get_coor_lat(dest_points));
-							if(PointIsOverlapping(source_point, dest_point, 50))
-							{
-								//source_polygon.setPointIsAdded(source_points, true);
-								//next_poly.setPointIsAdded(dest_points, true);
-								//check next point, if we're going UP or DOWN on the next polygon
-								
-								
-								CreateCombinedRestrictionShape(combined_shapestruct, next_poly, dest_points+1, POINT_DIRECTION.UP, combo_id);
-							}
-						}
-					}
-					boolean b_added = source_polygon.getIsAdded(source_points);// || next_poly.getIsAdded(dest_points);
-					//if(!b_added)
-					{
-						combined_shapestruct.add_coor(source_point.get_lon(), source_point.get_lat());
-						source_polygon.setPointIsAdded(source_points, true);						
-					}
-					if(direction==POINT_DIRECTION.UP)
-						source_points ++;
-					else
-						source_points --;
-
-					
-				}
-			}
-		}
-	}*/
 	
 	/**
 	 * Check if two points are close enough (epsilon meters) to be overlapping 
