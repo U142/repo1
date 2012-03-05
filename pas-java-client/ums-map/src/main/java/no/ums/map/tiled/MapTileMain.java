@@ -44,7 +44,7 @@ public final class MapTileMain {
                         mainFrame.getLblZoom().setText(String.valueOf(zoomLookup.getZoomLevel()));
                     }
                 });
-                mainFrame.getMapComponent1().addLayer(new MapComponent.DrawingLayer(mainFrame.getMapComponent1()));
+                //mainFrame.getMapComponent1().addLayer(new MapComponent.DrawingLayer(mainFrame.getMapComponent1()));
                 mainFrame.setVisible(true);
             }
         });
