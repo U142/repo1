@@ -65,12 +65,12 @@ public class MapApplet extends JApplet implements ActionListener {
 	public int applet_height;
 	
 	public void init() {
-		try {
+		/*try {
 			System.setSecurityManager(null);
 		}
 		catch(Exception e) {
 			
-		}
+		}*/
 		
 	}
 	
