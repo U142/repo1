@@ -150,7 +150,7 @@ public class MapPanel extends JPanel implements ActionListener {
 			clear();
 		}else if(e.getSource()==btn4){ //Toolbar gotTo
 			NavStruct struct = m_shape.typecast_polygon().calc_bounds();
-			m_nav.gotoMap(struct,null);
+			m_nav.gotoMap(struct);
 		}
 	}
 	public Navigation getM_navigation(){

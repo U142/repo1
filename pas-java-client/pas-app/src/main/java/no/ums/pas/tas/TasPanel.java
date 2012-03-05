@@ -532,12 +532,12 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	protected void zoomToCountry(ULBACOUNTRY c)
 	{
 		NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-		Variables.getNavigation().gotoMap(nav, null);
+		Variables.getNavigation().gotoMap(nav);
 	}
 	protected void zoomToContinent(ULBACONTINENT c)
 	{
 		NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-		Variables.getNavigation().gotoMap(nav, null);
+		Variables.getNavigation().gotoMap(nav);
 	}
 
 	public TasPanel(ActionListener callback)

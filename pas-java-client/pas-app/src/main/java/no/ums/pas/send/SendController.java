@@ -588,7 +588,7 @@ public class SendController implements ActionListener {
 		}
 		else if("act_polygon_imported_eof".equals(e.getActionCommand())) {
 			SosiFile f = (SosiFile)e.getSource();
-			Variables.getNavigation().gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds(),null);
+			Variables.getNavigation().gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds());
 		}
 		else if("act_gis_imported_eof".equals(e.getActionCommand())) {
 			PAS.get_pas().add_event("act_gis_imported_eof", null);

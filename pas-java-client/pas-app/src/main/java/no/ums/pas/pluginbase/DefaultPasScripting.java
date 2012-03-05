@@ -1201,7 +1201,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onMapGotoNavigation(NavStruct n) {
 		//PAS.get_pas().actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-		Variables.getNavigation().gotoMap(n, null);
+		Variables.getNavigation().gotoMap(n);
 		return true;
 	}
 

@@ -212,7 +212,7 @@ public class Navigation extends AbstractBean{
 	protected boolean setNavigation(NavStruct nav, NAVIGATION_GESTURE gesture) {
 		return setNavigation(nav, true, gesture);
 	}
-	public void gotoMap(NavStruct nav, MapFrame mapFrame) {
+	public void gotoMap(NavStruct nav) {
 		Dimension dim;
 
         setNavigation(nav, true);

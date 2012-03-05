@@ -25,7 +25,6 @@ import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.*;
-import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 import no.ums.ws.common.MDVSENDINGINFOGROUP;
 import no.ums.ws.common.UBBMESSAGE;
 import no.ums.ws.common.cb.*;
@@ -855,7 +854,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			current_mode = MODE.SHOWING_SUMMARY;
 			showSummary();
 			checkForEnableSendButton();
-			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds(),null);
+			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds());
 		}
 		else if(e.getActionCommand().equals("act_goto_authorization")) {
 			PAS.pasplugin.onLockSending(null, true);
