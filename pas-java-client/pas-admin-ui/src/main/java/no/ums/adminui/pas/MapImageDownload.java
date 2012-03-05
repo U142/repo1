@@ -36,13 +36,6 @@ public class MapImageDownload extends JApplet {
     private int applet_height;
 
 	public void init() {
-		try {
-			System.setSecurityManager(null);
-
-		}
-		catch(Exception e) {
-			
-		}
 
         applet_height = Integer.parseInt(getParameter("applet_height"));
         applet_width = Integer.parseInt(getParameter("applet_width"));
