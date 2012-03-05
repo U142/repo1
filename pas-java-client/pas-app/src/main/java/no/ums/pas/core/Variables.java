@@ -20,6 +20,16 @@ public class Variables {
 	private static Settings settings = null;
 	private static StatusController statusController = null;
 
+    public static int getZoomLevel() {
+        return zoomLevel;
+    }
+
+    public static void setZoomLevel(int zoomLevel) {
+        Variables.zoomLevel = zoomLevel;
+    }
+
+    private static int zoomLevel = 4;
+
     public static final Dimension MINMAPDIMENSIONS = new Dimension(20000,20000);
 	public static final float MAPZOOMSPEED = 0.25f;
 
