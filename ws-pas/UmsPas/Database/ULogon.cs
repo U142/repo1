@@ -94,6 +94,7 @@ namespace com.ums.PAS.Database
 
         protected bool SaveNsLookup(long n_userpk, ref UNSLOOKUP ns)
         {
+            UmsDb dbNsLookup = new UmsDb();
             OdbcDataReader rs = null;
             try
             {
@@ -101,7 +102,7 @@ namespace com.ums.PAS.Database
                                             "sz_ip='{1}'",
                                             n_userpk, ns.sz_ip);
 
-                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = dbNsLookup.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     rs.Close();
@@ -109,7 +110,7 @@ namespace com.ums.PAS.Database
                                           "sz_location='{3}' WHERE l_userpk={4} AND sz_ip='{5}' ",
                                           ns.l_lastdatetime, ns.sz_domain, (ns.f_success ? 1 : 0), ns.sz_location,
                                           n_userpk, ns.sz_ip);
-                    ExecNonQuery(szSQL);
+                    dbNsLookup.ExecNonQuery(szSQL);
                 }
                 else
                 {
@@ -117,7 +118,7 @@ namespace com.ums.PAS.Database
                     szSQL = String.Format("INSERT INTO BBUSER_NSLOOKUP(l_userpk, sz_domain, sz_ip, l_lastdatetime, f_success, sz_location) " +
                                         "VALUES({0}, '{1}', '{2}', {3}, {4}, '{5}')",
                                         n_userpk, ns.sz_domain, ns.sz_ip, ns.l_lastdatetime, (ns.f_success ? 1 : 0), ns.sz_location);
-                    ExecNonQuery(szSQL);
+                    dbNsLookup.ExecNonQuery(szSQL);
                 }
                 return true;
             }
@@ -129,6 +130,7 @@ namespace com.ums.PAS.Database
             {
                 if (rs != null && !rs.IsClosed)
                     rs.Close();
+                dbNsLookup.close();
             }
         }
 

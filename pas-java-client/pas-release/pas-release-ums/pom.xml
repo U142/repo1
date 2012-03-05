@@ -177,7 +177,6 @@
                         <plugin>
                             <groupId>no.ums.maven</groupId>
                             <artifactId>maven-ums-plugin</artifactId>
-                            <version>1.2.6-SNAPSHOT</version>
                             <configuration>
                                 <destinations>
                                     <destination>smb://Administrator:Digi20ums@192.168.5.21/e$/www/secure/pas/pasprod/
