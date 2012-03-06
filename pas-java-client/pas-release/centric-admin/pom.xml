@@ -46,8 +46,7 @@
                     <configuration>
                         <src>${project.build.directory}/${project.build.finalName}-bin.zip</src>
                         <destinations>
-                            <!--<destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp/</destination>-->
-                            <destination>file:///c:/ums/</destination>
+                            <destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp/</destination>
                         </destinations>
                     </configuration>
                 </plugin>
