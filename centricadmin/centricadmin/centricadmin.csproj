@@ -76,6 +76,7 @@
     <Content Include="css\default.css" />
     <Content Include="Currently_busy.aspx" />
     <Content Include="images\Calendar_scheduleHS.png" />
+    <Content Include="images\nl_alert_admin.png" />
     <Content Include="javaapp\admin.jar" />
     <Content Include="javaapp\common-2.2.1.jar" />
     <Content Include="javaapp\commons-lang-2.1.jar" />
@@ -594,12 +595,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52293</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/centricadmin</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
