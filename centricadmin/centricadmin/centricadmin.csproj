@@ -319,7 +319,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -584,7 +586,7 @@
   <Import Project="$(MSBuildProjectDirectory)\ums.targets" />
   <PropertyGroup>
     <DeployUrl>secure.ums.no/centricadmin</DeployUrl>
-    <DeployTargetFolderBeta>\Secure\centricadmin</DeployTargetFolderBeta>
+    <DeployTargetFolderBeta>\centricadmin</DeployTargetFolderBeta>
     <DeployTargetFolderQa>\www\Secure\centricadmin</DeployTargetFolderQa>
     <DeployTargetFolderProd>\www\Secure\centricadmin</DeployTargetFolderProd>
   </PropertyGroup>
