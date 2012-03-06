@@ -137,6 +137,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		try {
             wsGetRestrictionShapes.run();
 		} catch(Exception e) {
+            new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_logon");
 			log.warn(e.getMessage(), e);
 		}
 		

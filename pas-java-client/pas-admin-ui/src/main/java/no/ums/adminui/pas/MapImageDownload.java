@@ -122,7 +122,7 @@ public class MapImageDownload extends JApplet {
         mapComponent.getDrawlayLayer().setPath(path);
 
         getContentPane().add(mapComponent);
-        //setVisible(false);
+        setVisible(true);
 
         mapComponent.repaint();
         mapComponent.getDrawlayLayer().recalculate();
