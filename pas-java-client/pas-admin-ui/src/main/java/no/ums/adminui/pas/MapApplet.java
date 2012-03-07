@@ -66,6 +66,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	public void init() {
 		try {
+            System.out.println("SecurityManager");
 			System.setSecurityManager(null);
 		}
 		catch(Exception e) {
