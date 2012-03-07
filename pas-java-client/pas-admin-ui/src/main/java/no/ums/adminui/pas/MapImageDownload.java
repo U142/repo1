@@ -139,8 +139,6 @@ public class MapImageDownload extends JApplet {
 
 		}
 
-
-
 	}
 	
 
