@@ -77,6 +77,7 @@
     <Content Include="Currently_busy.aspx" />
     <Content Include="images\Calendar_scheduleHS.png" />
     <Content Include="images\nl_alert_admin.png" />
+    <Content Include="javaapp\dummy_for_creating_folder.htm" />
     <Content Include="logoff.aspx" />
     <Content Include="logon.aspx" />
     <Content Include="main.aspx" />
@@ -518,7 +519,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
-    <Folder Include="javaapp\" />
     <Folder Include="obj\" />
   </ItemGroup>
   <ItemGroup>
