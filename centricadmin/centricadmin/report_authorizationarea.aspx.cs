@@ -174,9 +174,9 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                         " javaapp/ws-java-clients-1.2-SNAPSHOT.jar";
 
 
-                        string code = "no/ums/adminui/pas/MapImageDownload2.class";
+                        string code = "no/ums/adminui/pas/MapImageDownload.class";
 
-                        string mainclass = "no.ums.adminui.pas.MapImageDownload2";
+                        string mainclass = "no.ums.adminui.pas.MapImageDownload";
 
                         txt.Text = "<input type=\"button\" onclick=\"javascript:launchApplet('" +
                                         "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1 archive=" + 
