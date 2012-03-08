@@ -34,6 +34,8 @@ public class MapImageDownload2 extends JApplet {
     private int applet_width;
     private int applet_height;
 
+    private boolean doneDrawing = false;
+
     public void start() {
         System.out.println("Denne er oppdatert");
 
@@ -125,11 +127,10 @@ public class MapImageDownload2 extends JApplet {
 
         mapComponent.repaint();
         mapComponent.getDrawlayLayer().recalculate();
+        */
 
-        Thread thread = new WaitThread(this, mapComponent.getDrawlayLayer());
-        thread.start();*/
-        saveImage();
-        
+        Thread thread = new WaitThread(this);
+        thread.start();
     }
 
     public void init() {
@@ -156,6 +157,7 @@ public class MapImageDownload2 extends JApplet {
         super.paint(g);
         Graphics2D g2 = (Graphics2D)g;
         g2.drawString("Testing draw function",25,25);
+        doneDrawing = true;
     }
 
     public void saveImage() {
@@ -194,15 +196,15 @@ public class MapImageDownload2 extends JApplet {
     private class WaitThread extends Thread {
 
         MapComponent.DrawingLayer layer;
-        MapImageDownload mapImageDownload;
+        MapImageDownload2 mapImageDownload;
 
-        public WaitThread(MapImageDownload mapImageDownload, MapComponent.DrawingLayer layer) {
+        public WaitThread(MapImageDownload2 mapImageDownload) {
             this.layer = layer;
             this.mapImageDownload = mapImageDownload;
         }
         @Override
         public void run() {
-            while(!layer.isDoneLoading() || !mapDownloaded(mapComponent)) {
+            while(!doneDrawing) {
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {

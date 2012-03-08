@@ -68,7 +68,12 @@ public final class MapComponent extends JComponent {
         
         public boolean canDrawHere(Point p) {
             Polygon restricionPoly = createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
-            return (!restricionPoly.contains(p));
+            if(restricionPoly != null) {
+                return (!restricionPoly.contains(p));
+            }
+            else {
+                return false;
+            }
         }
         
         public Point2D.Double[] getRestrictionBorder(Point2D.Double p1, Point2D.Double p2) {
@@ -423,7 +428,9 @@ public final class MapComponent extends JComponent {
             }
 
             g2.setColor(new Color(Color.BLUE.getRed(), Color.BLUE.getGreen(), Color.BLUE.getBlue(), 10));
-            g2.fillPolygon(xCoords, yCoords, i);
+            if(i>0) {
+                g2.fillPolygon(xCoords, yCoords, i);
+            }
 
         }
 
