@@ -16,6 +16,7 @@ import no.ums.pas.maps.defines.PolygonStruct;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,6 +128,7 @@ public class MapImageDownload2 extends JApplet {
 
         Thread thread = new WaitThread(this, mapComponent.getDrawlayLayer());
         thread.start();*/
+        saveImage();
         
     }
 
@@ -140,6 +142,14 @@ public class MapImageDownload2 extends JApplet {
 
     }
 
+    public Image getImage()
+    {
+        BufferedImage bi = new BufferedImage(applet_width, applet_height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bi.createGraphics();
+        this.paint(g);
+        g.dispose();
+        return bi;
+    }
 
 
     public void paint(Graphics g) {
@@ -149,7 +159,7 @@ public class MapImageDownload2 extends JApplet {
     }
 
     public void saveImage() {
-        Variables.getMapFrame().save_map(mapComponent.getDrawlayLayer().getBufferedImage(applet_width, applet_height));
+        Variables.getMapFrame().save_map(getImage());
         System.exit(0);
     }
 
