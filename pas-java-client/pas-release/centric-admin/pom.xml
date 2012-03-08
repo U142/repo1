@@ -19,26 +19,27 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>1.2</version>
                 <executions>
                     <execution>
+                        <id>sign</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <phase>package</phase>
                         <configuration>
                             <keystore>${project.basedir}/../ums.keystore</keystore>
                             <keypass>${key.keypass}</keypass>
                             <storepass>${key.storepass}</storepass>
                             <alias>${key.alias}</alias>
-
                             <verify>true</verify>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -66,8 +67,8 @@
                     <configuration>
                         <src>${project.build.directory}/${project.build.finalName}-bin.zip</src>
                         <destinations>
-                            <destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp/</destination>
-                            <!--<destination>file:///c:/ums/</destination>-->
+                            <!--<destination>smb://Administrator:digi20ums@192.168.3.40/www/centricadmin/javaapp/</destination>-->
+                            <destination>file:///c:/ums/</destination>
                         </destinations>
                     </configuration>
                 </plugin>
