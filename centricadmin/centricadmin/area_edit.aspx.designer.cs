@@ -120,24 +120,6 @@ public partial class area_edit {
     protected global::System.Web.UI.WebControls.TextBox txt_obsolete;
     
     /// <summary>
-    /// btn_pan control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlInputButton btn_pan;
-    
-    /// <summary>
-    /// btn_draw control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlInputButton btn_draw;
-    
-    /// <summary>
     /// mapapplet control.
     /// </summary>
     /// <remarks>

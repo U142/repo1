@@ -43,23 +43,11 @@
             //return false;
         }
 
-        
-        window.onload = function () {
 
-            var applet = document.getElementById("body_mapapplet");
-            applet.onmouseover = function (e) {
-                window.onscroll = function (e) {
-                    //scroll where you want to be (the top)
-                    //scroll(0, 0);
-                }
-            }
 
-            applet.onmouseout = function (e) {
-                //replace with empty function
-                window.onscroll = function (e) { }
-            }
 
-        };
+       
+
     </script>
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
@@ -91,11 +79,6 @@
             <asp:TableCell>
                 <asp:TextBox ID="txt_obsolete" runat="server" Text="" Enabled="false" ></asp:TextBox>
             </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell><input type="button" id="btn_zoom" value="zoom" OnClick="javascript:document.mapapplet.zoom();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_pan" runat="server" value="pan" OnClick="javascript:document.mapapplet.pan();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_draw" runat="server" value="draw" OnClick="javascript:document.mapapplet.draw();" disabled="true"/></asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
@@ -168,12 +151,33 @@
                     <param id="applet_height" name="applet_height" runat="server" />
                     <param id="applet_width" name="applet_width" runat="server" />
                 </applet>
-                <!--
+                
                 <script type="text/javascript">
-                    var attributes = { width:675, height:300} ;
-                    var parameters = { jnlp_href: 'javaapp/jnlptest.jnlp'};
-                    deployJava.runApplet(attributes, parameters, '1.6');
-                </script>-->
+                    var mapapplet = document.getElementById("body_mapapplet")
+     
+
+                    function preventScrolling(e) {
+                        var evt = window.event || e;  //equalize event object
+
+                        mapapplet.focus();
+
+                        if (evt.preventDefault) { //disable default wheel action of scrolling page
+                            evt.preventDefault();
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+
+                    var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";  //FF doesn't recognize mousewheel as of FF3.x
+
+                    if (mapapplet.attachEvent) { //if IE (and Opera depending on user setting)
+                        mapapplet.attachEvent("on" + mousewheelevt, preventScrolling);
+                    }
+                    else if (mapapplet.addEventListener) { //WC3 browsers
+                        mapapplet.addEventListener(mousewheelevt, preventScrolling, false);
+                    }
+                </script>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="\\192.168.3.40\d$\www\centricadmin" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Beta NLAlertAdmin" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/ru/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="user_admin.aspx" publishTime="02/13/2012 14:44:28" />
+    <file relUrl="images/nl_alert_admin.png" publishTime="03/06/2012 12:30:36" />
+    <file relUrl="Global.asax" publishTime="02/10/2012 13:18:28" />
+    <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="02/10/2012 13:15:39" />
+    <file relUrl="Site.Master" publishTime="02/13/2012 10:01:17" />
+    <file relUrl="report_monthly.aspx" publishTime="02/10/2012 13:20:06" />
+    <file relUrl="Handler.ashx" publishTime="02/13/2012 14:42:01" />
+    <file relUrl="bin/es/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="About.aspx" publishTime="02/13/2012 09:53:20" />
+    <file relUrl="main.aspx" publishTime="02/13/2012 15:12:03" />
+    <file relUrl="bin/ko/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/hi/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/centric.dll" publishTime="03/08/2012 14:53:34" />
+    <file relUrl="parameters.aspx" publishTime="02/10/2012 13:20:06" />
+    <file relUrl="bin/zh-CHS/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/centric.pdb" publishTime="03/08/2012 14:53:34" />
+    <file relUrl="MasterPage.master" publishTime="02/13/2012 12:28:41" />
+    <file relUrl="Account/Web.config" publishTime="03/06/2012 15:42:09" />
+    <file relUrl="logon.aspx" publishTime="02/10/2012 13:20:17" />
+    <file relUrl="Account/Login.aspx" publishTime="02/13/2012 09:49:13" />
+    <file relUrl="report_useractivity.aspx" publishTime="02/10/2012 13:20:05" />
+    <file relUrl="javaapp/dummy_for_creating_folder.htm" publishTime="03/07/2012 16:39:32" />
+    <file relUrl="bin/de/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="packages.config" publishTime="02/10/2012 13:18:28" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="02/10/2012 13:15:39" />
+    <file relUrl="bin/AjaxControlToolkit.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="Currently_busy.aspx" publishTime="02/13/2012 13:56:14" />
+    <file relUrl="bin/zh-CHT/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="images/Calendar_scheduleHS.png" publishTime="02/10/2012 13:18:26" />
+    <file relUrl="Default.aspx" publishTime="02/13/2012 09:49:12" />
+    <file relUrl="Account/ChangePasswordSuccess.aspx" publishTime="02/13/2012 09:49:13" />
+    <file relUrl="bin/he/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/fr/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="Account/Register.aspx" publishTime="02/13/2012 09:49:12" />
+    <file relUrl="css/default.css" publishTime="02/13/2012 14:43:16" />
+    <file relUrl="bin/nl/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/tr-TR/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/it/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="Account/ChangePassword.aspx" publishTime="02/13/2012 09:53:20" />
+    <file relUrl="report_useraccess.aspx" publishTime="02/10/2012 13:20:05" />
+    <file relUrl="area_edit.aspx" publishTime="03/05/2012 20:09:59" />
+    <file relUrl="report_authorizationarea.aspx" publishTime="02/16/2012 13:44:14" />
+    <file relUrl="predefine_area.aspx" publishTime="02/10/2012 13:20:06" />
+    <file relUrl="Web.config" publishTime="03/08/2012 14:53:35" />
+    <file relUrl="report_accesspruser.aspx" publishTime="02/10/2012 13:20:06" />
+    <file relUrl="bin/cs/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="channel.aspx" publishTime="02/10/2012 13:20:17" />
+    <file relUrl="bin/ar/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="Styles/Site.css" publishTime="02/13/2012 10:27:00" />
+    <file relUrl="Scripts/jquery-1.4.1.js" publishTime="02/10/2012 13:15:39" />
+    <file relUrl="predefine_text.aspx" publishTime="02/13/2012 14:43:48" />
+    <file relUrl="bin/ja/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="bin/pt/AjaxControlToolkit.resources.dll" publishTime="02/10/2012 14:25:22" />
+    <file relUrl="logoff.aspx" publishTime="02/14/2012 09:55:12" />
+    <file relUrl="App_Themes/sampleTheme/samppleTheme.skin" publishTime="02/10/2012 13:18:26" />
+    <file relUrl="systemmessages.aspx" publishTime="02/13/2012 12:39:12" />
+  </publishProfile>
+</publishData>

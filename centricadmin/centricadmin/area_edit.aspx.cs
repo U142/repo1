@@ -288,7 +288,6 @@ public partial class area_edit : System.Web.UI.Page
 
                             txt_name.Text = "";
                             txt_name.Enabled = false;
-                            btn_draw.Disabled = true;
                             txt_coor.Text = "";
                         }
                     }
@@ -323,7 +322,6 @@ public partial class area_edit : System.Web.UI.Page
             txt_timestamp.Text = "";
             txt_id.Text = "";
             chk_obsolete.Checked = false;
-            btn_draw.Disabled = false;
             chk_obsolete.Enabled = true;
             lbl_error.Text = "";
             txt_coor.Text = "";
