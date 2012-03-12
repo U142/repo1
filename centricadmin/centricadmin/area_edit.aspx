@@ -159,7 +159,7 @@
                     function preventScrolling(e) {
                         var evt = window.event || e;  //equalize event object
 
-                        mapapplet.focus();
+                        mapapplet.requestFocus();
 
                         if (evt.preventDefault) { //disable default wheel action of scrolling page
                             evt.preventDefault();
