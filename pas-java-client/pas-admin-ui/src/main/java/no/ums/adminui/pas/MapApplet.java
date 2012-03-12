@@ -46,7 +46,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    private ZoomLookup zoomLookup;
+    private transient ZoomLookup zoomLookup;
 
     public MapFrameAdmin m_mappane;
     public MapComponent mapComponent;
@@ -64,7 +64,6 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	public void init() {
 		try {
-            System.out.println("SecurityManager");
 			System.setSecurityManager(null);
 		}
 		catch(Exception e) {
@@ -72,11 +71,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		}
 		
 	}
-	
-	public void kickRepaint()
-	{
-	}
-	
+
 	public void start() {
 		
 		vars.init(getParameter("w"));
@@ -98,7 +93,6 @@ public class MapApplet extends JApplet implements ActionListener {
         
 		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{
-			//m_settings.setMapServer(MAPSERVER.DEFAULT);
 
 		}
 		else
@@ -152,22 +146,15 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	
 	private void afterAfterLogon() {
-		SendController m_sendcontroller = new SendController();
-		//m_drawthread.set_sendcontroller(m_sendcontroller);
-		Variables.setSendController(m_sendcontroller);
-
-
-		
 		Container contentpane = getContentPane();
 		contentpane.setLayout(new FlowLayout());
 
 		contentpane.add(mapComponent, BorderLayout.PAGE_END);
 		contentpane.setSize(applet_width, applet_height);
 
-        /*m_mappane.addActionListener(this);
-		m_mappane.set_mode(MapFrame.MapMode.ZOOM);*/
         mapComponent.repaint();
-
+        setFocusable(true);
+        requestFocus();
 	}
 	
 	private void add_controls(){
@@ -297,22 +284,12 @@ public class MapApplet extends JApplet implements ActionListener {
                 }
             }
 
-            
-            /*
-			m_mappane = new MapFrameAdmin(applet_width, applet_height, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true);
-            Variables.getNavigation().setMapFrame(m_mappane);
-            Variables.getNavigation().setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144), false);
-			Variables.setMapFrame(m_mappane);
-			m_mappane.load_map();
-			m_drawthread.set_mappane(m_mappane);
-			
-			m_mappane.initialize();*/
 			add(mapComponent);
 			b_results_ready = true;
 			afterAfterLogon();
 		}
 			
-		}
+    }
 
     private List<LonLat> convertCombinedRestrictionShapeCoordinatesToLonLat(List<ShapeStruct> combinedRestrictionShape) {
         List<LonLat> lonLats = new ArrayList<LonLat>();
@@ -340,33 +317,15 @@ public class MapApplet extends JApplet implements ActionListener {
 				s = rshapes.get(0).typecast_polygon();
 				break;
 			}
-			
 		}
-		
-		if(Variables.getSendController().get_activesending() == null) {
-			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-			Variables.getSendController().set_activesending(so);
-			Variables.getSendController().add_sending(so, false);
-			sp = new SendPropertiesPolygon(s,new SendOptionToolbar(so,this,0), new Col());
-			so.set_sendproperties(sp);
-		}
-		else {
-			if(Variables.getSendController().get_activesending().get_sendproperties().get_shapestruct().isObsolete())
-				Variables.getSendController().get_activesending().get_sendproperties().get_shapestruct().setHidden(true);
-			Variables.getSendController().get_activesending().get_sendproperties().set_shapestruct(s);
-		}
-		if(sp.get_shapestruct().isObsolete())
-			sp.get_shapestruct().setHidden(false);
-		sp.get_shapestruct().set_fill_color(Color.BLUE);
-		Variables.getMapFrame().actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-		Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
 
-		//Variables.MAPPANE.setAllOverlaysDirty();
-		//Variables.DRAW.setNeedRepaint();
-		Variables.getMapFrame().kickRepaint();
-		//Variables.MAPPANE.load_map(true);
-		
-		
+        // Coordinates are the wrong way round
+        List<LonLat> shape = mapComponent.addLonLatToShape(s.get_coors_lon(), s.get_coors_lat());
+        
+        mapComponent.getDrawLayer().setShape(shape);
+        mapComponent.getDrawLayer().setPath(mapComponent.convertLonLatToPath2D(shape,zoomLookup));
+        mapComponent.getDrawLayer().recalculate();
+        mapComponent.repaint();
 	}
 	public void store(String name) {
 		Variables.getMapFrame().get_active_shape();
@@ -392,7 +351,7 @@ public class MapApplet extends JApplet implements ActionListener {
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._rbo,
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
-                false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape,
+                false, 3, 150, "NLAlertAdmin", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape,
                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		
 		
@@ -415,19 +374,17 @@ public class MapApplet extends JApplet implements ActionListener {
 		}
 		return s;
 	}
-	public void addRestriction(String coors) {
+
+    public void addRestriction(String coors) {
 		PolygonStruct s = parseCoors(coors);
 		m_info.get_departments().m_combined_shapestruct_list.add(s);
 		m_info.get_departments().CreateCombinedRestrictionShape();
 		//set restriction shape
 	}
-	public void pan() {
-		m_mappane.set_mode(MapFrame.MapMode.PAN);
-		//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-	}
-	public void zoom() {
-		m_mappane.set_mode(MapFrame.MapMode.ZOOM);
-	}
+    public void requestFocus() {
+        mapComponent.requestFocus();
+    }
+
 	public void draw() {
 		m_mappane.set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
 		if(Variables.getSendController().get_activesending() == null) {
@@ -445,29 +402,30 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 	}
 	public String get(){
-		ArrayList<Double> lat = m_mappane.get_active_shape().typecast_polygon().get_coors_lat();
-		ArrayList<Double> lon = m_mappane.get_active_shape().typecast_polygon().get_coors_lon();
-		String coors = "";
-		
-		for(int i=0;i<lat.size();++i) {
-			coors += lat.get(i).toString();
-			if(i+1<lat.size())
-				coors += "|";
-		}
-		if(coors.length()>0)
-			coors+="€";
-		for(int i=0;i<lon.size();++i) {
-			coors += lon.get(i).toString();
-			if(i+1<lon.size())
-				coors += "|";
-		}
-		
-		
-		return coors;
+
+        String lat = "";
+        String lon = "";
+
+        try {
+            List<LonLat> shape = mapComponent.getDrawLayer().getShape();
+
+            for(int i=0;i<shape.size();++i) {
+                lat += String.valueOf(shape.get(i).getLat());
+                if(i+1<shape.size())
+                    lat += "|";
+
+                lon += String.valueOf(shape.get(i).getLon());
+                if(i+1<shape.size())
+                    lon += "|";
+            }
+        } catch (Exception e) {
+            System.out.println("Exception adding coordinates: " + e.getMessage());
+        }
+        
+		return lat + "¤" + lon;
 	}
 	
 	public boolean logon(String userid, String company, String password) {
 		return true;
 	}
 }
- 

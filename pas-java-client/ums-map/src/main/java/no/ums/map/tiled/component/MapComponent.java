@@ -40,6 +40,10 @@ public final class MapComponent extends JComponent {
         public boolean isDoneLoading() { return doneDrawing; }
         
         public void setShape(List<LonLat> shape) { this.shape = shape; }
+        public List<LonLat> getShape() { 
+            System.out.println("getShape");
+            return this.shape;
+        }
         public void setPath(Path2D.Double path) { this.path = path; }
 
         public DrawingLayer(MapComponent mapComponent) {
@@ -64,6 +68,7 @@ public final class MapComponent extends JComponent {
         public void mouseWheelMoved(MouseWheelEvent e) {
             super.mouseWheelMoved(e);
             recalculate();
+            System.out.println("mouseWheelMoved");
         }
         
         public boolean canDrawHere(Point p) {
@@ -333,7 +338,6 @@ public final class MapComponent extends JComponent {
                     recalculate();
                     mapComponent.repaint();
                 }
-                mapComponent.requestFocus();
             }
         }
 
@@ -348,6 +352,7 @@ public final class MapComponent extends JComponent {
             ZoomLookup zoomLookup = recalculate();
 
             LonLat ll = zoomLookup.getLonLat(mapComponent.getModel().getTopLeft(), e.getX(),e.getY());
+            mapComponent.requestFocus();
         }
 
         public ZoomLookup recalculate() {
@@ -435,7 +440,7 @@ public final class MapComponent extends JComponent {
         }
 
         private Point2D.Double getLastPoint() {
-            PathIterator pathIterator = mapComponent.getDrawlayLayer().path.getPathIterator(new AffineTransform());
+            PathIterator pathIterator = mapComponent.getDrawLayer().path.getPathIterator(new AffineTransform());
 
             double[] coors = new double[2];
 
@@ -631,7 +636,8 @@ public final class MapComponent extends JComponent {
         return null;
     }
     
-    public DrawingLayer getDrawlayLayer() {
+    public DrawingLayer getDrawLayer() {
+        System.out.println("getDrawLayer");
         for(MapLayer layer: layers) {
             if( layer instanceof DrawingLayer) {
                 return (DrawingLayer)layer;
@@ -706,6 +712,23 @@ public final class MapComponent extends JComponent {
         this.tileLookup = value;
         firePropertyChange("tileLookup", oldValue, value);
         repaint();
+    }
+
+    public List<LonLat> addLonLatToShape(String[] lat, String[] lon) {
+        List<LonLat> lonLatList = new ArrayList<LonLat>();
+
+        for(int i=0;i<lat.length;i++) {
+            lonLatList.add(new LonLat(Double.parseDouble(lat[i].replace(',','.')),Double.parseDouble(lon[i].replace(',','.'))));
+        }
+        return lonLatList;
+    }
+    public List<LonLat> addLonLatToShape(ArrayList<Double> lat, ArrayList<Double> lon) {
+        List<LonLat> lonLatList = new ArrayList<LonLat>();
+
+        for(int i=0;i<lat.size();i++) {
+            lonLatList.add(new LonLat(lat.get(i),lon.get(i)));
+        }
+        return lonLatList;
     }
 
     @Override

@@ -18,7 +18,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapImageDownload extends JApplet {
@@ -36,7 +35,7 @@ public class MapImageDownload extends JApplet {
     private int applet_height;
 
     public void start() {
-        System.out.println("Denne er oppdatert");
+        System.out.println("Startet");
 
         applet_height = Integer.parseInt(getParameter("applet_height"));
         applet_width = Integer.parseInt(getParameter("applet_width"));
@@ -87,6 +86,8 @@ public class MapImageDownload extends JApplet {
         String[] clat = lat.split("\\|");
         String[] clon = lon.split("\\|");
 
+        System.out.println("Lat: " + lat);
+        System.out.println("Lon: " + lon);
 
 
         mapComponent = new MapComponent();
@@ -94,7 +95,7 @@ public class MapImageDownload extends JApplet {
         final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
         mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
 
-        List<LonLat> shape = addLonLatToShape(clon,clat);
+        List<LonLat> shape = mapComponent.addLonLatToShape(clon,clat);
         LonLat[] bounds = mapComponent.getBounds(shape);
 
         final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
@@ -118,16 +119,17 @@ public class MapImageDownload extends JApplet {
         ZoomLookup zoomLookup = mapComponent.getTileLookup().getZoomLookup(Variables.getZoomLevel());
 
         Path2D.Double path = mapComponent.convertLonLatToPath2D(shape, zoomLookup);
-        mapComponent.getDrawlayLayer().setShape(shape);
-        mapComponent.getDrawlayLayer().setPath(path);
+        mapComponent.getDrawLayer().setShape(shape);
+        mapComponent.getDrawLayer().setPath(path);
 
         getContentPane().add(mapComponent);
         setVisible(true);
 
         mapComponent.repaint();
-        mapComponent.getDrawlayLayer().recalculate();
+        mapComponent.getDrawLayer().recalculate();
 
-        Thread thread = new WaitThread(this, mapComponent.getDrawlayLayer());
+        System.out.println("Starting thread");
+        Thread thread = new WaitThread(this, mapComponent.getDrawLayer());
         thread.start();
     }
     
@@ -138,7 +140,7 @@ public class MapImageDownload extends JApplet {
 		catch(Exception e) {
 
 		}
-
+        System.out.println("SecurityManager");
 	}
 	
 
@@ -148,7 +150,8 @@ public class MapImageDownload extends JApplet {
 	}
     
     public void saveImage() {
-        Variables.getMapFrame().save_map(mapComponent.getDrawlayLayer().getBufferedImage(applet_width, applet_height));
+        System.out.println("Saving image");
+        Variables.getMapFrame().save_map(mapComponent.getDrawLayer().getBufferedImage(applet_width, applet_height));
         System.exit(0);
     }
     
@@ -171,14 +174,7 @@ public class MapImageDownload extends JApplet {
         return downloaded;
     }
     
-    private List<LonLat> addLonLatToShape(String[] lat, String[] lon) {
-        List<LonLat> lonLatList = new ArrayList<LonLat>();
-        
-        for(int i=0;i<lat.length;i++) {
-            lonLatList.add(new LonLat(Double.parseDouble(lat[i].replace(',','.')),Double.parseDouble(lon[i].replace(',','.'))));
-        }
-        return lonLatList;
-    }
+
     
     private class WaitThread extends Thread {
 
@@ -188,11 +184,13 @@ public class MapImageDownload extends JApplet {
         public WaitThread(MapImageDownload mapImageDownload, MapComponent.DrawingLayer layer) {
             this.layer = layer;
             this.mapImageDownload = mapImageDownload;
+            System.out.println("Thread constructed");
         }
         @Override
         public void run() {
-            while(!layer.isDoneLoading() || !mapDownloaded(mapComponent)) {
+            while(!layer.isDoneLoading() /*|| !mapDownloaded(mapComponent)*/) {
                 try {
+                    System.out.println("Sleeping");
                     sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
