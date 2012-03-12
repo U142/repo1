@@ -50,7 +50,6 @@ public class MapApplet extends JApplet implements ActionListener {
 
     public MapFrameAdmin m_mappane;
     public MapComponent mapComponent;
-	public AdminDraw m_drawthread;
 	public Navigation m_navigation;
 	public Image m_image;
 	public String coors;
@@ -138,14 +137,6 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	
 	private void afterLogon() {
-		
-		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,applet_width,applet_height);
-		Variables.setDraw(m_drawthread);
-		
-		
-	}
-	
-	private void afterAfterLogon() {
 		Container contentpane = getContentPane();
 		contentpane.setLayout(new FlowLayout());
 
@@ -171,8 +162,6 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 			boolean b_results_ready;
 			ArrayOfUDEPARTMENT wsdept = (ArrayOfUDEPARTMENT)e.getSource();
-			
-			afterLogon();
 			
 			List<UDEPARTMENT> depts = wsdept.getUDEPARTMENT();
 			for(int i=0; i < depts.size(); i++)
@@ -286,7 +275,7 @@ public class MapApplet extends JApplet implements ActionListener {
 
 			add(mapComponent);
 			b_results_ready = true;
-			afterAfterLogon();
+			afterLogon();
 		}
 			
     }
