@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="\\192.168.3.40\d$\www\PAS\ws_NLAlert" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Beta NLAlert" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/UmsDbLib.dll" publishTime="03/07/2012 15:00:25" />
+    <file relUrl="bin/UmsPas.pdb" publishTime="03/07/2012 15:00:26" />
+    <file relUrl="bin/CapProxy.dll" publishTime="03/07/2012 15:00:24" />
+    <file relUrl="WS/Infosentral.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/Global.asax.cs" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="WS/TAS.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="Web.config" publishTime="03/07/2012 15:02:13" />
+    <file relUrl="bin/Interop.TTSLib.dll" publishTime="03/07/2012 15:00:27" />
+    <file relUrl="Global.asax" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/wsPASExec.pdb" publishTime="03/07/2012 15:00:29" />
+    <file relUrl="bin/Ionic.Zip.Reduced.dll" publishTime="11/23/2011 13:32:56" />
+    <file relUrl="bin/UmsDbLib.pdb" publishTime="03/07/2012 15:00:25" />
+    <file relUrl="WS/AddressDatabase.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/UmsFile.dll" publishTime="03/07/2012 15:00:25" />
+    <file relUrl="bin/UmsAudio.pdb" publishTime="03/07/2012 15:00:28" />
+    <file relUrl="bin/wsPASExec.dll" publishTime="03/07/2012 15:00:30" />
+    <file relUrl="WS/VB.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/Interop.WAV2RAWLib.dll" publishTime="03/07/2012 15:00:29" />
+    <file relUrl="bin/ZipLib.dll" publishTime="03/07/2012 15:00:26" />
+    <file relUrl="bin/UmsFile.pdb" publishTime="03/07/2012 15:00:25" />
+    <file relUrl="WS/PasStatus.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/ZipLib.pdb" publishTime="03/07/2012 15:00:26" />
+    <file relUrl="bin/libums2-csharp.dll" publishTime="11/23/2011 13:32:57" />
+    <file relUrl="WS/PasAdmin.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/Global.asax" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/UmsCommon.dll" publishTime="03/07/2012 15:00:24" />
+    <file relUrl="bin/UmsPas.dll" publishTime="03/07/2012 15:00:26" />
+    <file relUrl="bin/Lucene.Net.dll" publishTime="11/23/2011 13:32:56" />
+    <file relUrl="WS/ExternalExec.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/Lucene.Net.pdb" publishTime="11/23/2011 13:32:56" />
+    <file relUrl="WS/Voice.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/UmsCommon.pdb" publishTime="03/07/2012 15:00:24" />
+    <file relUrl="bin/Lucene.Net.xml" publishTime="11/23/2011 13:32:56" />
+    <file relUrl="WS/Conference.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/UmsAudio.dll" publishTime="03/07/2012 15:00:28" />
+    <file relUrl="WS/PAS.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="WS/ParmAdmin.asmx" publishTime="11/23/2011 13:32:58" />
+    <file relUrl="bin/CapProxy.pdb" publishTime="03/07/2012 15:00:24" />
+  </publishProfile>
+</publishData>
