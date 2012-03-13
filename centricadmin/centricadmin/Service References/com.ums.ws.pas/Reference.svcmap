@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="2fa2fe06-bac6-4ca8-985e-5d8b94b09e2e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="025c088b-6c67-4ef2-a12f-37dc53e95413" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -18,11 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8080/WS/Pas.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/ws_pas/ws/pas.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Pas.disco" MetadataType="Disco" ID="cda58d0e-7179-46d3-80a4-51593139e899" SourceId="1" SourceUrl="http://localhost:8080/WS/Pas.asmx?disco" />
-    <MetadataFile FileName="Pas.wsdl" MetadataType="Wsdl" ID="84b5151d-4290-4ce7-bb94-ad685361980f" SourceId="1" SourceUrl="http://localhost:8080/WS/Pas.asmx?wsdl" />
+    <MetadataFile FileName="pas.disco" MetadataType="Disco" ID="2ed7c518-a8cd-448a-a18e-e5a574896d5b" SourceId="1" SourceUrl="http://localhost/ws_pas/ws/pas.asmx?disco" />
+    <MetadataFile FileName="pas.wsdl" MetadataType="Wsdl" ID="1c8ee6ce-42c4-42bd-820f-b2ce9cccd57c" SourceId="1" SourceUrl="http://localhost/ws_pas/ws/pas.asmx?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
