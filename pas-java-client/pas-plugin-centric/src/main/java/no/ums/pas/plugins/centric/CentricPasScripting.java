@@ -1134,15 +1134,15 @@ public class CentricPasScripting extends DefaultPasScripting {
             DeptArray depts = p.get_userinfo().get_departments();
 
             for (Object dept : depts) {
-                //((DeptInfo) dept).drawRestrictionShapes(g, nav);
+                ((DeptInfo) dept).drawRestrictionShapes(g, nav);
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-            /*for (ShapeStruct aList : list) {
+            for (ShapeStruct aList : list) {
                 aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, false, 1, false);
-            }*/
+            }
             
             
-            
+            /*
             //shade surroundings
             Rectangle scr = p.get_mappane().getBounds();
             Polygon polyScreen = new Polygon();
@@ -1172,6 +1172,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             g.setColor(new Color(0,0,0,120));
             g.fillPolygon(polyScreen);
             g.setClip(oldClip);
+            */
 
         } catch (Exception e) {
             log.warn(e.getMessage(), e);
