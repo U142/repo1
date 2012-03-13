@@ -25,8 +25,6 @@ import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -54,7 +52,6 @@ import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
-import java.awt.geom.Path2D;
 import java.util.*;
 import java.util.List;
 

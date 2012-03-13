@@ -35,6 +35,7 @@ public class UShapeToShape
 							(int)upolygon.getColAlpha()), 
 							new Color(0,0,0));
 			polygonstruct.setDetailMode(DETAILMODE.SHOW_POLYGON_FULL);
+            polygonstruct.setObsolete(upolygon.getFDisabled()==1);
 			//if(upolygon.getMArrayPolypoints()!=null)
 			if(upolygon.getPolypoint()!=null)
 			{

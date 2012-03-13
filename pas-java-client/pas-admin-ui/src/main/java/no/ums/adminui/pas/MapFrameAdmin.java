@@ -2,8 +2,13 @@ package no.ums.adminui.pas;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+import com.google.common.base.Joiner;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.AbstractTileCacheWms;
+import no.ums.map.tiled.TileCacheFleximap;
+import no.ums.map.tiled.TileLookup;
+import no.ums.map.tiled.TileLookupImpl;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -13,14 +18,18 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
+import org.geotools.data.wms.WebMapServer;
+import org.geotools.ows.ServiceException;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 
 public class MapFrameAdmin extends MapFrame {
 
     private static final Log log = UmsLog.getLogger(MapFrameAdmin.class);
 
-    //private static final Log logger = UmsLog.getLogger(MapFrameAdmin.class);
     private Graphics m_gfx;
 	public Graphics get_gfx() { return m_gfx; }
 	
@@ -37,19 +46,10 @@ public class MapFrameAdmin extends MapFrame {
 				
 				public void run()
 				{
-					//b_loading_in_progress = true;
 					setIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
 					kickRepaint();
 					load_map();
 					setIsLoading(false, "");
-					/*while(get_mapimage()==null)
-					{
-						try
-						{
-							Thread.sleep(10);
-						}
-						catch(Exception e) { }
-					}*/
 					kickRepaint();
 				}
 			};
@@ -94,24 +94,18 @@ public class MapFrameAdmin extends MapFrame {
 		
 		}
 		m_img_onscreen= m_img_loading;
-		/*m_img_onscreen = new BufferedImage(m_img_loading.getWidth(null), m_img_loading.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		Graphics tempg = m_img_onscreen.createGraphics();
-		tempg.drawImage(m_img_loading, 0, 0, null);
-		tempg.dispose();*/
-		
-		//PAS.get_pas().prepareImage(m_img_onscreen, PAS.get_pas().get_drawthread());
+
 		try {
 			prepareImage(m_img_onscreen, null); //get_drawthread());
 		} catch(Exception e) {
-			//log.debug("prepareImage " + e.getMessage());
-			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
+			log.debug("prepareImage " + e.getMessage());
 		}
 		try {
 			set_cursor(m_current_cursor);
 		} catch(Exception e) {
-			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
+            log.debug("prepareImage " + e.getMessage());
 		}
-		//log.debug("KICKREPAINT");
+
 		kickRepaint();
 		
 	}
@@ -189,7 +183,73 @@ public class MapFrameAdmin extends MapFrame {
 		m_n_current_mode = n_mode;
 
 	}
-	
+
+    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
+        private String lastLookup = null;
+        private String scheme;
+        private String host;
+        private String path;
+        private String version;
+
+
+        private void update() {
+            final String wmsSite = Variables.getSettings().getWmsSite();
+            if (lastLookup == null || !lastLookup.equals(wmsSite)) {
+                try {
+                    final URI base = URI.create(wmsSite);
+                    scheme = base.getScheme();
+                    host = base.getHost();
+                    path = base.getPath();
+
+                    m_maploader.setWmsAuthenticator(Variables.getSettings().getWmsUsername(), Variables.getSettings().getWmsPassword().toCharArray());
+                    WebMapServer wms = new WebMapServer(new URL(wmsSite));
+                    version = wms.getCapabilities().getVersion();
+                    lastLookup = wmsSite;
+                } catch (IOException e) {
+                    version = "1.1.1";
+                    log.warn("Failed to fetch WMS version", e);
+                } catch (ServiceException e) {
+                    log.warn("Failed to fetch WMS version", e);
+                }
+            }
+        }
+
+        @Override
+        public String getScheme() {
+            update();
+            return scheme;
+        }
+
+        @Override
+        public String getHost() {
+            update();
+            return host;
+        }
+
+        @Override
+        public String getPath() {
+            update();
+            return path;
+        }
+
+        @Override
+        public String getVersion() {
+            update();
+            return version;
+        }
+
+        @Override
+        public String getFormat() {
+            return Variables.getSettings().getSelectedWmsFormat();
+        }
+
+        @Override
+        public String getLayers() {
+            return Joiner.on(",").join(Variables.getSettings().getSelectedWmsLayers());
+        }
+    });
+
 	@Override
 	public void paintComponent(Graphics g) {
 		try

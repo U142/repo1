@@ -37,7 +37,7 @@
         <key.alias>UMS</key.alias>
         <version.geotools>2.6.5</version.geotools>
         <version.ums.ws>1.2-SNAPSHOT</version.ums.ws>
-        <jnlp.output>${build.directory}/jnlp-output</jnlp.output>
+        <jnlp.output>${project.build.directory}/jnlp-output</jnlp.output>
         <jnlp.filename>PAS.${project.version}.jnlp</jnlp.filename>
         <jnlp_codebase>codebase</jnlp_codebase>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,113 +79,113 @@
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>ums-log</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>ums-map</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-icons</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-cellbroadcast</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>core</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>gps</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>importer</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>maps</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>parm</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>pas</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>send</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>status</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
                 <classifier>sound</classifier>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
                 <classifier>tas</classifier>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
                 <classifier>ums</classifier>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-core</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-lang</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-plugin-centric</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-release</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>pas-app</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- UMS WebServices -->

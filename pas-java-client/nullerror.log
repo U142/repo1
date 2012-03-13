@@ -1,13 +1,14 @@
-Tue Feb 07 15:55:37 CET 2012
+Fri Mar 09 17:15:13 CET 2012
 Heading: Waarschuwing
-Description: Servers UI defaults file could not be loaded (http://localhost:8080//pas-site-setup.txt)
-StackTrace: java.io.IOException: Server returned HTTP response code: 400 for URL: http://localhost:8080//pas-site-setup.txt
-	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1436)
+Description: Servers UI defaults file could not be loaded (https://secure.ums2.no//pas-site-setup.txt)
+StackTrace: java.io.FileNotFoundException: https://secure.ums2.no//pas-site-setup.txt
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1434)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:234)
 	at java.net.URL.openStream(URL.java:1010)
 	at no.ums.pas.localization.UIParamLoader.loadServerUIParams(UIParamLoader.java:177)
-	at no.ums.pas.PAS.createGUI(PAS.java:601)
-	at no.ums.pas.PAS.access$100(PAS.java:130)
-	at no.ums.pas.PAS$2.run(PAS.java:536)
+	at no.ums.pas.PAS.createGUI(PAS.java:530)
+	at no.ums.pas.PAS.access$100(PAS.java:85)
+	at no.ums.pas.PAS$2.run(PAS.java:491)
 
 ***********************
 

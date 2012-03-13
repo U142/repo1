@@ -82,52 +82,7 @@ import contrib.com.jgoodies.looks.common.FontSet;
 
 
 
-/*class ThemeLoader
-{
-	class PluginClassLoader extends URLClassLoader {
-		  public PluginClassLoader(URL[] urls, ClassLoader parent) {
-		    super(urls, parent);
-		  }
-
-		  public Class<?> loadClass(String name)
-		      throws ClassNotFoundException {
-		    Class loadedClass = findLoadedClass(name);
-		    if (loadedClass == null) {
-		      try {
-		        loadedClass = findClass(name);
-		      } catch (ClassNotFoundException e) {
-		        // Swallow exception
-		        //does not exist locally
-		      }
-
-		      if (loadedClass == null) {
-		        loadedClass = super.loadClass(name);
-		      }
-		    }
-		    return loadedClass;
-		  }
-
-		}
-	public void load(String s)
-	{
-		try
-		{
-			URL [] urls = new URL [] { 
-					new URL("https://secure.ums2.no/vb4utv/UMSTheme.java") 
-			};
-			PluginClassLoader cl = new PluginClassLoader(urls, PAS.class.getClassLoader());
-			Object o = cl.loadClass("com.ums.UMSTheme").newInstance();
-		}
-		catch(Exception e)
-		{
-			log.warn(e.getMessage(), e);
-		}
-		
-		
-	}
-}*/
-
-public class PAS extends JFrame implements ComponentListener, WindowListener, SkinChangeListener 
+public class PAS extends JFrame implements ComponentListener, WindowListener, SkinChangeListener
 								/*substance 3.3*/ ,ThemeChangeListener, WatermarkChangeListener, //BorderPainterChangeListener,
 											GradientPainterChangeListener, ButtonShaperChangeListener {
 
@@ -547,35 +502,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	private void createGUI() {
-		//m_appicon = ImageLoader.load_icon("UMSKule_icon_16x16.gif");
-		//m_appicon = ImageLoader.load_icon("pas_appicon_16.png");
+
 		m_appicon = pasplugin.onLoadAppIcon();
-		
-		//m_lookandfeel = pasplugin.onSetInitialLookAndFeel(getRootPane());
-		
-		try {
-			//UIManager.setLookAndFeel(m_lookandfeel);
-			
-			
-			/*SubstanceLookAndFeel.setFontPolicy(contrib.com.jgoodies.looks.common.FontPolicies.getLooks1xPlasticPolicy());
-			final FontSet set = SubstanceLookAndFeel.getFontPolicy().getFontSet("Substance", null);
-			SubstanceLookAndFeel.setFontPolicy(new FontPolicy() {
 
-				@Override
-				public FontSet getFontSet(String arg0, UIDefaults arg1) {
-					return new org.jvnet.substance.fonts.ScaledFontSet(set, 1.0f);
-		                      //substanceCoreFontSet, newValue);
-				}
-				
-			});*/
-			//PropertiesFileParamReader reader = new PropertiesFileParamReader("C:\\Program Files\\UMS Population Alert System\\lookandfeel.config");
-
-			
-
-		} catch(Exception e) {
-			log.debug(e.getMessage());
-			Error.getError().addError(Localization.l("common_error"), "Error setting Look and Feel", e, Error.SEVERITY_ERROR);
-		}
 		try
 		{
 			String defaultlang = pasplugin.getDefaultLocale(m_settings);
@@ -724,48 +653,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_storagecontroller.create_storageelements(sz_home, sz_storage_tempwav, sz_storage_status, sz_storage_fleetcontrol,
 												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + File.separator);
 		SoundRecorder.setVocTempPath(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_));
-		
-		//VISUAL SETTINGS MOVED TO WEBSERVICES
-		/*m_settings = new XmlReader().loadVisualsSettings(m_settings);
-		if(m_settings!=null)
-		{
-			//SubstanceLookAndFeel.setCurrentTheme(m_settings.getThemeClassName());
-			try
-			{
-				//SubstanceLookAndFeel.setCurrentTheme(SubstanceTheme.getTheme(m_settings.getThemeClassName()));
-				//ClassLoader loader = new ClassLoader(); //getSystemResource(m_settings.getThemeClassName());
-				//SubstanceTheme activeTheme = new SubstanceMixTheme(m_settings.getThemeClassName());
-				        //new SubstancePurpleTheme(),
-				        //new SubstanceBarbyPinkTheme()).saturate(0.1);
-				//SubstanceLookAndFeel.setCurrentTheme(activeTheme);
 
-				//Substance 3.3
-				////
-					boolean b;
-					b = SubstanceLookAndFeel.setSkin(m_settings.getSkinClassName());
-					b = SubstanceLookAndFeel.setCurrentTheme(m_settings.getThemeClassName());
-					b = SubstanceLookAndFeel.setCurrentButtonShaper(m_settings.getButtonShaperClassname());
-					if(m_settings.getGradientClassname()!=null && m_settings.getGradientClassname().length() > 0)
-						b = SubstanceLookAndFeel.setCurrentGradientPainter(m_settings.getGradientClassname());
-					else
-						b = SubstanceLookAndFeel.setCurrentGradientPainter("org.jvnet.substance.painter.GlassGradientPainter");
-					if(m_settings.getTitlePainterClassname()!=null && m_settings.getTitlePainterClassname().length() > 0)
-						b = SubstanceLookAndFeel.setCurrentTitlePainter(m_settings.getTitlePainterClassname());
-					else
-						b = SubstanceLookAndFeel.setCurrentTitlePainter("org.jvnet.substance.title.Glass3DTitlePainter");
-					//b = SubstanceLookAndFeel.setcur
-					b = SubstanceLookAndFeel.setCurrentWatermark(m_settings.getWatermarkClassName());
-					//b = SubstanceLookAndFeel.setCurrentTitlePainter(m_settings.getTitlePainterClassname());
-				////
-					 
-			}
-			catch(Exception e)
-			{
-				log.warn(e.getMessage(), e);
-			}
-		}
-		m_settings = new XmlReader().loadMapSetup(m_settings);
-		*/
 		try
 		{
 			this.setIconImage(get_appicon().getImage());
@@ -807,14 +695,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			if(m_settings.getUsername().length()>0 && m_settings.getCompany().length() > 0)
 			{
-				try
-				{
-					//LoadVisualSettings(get_pasactionlistener(), m_settings.getUsername(), m_settings.getCompany(), false);
-					//initSubstance();
-				}
-				catch(Exception e)
-				{
-				}
 				info = new LogonInfo(m_settings.getUsername(),m_settings.getCompany());
 				if(sz_language!=null)
 					info.set_language(sz_language);

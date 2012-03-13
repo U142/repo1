@@ -118,9 +118,15 @@ public class MapFrame extends JPanel implements ActionListener {
 
     private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
 
+    private MAPSERVER mapserver;
+    
+    public void setMapserver(MAPSERVER mapserver) {
+        this.mapserver = mapserver;
+    }
+    
     private void navigationChanged()
     {
-        final TileLookup tileLookup = getTileLookup();
+        final TileLookup tileLookup = getTileLookup(mapserver);
         final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
         get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
         Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
@@ -129,6 +135,7 @@ public class MapFrame extends JPanel implements ActionListener {
 
     public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap) {
         super();
+        
         m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
 
         mapModel.addPropertyChangeListener("zoom", new PropertyChangeListener() {
@@ -145,8 +152,8 @@ public class MapFrame extends JPanel implements ActionListener {
         mapModel.addPropertyChangeListener("topLeft", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-    			navigationChanged();
-            	PAS.get_pas().kickRepaint();
+                navigationChanged();
+                PAS.get_pas().kickRepaint();
             }
         });
         get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {
@@ -240,7 +247,7 @@ public class MapFrame extends JPanel implements ActionListener {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (mouseDownPoint != null && get_mode() == MapMode.PAN_BY_DRAG) {
-                    controller.mapDragged(mapModel, getTileLookup(), getSize(), e.getX() - mouseDownPoint.x, e.getY() - mouseDownPoint.y);
+                    controller.mapDragged(mapModel, getTileLookup(PAS.get_pas().get_settings().getMapServer()), getSize(), e.getX() - mouseDownPoint.x, e.getY() - mouseDownPoint.y);
                     mouseDownPoint = e.getPoint();
                     kickRepaint();
                 }
@@ -270,11 +277,11 @@ public class MapFrame extends JPanel implements ActionListener {
     {
     	if(bZoomIn)
     	{
-            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);
+            controller.onZoomIn(mapModel, getTileLookup(PAS.get_pas().get_settings().getMapServer()), getSize(), p);
     	}
     	else
     	{
-            controller.onZoomOut(mapModel, getTileLookup(), getSize(), p);
+            controller.onZoomOut(mapModel, getTileLookup(PAS.get_pas().get_settings().getMapServer()), getSize(), p);
     	}
     }
 
@@ -796,7 +803,7 @@ public class MapFrame extends JPanel implements ActionListener {
             }
             pendingDownloads.clear();
 
-            final Iterable<TileLookup> layers = Iterables.concat(Collections.singleton(getTileLookup()), tileOverlays.values());
+            final Iterable<TileLookup> layers = Iterables.concat(Collections.singleton(getTileLookup(PAS.get_pas().get_settings().getMapServer())), tileOverlays.values());
             for (final TileLookup tileLookup : layers) {
                 final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
                 final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
@@ -903,8 +910,8 @@ public class MapFrame extends JPanel implements ActionListener {
         }
     });
 
-    public TileLookup getTileLookup() {
-        switch (PAS.get_pas().get_settings().getMapServer()) {
+    public TileLookup getTileLookup(MAPSERVER mapserver) {
+        switch (mapserver) {
             case DEFAULT:
                 return defaultLookup;
             case WMS:
@@ -915,7 +922,7 @@ public class MapFrame extends JPanel implements ActionListener {
     }
 
     public ZoomLookup getZoomLookup() {
-        return getTileLookup().getZoomLookup(getMapModel().getZoom());
+        return getTileLookup(PAS.get_pas().get_settings().getMapServer()).getZoomLookup(getMapModel().getZoom());
     }
 
     public Image get_mapimage() {

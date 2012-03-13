@@ -10,8 +10,9 @@
                 document.getElementById("body_txt_coor").value = document.mapapplet.get();
                 return false;
             } catch (err) { }
-           
+
         }
+
         function setShape(coor, id, obsolete, timestamp, deptname) {
             
             document.getElementById("body_txt_id").value = id;
@@ -41,7 +42,12 @@
             
             //return false;
         }
-        
+
+
+
+
+       
+
     </script>
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
@@ -75,16 +81,63 @@
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
-            <asp:TableCell><input type="button" id="btn_zoom" value="zoom" OnClick="javascript:document.mapapplet.zoom();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_pan" runat="server" value="pan" OnClick="javascript:document.mapapplet.pan();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_draw" runat="server" value="draw" OnClick="javascript:document.mapapplet.draw();" disabled="true"/></asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/admin.jar, javaapp/common-2.2.1.jar, javaapp/commons-lang-2.1.jar, javaapp/Core.jar, javaapp/geoapi-2.2.0.jar, javaapp/gt-api-2.5.5.jar, javaapp/gt-main-2.5.5.jar,
-                javaapp/gt-metadata-2.5.5.jar, javaapp/gt-referencing-2.5.5.jar, javaapp/gt-shapefile-2.5.5.jar, javaapp/gt-wms-2.5.5.jar, javaapp/gt-xml-2.5.5.jar, javaapp/Importer.jar, javaapp/jcommon-1.0.16.jar,
-                javaapp/jdom-1.0.jar, javaapp/jfreechart-1.0.13.jar, javaapp/jts-1.9.jar, javaapp/localization.jar, javaapp/Maps.jar, javaapp/no.ums.jar, javaapp/PAS.jar, javaapp/PASIcons.jar, javaapp/plugins.jar,
-                javaapp/roxes-win32forjava-1.0.2.jar, javaapp/Send.jar, javaapp/substance.3.3.0.1.jar, javaapp/substance.4.3.11.jar, javaapp/substance.5.0.01.jar, javaapp/substance.jar, javaapp/UMS.jar"
+                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/annotations-1.0.0.jar,
+                        javaapp/centric-admin-2.0-SNAPSHOT.jar, 
+                        javaapp/commons-beanutils-1.7.0.jar, 
+                        javaapp/commons-lang-2.3.jar, 
+                        javaapp/commons-logging-1.0.3.jar, 
+                        javaapp/commons-pool-1.5.3.jar, 
+                        javaapp/geoapi-2.3-M1.jar, 
+                        javaapp/geoapi-pending-2.3-M1.jar, 
+                        javaapp/gt-api-2.6.5.jar, 
+                        javaapp/gt-coverage-2.6.5.jar, 
+                        javaapp/gt-cql-2.6.5.jar, 
+                        javaapp/gt-main-2.6.5.jar, 
+                        javaapp/gt-metadata-2.6.5.jar, 
+                        javaapp/gt-referencing-2.6.5.jar, 
+                        javaapp/gt-render-2.6.5.jar, 
+                        javaapp/gt-shapefile-2.6.5.jar, 
+                        javaapp/gt-wms-2.6.5.jar, 
+                        javaapp/gt-xml-2.6.5.jar, 
+                        javaapp/guava-r07.jar, 
+                        javaapp/hamcrest-core-1.1.jar, 
+                        javaapp/hamcrest-library-1.1.jar, 
+                        javaapp/jaxb2-basics-0.6.0.jar, 
+                        javaapp/jaxb2-basics-runtime-0.6.0.jar, 
+                        javaapp/jaxb2-basics-tools-0.6.0.jar, 
+                        javaapp/jcommon-1.0.16.jar, 
+                        javaapp/jdom-1.0.jar, 
+                        javaapp/jfreechart-1.0.13.jar, 
+                        javaapp/jmock-2.5.1.jar, 
+                        javaapp/jnlp-1.0.jar, 
+                        javaapp/joda-time-1.6.2.jar, 
+                        javaapp/jsr-275-1.0-beta-2.jar, 
+                        javaapp/jsr305-1.3.9.jar, 
+                        javaapp/jts-1.11.jar, 
+                        javaapp/NLMapSearch-1.0.jar, 
+                        javaapp/pas-admin-ui-2.0-SNAPSHOT.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-core.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-gps.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-importer.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-maps.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-parm.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-pas.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-send.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-sound.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-status.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-tas.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT-ums.jar, 
+                        javaapp/pas-app-2.0-SNAPSHOT.jar, 
+                        javaapp/pas-cellbroadcast-2.0-SNAPSHOT.jar, 
+                        javaapp/pas-core-2.0-SNAPSHOT.jar, 
+                        javaapp/pas-icons-2.0-SNAPSHOT.jar, 
+                        javaapp/pas-lang-2.0-SNAPSHOT.jar, 
+                        javaapp/substance-3.3.0.1.jar, 
+                        javaapp/ums-log-2.0-SNAPSHOT.jar, 
+                        javaapp/ums-map-2.0-SNAPSHOT.jar, 
+                        javaapp/vecmath-1.3.2.jar, 
+                        javaapp/ws-java-clients-1.2-SNAPSHOT.jar"
                  code="no/ums/adminui/pas/MapApplet.class" main-class="no.ums.adminui.pas.MapApplet">
                     <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
                     <param id="compid" name="compid" runat="server" value="dette er noe tekst" />
@@ -97,14 +150,34 @@
                     <param id="c" name="c" runat="server" />
                     <param id="applet_height" name="applet_height" runat="server" />
                     <param id="applet_width" name="applet_width" runat="server" />
-                    <!--<param name="jnlp_href" value="javaapp/mapapplet.jnlp"--> />
                 </applet>
-                <!--
+                
                 <script type="text/javascript">
-                    var attributes = { width:675, height:300} ;
-                    var parameters = { jnlp_href: 'javaapp/jnlptest.jnlp'};
-                    deployJava.runApplet(attributes, parameters, '1.6');
-                </script>-->
+                    var mapapplet = document.getElementById("body_mapapplet")
+     
+
+                    function preventScrolling(e) {
+                        var evt = window.event || e;  //equalize event object
+
+                        mapapplet.requestFocus();
+
+                        if (evt.preventDefault) { //disable default wheel action of scrolling page
+                            evt.preventDefault();
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+
+                    var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";  //FF doesn't recognize mousewheel as of FF3.x
+
+                    if (mapapplet.attachEvent) { //if IE (and Opera depending on user setting)
+                        mapapplet.attachEvent("on" + mousewheelevt, preventScrolling);
+                    }
+                    else if (mapapplet.addEventListener) { //WC3 browsers
+                        mapapplet.addEventListener(mousewheelevt, preventScrolling, false);
+                    }
+                </script>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>

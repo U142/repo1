@@ -25,7 +25,6 @@ import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.*;
-import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 import no.ums.ws.common.MDVSENDINGINFOGROUP;
 import no.ums.ws.common.UBBMESSAGE;
 import no.ums.ws.common.cb.*;

@@ -144,6 +144,9 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 
 	protected NavStruct m_bounds = new NavStruct();
 	protected MapPointLL m_center = new MapPointLL(0,0);
+
+    public MapPointLL getCenter() { return m_center; }
+
 	protected MapPointPix m_center_pix = new MapPointPix(0, 0);
 	public void SetBounds(double lbo, double rbo, double ubo, double bbo)
 	{
