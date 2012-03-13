@@ -39,6 +39,8 @@ public partial class parameters : System.Web.UI.Page
             txt_heartbeat.Text = param.l_heartbeat.ToString();
             txt_interval.Text = param.l_interval.ToString();
             txt_duration.Text = param.l_duration.ToString();
+            txt_pagesize.Text = param.l_pagesize.ToString();
+            txt_maxpages.Text = param.l_maxpages.ToString();
         }
     }
     protected void btn_save_Click(object sender, EventArgs e)
@@ -55,6 +57,9 @@ public partial class parameters : System.Web.UI.Page
         param.l_interval = int.Parse(txt_interval.Text);
         //param.l_repetition = int.Parse(txt_repetitions.Text);
         param.l_duration = int.Parse(txt_duration.Text);
+        param.l_pagesize = int.Parse(txt_pagesize.Text);
+        param.l_maxpages = int.Parse(txt_maxpages.Text);
+
         paswsSoapClient pws = new paswsSoapClient();
         pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
         centric.com.ums.ws.pas.admin.ULOGONINFO logon = (centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];

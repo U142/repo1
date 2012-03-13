@@ -282,6 +282,78 @@ public partial class parameters {
     protected global::System.Web.UI.WebControls.RangeValidator rng_repetitions;
     
     /// <summary>
+    /// lbl_pagesize control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lbl_pagesize;
+    
+    /// <summary>
+    /// txt_pagesize control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txt_pagesize;
+    
+    /// <summary>
+    /// req_pagesize control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RequiredFieldValidator req_pagesize;
+    
+    /// <summary>
+    /// rng_pagesize control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RangeValidator rng_pagesize;
+    
+    /// <summary>
+    /// lbl_maxpages control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lbl_maxpages;
+    
+    /// <summary>
+    /// txt_maxpages control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txt_maxpages;
+    
+    /// <summary>
+    /// req_maxpages control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RequiredFieldValidator req_maxpages;
+    
+    /// <summary>
+    /// rng_maxpages control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RangeValidator rng_maxpages;
+    
+    /// <summary>
     /// btn_save control.
     /// </summary>
     /// <remarks>
