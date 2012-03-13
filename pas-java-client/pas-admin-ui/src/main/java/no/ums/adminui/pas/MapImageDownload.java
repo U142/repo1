@@ -160,7 +160,7 @@ public class MapImageDownload extends JApplet {
         System.exit(0);
     }
     
-    public boolean mapDownloaded(MapComponent mapComponent) {
+    public int mapDownloaded(MapComponent mapComponent, int progress) {
         
         ImmutableList<TileData> tileDataList = mapComponent.getTileLookup().getTileInfo(Variables.getZoomLevel(),
                 mapComponent.getModel().getTopLeft(), new Dimension(applet_width,applet_height)).getTileData();
@@ -168,41 +168,50 @@ public class MapImageDownload extends JApplet {
         final TileLookup tileLookup = mapComponent.getTileLookup();
         final MapComponent mc = mapComponent;
         
-        boolean downloaded = true;
-        
+        boolean firstLoop = false;
+        if(progress == 0) {
+            firstLoop = true;
+        }
 
+        int numOk = 0;
         for(final TileData tileData: tileDataList) {
-            System.out.println(tileData.toString() + " eksisterer? " + mapComponent.getTileLookup().exists(tileData) + " type=" + mapComponent.getTileLookup().getImage(tileData).getClass().toString());
-
-            if(!mapComponent.getTileLookup().exists(tileData)) {
+            if(!tileLookup.testImageExists(tileData)) {
                 new Runnable() {
                     public void run() {
                         tileLookup.getImageFast(tileData);
                         mc.repaint();
                     }
                 };
-                downloaded = false;
             }
-        }
-
-        //if(downloaded) {
-            mapComponent.repaint();
-        //}
-        System.out.println("Tiledatalist: " + tileDataList.size());
-        int numOk = 0;
-        for(final TileData tileData: tileDataList) {
-            if(!tileLookup.testImageExists(tileData))
-                downloaded = false;
-            else
+            else {
                 ++numOk;
+                if(firstLoop) { // To get live percentage update and avoid resetting on each call
+                    progress = (numOk*100) / tileDataList.size();
+                    downloadPercent = progress;
+                    System.out.println("Progress: " + downloadPercent + "%");
+                }
+            } 
         }
-        System.out.println("Progress: " + numOk + "/" + tileDataList.size());
 
-        return downloaded;
+        if(!firstLoop) {
+            progress  = (numOk*100) / tileDataList.size();
+            downloadPercent = progress;
+        }
+
+        mapComponent.repaint();
+
+        return progress;
     }
     
-
+    int downloadPercent = 0;
     
+    public int getImageDownloadProgress() {
+        return downloadPercent;
+    }
+    
+    public String getTest() {
+        return "test";
+    }
     
     private class WaitThread extends Thread {
 
@@ -212,15 +221,17 @@ public class MapImageDownload extends JApplet {
         public WaitThread(MapImageDownload mapImageDownload, MapComponent.DrawingLayer layer) {
             this.layer = layer;
             this.mapImageDownload = mapImageDownload;
-            System.out.println("Thread constructed");
+            downloadPercent = 0;
         }
         @Override
         public void run() {
             mapComponent.repaint();
-            while(!mapDownloaded(mapComponent)) {
+            int progress = 0;
+            while(progress<100) {
                 try {
+                    progress = mapDownloaded(mapComponent, progress);
                     System.out.println("Sleeping");
-                    sleep(1000);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
@@ -261,6 +272,7 @@ public class MapImageDownload extends JApplet {
                     }
                 }
             }
+            System.exit(0);
 
         }
     }

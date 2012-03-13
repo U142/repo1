@@ -106,15 +106,6 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                     lon += "|";
                             }
                         }
-                        /*
-                        string archive = "javaapp/admin.jar, " +
-                                        "javaapp/common-2.2.1.jar, javaapp/commons-lang-2.1.jar, javaapp/Core.jar, javaapp/geoapi-2.2.0.jar, javaapp/gt-api-2.5.5.jar, " + 
-                                        "javaapp/gt-main-2.5.5.jar, javaapp/gt-metadata-2.5.5.jar, javaapp/gt-referencing-2.5.5.jar, javaapp/gt-shapefile-2.5.5.jar, javaapp/gt-wms-2.5.5.jar, " +
-                                        "javaapp/gt-xml-2.5.5.jar, javaapp/Importer.jar, javaapp/jcommon-1.0.16.jar, javaapp/jdom-1.0.jar, javaapp/jfreechart-1.0.13.jar, javaapp/jts-1.9.jar, " +
-                                        "javaapp/localization.jar, javaapp/ums-map-2.0-SNAPSHOT.jar, javaapp/no.ums.jar, javaapp/PAS.jar, javaapp/PASIcons.jar, javaapp/plugins.jar, " +
-                                        "javaapp/roxes-win32forjava-1.0.2.jar, javaapp/Send.jar, javaapp/substance.3.3.0.1.jar, javaapp/substance.4.3.11.jar, javaapp/substance.5.0.01.jar, " +
-                                        "javaapp/substance.jar, javaapp/UMS.jar, pas-app-2.0-SNAPSHOT-maps.jar, pas-admin-ui-2.0-SNAPSHOT.jar";
-                        */
 
                         string archive = "javaapp/annotations-1.0.0.jar," +
                                         " javaapp/centric-admin-2.0-SNAPSHOT.jar," +
@@ -189,11 +180,11 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                             "<param name=w value=" + ConfigurationManager.AppSettings["w"] + " >" +
                                             "<param name=applet_width value=" + ConfigurationManager.AppSettings["applet_width"] + " >" +
                                             "<param name=applet_height value=" + ConfigurationManager.AppSettings["applet_height"] + " >" +
-                                            //"<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
                                        "</applet>" +
-                                    "')\" value=\"Save\" />";
+                                    "'," + obj[j].l_deptpk + ")\" value=\"Save\" />";
                         cell.Controls.Add(txt);
                         row.Cells.Add(cell);
+                        
                         if (add)
                             tbl_output.Rows.Add(row);
 
