@@ -147,10 +147,6 @@ public class MapApplet extends JApplet implements ActionListener {
         setFocusable(true);
         requestFocus();
 	}
-	
-	private void add_controls(){
-		
-	}
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {

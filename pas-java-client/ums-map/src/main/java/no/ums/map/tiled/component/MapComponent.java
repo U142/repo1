@@ -385,11 +385,10 @@ public final class MapComponent extends JComponent {
             }
         }
 
-        @Override
-        public void paint(Graphics g) {
+        public void paintShapes(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             graphics = g2;
-            
+
             if (isDrawing && currentPoint != null) {
                 BasicStroke stroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {3f, 3f}, 0.0f);
                 g2.setStroke(stroke);
@@ -408,6 +407,11 @@ public final class MapComponent extends JComponent {
                 fillPolygon(g2, path);
             }
             doneDrawing = true;
+        }
+        
+        @Override
+        public void paint(Graphics g) {
+            paintShapes(g);
         }
 
         private void fillPolygon(Graphics2D g2, Path2D.Double path) {
