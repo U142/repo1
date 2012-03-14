@@ -36,7 +36,7 @@ public final class MapComponent extends JComponent {
         private List<LonLat> shape;
         private Graphics2D graphics;
 
-        private boolean drawingActivated = false;
+        private boolean drawingActivated = true;
         public boolean isDrawingActivated() { return drawingActivated; }
         public void setDrawingActivated(boolean drawingActivated) { this.drawingActivated = drawingActivated; }
         
