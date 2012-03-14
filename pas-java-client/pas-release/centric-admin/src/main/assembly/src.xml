@@ -11,7 +11,7 @@
             <directory>${project.build.directory}</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
-                <include>*.jar</include>
+                <include>centric-admin-*.jar</include>
             </includes>
         </fileSet>
     </fileSets>

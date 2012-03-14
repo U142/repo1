@@ -76,6 +76,13 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <finalName>tmp</finalName>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>no.ums.maven</groupId>
                     <artifactId>maven-ums-plugin</artifactId>
                     <configuration>
