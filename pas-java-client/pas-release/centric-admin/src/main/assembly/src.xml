@@ -8,15 +8,6 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}</directory>
-            <outputDirectory>/</outputDirectory>
-            <includes>
-                <include>README*</include>
-                <include>LICENSE*</include>
-                <include>NOTICE*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>${project.build.directory}</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
@@ -24,12 +15,12 @@
             </includes>
         </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
-            <scope>runtime</scope>
-            <unpack>false</unpack>
-        </dependencySet>
-    </dependencySets>
+    <!--<dependencySets>-->
+        <!--<dependencySet>-->
+            <!--<outputDirectory>/</outputDirectory>-->
+            <!--<useProjectArtifact>true</useProjectArtifact>-->
+            <!--<scope>runtime</scope>-->
+            <!--<unpack>false</unpack>-->
+        <!--</dependencySet>-->
+    <!--</dependencySets>-->
 </assembly>
