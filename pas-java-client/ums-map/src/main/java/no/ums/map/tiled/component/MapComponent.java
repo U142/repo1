@@ -72,15 +72,96 @@ public final class MapComponent extends JComponent {
         }
         
         public boolean canDrawHere(Point p) {
-            Polygon restricionPoly = createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
+            boolean canDraw = true;
+            Polygon restricionPoly = MapTools.createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
+            
             if(restricionPoly != null) {
-                return (!restricionPoly.contains(p));
+                canDraw = (!restricionPoly.contains(p));
             }
             else {
-                return false;
+                canDraw = false;
             }
+            if(mapComponent.getDrawLayer().shape.size()>2 && canDraw) {
+                PathIterator pi = mapComponent.getRestrictionLayer().path.getPathIterator(new AffineTransform());
+                Path2D tmp = new Path2D.Double();
+                tmp.append(pi,true);
+
+                PathIterator piDraw = mapComponent.getDrawLayer().path.getPathIterator(new AffineTransform());
+
+
+                List<Double[]> draw = new ArrayList<Double[]>();
+                double[] coors = new double[2];
+                while(!piDraw.isDone()) {
+                    piDraw.currentSegment(coors);
+                    draw.add(new Double[] { coors[0], coors[1] });
+                    piDraw.next();
+                }
+
+                Double[] tmpc = draw.get(draw.size()-1);
+
+                Line2D.Double line = new Line2D.Double(tmpc[0].intValue(), tmpc[1].intValue(),
+                        p.getX(), p.getY());
+                
+                canDraw = !lineIntersects(mapComponent.getRestrictionLayer().path, line);
+            }
+            return canDraw;
         }
         
+        private boolean lineIntersects(Path2D restrictionPath, Line2D line) {
+            PathIterator iterator = restrictionPath.getPathIterator(new AffineTransform());
+            double[] coors1 = new double[2];
+            double[] coors2 = new double[2];
+            Line2D.Double restrictionLine;
+
+            while (!iterator.isDone()) {
+                iterator.currentSegment(coors1);
+                iterator.next();
+                if(!iterator.isDone()) {
+                    iterator.currentSegment(coors2);
+                    restrictionLine = new Line2D.Double(coors1[0], coors1[1], coors2[0], coors2[1]);
+                    if(restrictionLine.intersectsLine(line)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private class AreaTing extends Area {
+
+            public AreaTing(Polygon area) {
+                super(area);
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                AreaTing ext = null;
+                if(obj instanceof AreaTing) {
+                    ext = (AreaTing) obj;
+                }
+                else {
+                    return false;
+                }
+
+                List<Double[]> local = getCoors(this);
+                List<Double[]> external = getCoors(ext);
+
+                return local.equals(external);
+            }
+
+            private List<Double[]> getCoors(AreaTing areaTing) {
+                List<Double[]> list = new ArrayList<Double[]>();
+                PathIterator pathIterator =  areaTing.getPathIterator(new AffineTransform());
+                double[] coors = new double[2];
+                while(!pathIterator.isDone()) {
+                    pathIterator.currentSegment(coors);
+                    list.add(new Double[] { coors[0], coors[1] });
+                    pathIterator.next();
+                }
+                return list;
+            }
+        }
+
         public Point2D.Double[] getRestrictionBorder(Point2D.Double p1, Point2D.Double p2) {
             ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
             LonLat llstart = closestPolygonPoint(p1);
@@ -219,16 +300,6 @@ public final class MapComponent extends JComponent {
             return path;
         }
         
-        public int getNumberOfPathPoints(Path2D.Double path) {
-            PathIterator pathIterator = path.getPathIterator(new AffineTransform());
-            int i=0;
-            while(!pathIterator.isDone()) {
-                i++;
-                pathIterator.next();
-            }
-            return i;
-        }
-        
         public LonLat closestPolygonPoint(Point2D.Double p) {
             List<LonLat> res = mapComponent.getRestrictionLayer().shape;
 
@@ -245,30 +316,6 @@ public final class MapComponent extends JComponent {
                 }
             }
             return closest;
-        }
-
-        public Polygon createPolygon(Path2D.Double path, List<LonLat> shape) {
-            if(shape.size()>0) {
-                PathIterator iterator = path.getPathIterator(new AffineTransform());
-                double[] coords = new double[2];
-                int[] x = new int[shape.size()+1];
-                int[] y = new int[shape.size()+1];
-                int i=0;
-                while(!iterator.isDone()) {
-                    iterator.currentSegment(coords);
-                    try {
-                        x[i] = (int)coords[0];
-                    }
-                    catch (Exception ex) {
-                        System.out.print(ex.getMessage());
-                    }
-                    y[i] = (int)coords[1];
-                    i++;
-                    iterator.next();
-                }
-                return new Polygon(x, y, shape.size());
-            }
-            return null;
         }
 
         @Override
@@ -307,17 +354,15 @@ public final class MapComponent extends JComponent {
                 else if (isDrawing && e.getButton() == MouseEvent.BUTTON1) {
                     ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
                     LonLat ll;
-                    if(getNumberOfPathPoints(path) == 1) {
+                    if(MapTools.getNumberOfPathPoints(path) == 1 && mapComponent.getRestrictionLayer().shape.size() > 3) {
                         Point2D.Double lastPoint = getLastPoint();
                         LonLat ll1 = closestPolygonPoint(new Point2D.Double(lastPoint.getX(), lastPoint.getY()));
                         Point p1 = zoomLookup.getScreenPoint(mapComponent.getModel().getTopLeft(),ll1);
                         path.lineTo(p1.getX(), p1.getY());
-                        //shape.add(ll1);
 
                         LonLat ll2 = closestPolygonPoint(new Point2D.Double(e.getX(), e.getY()));
                         Point p2 = zoomLookup.getScreenPoint(mapComponent.getModel().getTopLeft(),ll2);
                         path.lineTo(p2.getX(), p2.getY());
-                        //shape.add(ll2);
 
                         List<LonLat> lonLatPath = getShapeShortestRoute(mapComponent.getRestrictionLayer().shape, ll1, ll2);
                         // Add the restriction border to path
@@ -775,6 +820,8 @@ public final class MapComponent extends JComponent {
         void mapDragged(MapModel model, TileLookup tileLookup, Dimension size, int xOffset, int yOffset);
 
     }
+    
+
 
     private class MapMouseAdapter extends MouseAdapter {
 
