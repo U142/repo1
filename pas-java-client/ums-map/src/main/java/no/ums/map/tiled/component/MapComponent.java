@@ -36,8 +36,9 @@ public final class MapComponent extends JComponent {
         private List<LonLat> shape;
         private Graphics2D graphics;
 
-        private boolean doneDrawing = false;
-        public boolean isDoneLoading() { return doneDrawing; }
+        private boolean drawingActivated = false;
+        public boolean isDrawingActivated() { return drawingActivated; }
+        public void setDrawingActivated(boolean drawingActivated) { this.drawingActivated = drawingActivated; }
         
         public void setShape(List<LonLat> shape) { this.shape = shape; }
         public List<LonLat> getShape() { 
@@ -104,6 +105,9 @@ public final class MapComponent extends JComponent {
                 
                 canDraw = !lineIntersects(mapComponent.getRestrictionLayer().path, line);
             }
+
+            canDraw = isDrawingActivated();
+
             return canDraw;
         }
         
@@ -451,7 +455,6 @@ public final class MapComponent extends JComponent {
                 g2.draw(path);
                 fillPolygon(g2, path);
             }
-            doneDrawing = true;
         }
         
         @Override

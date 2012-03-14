@@ -371,20 +371,7 @@ public class MapApplet extends JApplet implements ActionListener {
     }
 
 	public void draw() {
-		m_mappane.set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
-		if(Variables.getSendController().get_activesending() == null) {
-			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-			Variables.getSendController().set_activesending(so);
-			Variables.getSendController().add_sending(so, false);
-			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
-			so.set_sendproperties(sp);
-		}
-		else
-			sp = Variables.getSendController().get_activesending().get_sendproperties().typecast_poly();
-		
-		sp.set_color(Color.BLUE);
-								
-		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+		mapComponent.getDrawLayer().setDrawingActivated(true);
 	}
 	public String get(){
 
