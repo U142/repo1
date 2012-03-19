@@ -40,8 +40,7 @@ public final class MapComponent extends JComponent {
         public void setDrawingActivated(boolean drawingActivated) { this.drawingActivated = drawingActivated; }
         
         public void setShape(List<LonLat> shape) { this.shape = shape; }
-        public List<LonLat> getShape() { 
-            System.out.println("getShape");
+        public List<LonLat> getShape() {
             return this.shape;
         }
         public void setPath(Path2D.Double path) { this.path = path; }
@@ -68,7 +67,6 @@ public final class MapComponent extends JComponent {
         public void mouseWheelMoved(MouseWheelEvent e) {
             super.mouseWheelMoved(e);
             recalculate();
-            System.out.println("mouseWheelMoved");
         }
         
         public boolean canDrawHere(Point p) {
@@ -519,7 +517,6 @@ public final class MapComponent extends JComponent {
     }
     
     public DrawingLayer getDrawLayer() {
-        System.out.println("getDrawLayer");
         for(MapLayer layer: layers) {
             if( layer instanceof DrawingLayer) {
                 return (DrawingLayer)layer;
