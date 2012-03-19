@@ -454,7 +454,7 @@ public partial class user_admin : System.Web.UI.Page
     }
     protected void region_select(object sender, EventArgs e)
     {
-        if (Session["sregion"].ToString() != "true")
+        if (Session["sregion"] == null || Session["sregion"].ToString() != "true")
         {
             centric.com.ums.ws.pas.admin.ULOGONINFO li = (centric.com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
