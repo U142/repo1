@@ -2404,7 +2404,7 @@ namespace com.ums.ws.parm
             }
             catch (Exception e)
             {
-                ULog.error("SQL Error:\n" + sz_sql + "\n" + e.Message);
+                ULog.error("HandleAlertUpdate: SQL Error:\n" + sz_sql + "\n" + e.Message);
                 throw;
             }
         }
