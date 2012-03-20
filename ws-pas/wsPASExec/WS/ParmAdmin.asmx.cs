@@ -2351,6 +2351,7 @@ namespace com.ums.ws.parm
         /*new function for insert/update/delete of alerts, by using PAALERT class*/
         public long HandleAlertUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAALERT a)
         {
+            String sz_sql = "";
             try
             {
                 m_logon = logon;
@@ -2362,7 +2363,6 @@ namespace com.ums.ws.parm
                 String sz_description = a.sz_description.Replace("'", "''");
                 String sz_oadc = a.sz_sms_oadc.Replace("'", "''");
                 String sz_message = a.sz_sms_message.Replace("'", "''");
-                String sz_sql;
                 sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}', '{18}', {19}",
                                         operation.ToString().ToLower(), a.l_alertpk, logon.l_userpk, logon.l_comppk, a.l_parent,
                                         sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
@@ -2402,8 +2402,9 @@ namespace com.ums.ws.parm
                 }
                 return n_ret;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                ULog.error("HandleAlertUpdate: SQL Error:\n" + sz_sql + "\n" + e.Message);
                 throw;
             }
         }
