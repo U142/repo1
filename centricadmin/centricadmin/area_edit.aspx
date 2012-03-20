@@ -63,6 +63,18 @@
             <asp:TableCell>
                 <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click" CausesValidation="false"/></asp:TableCell>
         </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <ul>
+                    <li>Press create to activate drawing</li>
+                    <li>Zoom using scroll wheel</li>
+                    <li>Pan by dragging map</li>
+                    <li>Start drawing by mouse left click, first two points define border line</li>
+                    <li>Complete polygon by mouse right click</li>
+                    <li>Click save to store</li>
+                </ul>
+            </asp:TableCell>
+        </asp:TableRow>
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
         </asp:TableHeaderRow>
