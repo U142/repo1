@@ -30,8 +30,8 @@ namespace com.ums.PAS.Settings
             try
             {
                 String szSQL;
-                szSQL = String.Format("sp_cb_upd_LBAPARAMETER {0},{1},{2},'{3}',{4},{5},{6},{7},{8},{9},{10},{11}", logon.l_userpk, param.l_incorrect, param.l_autologoff, param.sz_adminemail.Replace("'","''"),
-                    param.l_channelno, param.l_test_channelno, param.l_heartbeat, param.l_duration, param.l_interval, param.l_repetition, param.l_deptpk, param.l_comppk);
+                szSQL = String.Format("sp_cb_upd_LBAPARAMETER {0},{1},{2},'{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", logon.l_userpk, param.l_incorrect, param.l_autologoff, param.sz_adminemail.Replace("'","''"),
+                    param.l_channelno, param.l_test_channelno, param.l_heartbeat, param.l_duration, param.l_interval, param.l_repetition, param.l_deptpk, param.l_comppk, param.l_pagesize, param.l_maxpages);
 
                 return ExecNonQuery(szSQL);
 
@@ -67,6 +67,8 @@ namespace com.ums.PAS.Settings
                     param.l_duration = odr.GetInt32(7);
                     param.l_interval = odr.GetInt32(8);
                     param.l_repetition = odr.GetInt32(9);
+                    param.l_pagesize = odr.GetInt32(odr.GetOrdinal("l_pagesize"));
+                    param.l_maxpages = odr.GetInt32(odr.GetOrdinal("l_maxpages"));
                     param.l_deptpk = logon.l_deptpk;
                     param.l_comppk = logon.l_comppk;
                 }

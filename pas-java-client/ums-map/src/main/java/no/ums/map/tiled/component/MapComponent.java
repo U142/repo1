@@ -34,14 +34,13 @@ public final class MapComponent extends JComponent {
         private Point currentPoint;
         private Path2D.Double path;
         private List<LonLat> shape;
-        private Graphics2D graphics;
 
-        private boolean doneDrawing = false;
-        public boolean isDoneLoading() { return doneDrawing; }
+        private boolean drawingActivated = true;
+        public boolean isDrawingActivated() { return drawingActivated; }
+        public void setDrawingActivated(boolean drawingActivated) { this.drawingActivated = drawingActivated; }
         
         public void setShape(List<LonLat> shape) { this.shape = shape; }
-        public List<LonLat> getShape() { 
-            System.out.println("getShape");
+        public List<LonLat> getShape() {
             return this.shape;
         }
         public void setPath(Path2D.Double path) { this.path = path; }
@@ -68,138 +67,64 @@ public final class MapComponent extends JComponent {
         public void mouseWheelMoved(MouseWheelEvent e) {
             super.mouseWheelMoved(e);
             recalculate();
-            System.out.println("mouseWheelMoved");
         }
         
         public boolean canDrawHere(Point p) {
-            Polygon restricionPoly = createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
-            if(restricionPoly != null) {
-                return (!restricionPoly.contains(p));
-            }
-            else {
-                return false;
-            }
-        }
-        
-        public Point2D.Double[] getRestrictionBorder(Point2D.Double p1, Point2D.Double p2) {
-            ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
-            LonLat llstart = closestPolygonPoint(p1);
-            Point start = zoomLookup.getPoint(llstart);
-            LonLat llend = closestPolygonPoint(p2);
-            Point end = zoomLookup.getPoint(llend);
-            return new Point2D.Double[] { p1, p2 };
-        }
-        
-        // find entry and exit point
-        // try one and get lon lats for all points also sum distance
-        // try the other way and sum distance
-        // Compare distance and return shortest
-        
-        private List<LonLat> getShapeShortestRoute(List<LonLat> shape, LonLat start, LonLat finish) {
-            double distance = 0;
-            List<LonLat> route = new ArrayList<LonLat>();
-            boolean distanceFound = false;
+            boolean canDraw;
+            Polygon restricionPoly = MapTools.createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
 
-            int startIndex = shape.indexOf(start);
-            int finishIndex = shape.indexOf(finish);
+            canDraw = restricionPoly != null && (!restricionPoly.contains(p));
+
+            if(mapComponent.getDrawLayer().shape.size()>2 && canDraw) {
+                PathIterator pi = mapComponent.getRestrictionLayer().path.getPathIterator(new AffineTransform());
+                Path2D tmp = new Path2D.Double();
+                tmp.append(pi,true);
+
+                PathIterator piDraw = mapComponent.getDrawLayer().path.getPathIterator(new AffineTransform());
 
 
-            for(int i=startIndex;i<shape.size();i++) {
-                LonLat next = null;
-                LonLat current = shape.get(i);
-
-                route.add(current);
-
-                if(finishIndex == i) {
-                    distanceFound = true;
-                    break;
+                List<Double[]> draw = new ArrayList<Double[]>();
+                double[] coors = new double[2];
+                while(!piDraw.isDone()) {
+                    piDraw.currentSegment(coors);
+                    draw.add(new Double[] { coors[0], coors[1] });
+                    piDraw.next();
                 }
+
+                Double[] tmpc = draw.get(draw.size()-1);
+
+                Line2D.Double line = new Line2D.Double(tmpc[0].intValue(), tmpc[1].intValue(),
+                        p.getX(), p.getY());
                 
-                if(i+1<shape.size()) {
-                    next = shape.get(i+1);
-                }
-
-                if(next != null) {
-                    distance += current.distanceToInM(next);
-                }
+                canDraw = !lineIntersects(mapComponent.getRestrictionLayer().path, line);
             }
 
-            if(startIndex != 0 && !distanceFound) {
-                for(int i=0;i<=startIndex;i++) {
-                    LonLat next = null;
-                    LonLat current = shape.get(i);
+            canDraw = isDrawingActivated();
 
-                    route.add(current);
-
-                    if(finishIndex == i) {
-                        distanceFound = true;
-                        break;
-                    }
-
-                    if(i+1<startIndex) {
-                        next = shape.get(i+1);
-                    }
-
-                    if(next != null) {
-                        distance += current.distanceToInM(next);
-                    }
-                }
-            }
-
-            // Go the other way
-            boolean altDistanceFound = false;
-            List<LonLat> altRoute = new ArrayList<LonLat>();
-            double altDistance = 0;
-
-            for(int i=startIndex;i>=0;i--) {
-                LonLat next = null;
-                LonLat current = shape.get(i);
-
-                altRoute.add(current);
-
-                if(finishIndex == i) {
-                    altDistanceFound = true;
-                    break;
-                }
-
-                if(i-1>0) {
-                    next = shape.get(i-1);
-                }
-
-                if(next != null) {
-                    altDistance += current.distanceToInM(next);
-                }
-            }
-
-            if(startIndex != shape.size() && !altDistanceFound) {
-                for(int i=shape.size()-1;i>=0;i--) {
-                    LonLat next = null;
-                    LonLat current = shape.get(i);
-
-                    altRoute.add(current);
-
-                    if(finishIndex == i) {
-                        altDistanceFound = true;
-                        break;
-                    }
-
-                    if(i-1>=0) {
-                        next = shape.get(i-1);
-                    }
-
-                    if(next != null) {
-                        altDistance += current.distanceToInM(next);
-                    }
-                }
-            }
-
-            if(distance < altDistance) {
-                return route;
-            }
-            else {
-                return altRoute;
-            }
+            return canDraw;
         }
+        
+        private boolean lineIntersects(Path2D restrictionPath, Line2D line) {
+            PathIterator iterator = restrictionPath.getPathIterator(new AffineTransform());
+            double[] coors1 = new double[2];
+            double[] coors2 = new double[2];
+            Line2D.Double restrictionLine;
+
+            while (!iterator.isDone()) {
+                iterator.currentSegment(coors1);
+                iterator.next();
+                if(!iterator.isDone()) {
+                    iterator.currentSegment(coors2);
+                    restrictionLine = new Line2D.Double(coors1[0], coors1[1], coors2[0], coors2[1]);
+                    if(restrictionLine.intersectsLine(line)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
 
         public Path2D.Double addLonLatToPath(List<LonLat> lonLatShape, Path2D.Double path) {
             ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
@@ -214,19 +139,10 @@ public final class MapComponent extends JComponent {
                     path.lineTo(screenPoint.getX(),screenPoint.getY());
                 }
                 path.closePath();
+                ++i;
             }
 
             return path;
-        }
-        
-        public int getNumberOfPathPoints(Path2D.Double path) {
-            PathIterator pathIterator = path.getPathIterator(new AffineTransform());
-            int i=0;
-            while(!pathIterator.isDone()) {
-                i++;
-                pathIterator.next();
-            }
-            return i;
         }
         
         public LonLat closestPolygonPoint(Point2D.Double p) {
@@ -245,30 +161,6 @@ public final class MapComponent extends JComponent {
                 }
             }
             return closest;
-        }
-
-        public Polygon createPolygon(Path2D.Double path, List<LonLat> shape) {
-            if(shape.size()>0) {
-                PathIterator iterator = path.getPathIterator(new AffineTransform());
-                double[] coords = new double[2];
-                int[] x = new int[shape.size()+1];
-                int[] y = new int[shape.size()+1];
-                int i=0;
-                while(!iterator.isDone()) {
-                    iterator.currentSegment(coords);
-                    try {
-                        x[i] = (int)coords[0];
-                    }
-                    catch (Exception ex) {
-                        System.out.print(ex.getMessage());
-                    }
-                    y[i] = (int)coords[1];
-                    i++;
-                    iterator.next();
-                }
-                return new Polygon(x, y, shape.size());
-            }
-            return null;
         }
 
         @Override
@@ -307,19 +199,17 @@ public final class MapComponent extends JComponent {
                 else if (isDrawing && e.getButton() == MouseEvent.BUTTON1) {
                     ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
                     LonLat ll;
-                    if(getNumberOfPathPoints(path) == 1) {
+                    if(MapTools.getNumberOfPathPoints(path) == 1 && mapComponent.getRestrictionLayer().shape.size() > 3) {
                         Point2D.Double lastPoint = getLastPoint();
                         LonLat ll1 = closestPolygonPoint(new Point2D.Double(lastPoint.getX(), lastPoint.getY()));
                         Point p1 = zoomLookup.getScreenPoint(mapComponent.getModel().getTopLeft(),ll1);
                         path.lineTo(p1.getX(), p1.getY());
-                        //shape.add(ll1);
 
                         LonLat ll2 = closestPolygonPoint(new Point2D.Double(e.getX(), e.getY()));
                         Point p2 = zoomLookup.getScreenPoint(mapComponent.getModel().getTopLeft(),ll2);
                         path.lineTo(p2.getX(), p2.getY());
-                        //shape.add(ll2);
 
-                        List<LonLat> lonLatPath = getShapeShortestRoute(mapComponent.getRestrictionLayer().shape, ll1, ll2);
+                        List<LonLat> lonLatPath = MapTools.getShapeShortestRoute(mapComponent.getRestrictionLayer().shape, ll1, ll2);
                         // Add the restriction border to path
                         path = addLonLatToPath(lonLatPath, path);
 
@@ -328,7 +218,6 @@ public final class MapComponent extends JComponent {
                     }
                     path.lineTo(e.getX(), e.getY());
                     ll = zoomLookup.getLonLat(mapComponent.getModel().getTopLeft(), e.getX(),e.getY());
-                    Point p = zoomLookup.getPoint(ll);
                     shape.add(ll);
                     recalculate();
                     mapComponent.repaint();
@@ -349,9 +238,7 @@ public final class MapComponent extends JComponent {
         public void mouseDragged(MouseEvent e) {
             super.mouseDragged(e);
             currentPoint = e.getPoint();
-            ZoomLookup zoomLookup = recalculate();
-
-            LonLat ll = zoomLookup.getLonLat(mapComponent.getModel().getTopLeft(), e.getX(),e.getY());
+            recalculate();
             mapComponent.requestFocus();
         }
 
@@ -385,11 +272,9 @@ public final class MapComponent extends JComponent {
             }
         }
 
-        @Override
-        public void paint(Graphics g) {
+        public void paintShapes(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
-            graphics = g2;
-            
+
             if (isDrawing && currentPoint != null) {
                 BasicStroke stroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {3f, 3f}, 0.0f);
                 g2.setStroke(stroke);
@@ -397,17 +282,16 @@ public final class MapComponent extends JComponent {
                 g2.draw(new Line2D.Double(path.getCurrentPoint(), currentPoint));
             }
             if (path != null) {
-                //if(path point is smaller than 3)
-                // find the closest point in restriction shape to mouse pointer
-                // find the closest point in the restriction shape of the first point in the path
-                // draw along the restriction shape between the two points above
-
                 g2.setStroke(new BasicStroke(2));
                 g2.setColor(Color.BLUE);
                 g2.draw(path);
                 fillPolygon(g2, path);
             }
-            doneDrawing = true;
+        }
+        
+        @Override
+        public void paint(Graphics g) {
+            paintShapes(g);
         }
 
         private void fillPolygon(Graphics2D g2, Path2D.Double path) {
@@ -530,7 +414,6 @@ public final class MapComponent extends JComponent {
                 g2.setStroke(new BasicStroke(1));
                 g2.setColor(Color.BLACK);
                 g2.draw(path);
-                //fillPolygon(g2, path);
             }
         }
 
@@ -558,7 +441,6 @@ public final class MapComponent extends JComponent {
 
             g2.setColor(new Color(Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue(), 30));
             g2.fillPolygon(xCoords, yCoords, i);
-
         }
     }
     
@@ -593,7 +475,6 @@ public final class MapComponent extends JComponent {
 
             g2.setColor(SystemColor.textText);
             g2.drawString(this.shapeName, p.x-width/2, p.y+2);
-            //g2.drawString(shapeName, p.x , p.y);
         }
         
     }
@@ -637,7 +518,6 @@ public final class MapComponent extends JComponent {
     }
     
     public DrawingLayer getDrawLayer() {
-        System.out.println("getDrawLayer");
         for(MapLayer layer: layers) {
             if( layer instanceof DrawingLayer) {
                 return (DrawingLayer)layer;
@@ -667,11 +547,6 @@ public final class MapComponent extends JComponent {
         return new LonLat[] { topLeft, bottomRight };
     }
 
-    public Point getCoordinateToPoint(LonLat lonLat) {
-        return this.getTileLookup().getZoomLookup(getModel().getZoom()).getScreenPoint(
-                model.getTopLeft(), lonLat);
-    }
-    
     public MapComponent() {
         setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
         addComponentListener(new ComponentAdapter() {

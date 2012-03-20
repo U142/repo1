@@ -621,6 +621,10 @@ namespace centric.com.ums.ws.pas {
         
         private int l_repetitionField;
         
+        private int l_pagesizeField;
+        
+        private int l_maxpagesField;
+        
         private int l_deptpkField;
         
         private int l_comppkField;
@@ -747,6 +751,30 @@ namespace centric.com.ums.ws.pas {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public int l_pagesize {
+            get {
+                return this.l_pagesizeField;
+            }
+            set {
+                this.l_pagesizeField = value;
+                this.RaisePropertyChanged("l_pagesize");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public int l_maxpages {
+            get {
+                return this.l_maxpagesField;
+            }
+            set {
+                this.l_maxpagesField = value;
+                this.RaisePropertyChanged("l_maxpages");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
         public int l_deptpk {
             get {
                 return this.l_deptpkField;
@@ -758,7 +786,7 @@ namespace centric.com.ums.ws.pas {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
         public int l_comppk {
             get {
                 return this.l_comppkField;

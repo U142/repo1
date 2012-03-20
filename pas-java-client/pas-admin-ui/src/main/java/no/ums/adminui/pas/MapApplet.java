@@ -50,7 +50,6 @@ public class MapApplet extends JApplet implements ActionListener {
 
     public MapFrameAdmin m_mappane;
     public MapComponent mapComponent;
-	public AdminDraw m_drawthread;
 	public Navigation m_navigation;
 	public Image m_image;
 	public String coors;
@@ -138,14 +137,6 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	
 	private void afterLogon() {
-		
-		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,applet_width,applet_height);
-		Variables.setDraw(m_drawthread);
-		
-		
-	}
-	
-	private void afterAfterLogon() {
 		Container contentpane = getContentPane();
 		contentpane.setLayout(new FlowLayout());
 
@@ -155,10 +146,6 @@ public class MapApplet extends JApplet implements ActionListener {
         mapComponent.repaint();
         setFocusable(true);
         requestFocus();
-	}
-	
-	private void add_controls(){
-		
 	}
 
 	@Override
@@ -171,8 +158,6 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 			boolean b_results_ready;
 			ArrayOfUDEPARTMENT wsdept = (ArrayOfUDEPARTMENT)e.getSource();
-			
-			afterLogon();
 			
 			List<UDEPARTMENT> depts = wsdept.getUDEPARTMENT();
 			for(int i=0; i < depts.size(); i++)
@@ -286,7 +271,7 @@ public class MapApplet extends JApplet implements ActionListener {
 
 			add(mapComponent);
 			b_results_ready = true;
-			afterAfterLogon();
+			afterLogon();
 		}
 			
     }
@@ -386,20 +371,7 @@ public class MapApplet extends JApplet implements ActionListener {
     }
 
 	public void draw() {
-		m_mappane.set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
-		if(Variables.getSendController().get_activesending() == null) {
-			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-			Variables.getSendController().set_activesending(so);
-			Variables.getSendController().add_sending(so, false);
-			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
-			so.set_sendproperties(sp);
-		}
-		else
-			sp = Variables.getSendController().get_activesending().get_sendproperties().typecast_poly();
-		
-		sp.set_color(Color.BLUE);
-								
-		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+		mapComponent.getDrawLayer().setDrawingActivated(true);
 	}
 	public String get(){
 

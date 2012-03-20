@@ -37,6 +37,8 @@ public interface TileLookup {
 
     boolean exists(TileData tileInfo);
     
+    boolean testImageExists(TileData tileInfo);
+    
     void clearAllCache();
 
 }

@@ -90,6 +90,30 @@
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="lbl_pagesize" runat="server" Text="Number of characters per page"></asp:Label>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:TextBox ID="txt_pagesize" runat="server"></asp:TextBox>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:RequiredFieldValidator ID="req_pagesize" runat="server" Text="*" ErrorMessage="Characters per page missing" ControlToValidate="txt_pagesize" />
+                <asp:RangeValidator id="rng_pagesize" Type="Integer" runat="server" MinimumValue="1" MaximumValue="93" ControlToValidate="txt_pagesize" Text="*" ErrorMessage="Integer value between 1 and 93 required for page characters" />
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="lbl_maxpages" runat="server" Text="Number of pages"></asp:Label>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:TextBox ID="txt_maxpages" runat="server"></asp:TextBox>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:RequiredFieldValidator ID="req_maxpages" runat="server" Text="*" ErrorMessage="Max number of pages missing" ControlToValidate="txt_maxpages" />
+                <asp:RangeValidator id="rng_maxpages" Type="Integer" runat="server" MinimumValue="1" MaximumValue="15" ControlToValidate="txt_maxpages" Text="*" ErrorMessage="Integer value between 1 and 15 required for max pages" />
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
             <asp:TableCell HorizontalAlign="Right" ColumnSpan="2">
                 <asp:Button ID="btn_save" runat="server" Text="Save" OnClick="btn_save_Click"/>
             </asp:TableCell>

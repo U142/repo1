@@ -1513,6 +1513,8 @@ namespace com.ums.UmsCommon
         public int l_duration;
         public int l_interval;
         public int l_repetition;
+        public int l_pagesize;
+        public int l_maxpages;
         public int l_deptpk;
         public int l_comppk;
     }

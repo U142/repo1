@@ -10,14 +10,19 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.ums.tools.FilePicker;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 
 public class MapImageDownload extends JApplet {
@@ -125,8 +130,8 @@ public class MapImageDownload extends JApplet {
         getContentPane().add(mapComponent);
         setVisible(true);
 
-        mapComponent.repaint();
         mapComponent.getDrawLayer().recalculate();
+        //mapComponent.repaint();
 
         System.out.println("Starting thread");
         Thread thread = new WaitThread(this, mapComponent.getDrawLayer());
@@ -155,26 +160,58 @@ public class MapImageDownload extends JApplet {
         System.exit(0);
     }
     
-    public boolean mapDownloaded(MapComponent mapComponent) {
+    public int mapDownloaded(MapComponent mapComponent, int progress) {
+        
         ImmutableList<TileData> tileDataList = mapComponent.getTileLookup().getTileInfo(Variables.getZoomLevel(),
                 mapComponent.getModel().getTopLeft(), new Dimension(applet_width,applet_height)).getTileData();
 
-        boolean downloaded = true;
-
-        for(TileData tileData: tileDataList) {
-            if(!mapComponent.getTileLookup().exists(tileData)) {
-                downloaded = false;
-            }
-        }
-
-        if(downloaded) {
-            mapComponent.repaint();
-        }
+        final TileLookup tileLookup = mapComponent.getTileLookup();
+        final MapComponent mc = mapComponent;
         
-        return downloaded;
+        boolean firstLoop = false;
+        if(progress == 0) {
+            firstLoop = true;
+        }
+
+        int numOk = 0;
+        for(final TileData tileData: tileDataList) {
+            if(!tileLookup.testImageExists(tileData)) {
+                new Runnable() {
+                    public void run() {
+                        tileLookup.getImageFast(tileData);
+                        mc.repaint();
+                    }
+                };
+            }
+            else {
+                ++numOk;
+                if(firstLoop) { // To get live percentage update and avoid resetting on each call
+                    progress = (numOk*100) / tileDataList.size();
+                    downloadPercent = progress;
+                    System.out.println("Progress: " + downloadPercent + "%");
+                }
+            } 
+        }
+
+        if(!firstLoop) {
+            progress  = (numOk*100) / tileDataList.size();
+            downloadPercent = progress;
+        }
+
+        mapComponent.repaint();
+
+        return progress;
     }
     
-
+    int downloadPercent = 0;
+    
+    public int getImageDownloadProgress() {
+        return downloadPercent;
+    }
+    
+    public String getTest() {
+        return "test";
+    }
     
     private class WaitThread extends Thread {
 
@@ -184,19 +221,59 @@ public class MapImageDownload extends JApplet {
         public WaitThread(MapImageDownload mapImageDownload, MapComponent.DrawingLayer layer) {
             this.layer = layer;
             this.mapImageDownload = mapImageDownload;
-            System.out.println("Thread constructed");
+            downloadPercent = 0;
         }
         @Override
         public void run() {
-            while(!layer.isDoneLoading() /*|| !mapDownloaded(mapComponent)*/) {
+            mapComponent.repaint();
+            int progress = 0;
+            while(progress<100) {
                 try {
+                    progress = mapDownloaded(mapComponent, progress);
                     System.out.println("Sleeping");
-                    sleep(1000);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
-            saveImage();
+            //saveImage();
+            save();
+        }
+        
+        private void save()
+        {
+            BufferedImage img = new BufferedImage(applet_width, applet_height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics2D = img.createGraphics();
+            //graphics2D.drawImage(m_image,0,0,null);
+
+            ImmutableList<TileData> tileDataList = mapComponent.getTileLookup().getTileInfo(Variables.getZoomLevel(),
+                    mapComponent.getModel().getTopLeft(), new Dimension(applet_width,applet_height)).getTileData();
+            final TileLookup tileLookup = mapComponent.getTileLookup();
+            for(final TileData tileData : tileDataList) {
+                Image imgTile = mapComponent.getTileLookup().getImage(tileData);
+                graphics2D.drawImage(imgTile, tileData.getX(), tileData.getY(), null);
+            }
+            mapComponent.getDrawLayer().paintShapes(graphics2D);
+            graphics2D.dispose();
+
+            FilePicker picker = new FilePicker(null,
+                    StorageController.StorageElements.get_path(StorageController.PATH_HOME_),
+                    "Save As", new String[][] {
+                    { "PNG", ".png" } }, 2);
+            File f = picker.getSelectedFile();
+            if(f != null) {
+                String sz_filetype = picker.getFileType().toLowerCase();
+
+                if(f!=null) {
+                    try {
+                        ImageIO.write(img, sz_filetype, f);
+                    } catch(Exception e) {
+
+                    }
+                }
+            }
+            System.exit(0);
+
         }
     }
 }

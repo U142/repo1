@@ -204,7 +204,10 @@ public partial class main : System.Web.UI.Page
             
             DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
             if (res.successful)
+            {
                 lst_messages.Items.Remove(lst_messages.SelectedItem);
+                txt_view_message.Text = "";
+            }
         }
                 
     }

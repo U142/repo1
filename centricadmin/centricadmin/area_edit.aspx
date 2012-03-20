@@ -63,6 +63,18 @@
             <asp:TableCell>
                 <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click" CausesValidation="false"/></asp:TableCell>
         </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <ul>
+                    <li>Press create to activate drawing</li>
+                    <li>Zoom using scroll wheel</li>
+                    <li>Pan by dragging map</li>
+                    <li>Start drawing by mouse left click, first two points define border line</li>
+                    <li>Complete polygon by mouse right click</li>
+                    <li>Click save to store</li>
+                </ul>
+            </asp:TableCell>
+        </asp:TableRow>
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
         </asp:TableHeaderRow>
@@ -82,62 +94,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/annotations-1.0.0.jar,
-                        javaapp/centric-admin-2.0-SNAPSHOT.jar, 
-                        javaapp/commons-beanutils-1.7.0.jar, 
-                        javaapp/commons-lang-2.3.jar, 
-                        javaapp/commons-logging-1.0.3.jar, 
-                        javaapp/commons-pool-1.5.3.jar, 
-                        javaapp/geoapi-2.3-M1.jar, 
-                        javaapp/geoapi-pending-2.3-M1.jar, 
-                        javaapp/gt-api-2.6.5.jar, 
-                        javaapp/gt-coverage-2.6.5.jar, 
-                        javaapp/gt-cql-2.6.5.jar, 
-                        javaapp/gt-main-2.6.5.jar, 
-                        javaapp/gt-metadata-2.6.5.jar, 
-                        javaapp/gt-referencing-2.6.5.jar, 
-                        javaapp/gt-render-2.6.5.jar, 
-                        javaapp/gt-shapefile-2.6.5.jar, 
-                        javaapp/gt-wms-2.6.5.jar, 
-                        javaapp/gt-xml-2.6.5.jar, 
-                        javaapp/guava-r07.jar, 
-                        javaapp/hamcrest-core-1.1.jar, 
-                        javaapp/hamcrest-library-1.1.jar, 
-                        javaapp/jaxb2-basics-0.6.0.jar, 
-                        javaapp/jaxb2-basics-runtime-0.6.0.jar, 
-                        javaapp/jaxb2-basics-tools-0.6.0.jar, 
-                        javaapp/jcommon-1.0.16.jar, 
-                        javaapp/jdom-1.0.jar, 
-                        javaapp/jfreechart-1.0.13.jar, 
-                        javaapp/jmock-2.5.1.jar, 
-                        javaapp/jnlp-1.0.jar, 
-                        javaapp/joda-time-1.6.2.jar, 
-                        javaapp/jsr-275-1.0-beta-2.jar, 
-                        javaapp/jsr305-1.3.9.jar, 
-                        javaapp/jts-1.11.jar, 
-                        javaapp/NLMapSearch-1.0.jar, 
-                        javaapp/pas-admin-ui-2.0-SNAPSHOT.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-core.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-gps.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-importer.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-maps.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-parm.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-pas.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-send.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-sound.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-status.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-tas.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT-ums.jar, 
-                        javaapp/pas-app-2.0-SNAPSHOT.jar, 
-                        javaapp/pas-cellbroadcast-2.0-SNAPSHOT.jar, 
-                        javaapp/pas-core-2.0-SNAPSHOT.jar, 
-                        javaapp/pas-icons-2.0-SNAPSHOT.jar, 
-                        javaapp/pas-lang-2.0-SNAPSHOT.jar, 
-                        javaapp/substance-3.3.0.1.jar, 
-                        javaapp/ums-log-2.0-SNAPSHOT.jar, 
-                        javaapp/ums-map-2.0-SNAPSHOT.jar, 
-                        javaapp/vecmath-1.3.2.jar, 
-                        javaapp/ws-java-clients-1.2-SNAPSHOT.jar"
+                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/centric-admin-2.0-SNAPSHOT.jar"
                  code="no/ums/adminui/pas/MapApplet.class" main-class="no.ums.adminui.pas.MapApplet">
                     <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
                     <param id="compid" name="compid" runat="server" value="dette er noe tekst" />

@@ -2,8 +2,41 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
 <script language="javascript" type="text/javascript">
-    function launchApplet(applet) {
+
+    var timeout;
+    var currentApplet;
+    var currentDeptPk;
+    function launchApplet(applet,deptpk) {
+        currentApplet = applet;
+        currentDeptPk = deptpk;
         document.getElementById("body_applet").innerHTML = applet;
+        startTimeout();
+    }
+    function updateImageDownloadProgress() {
+        try {
+            var progress = document.getElementById("MapImageDownload" + currentDeptPk).getImageDownloadProgress();
+            document.getElementById("body_lbl_progress").innerHTML = "Downloading: " + pad(progress) + "%";
+            if (progress < 100)
+                startTimeout();
+            else
+                timeout = setTimeout("hideProgress()", 2000);
+        } catch (e) {
+            startTimeout();
+        }
+    }
+    function startTimeout() {
+        timeout = setTimeout("updateImageDownloadProgress()", 100);
+    }
+
+    function hideProgress() {
+        document.getElementById("body_lbl_progress").innerHTML = "";
+    }
+
+    function pad(text) {
+        while(text.length<3) { 
+            text += '0' + text;
+        }
+        return text;
     }
 </script>
 <div>
@@ -41,8 +74,9 @@
         </asp:TableCell>
     </asp:TableRow>
     <asp:TableRow>
-        <asp:TableCell>
+        <asp:TableCell ColumnSpan="2">
             <asp:Button ID="btn_show" runat="server" Text="Show" OnClick="btn_showClick"/>
+            <asp:Label ID="lbl_progress" runat="server" Text="" />
         </asp:TableCell>
     </asp:TableRow>
 </asp:Table>

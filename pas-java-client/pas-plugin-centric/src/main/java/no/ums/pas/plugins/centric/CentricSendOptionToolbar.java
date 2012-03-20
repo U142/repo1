@@ -23,10 +23,12 @@ import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.plugins.centric.tools.CentricPrintCtrl;
 import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
+import no.ums.pas.plugins.centric.ws.WSLBAParameters;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.*;
 import no.ums.ws.common.MDVSENDINGINFOGROUP;
 import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.ULBAPARAMETER;
 import no.ums.ws.common.cb.*;
 import no.ums.ws.common.parm.UPLMN;
 import no.ums.ws.common.parm.UPolygon;
@@ -225,12 +227,23 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public CentricSendOptionToolbar() {
 		//super();
 		current_mode = MODE.INITIALIZING;
-		init();
-		
+
+
+        WSLBAParameters lbap = new WSLBAParameters(this, "act_download_lba_parameters_finished");
+        try
+        {
+            lbap.runNonThreaded();
+        }
+        catch(Exception e)
+        {
+            log.warn(e.getMessage(), e);
+        }
+        init();
+
 		WSCentricRRO rro = new WSCentricRRO(this, "act_download_risk_reaction_originator_finished");
 		try
 		{
-			rro.call();
+			rro.runNonThreaded();
 		}
 		catch(Exception e)
 		{
@@ -975,6 +988,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			CentricPrintCtrl pctrl = new CentricPrintCtrl(Variables.getDraw().get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
 			pctrl.doPrint();
 		}
+        if("act_download_lba_parameters_finished".equals(e.getActionCommand())) {
+            ULBAPARAMETER lbap = (ULBAPARAMETER)e.getSource();
+            MAX_MESSAGELENGTH_PR_PAGE = lbap.getLPagesize();
+            MAX_PAGES = lbap.getLMaxpages();
+            MAX_TOTAL_CHARS = MAX_MESSAGELENGTH_PR_PAGE * MAX_PAGES;
+        }
 	}
 	
 	private String getFormatedDate() {

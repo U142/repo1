@@ -60,6 +60,15 @@ public final class TileLookupImpl implements TileLookup {
         return getImageFast(data, 0, 1);
     }
 
+    @Override
+    public boolean testImageExists(final TileData data) {
+        final Image image = tileCache.render(data.getZoom() - 0, data.getRow() / 1, data.getColumn() / 1);
+        if(image instanceof AbstractTileCache.InvalidImage) {
+            System.out.println("invalid image");
+        }
+        return !(image instanceof AbstractTileCache.InvalidImage);
+    }
+    
     /**
      * Fetches an image by just examining the cache
      * <p/>

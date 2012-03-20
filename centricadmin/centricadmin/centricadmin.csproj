@@ -179,6 +179,20 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\com.ums.ws.pas.status\PasStatus.wsdl" />
+    <None Include="Service References\com.ums.ws.parm.admin\ParmAdmin.disco" />
+    <None Include="Service References\com.ums.ws.parm.admin\configuration91.svcinfo" />
+    <None Include="Service References\com.ums.ws.parm.admin\configuration.svcinfo" />
+    <None Include="Service References\com.ums.ws.parm.admin\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\com.ums.ws.pas.status\PasStatus.disco" />
+    <None Include="Service References\com.ums.ws.pas.status\configuration91.svcinfo" />
+    <None Include="Service References\com.ums.ws.pas.status\configuration.svcinfo" />
+    <None Include="Service References\com.ums.ws.pas.status\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Service References\com.ums.ws.pas\centric.com.ums.ws.pas.AUDIO_RESPONSE.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -257,24 +271,10 @@
     <None Include="Service References\com.ums.ws.pas\centric.com.ums.ws.pas.UWeatherReportResults.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\com.ums.ws.pas\Pas.disco" />
+    <None Include="Service References\com.ums.ws.pas\pas.disco" />
     <None Include="Service References\com.ums.ws.pas\configuration91.svcinfo" />
     <None Include="Service References\com.ums.ws.pas\configuration.svcinfo" />
     <None Include="Service References\com.ums.ws.pas\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\com.ums.ws.parm.admin\ParmAdmin.disco" />
-    <None Include="Service References\com.ums.ws.parm.admin\configuration91.svcinfo" />
-    <None Include="Service References\com.ums.ws.parm.admin\configuration.svcinfo" />
-    <None Include="Service References\com.ums.ws.parm.admin\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\com.ums.ws.pas.status\PasStatus.disco" />
-    <None Include="Service References\com.ums.ws.pas.status\configuration91.svcinfo" />
-    <None Include="Service References\com.ums.ws.pas.status\configuration.svcinfo" />
-    <None Include="Service References\com.ums.ws.pas.status\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -300,10 +300,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <None Include="Service References\com.ums.ws.pas.admin\PasAdmin.wsdl" />
-    <None Include="Service References\com.ums.ws.pas\Pas.wsdl" />
     <Content Include="Web.beta.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <None Include="Service References\com.ums.ws.pas\pas.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">

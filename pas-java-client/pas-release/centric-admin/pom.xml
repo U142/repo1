@@ -19,14 +19,14 @@
     </dependencies>
     <build>
         <plugins>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jarsigner-plugin</artifactId>
                 <version>1.2</version>
                 <executions>
                     <execution>
                         <id>sign</id>
-                        <phase>generate-resources</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
@@ -36,16 +36,31 @@
                             <storepass>${key.storepass}</storepass>
                             <alias>${key.alias}</alias>
                             <verify>true</verify>
+                            <archive>${project.build.directory}/${project.artifactId}-${project.version}.jar</archive>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <groupId>org.apache.maven.plugins</groupId>
                 <version>2.3</version>
                 <executions>
                     <execution>
+                        <id>before-sign</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>after-sign</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -61,6 +76,13 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <finalName>tmp</finalName>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>no.ums.maven</groupId>
                     <artifactId>maven-ums-plugin</artifactId>

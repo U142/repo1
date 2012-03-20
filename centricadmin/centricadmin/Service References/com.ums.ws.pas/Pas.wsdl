@@ -1164,6 +1164,8 @@
           <s:element minOccurs="1" maxOccurs="1" name="l_duration" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="l_interval" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="l_repetition" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pagesize" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxpages" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
         </s:sequence>
@@ -2548,10 +2550,10 @@
   </wsdl:binding>
   <wsdl:service name="pasws">
     <wsdl:port name="paswsSoap" binding="tns:paswsSoap">
-      <soap:address location="http://localhost:8080/WS/Pas.asmx" />
+      <soap:address location="http://localhost/ws_pas/ws/pas.asmx" />
     </wsdl:port>
     <wsdl:port name="paswsSoap12" binding="tns:paswsSoap12">
-      <soap12:address location="http://localhost:8080/WS/Pas.asmx" />
+      <soap12:address location="http://localhost/ws_pas/ws/pas.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
