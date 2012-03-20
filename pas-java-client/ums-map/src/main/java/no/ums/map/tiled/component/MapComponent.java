@@ -238,6 +238,7 @@ public final class MapComponent extends JComponent {
         public void mouseDragged(MouseEvent e) {
             super.mouseDragged(e);
             currentPoint = e.getPoint();
+            recalculate();
             mapComponent.requestFocus();
         }
 
