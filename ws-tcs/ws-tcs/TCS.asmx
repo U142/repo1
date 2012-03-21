@@ -1,0 +1,1 @@
+﻿<%@ WebService Language="C#" CodeBehind="TCS.asmx.cs" Class="ums.ws.tcs.TCSService" %>
