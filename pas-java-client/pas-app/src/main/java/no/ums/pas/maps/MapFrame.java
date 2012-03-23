@@ -901,6 +901,14 @@ public class MapFrame extends JPanel implements ActionListener {
         public String getLayers() {
             return Joiner.on(",").join(Variables.getSettings().getSelectedWmsLayers());
         }
+
+		@Override
+		public int getSrs() {
+			int srs = Integer.parseInt(Variables.getSettings().getWmsEpsg());
+			if(srs<=0)
+				srs = 4326;
+			return srs;
+		}
     });
 
     public TileLookup getTileLookup() {

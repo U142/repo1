@@ -63,4 +63,12 @@ public class TileCacheWms extends AbstractTileCacheWms {
     public final String getLayers() {
         return layers;
     }
+
+    /**
+     * Return default srs for lon/lat WGS84
+     */
+	@Override
+	public int getSrs() {
+		return 4326;
+	}
 }
