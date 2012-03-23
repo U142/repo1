@@ -23,6 +23,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 
 public class MapImageDownload extends JApplet {
@@ -97,11 +98,26 @@ public class MapImageDownload extends JApplet {
 
         mapComponent = new MapComponent();
         mapComponent.setPreferredSize(new Dimension(applet_width,applet_height));
-        final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
-        mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
+
+        String scheme="", host="", mappath="";
+        final URI base = URI.create(Variables.getSettings().getWmsSite());
+
+        try {
+            scheme = base.getScheme();
+            host = base.getHost();
+            mappath = base.getPath();
+        } catch (Exception ex) {
+            log.warn("Failed to fetch WMS version", ex);
+        }
+
+        final TileCacheWms wmsTileCache = new TileCacheWms(scheme,host,mappath,"1.1.1",Variables.getSettings().getSelectedWmsFormat(),Integer.valueOf(Variables.getSettings().getWmsEpsg()),Variables.getSettings().getSelectedWmsLayers());
+
+        //final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
+        mapComponent.setTileLookup(new TileLookupImpl(wmsTileCache));
 
         List<LonLat> shape = mapComponent.addLonLatToShape(clon,clat);
         LonLat[] bounds = mapComponent.getBounds(shape);
+
 
         final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
         Variables.setZoomLevel(tileLookup.getZoom());

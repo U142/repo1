@@ -12,9 +12,14 @@ import java.awt.*;
 public final class MapController implements MapComponent.Controller {
 
     public int zoomLevel = 1;
+    public int maxZoomLevel = Integer.MAX_VALUE;
     
     public void setZoomLevel(int zoomLevel) {
         this.zoomLevel = zoomLevel;
+    }
+    
+    public void setMaxZoomLevel(int zoomLevel) {
+        this.maxZoomLevel = zoomLevel;
     }
     
     @Override
@@ -34,6 +39,9 @@ public final class MapController implements MapComponent.Controller {
         final LonLat lonLat = zoomLookup.getLonLat(model.getTopLeft(), point.x, point.y);
         final ZoomLookup level = tileLookup.getZoomLookup(model.getZoom() + delta);
         if (level.getZoomLevel() <= zoomLevel) {
+            return;
+        }
+        else if(level.getZoomLevel() > maxZoomLevel) {
             return;
         }
         final Point centerAbs = level.getPoint(lonLat);

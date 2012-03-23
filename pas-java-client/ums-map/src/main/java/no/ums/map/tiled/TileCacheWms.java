@@ -13,6 +13,7 @@ public class TileCacheWms extends AbstractTileCacheWms {
     private final String version;
     private final String format;
     private final String layers;
+    private final int srs;
 
     public TileCacheWms(final String scheme, final String host, final String path, final String version,
                         final String format, final Iterable<String> layers) {
@@ -21,6 +22,18 @@ public class TileCacheWms extends AbstractTileCacheWms {
         this.path = path;
         this.version = version;
         this.format = format;
+        this.srs = 4326;
+        this.layers = Joiner.on(",").join(layers);
+    }
+
+    public TileCacheWms(final String scheme, final String host, final String path, final String version,
+                        final String format, int srs, final Iterable<String> layers) {
+        this.scheme = scheme;
+        this.host = host;
+        this.path = path;
+        this.version = version;
+        this.format = format;
+        this.srs = srs;
         this.layers = Joiner.on(",").join(layers);
     }
 
@@ -31,6 +44,18 @@ public class TileCacheWms extends AbstractTileCacheWms {
         this.path = path;
         this.version = version;
         this.format = format;
+        this.srs = 4326;
+        this.layers = Joiner.on(",").join(layers);
+    }
+
+    public TileCacheWms(final String scheme, final String host, final String path, final String version,
+                        final String format, final int srs, final String ... layers) {
+        this.scheme = scheme;
+        this.host = host;
+        this.path = path;
+        this.version = version;
+        this.format = format;
+        this.srs = srs;
         this.layers = Joiner.on(",").join(layers);
     }
 
@@ -69,6 +94,6 @@ public class TileCacheWms extends AbstractTileCacheWms {
      */
 	@Override
 	public int getSrs() {
-		return 4326;
+		return srs;
 	}
 }

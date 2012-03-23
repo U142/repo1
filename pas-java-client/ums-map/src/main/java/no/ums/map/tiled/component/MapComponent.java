@@ -26,7 +26,9 @@ public final class MapComponent extends JComponent {
     private final Controller controller = new MapController();
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private final List<Future<?>> tasks = new ArrayList<Future<?>>();
-    
+
+    public Controller getMapController() { return controller; }
+
     public static class DrawingLayer extends MouseAdapter implements MapLayer, KeyListener {
 
         private final MapComponent mapComponent;
@@ -644,7 +646,10 @@ public final class MapComponent extends JComponent {
         void onZoomOut(MapModel model, TileLookup tileLookup, Dimension size, Point point);
 
         void mapDragged(MapModel model, TileLookup tileLookup, Dimension size, int xOffset, int yOffset);
-
+        
+        void setZoomLevel(int zoomLevel);
+        
+        void setMaxZoomLevel(int zoomLevel);
     }
 
     private class MapMouseAdapter extends MouseAdapter {

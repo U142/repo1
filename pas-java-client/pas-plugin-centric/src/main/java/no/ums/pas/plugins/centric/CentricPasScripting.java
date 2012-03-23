@@ -51,7 +51,6 @@ import javax.swing.Timer;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Area;
 import java.util.*;
 import java.util.List;
 
@@ -784,6 +783,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onSetInitialMapBounds(Navigation nav, UserInfo ui) {
         nav.setNavigation(ui.get_departments().get_combined_restriction_shape().get(0).getFullBBox(), false);
         PAS.get_pas().get_mappane().getMapController().setZoomLevel(7);
+        PAS.get_pas().get_mappane().getMapController().setMaxZoomLevel(12);
         return true;
     }
 
