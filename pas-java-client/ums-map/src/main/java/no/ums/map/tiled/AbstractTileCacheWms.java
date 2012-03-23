@@ -72,10 +72,10 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
 				 break;
 			 case 4326: //lon/lat
 			 default:
-				 n_lbo = ll2.getLon();
-				 n_rbo = ll1.getLon();
+				 n_lbo = ll1.getLon();
+				 n_rbo = ll2.getLon();
 				 n_ubo = ll1.getLat();
-				 n_bbo = ll1.getLat();
+				 n_bbo = ll2.getLat();
 				 break;
 
             }
