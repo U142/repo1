@@ -13,13 +13,11 @@ import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.send.*;
-import no.ums.pas.ums.tools.Col;
+import no.ums.pas.send.SendPropertiesPolygon;
 import no.ums.ws.common.PASHAPETYPES;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.ArrayOfUShape;
@@ -35,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,8 +206,22 @@ public class MapApplet extends JApplet implements ActionListener {
             mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
             mapComponent.getModel().setZoom(Variables.getZoomLevel());
 
-            final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
-            mapComponent.setTileLookup(new TileLookupImpl(osmTileCache));
+            mapComponent.getMapController().setZoomLevel(7);
+            mapComponent.getMapController().setMaxZoomLevel(12);
+
+            String scheme="", host="", path="";
+            final URI base = URI.create(Variables.getSettings().getWmsSite());
+            try {
+                scheme = base.getScheme();
+                host = base.getHost();
+                path = base.getPath();
+            } catch (Exception ex) {
+                log.warn("Failed to fetch WMS version", ex);
+            }
+
+            final TileCacheWms wmsTileCache = new TileCacheWms(scheme,host,path,"1.1.1",Variables.getSettings().getSelectedWmsFormat(),Integer.valueOf(Variables.getSettings().getWmsEpsg()),Variables.getSettings().getSelectedWmsLayers());
+            //final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
+            mapComponent.setTileLookup(new TileLookupImpl(wmsTileCache));
 
             zoomLookup = mapComponent.getTileLookup().getZoomLookup(Variables.getZoomLevel());
 
