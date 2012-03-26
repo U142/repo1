@@ -147,6 +147,8 @@ public class MapApplet extends JApplet implements ActionListener {
         requestFocus();
 	}
 
+
+    
 	@Override
 	public void actionPerformed(final ActionEvent e) {
 			
@@ -200,7 +202,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 			Variables.setUserInfo(m_info);
             mapComponent = new MapComponent();
-            mapComponent.setPreferredSize(new Dimension(applet_width,applet_height));
+            mapComponent.setPreferredSize(new Dimension(applet_width, applet_height));
 
             // Sets the map somewhere just to be able to calculate restriction area
             mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
@@ -307,18 +309,30 @@ public class MapApplet extends JApplet implements ActionListener {
 
 
     public void put(String id) {
-		PolygonStruct s = null; 
-		for(int i=0;i< Variables.getUserInfo().get_departments().size();++i){
-			DeptInfo deptinfo = (DeptInfo)m_info.get_departments().get(i);
-			if(deptinfo.get_deptpk() == Integer.parseInt(id)) { 
-				List<ShapeStruct> rshapes = deptinfo.get_restriction_shapes();
-				s = rshapes.get(0).typecast_polygon();
-				break;
-			}
-		}
+		PolygonStruct s = null;
+        List<LonLat> shape;
 
+		if(!id.equals("-1")) {
+            for(int i=0;i< Variables.getUserInfo().get_departments().size();++i){
+                DeptInfo deptinfo = (DeptInfo)m_info.get_departments().get(i);
+                if(deptinfo.get_deptpk() == Integer.parseInt(id)) {
+                    List<ShapeStruct> rshapes = deptinfo.get_restriction_shapes();
+                    s = rshapes.get(0).typecast_polygon();
+                    break;
+                }
+            }
+            if(s != null) {
+                shape = mapComponent.addLonLatToShape(s.get_coors_lon(), s.get_coors_lat());
+            }
+            else {
+                shape = new ArrayList<LonLat>();
+            }
+        }
+        else {
+            shape = new ArrayList<LonLat>();
+        }
         // Coordinates are the wrong way round
-        List<LonLat> shape = mapComponent.addLonLatToShape(s.get_coors_lon(), s.get_coors_lat());
+
         
         mapComponent.getDrawLayer().setShape(shape);
         mapComponent.getDrawLayer().setPath(mapComponent.convertLonLatToPath2D(shape,zoomLookup));

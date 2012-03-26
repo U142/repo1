@@ -13,6 +13,21 @@
 
         }
 
+        function splitAndSetShape(ddlValue) {
+            if (ddlValue == "-1") {
+                setShape("", "-1", "", "", "");
+            }
+            else {
+                var tmp = ddlValue.replace('"', '');
+                tmp = tmp.replace(/\'/g, "");
+                tmp = tmp.replace(/\s+/g, "");
+                var tmparr = tmp.split(',');
+
+                setShape(tmparr[0], tmparr[1], tmparr[2], tmparr[3], tmparr[4]);
+            }
+            
+        }
+
         function setShape(coor, id, obsolete, timestamp, deptname) {
             
             document.getElementById("body_txt_id").value = id;
@@ -42,27 +57,13 @@
             
             //return false;
         }
-
-
-
-
        
 
     </script>
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
-            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
         </asp:TableHeaderRow>
-        <asp:TableRow>
-            <asp:TableCell ColumnSpan="4">
-                <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  Visible="false" ></asp:ListBox>
-                <asp:Table runat="server" ID="tbl_areas" GridLines="Both"></asp:Table>
-            </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>
-                <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click" CausesValidation="false"/></asp:TableCell>
-        </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
                 <ul>
@@ -74,10 +75,13 @@
                     <li>Click save to store</li>
                 </ul>
             </asp:TableCell>
+            
         </asp:TableRow>
-        <asp:TableHeaderRow>
-            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
-        </asp:TableHeaderRow>
+        <asp:TableRow>
+            <asp:TableCell HorizontalAlign="Right" ColumnSpan="4">
+                <asp:DropDownList runat="server" ID="ddlAreas" onchange="javascript:splitAndSetShape(this.options[this.selectedIndex].value)"></asp:DropDownList>
+            </asp:TableCell>
+        </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
                 <asp:Label ID="Label1" runat="server" Text="Authorization area"></asp:Label>
@@ -88,12 +92,15 @@
                 <asp:CheckBox ID="chk_obsolete" runat="server" Enabled="false" />
                 <asp:Label ID="Label2" runat="server" Text="Obsolete"></asp:Label>
             </asp:TableCell>
-            <asp:TableCell>
+            <asp:TableCell HorizontalAlign="Right">
                 <asp:TextBox ID="txt_obsolete" runat="server" Text="" Enabled="false" ></asp:TextBox>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click" CausesValidation="false"/>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
-            <asp:TableCell ColumnSpan="4">
+            <asp:TableCell ColumnSpan="5">
                 <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/centric-admin-2.0-SNAPSHOT.jar"
                  code="no/ums/adminui/pas/MapApplet.class" main-class="no.ums.adminui.pas.MapApplet">
                     <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
@@ -146,6 +153,16 @@
             <asp:TableCell>
                 <asp:Label ID="lbl_error" runat="server" Text=""></asp:Label>
                 <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
+        <asp:TableRow>
+        
+            <asp:TableCell ColumnSpan="4">
+                <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  Visible="false" ></asp:ListBox>
+                <asp:Table runat="server" ID="tbl_areas" GridLines="Both"></asp:Table>
             </asp:TableCell>
         </asp:TableRow>
     </asp:Table>    

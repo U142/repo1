@@ -21,42 +21,6 @@ public partial class area_edit {
     protected global::System.Web.UI.WebControls.Table table;
     
     /// <summary>
-    /// Label3 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label Label3;
-    
-    /// <summary>
-    /// lst_areas control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.ListBox lst_areas;
-    
-    /// <summary>
-    /// tbl_areas control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Table tbl_areas;
-    
-    /// <summary>
-    /// btn_create control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btn_create;
-    
-    /// <summary>
     /// Label4 control.
     /// </summary>
     /// <remarks>
@@ -64,6 +28,15 @@ public partial class area_edit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label4;
+    
+    /// <summary>
+    /// ddlAreas control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlAreas;
     
     /// <summary>
     /// Label1 control.
@@ -118,6 +91,15 @@ public partial class area_edit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txt_obsolete;
+    
+    /// <summary>
+    /// btn_create control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button btn_create;
     
     /// <summary>
     /// mapapplet control.
@@ -253,6 +235,33 @@ public partial class area_edit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
+    
+    /// <summary>
+    /// Label3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label3;
+    
+    /// <summary>
+    /// lst_areas control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.ListBox lst_areas;
+    
+    /// <summary>
+    /// tbl_areas control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Table tbl_areas;
     
     /// <summary>
     /// txt_coor control.

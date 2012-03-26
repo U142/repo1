@@ -96,6 +96,10 @@ public partial class area_edit : System.Web.UI.Page
 
     private void buildTable(centric.com.ums.ws.pas.admin.UDEPARTMENT[] obj)
     {
+        // Also populate drop down
+        ddlAreas.Items.Clear();
+        ddlAreas.Items.Add(new ListItem("Show area", "-1"));
+
         tbl_areas.Rows.Clear();
 
         TableHeaderRow hr = new TableHeaderRow();
@@ -142,16 +146,18 @@ public partial class area_edit : System.Web.UI.Page
                             jall += "|";
 
                     }
-                    //txt_area.Text += "\n";
+                    
                     tr = new TableRow();
                     tc = new TableCell();
                     HyperLink lb = new HyperLink();
                     lb.Text = dept.sz_deptid;
-                    //tc.Text = ulist[i].sz_userid;
-                    //lb.CommandArgument = dept.l_deptpk.ToString();
-                    //lb.OnClientClick = "";
-                    //lb.Attributes.Add("onClick", "javascript:setShape(" + jall + ");return false;");
+                    
                     lb.NavigateUrl = "javascript:setShape('" + "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid + "')";
+
+                    //Add information to dropdown
+
+                    ddlAreas.Items.Add(new ListItem(dept.sz_deptid, "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid));
+
                     //lb.CausesValidation = false;
                     lb.ID = "lb_view" + dept.l_deptpk.ToString();
                     //lb.Click += new EventHandler(this.btn_view_click);
