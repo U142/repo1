@@ -904,9 +904,15 @@ public class MapFrame extends JPanel implements ActionListener {
 
 		@Override
 		public int getSrs() {
-			int srs = Integer.parseInt(Variables.getSettings().getWmsEpsg());
-			if(srs<=0)
-				srs = 4326;
+			int srs = 4326;
+			try
+			{
+				srs = Integer.parseInt(Variables.getSettings().getWmsEpsg());
+			}
+			catch(Exception e)
+			{
+				log.info("SRS not set");
+			}
 			return srs;
 		}
     });
