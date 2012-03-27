@@ -16,19 +16,12 @@ import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPasswordField;
-import javax.swing.JToolTip;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -119,7 +112,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	{
 		m_sz_errortext = s;
 		m_panel.m_lbl_errormsg.setText(s);
-		if(b_error)
+
+        if(b_error)
 			m_panel.m_lbl_errormsg.setForeground(Color.RED);
 		else
 			m_panel.m_lbl_errormsg.setForeground(new Color(0,140,0));
@@ -340,7 +334,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		private StdTextLabel m_lbl_compid;
 		private StdTextLabel m_lbl_passwd;
 		private JButton		m_btn_submit;
-		private StdTextLabel m_lbl_errormsg;
+		private JTextPane m_lbl_errormsg;
 		private NSList m_nslist;
 		private StdTextLabel m_lbl_language;
 		private JComboBox m_combo_language;
@@ -355,7 +349,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		public StdTextLabel getLblLanguage() { return m_lbl_language; }
 		public JComboBox getLanguageCombo() { return m_combo_language; }
 		public JButton getBtnSubmit() { return m_btn_submit; }
-		public StdTextLabel getLblError() { return m_lbl_errormsg; }
+		public JTextPane getLblError() { return m_lbl_errormsg; }
 		
 		
 		private void initComponents()
@@ -375,16 +369,17 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_compid = new StdTextLabel(Localization.l("logon_company"));
 			m_lbl_passwd = new StdTextLabel(Localization.l("logon_password"));
 			m_lbl_language = new StdTextLabel(Localization.l("common_language"));
-			m_lbl_errormsg = new StdTextLabel()
-			{
-				@Override
-				public String getToolTipText() {
-					return this.getText();
-				}
-				
-			};
+			m_lbl_errormsg = new JTextPane();
+            m_lbl_errormsg.setOpaque(false);
+            m_lbl_errormsg.setFocusable(false);
+            //m_lbl_errormsg.setLineWrap(true);
+            //m_lbl_errormsg.setWrapStyleWord(true);
+            StyledDocument styledDocument = m_lbl_errormsg.getStyledDocument();
+            SimpleAttributeSet center = new SimpleAttributeSet();
+            StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+            styledDocument.setParagraphAttributes(0,styledDocument.getLength(), center, false);
 			ToolTipManager.sharedInstance().registerComponent(m_lbl_errormsg);
-			m_lbl_errormsg.setHorizontalAlignment(JLabel.CENTER);
+			//m_lbl_errormsg.setHorizontalAlignment(JLabel.CENTER);
 			m_combo_language = new JComboBox();
 			
 			m_combo_language.setRenderer(new ListCellRenderer() {				
@@ -429,7 +424,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_language.setPreferredSize(new Dimension(110, 19));
 
 			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(390, 15));
+			m_lbl_errormsg.setPreferredSize(new Dimension(390, 50));
 			m_btn_submit.setActionCommand(ENABLE);
 			m_btn_submit.setActionCommand("act_logon");
 			m_btn_submit.addActionListener(this);
