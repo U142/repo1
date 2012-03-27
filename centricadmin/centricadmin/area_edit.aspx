@@ -15,6 +15,12 @@
 
         function splitAndSetShape(ddlValue) {
             if (ddlValue == "-1") {
+                document.getElementById("body_txt_name").disabled = true;
+                document.getElementById("body_txt_name").value = "";
+                document.getElementById("body_chk_obsolete").checked = false;
+                document.getElementById("body_chk_obsolete").disabled = false;
+                document.getElementById("body_chk_obsolete").parentElement.removeAttribute('disabled');
+                document.getElementById("body_txt_obsolete").value = "";
                 document.mapapplet.clear();
             }
             else {
