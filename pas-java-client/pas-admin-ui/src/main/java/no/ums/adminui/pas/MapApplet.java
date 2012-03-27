@@ -306,7 +306,13 @@ public class MapApplet extends JApplet implements ActionListener {
         return lonLats;
     }
 
-
+    public void clear() {
+        List<LonLat> shape = new ArrayList<LonLat>();
+        mapComponent.getDrawLayer().setShape(shape);
+        mapComponent.getDrawLayer().setPath(mapComponent.convertLonLatToPath2D(shape,zoomLookup));
+        mapComponent.getDrawLayer().recalculate();
+        mapComponent.repaint();
+    }
 
     public void put(String id) {
 		PolygonStruct s = null;
@@ -426,5 +432,23 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	public boolean logon(String userid, String company, String password) {
 		return true;
-	}
+	}   
 }
+/*
+class PutThread extends Thread {
+    MapApplet m;
+    
+    PutThread(MapApplet m) {
+        this.m = m;
+    }
+    
+    @Override
+    public void run() {
+        try {
+            sleep(15000);
+            m.clear();
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+}*/

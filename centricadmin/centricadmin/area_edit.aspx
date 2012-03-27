@@ -15,7 +15,7 @@
 
         function splitAndSetShape(ddlValue) {
             if (ddlValue == "-1") {
-                setShape("", "-1", "", "", "");
+                document.mapapplet.clear();
             }
             else {
                 var tmp = ddlValue.replace('"', '');
@@ -51,15 +51,32 @@
             document.getElementById("body_txt_obsolete").value = timestamp;
             try {
                 document.mapapplet.put(id);
-            } catch (err) { }
+            } catch (err) {
+            }
             
             
             
             //return false;
         }
-       
+        
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_pageLoaded(PageLoadedEventHandler);
+        function PageLoadedEventHandler() {
+            // custom script
+            if (document.getElementById("body_txt_draw_active").value == "True") {
+                try {
+                    document.mapapplet.clear();
+                    document.mapapplet.draw();
+                }
+                catch (err) {
+                }
+            }
+        }
 
     </script>
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+    
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
@@ -71,6 +88,7 @@
                     <li>Zoom using scroll wheel</li>
                     <li>Pan by dragging map</li>
                     <li>Start drawing by mouse left click, first two points define border line</li>
+                    <li>Delete single points by pressing delete</li>
                     <li>Complete polygon by mouse right click</li>
                     <li>Click save to store</li>
                 </ul>
@@ -87,10 +105,25 @@
                 <asp:Label ID="Label1" runat="server" Text="Authorization area"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_name" runat="server" Enabled="false"></asp:TextBox><asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="*" ControlToValidate="txt_name" ErrorMessage="Name is required"></asp:RequiredFieldValidator></asp:TableCell>
+                <asp:UpdatePanel ID="update1" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:TextBox ID="txt_name" runat="server" Enabled="false"></asp:TextBox><asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="*" ControlToValidate="txt_name" ErrorMessage="Name is required"></asp:RequiredFieldValidator>
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="btn_create" EventName="click" />
+                </Triggers>
+                </asp:UpdatePanel>
+            </asp:TableCell>
             <asp:TableCell>
-                <asp:CheckBox ID="chk_obsolete" runat="server" Enabled="false" />
-                <asp:Label ID="Label2" runat="server" Text="Obsolete"></asp:Label>
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:CheckBox ID="chk_obsolete" runat="server" Enabled="false" />
+                    <asp:Label ID="Label2" runat="server" Text="Obsolete"></asp:Label>
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="btn_create" EventName="click" />
+                </Triggers>
+                </asp:UpdatePanel>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right">
                 <asp:TextBox ID="txt_obsolete" runat="server" Text="" Enabled="false" ></asp:TextBox>
@@ -99,6 +132,7 @@
                 <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click" CausesValidation="false"/>
             </asp:TableCell>
         </asp:TableRow>
+        
         <asp:TableRow>
             <asp:TableCell ColumnSpan="5">
                 <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695" archive="javaapp/centric-admin-2.0-SNAPSHOT.jar"
@@ -145,29 +179,43 @@
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
-            <asp:TableCell HorizontalAlign="Right" ColumnSpan="4">
+            <asp:TableCell HorizontalAlign="Right" ColumnSpan="5">
                 <asp:Button ID="btn_save" runat="server" Text="Save" OnClientClick="javascript:getShape();" OnClick="btn_save_Click" />
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="lbl_error" runat="server" Text=""></asp:Label>
-                <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+            <asp:UpdatePanel ID="UpdatePanel3" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:Label ID="lbl_error" runat="server" Text=""></asp:Label>
+                    <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="btn_create" EventName="click" />
+                </Triggers>
+            </asp:UpdatePanel>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>
         </asp:TableHeaderRow>
         <asp:TableRow>
-        
             <asp:TableCell ColumnSpan="4">
                 <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  Visible="false" ></asp:ListBox>
                 <asp:Table runat="server" ID="tbl_areas" GridLines="Both"></asp:Table>
             </asp:TableCell>
         </asp:TableRow>
     </asp:Table>    
-    <asp:TextBox ID="txt_coor" runat="server" style="visibility:hidden"></asp:TextBox>
-    <asp:TextBox ID="txt_id" runat="server"  style="visibility:hidden"></asp:TextBox>
-    <asp:TextBox ID="txt_obsolete_holder" runat="server"  style="visibility:hidden"></asp:TextBox>
-    <asp:TextBox ID="txt_timestamp" runat="server"  style="visibility:hidden"></asp:TextBox>
+    <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
+    <ContentTemplate>
+        <asp:TextBox ID="txt_coor" runat="server" style="visibility:hidden"></asp:TextBox>
+        <asp:TextBox ID="txt_id" runat="server"  style="visibility:hidden"></asp:TextBox>
+        <asp:TextBox ID="txt_obsolete_holder" runat="server"  style="visibility:hidden"></asp:TextBox>
+        <asp:TextBox ID="txt_timestamp" runat="server"  style="visibility:hidden"></asp:TextBox>
+        <asp:TextBox ID="txt_draw_active" runat="server"  style="visibility:hidden"></asp:TextBox>
+    </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="btn_create" EventName="click" />
+        </Triggers>
+    </asp:UpdatePanel>
 </asp:Content>

@@ -37,7 +37,7 @@ public final class MapComponent extends JComponent {
         private Path2D.Double path;
         private List<LonLat> shape;
 
-        private boolean drawingActivated = true;
+        private boolean drawingActivated = false;
         public boolean isDrawingActivated() { return drawingActivated; }
         public void setDrawingActivated(boolean drawingActivated) { this.drawingActivated = drawingActivated; }
         
@@ -101,7 +101,9 @@ public final class MapComponent extends JComponent {
                 canDraw = !lineIntersects(mapComponent.getRestrictionLayer().path, line);
             }
 
-            canDraw = isDrawingActivated();
+            if(canDraw) {
+                canDraw = isDrawingActivated();
+            }
 
             return canDraw;
         }

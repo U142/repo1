@@ -12,6 +12,15 @@
 public partial class area_edit {
     
     /// <summary>
+    /// ScriptManager1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.ScriptManager ScriptManager1;
+    
+    /// <summary>
     /// table control.
     /// </summary>
     /// <remarks>
@@ -48,6 +57,15 @@ public partial class area_edit {
     protected global::System.Web.UI.WebControls.Label Label1;
     
     /// <summary>
+    /// update1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel update1;
+    
+    /// <summary>
     /// txt_name control.
     /// </summary>
     /// <remarks>
@@ -64,6 +82,15 @@ public partial class area_edit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
+    
+    /// <summary>
+    /// UpdatePanel1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanel1;
     
     /// <summary>
     /// chk_obsolete control.
@@ -219,6 +246,15 @@ public partial class area_edit {
     protected global::System.Web.UI.WebControls.Button btn_save;
     
     /// <summary>
+    /// UpdatePanel3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanel3;
+    
+    /// <summary>
     /// lbl_error control.
     /// </summary>
     /// <remarks>
@@ -264,6 +300,15 @@ public partial class area_edit {
     protected global::System.Web.UI.WebControls.Table tbl_areas;
     
     /// <summary>
+    /// UpdatePanel2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+    
+    /// <summary>
     /// txt_coor control.
     /// </summary>
     /// <remarks>
@@ -298,6 +343,15 @@ public partial class area_edit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txt_timestamp;
+    
+    /// <summary>
+    /// txt_draw_active control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txt_draw_active;
     
     /// <summary>
     /// Master property.

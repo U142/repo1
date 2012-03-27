@@ -149,17 +149,17 @@ public partial class area_edit : System.Web.UI.Page
                     
                     tr = new TableRow();
                     tc = new TableCell();
-                    HyperLink lb = new HyperLink();
+                    Label lb = new Label();
                     lb.Text = dept.sz_deptid;
                     
-                    lb.NavigateUrl = "javascript:setShape('" + "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid + "')";
+                    //lb.NavigateUrl = "javascript:setShape('" + "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid + "')";
 
                     //Add information to dropdown
 
                     ddlAreas.Items.Add(new ListItem(dept.sz_deptid, "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid));
 
                     //lb.CausesValidation = false;
-                    lb.ID = "lb_view" + dept.l_deptpk.ToString();
+                    //lb.ID = "lb_view" + dept.l_deptpk.ToString();
                     //lb.Click += new EventHandler(this.btn_view_click);
                     //lb.Attributes.Add("onclick", "javascript:setShape(" + jall + ");");
                     tc.Controls.Add(lb);
@@ -295,6 +295,7 @@ public partial class area_edit : System.Web.UI.Page
                             txt_name.Text = "";
                             txt_name.Enabled = false;
                             txt_coor.Text = "";
+                            txt_draw_active = "";
                         }
                     }
                     else
@@ -331,6 +332,7 @@ public partial class area_edit : System.Web.UI.Page
             chk_obsolete.Enabled = true;
             lbl_error.Text = "";
             txt_coor.Text = "";
+            txt_draw_active.Text = "True";
             //tbl_areas.Rows.Clear();
         }
         else
