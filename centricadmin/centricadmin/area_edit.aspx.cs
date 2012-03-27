@@ -295,7 +295,7 @@ public partial class area_edit : System.Web.UI.Page
                             txt_name.Text = "";
                             txt_name.Enabled = false;
                             txt_coor.Text = "";
-                            txt_draw_active = "";
+                            txt_draw_active.Text = "";
                         }
                     }
                     else
