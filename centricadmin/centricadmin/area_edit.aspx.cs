@@ -150,13 +150,18 @@ public partial class area_edit : System.Web.UI.Page
                     tr = new TableRow();
                     tc = new TableCell();
                     Label lb = new Label();
-                    lb.Text = dept.sz_deptid;
-                    
-                    //lb.NavigateUrl = "javascript:setShape('" + "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid + "')";
+                    lb.Text = dept.sz_deptid;                  
 
                     //Add information to dropdown
 
-                    ddlAreas.Items.Add(new ListItem(dept.sz_deptid, "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid));
+                    bool isObsolete = false;
+
+                    if (dept.restrictionShapes[0] != null)
+                    {
+                        isObsolete = dept.restrictionShapes[0].f_disabled == 1;
+                    }
+
+                    ddlAreas.Items.Add(new ListItem(dept.sz_deptid + (isObsolete ? " - OBS" : ""), "tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid));
 
                     //lb.CausesValidation = false;
                     //lb.ID = "lb_view" + dept.l_deptpk.ToString();
