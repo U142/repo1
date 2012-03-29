@@ -51,6 +51,12 @@ public partial class predefine_text : System.Web.UI.Page
             f.n_timefilter = 0;
 
             rebuildTree(false);
+
+            paswsSoapClient pc = new paswsSoapClient();
+            var parameters = pc.GetCBParameters(Util.convertLogonInfoPas(l));
+            string maxCharacters = ((parameters.l_maxpages - 1) * parameters.l_pagesize).ToString();
+            txt_char.Text = maxCharacters;
+            val_message.Text = String.Format("Message cannot be longer than {0} characters", maxCharacters);
         }
     }
 

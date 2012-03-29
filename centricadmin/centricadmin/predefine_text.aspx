@@ -7,7 +7,7 @@
     {
          var slen = document.getElementById("body_txt_message").value.length;
          var text = document.getElementById("body_txt_message").value;
-         var num_char = 1302;
+         var num_char = document.getElementById("body_txt_char").value;
          
          // alert(arguments.Value + '\n' + slen);
          if (getLength() <= num_char) {   
@@ -20,7 +20,7 @@
      function getLength() {
         var slen = document.getElementById("body_txt_message").value.length;
         var text = document.getElementById("body_txt_message").value;
-        var num_char = 1302;
+        var num_char = document.getElementById("body_txt_char").value;
         var i;
         var tot = 0;
         var extended = /[|^€{}\[\]~\\]/;
@@ -105,4 +105,5 @@
     ClientValidationFunction="ValidateStringLength" ControlToValidate="txt_message"    
     ErrorMessage="" Text="Message cannot be longer than 1302 characters" />
 <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+<asp:TextBox ID="txt_char" runat="server" style="visibility:hidden" />
 </asp:Content>
