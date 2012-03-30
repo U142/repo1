@@ -256,6 +256,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		} catch(Exception e) {
 		}
 		m_panel.init();
+		PAS.pasplugin.onCustomizeLogonDlg(this);
 
 	}
 	
@@ -334,7 +335,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		private StdTextLabel m_lbl_compid;
 		private StdTextLabel m_lbl_passwd;
 		private JButton		m_btn_submit;
-		private JTextPane m_lbl_errormsg;
+		private JTextPane m_lbl_errormsg = new JTextPane();
+		JScrollPane errorScroller = new JScrollPane(m_lbl_errormsg);
 		private NSList m_nslist;
 		private StdTextLabel m_lbl_language;
 		private JComboBox m_combo_language;
@@ -350,6 +352,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		public JComboBox getLanguageCombo() { return m_combo_language; }
 		public JButton getBtnSubmit() { return m_btn_submit; }
 		public JTextPane getLblError() { return m_lbl_errormsg; }
+		public JScrollPane getErrorScroller() { return errorScroller; }
 		
 		
 		private void initComponents()
@@ -369,7 +372,6 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_compid = new StdTextLabel(Localization.l("logon_company"));
 			m_lbl_passwd = new StdTextLabel(Localization.l("logon_password"));
 			m_lbl_language = new StdTextLabel(Localization.l("common_language"));
-			m_lbl_errormsg = new JTextPane();
             m_lbl_errormsg.setOpaque(false);
             m_lbl_errormsg.setFocusable(false);
             //m_lbl_errormsg.setLineWrap(true);
@@ -424,7 +426,11 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_language.setPreferredSize(new Dimension(110, 19));
 
 			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(390, 50));
+			//m_lbl_errormsg.setPreferredSize(new Dimension(390, 19));
+			errorScroller.setPreferredSize(new Dimension(390, 19));
+			errorScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			errorScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			errorScroller.setBorder(null);
 			m_btn_submit.setActionCommand(ENABLE);
 			m_btn_submit.setActionCommand("act_logon");
 			m_btn_submit.addActionListener(this);
@@ -534,7 +540,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			set_gridconst(5,inc_panels(),1,1, GridBagConstraints.WEST); //x,y,sizex,sizey
 			add(m_btn_submit, m_gridconst);			
 			set_gridconst(0,inc_panels(),7,1, GridBagConstraints.WEST);
-			add(m_lbl_errormsg, m_gridconst);
+			
+			add(errorScroller, m_gridconst);
 			set_gridconst(0,inc_panels(),7,1);
 			add(m_nslist, m_gridconst);
 		}

@@ -1008,7 +1008,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
 
         p.set_gridconst(0, p.inc_panels(), 7, 1, GridBagConstraints.CENTER);
-        p.add(p.getLblError(), p.m_gridconst);
+        p.add(p.getErrorScroller(), p.m_gridconst);
 
         return true;
 
@@ -1021,6 +1021,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);
         dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("common_ok"));
+        dlg.get_logonpanel().getErrorScroller().setPreferredSize(new Dimension(390, 50));
         return super.onCustomizeLogonDlg(dlg);
     }
 

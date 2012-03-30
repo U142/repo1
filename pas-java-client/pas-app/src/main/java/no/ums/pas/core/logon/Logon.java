@@ -120,7 +120,7 @@ public class Logon implements ActionListener {
 				public void run()
 				{
 					dlg = new LogonDialog(temp, null, true, m_initinfo, wantedlanguage, b_request_newsession);
-					PAS.pasplugin.onCustomizeLogonDlg(dlg);
+					//PAS.pasplugin.onCustomizeLogonDlg(dlg);
 				}
 				});
 			}
