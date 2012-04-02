@@ -19,6 +19,12 @@
         <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
         <jnlp_w>https://secure.ums2.no/PAS/ws_nlutv/WS/</jnlp_w>
         <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
+		
+		<jnlp_acceptance>ACCEPTANCE_BAA-WEB001</jnlp_acceptance>
+		<jnlp_ketentest>KETENTEST_BAK-WEB001</jnlp_ketentest>
+		<jnlp_prod>PROD</jnlp_prod>
+		<jnlp_prodncv>PROD-NCV</jnlp_prodncv>
+		<jnlp_test_svr9932>TEST_SRV9932</jnlp_test_svr9932>
     </properties>
     <dependencies>
         <dependency>
@@ -74,6 +80,172 @@
                     </execution>
                 </executions>
             </plugin>
+			
+				<!-- Additional JNLP files for NLAlert. One for each hosting server-->
+			
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<configuration>
+								<tasks>
+									<mkdir dir="${project.basedir}/target/jnlp/nlalert-jnlp/${jnlp_acceptance}"/>
+									<mkdir dir="${project.basedir}/target/jnlp/nlalert-jnlp/${jnlp_ketentest}"/>
+									<mkdir dir="${project.basedir}/target/jnlp/nlalert-jnlp/${jnlp_prod}"/>
+									<mkdir dir="${project.basedir}/target/jnlp/nlalert-jnlp/${jnlp_prodncv}"/>
+									<mkdir dir="${project.basedir}/target/jnlp/nlalert-jnlp/${jnlp_test_svr9932}"/>
+								</tasks>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+			    <plugin>
+                    <groupId>org.codehaus.mojo.webstart</groupId>
+                    <version>1.0-beta-2</version>
+                    <artifactId>webstart-maven-plugin</artifactId>
+                    <executions>
+						<!--Acceptance-->
+						<execution>
+							<id>1</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jnlp-inline</goal>
+                            </goals>
+							<configuration>
+
+								<pack200>false</pack200>
+								<jnlp>
+									<mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+									<outputFile>nlalert-jnlp/${jnlp_acceptance}/NLAlert.jnlp</outputFile>
+									<inputTemplate>src/main/jnlp/${jnlp_acceptance}.vm</inputTemplate>
+								</jnlp>
+								<sign>
+									<keystore>${project.basedir}/../ums.keystore</keystore>
+									<keypass>${key.keypass}</keypass>
+									<storepass>${key.storepass}</storepass>
+									<alias>${key.alias}</alias>
+
+									<verify>true</verify>
+								</sign>
+								<libPath>${jnlp_codebase}</libPath>
+							</configuration>
+
+						</execution>
+						
+						
+						
+						<!--jnlp_ketentest-->
+                        <execution>
+							<id>2</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jnlp-inline</goal>
+                            </goals>
+		                    <configuration>
+								<pack200>false</pack200>
+								<jnlp>
+									<mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+									<outputFile>nlalert-jnlp/${jnlp_ketentest}/NLAlert.jnlp</outputFile>
+									<inputTemplate>src/main/jnlp/${jnlp_ketentest}.vm</inputTemplate>
+								</jnlp>
+								<sign>
+									<keystore>${project.basedir}/../ums.keystore</keystore>
+									<keypass>${key.keypass}</keypass>
+									<storepass>${key.storepass}</storepass>
+									<alias>${key.alias}</alias>
+
+									<verify>true</verify>
+								</sign>
+								<libPath>${jnlp_codebase}</libPath>
+							</configuration>
+
+                        </execution>
+
+						<!--jnlp_prod-->
+                        <execution>
+							<id>3</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jnlp-inline</goal>
+                            </goals>
+							<configuration>
+								<pack200>false</pack200>
+								<jnlp>
+									<mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+									<outputFile>nlalert-jnlp/${jnlp_prod}/NLAlert.jnlp</outputFile>
+									<inputTemplate>src/main/jnlp/${jnlp_prod}.vm</inputTemplate>
+								</jnlp>
+								<sign>
+									<keystore>${project.basedir}/../ums.keystore</keystore>
+									<keypass>${key.keypass}</keypass>
+									<storepass>${key.storepass}</storepass>
+									<alias>${key.alias}</alias>
+
+									<verify>true</verify>
+								</sign>
+								<libPath>${jnlp_codebase}</libPath>
+							</configuration>							
+                        </execution>
+
+						<!--jnlp_prodncv-->
+                        <execution>
+							<id>4</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jnlp-inline</goal>
+                            </goals>
+							<configuration>
+								<pack200>false</pack200>
+								<jnlp>
+									<mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+									<outputFile>nlalert-jnlp/${jnlp_prodncv}/NLAlert.jnlp</outputFile>
+									<inputTemplate>src/main/jnlp/${jnlp_prodncv}.vm</inputTemplate>
+								</jnlp>
+								<sign>
+									<keystore>${project.basedir}/../ums.keystore</keystore>
+									<keypass>${key.keypass}</keypass>
+									<storepass>${key.storepass}</storepass>
+									<alias>${key.alias}</alias>
+
+									<verify>true</verify>
+								</sign>
+								<libPath>${jnlp_codebase}</libPath>
+							</configuration>
+						</execution>
+
+						<!--jnlp_test_svr9932-->
+                        <execution>
+							<id>5</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jnlp-inline</goal>
+                            </goals>
+							<configuration>
+								<pack200>false</pack200>
+								<jnlp>
+									<mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+									<outputFile>nlalert-jnlp/${jnlp_test_svr9932}/NLAlert.jnlp</outputFile>
+									<inputTemplate>src/main/jnlp/${jnlp_test_svr9932}.vm</inputTemplate>
+								</jnlp>
+								<sign>
+									<keystore>${project.basedir}/../ums.keystore</keystore>
+									<keypass>${key.keypass}</keypass>
+									<storepass>${key.storepass}</storepass>
+									<alias>${key.alias}</alias>
+
+									<verify>true</verify>
+								</sign>
+								<libPath>${jnlp_codebase}</libPath>
+							</configuration>
+						</execution>
+						
+                    </executions>
+                </plugin>
         </plugins>
     </build>
     <profiles>
