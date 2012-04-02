@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="http://192.168.154.130/NLAlertClient/codebase/" href="http://192.168.154.130/NLAlertClient/NLAlert.jnlp">
+  <information>
+	<title>NL Alert - (KETENTESTOMGEVING)</title>
+	<vendor>Unified Messaging Systems / Centric</vendor>
+	<icon href="http://192.168.154.130/NLAlertClient/images/centiccLogo64.ico" />
+	<!--<icon href="http://192.168.154.130/NLAlertClient/images/PAS_splash.jpg" kind="splash" />-->
+  </information>
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.6+"
+          href="http://java.sun.com/products/autodl/j2se"
+          java-vm-args="-Xms256M -Xmx768M -Dsun.net.client.defaultConnectTimeout=10000 -Dsun.net.client.defaultReadTimeout=600000" />
+    $dependencies
+  </resources>
+  <application-desc main-class="$mainClass">
+		<argument>-shttp://192.168.154.130/NLAlertClient/</argument>
+		<argument>-whttp://192.168.154.130/NLAlertWS/ws/</argument>
+		<argument>-pno.ums.pas.plugins.centric.plugin_Centric</argument>
+		<argument>-cNLALERT</argument>
+		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>-->
+		<argument>-mhttp://192.168.154.135/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>
+		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/Background_LatLon,BurgerAlert/Layers/Road_LatLon,BurgerAlert/Layers/River_LatLon,BurgerAlert/Layers/MunicipalityBorder_LatLon,BurgerAlert/Layers/CityPoint_LatLon,BurgerAlert/Layers/CityArea_LatLon;4326</argument>-->
+		<!--<argument>-mdefault</argument>-->
+		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/Background_LatLon,BurgerAlert/Layers/Road_LatLon,BurgerAlert/Layers/River_LatLon,BurgerAlert/Layers/MunicipalityBorder_LatLon,BurgerAlert/Layers/CityPoint_LatLon,BurgerAlert/Layers/CityArea_LatLon;4326</argument>-->
+  </application-desc>
+</jnlp>

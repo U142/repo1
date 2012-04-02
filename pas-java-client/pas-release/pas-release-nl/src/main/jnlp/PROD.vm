@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="http://10.120.51.10/NLAlertClient/codebase/" href="http://10.120.51.10/NLAlertClient/NLAlert.jnlp">
+  <information>
+	<title>NL Alert - Main Site (Ams) - Internal Connection - WEB001</title>
+	<vendor>Unified Messaging Systems / Centric</vendor>
+	<icon href="http://10.120.51.10/NLAlertClient/images/centiccLogo64.ico" />
+  </information>
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.6+"
+          href="http://java.sun.com/products/autodl/j2se"
+          java-vm-args="-Xms256M -Xmx768M -Dsun.net.client.defaultConnectTimeout=10000 -Dsun.net.client.defaultReadTimeout=600000" />
+    $dependencies
+  </resources>
+  <application-desc main-class="$mainClass">
+		<argument>-shttp://10.120.51.10/NLAlertClient/</argument>
+		<argument>-whttp://10.120.51.10/NLAlertWS/ws/</argument>
+		<argument>-pno.ums.pas.plugins.centric.plugin_Centric</argument>
+		<argument>-cNLALERT</argument>
+		<argument>-mhttp://10.120.51.15/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>
+  </application-desc>
+</jnlp>
