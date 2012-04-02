@@ -1795,7 +1795,7 @@ namespace com.ums.ws.parm
                         {
                             UShape sh = UShape.ParseFromXml(sz_shape_xml);
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         { }
                     }
 
@@ -1825,7 +1825,8 @@ namespace com.ums.ws.parm
                         //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
                         //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE OP.l_operator=XD.l_operator AND XD.l_operator=PA.l_operator AND PA.l_alertpk={0} AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
                         String szLbaSql = String.Format("sp_parm_getalert_lbaop {0}, {1}", l_alertpk, l_deptpk);
-                        lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
+                        PASUmsDb db2 = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
+                        lba = db2.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
                         while (lba.Read())
                         {
                             outxml.insertStartElement("operator");
@@ -1836,6 +1837,8 @@ namespace com.ums.ws.parm
                             outxml.insertEndElement();
                         }
                         lba.Close();
+                        db2.close();
+                        
                         outxml.insertEndElement(); //lbaoperators
                     }
                     if (sz_shape_xml.Trim().Length > 0)
