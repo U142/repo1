@@ -1141,39 +1141,6 @@ public class CentricPasScripting extends DefaultPasScripting {
             for (ShapeStruct aList : list) {
             	aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
             }
-            
-            
-            /*
-            //shade surroundings
-            Rectangle scr = p.get_mappane().getBounds();
-            Polygon polyScreen = new Polygon();
-            polyScreen.addPoint(0, 0);
-            polyScreen.addPoint(scr.width, 0);
-            polyScreen.addPoint(scr.width, scr.height);
-            polyScreen.addPoint(0, scr.height);
-            Area areaScreen = new Area(polyScreen);
-
-            final Point topLeft = Variables.getMapFrame().getZoomLookup().getPoint(Variables.getMapFrame().getMapModel().getTopLeft());
-            Polygon polyRestrict = new Polygon();
-            for (ShapeStruct aList : list) {
-            	if(aList instanceof PolygonStruct)
-            	{
-                    PolygonStruct poly = aList.typecast_polygon();
-		            for (int i=0; i<=poly.get_size(); i++) {
-		                final Point lineTo = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(poly.get_coor_lon(i % poly.get_size()), poly.get_coor_lat(i % poly.get_size())));
-		                polyRestrict.addPoint(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
-		            }
-            	}
-                Area areaRestrict = new Area(polyRestrict);
-                areaScreen.subtract(areaRestrict);
-            }
-            
-            Shape oldClip = g.getClip();
-            g.setClip(areaScreen);
-            g.setColor(new Color(0,0,0,120));
-            g.fillPolygon(polyScreen);
-            g.setClip(oldClip);
-            */
 
         } catch (Exception e) {
             log.warn(e.getMessage(), e);

@@ -421,10 +421,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			else
 				m_btn_send.setToolTipText(null);
 			break;
-		case SHOWING_AUTHORIZATION:
-			int n_auth_text = m_txt_authorization.getText().length();
-			m_btn_send.setEnabled(n_auth_text>0);
-			break;
 		case SENDING:
 			m_btn_send.setEnabled(false);
 			break;
@@ -596,102 +592,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_cancel, m_gridconst);
 		
 		
-		m_btn_send.setActionCommand("act_goto_authorization");
-		int width_left = 550-100;
-		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
-		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
-		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,70));
-		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
-
-		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
-		m_btn_send.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
-		m_btn_cancel.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
-		m_btn_save_message.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
-		m_btn_send_for_auth.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
-		updateCharacters();
-		revalidate();
-		repaint();
-		
-	}
-	
-	private void showAuthorization() {
-		
-		findDeptSendOnBehalfOf();
-        m_txt_event_name.setEnabled(false);
-		removeAll();
-		reset_panels();
-		set_gridconst(0, get_panel(), 1, 1);
-		add(m_lbl_event_name, m_gridconst);
-		set_gridconst(1, get_panel(), 7, 1);
-		add(m_txt_event_name, m_gridconst);
-		
-		add_spacing(DIR_VERTICAL, 5);
-		
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_lbl_preview, m_gridconst);
-		set_gridconst(1, get_panel(), 3, 2);
-		add(m_txt_previewscroll, m_gridconst);
-		set_gridconst(0, inc_panels(), 1, 1);
-
-		set_gridconst(1, inc_panels(), 1, 1);
-		add(m_lbl_pages, m_gridconst);
-		set_gridconst(2, get_panel(), 7, 1);
-		add(m_lbl_characters, m_gridconst);
-		
-		
-		add_spacing(DIR_VERTICAL, 20);
-		
-		set_gridconst(1, inc_panels(), 7, 1);
-		add(m_txt_warningscroll, m_gridconst);
-		m_txt_warning.setEnabled(false);
-		Font f = UIManager.getFont("SendingWarningText.font");
-		m_txt_warning.setFont(f);
-		Color c = UIManager.getColor("SendingWarningText.foreground");
-		m_txt_warning.setForeground(c);
-		m_txt_warning.setDisabledTextColor(c);
-		
-		add_spacing(DIR_VERTICAL, 5);
-		
-		set_gridconst(0, inc_panels(), 1, 1);
-        m_lbl_warning = new StdTextLabel(Localization.l("common_show_message_authorization_text"));
-		add(m_lbl_warning, m_gridconst);
-		
-				
-		m_txt_authorization = new JTextArea("",1,1);
-		m_txt_authorization.setWrapStyleWord(true);
-		m_txt_authorization.setLineWrap(true);
-		m_txt_authorization.addKeyListener(this);
-		m_txt_authorizationscroll = new JScrollPane(m_txt_authorization);
-		set_gridconst(1, get_panel(), 7, 1);
-		m_txt_authorizationscroll.setPreferredSize(new Dimension(m_txt_previewscroll.getWidth(),40));
-		add(m_txt_authorizationscroll, m_gridconst);
-		
-		add_spacing(DIR_VERTICAL, 5);
-		
-		set_gridconst(0, inc_panels(), 8, 1);
-        progress.set_totalitems(0, Localization.l("main_statustext_lba_sending"));
-		progress.stop_and_hide();
-		add(progress.get_progress(), m_gridconst);
-		
-		add_spacing(DIR_VERTICAL, 5);
-		
-		if(m_btn_cancel == null) {
-            m_btn_cancel = new JButton(Localization.l("common_cancel"));
-			m_btn_cancel.addActionListener(this);
-		}
-		
-		
-		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
-		add(m_btn_send, m_gridconst);
-		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
-		add(m_btn_cancel, m_gridconst);
-		
-		
 		m_btn_send.setActionCommand("act_send");
 		int width_left = 550-100;
 		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
 		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
-		m_txt_warningscroll.setPreferredSize(new Dimension(m_txt_previewscroll.getPreferredSize().width,70));
+		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,70));
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
 
 		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
@@ -770,7 +675,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			originator.setSzName(m_cbx_originator.getSelectedItem().toString());
 			CBMESSAGECONFIRMATION msgconfirm = new CBMESSAGECONFIRMATION();
 			msgconfirm.setLPk(-1);
-			msgconfirm.setSzName(m_txt_authorization.getText());
+			msgconfirm.setSzName("");
 			CBSENDBASE operation = null;
 					
 			
@@ -832,7 +737,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 			try {
 				current_mode = MODE.SHOWING_AUTHORIZATION;
-				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", operation);
+				WSCentricSend send = new WSCentricSend(this, "act_exec_cb_operation", operation);
 				send.start();
 			}
 			catch(Exception ex) {
@@ -869,13 +774,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			checkForEnableSendButton();
 			Variables.getNavigation().gotoMap(Variables.getMapFrame().get_active_shape().calc_bounds());
 		}
-		else if(e.getActionCommand().equals("act_goto_authorization")) {
-			PAS.pasplugin.onLockSending(null, true);
-			current_mode = MODE.SHOWING_AUTHORIZATION;
-			showAuthorization();
-			checkForEnableSendButton();
-		}
-		if(e.getActionCommand().equals("act_somethingsomething")){
+		if(e.getActionCommand().equals("act_exec_cb_operation")){
 			progress.stop_and_hide();
 			m_btn_cancel.setEnabled(true);
 			checkForEnableSendButton();
