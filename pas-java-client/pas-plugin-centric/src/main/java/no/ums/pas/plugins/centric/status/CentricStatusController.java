@@ -88,6 +88,9 @@ public class CentricStatusController extends StatusController {
 				CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 				res.setLProjectpk(m_projectpk);
 				m_centricstatus.getCBStatus();
+                if(m_timer.getDelay() == 1) { // This means a forced quick update, goes crazy if not reset
+                    m_timer.setDelay(get_autoupdate_millisecs());
+                }
 				log.debug("CentricStatusControl update...");
 			}
 			else

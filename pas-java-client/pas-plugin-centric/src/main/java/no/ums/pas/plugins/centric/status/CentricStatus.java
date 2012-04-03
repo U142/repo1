@@ -117,7 +117,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		cbsreq.setLogon(l);
 		
 		try {
-			if(isClosed())
+ 			if(isClosed())
 			{
 				ready = true;
 				return;
@@ -300,9 +300,11 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
             //get or create a UI pane
             if (containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
             {
+                log.debug("Message with refno " + currentstatus.getLRefno() + " already exists");
                 currentui = getHashMessageStatus().get(currentstatus.getLRefno());
             } else //new status, needs to be added to tabbed pane
             {
+                log.debug("Added message with refno: " + currentstatus.getLRefno());
                 currentui = new CentricMessageStatus(get_messages(), currentstatus);
                 putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
                 currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());
