@@ -110,7 +110,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	
 	public EastContent(PAS pas)
 	{
-		final int n_infopanel_height = 850; // Hardkodet pga layout og at scrollbaren skal fungere 
+		final int n_infopanel_height = 850; // Hardkodet pga layout og at scrollbaren skal fungere
 		final int n_infopanel_width = 400;
 		m_pas = pas;
 		m_icon_close = new ImageIcon(ImageLoader.load_icon("no.gif").getImage().getScaledInstance(10, 10, Image.SCALE_SMOOTH));

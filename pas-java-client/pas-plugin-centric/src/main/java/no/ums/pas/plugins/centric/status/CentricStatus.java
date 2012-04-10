@@ -111,8 +111,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		l.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 		l.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 		l.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
-		
-		//cbsreq = new CBPROJECTSTATUSREQUEST();
+
 		cbsreq.setLProjectpk(last_sendingresult.getLProjectpk());
 		cbsreq.setLogon(l);
 		
@@ -124,8 +123,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			}
             WSCentricStatus ws = new WSCentricStatus(this, "act_status_downloaded", cbsreq);
 			ws.start();
-			//WSCentricStatus getStatus = new WSCentricStatus(this,"act_status_downloaded",cbsreq,this);
-			//getStatus.start();
 		} catch(Exception ex) {
 			ready = true;
 		}
@@ -138,8 +135,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		add_controls();
 		cbsreq = new CBPROJECTSTATUSREQUEST();
 		cbsreq.setLTimefilter(0);
-		//getCBStatus(res);
-		
 	}
 	
 	//check if the event-tab is selected, or a sending-tab
