@@ -674,7 +674,7 @@ public class PolygonStruct extends ShapeStruct {
 		finalizeShape();
 	}
 	public NavStruct calc_bounds() {
-        double lbo = 9999, rbo = -9999, ubo = -9999, bbo = 9999;
+        double lbo = -180, rbo = 180, ubo = 90, bbo = -90;
 		if(m_coor_lon.size() == 0)
 			return null;
 		double lon=0, lat=0;
