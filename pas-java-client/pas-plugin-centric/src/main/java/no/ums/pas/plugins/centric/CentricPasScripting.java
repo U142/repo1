@@ -39,7 +39,6 @@ import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UBBNEWS;
 import no.ums.ws.common.USYSTEMMESSAGES;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
@@ -620,16 +619,44 @@ public class CentricPasScripting extends DefaultPasScripting {
     class UserInfoPane extends DefaultPanel implements ComponentListener {
         @Override
         public int getWantedHeight() {
-            return 25;
+            return Math.min(18*numberOfLines, maxHeightOfLines*18);
         }
-
-        StdTextLabel lbl_userinfo = new StdTextLabel("");
-
+        
+        int maxHeightOfLines = 2; //number of lines before enabling vertical scrollbar
+        int numberOfLines = 1;
+        TextAreaExt txtUserInfo = new TextAreaExt();
+        JScrollPane scroll;
+        
+        class TextAreaExt extends JTextArea {
+			private static final long serialVersionUID = 7665866774943842250L;
+			TextAreaExt() {
+                setEditable(false);
+                setLineWrap(true);
+                setWrapStyleWord(true);
+                setBorder(null);        		
+        	}
+        	public int getLineCountAsSeen() {
+        		Font font = this.getFont();
+        	    FontMetrics fontMetrics = getFontMetrics(font);
+        	    int fontHeight = fontMetrics.getHeight();
+        	    int lineCount;
+        	    try {
+        	    	int height = modelToView(getDocument().getEndPosition().getOffset() - 1).y;
+        	    	lineCount = height / fontHeight + 1;
+        	    } catch (Exception e) { 
+        	    	lineCount = 0;
+        	    }      
+        	    return lineCount;        		
+        	}
+        }
+        
         UserInfoPane() {
             super();
             setLayout(new BorderLayout());
-            lbl_userinfo.setBackground(Color.white);
-            lbl_userinfo.setVerticalTextPosition(JLabel.CENTER);
+            scroll = new JScrollPane(txtUserInfo);
+            scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scroll.setBorder(null);
             addComponentListener(this);
             add_controls();
         }
@@ -658,13 +685,20 @@ public class CentricPasScripting extends DefaultPasScripting {
                     str += Localization.l("logon_rights_national_user"); //" - $Regional Super User - ";
                     break;
             }
-
-            lbl_userinfo.setText(str);
+            txtUserInfo.setText(str);
+            int prevLines = numberOfLines;
+            numberOfLines = txtUserInfo.getLineCountAsSeen();
+            //if number of lines changed, make sure to force a resize of the component itself
+            if(prevLines!=numberOfLines) {
+            	setPreferredSize(new Dimension(getWidth(), getWantedHeight()));
+            	revalidate();
+            }
+            txtUserInfo.setToolTipText(numberOfLines>maxHeightOfLines ? str : null);
         }
 
         @Override
         public void add_controls() {
-            add(lbl_userinfo);
+            add(scroll);
         }
 
         @Override
@@ -675,8 +709,10 @@ public class CentricPasScripting extends DefaultPasScripting {
         public void componentResized(ComponentEvent e) {
             int w = getWidth();
 
-            lbl_userinfo.setPreferredSize(new Dimension(w, getWantedHeight()));
-            lbl_userinfo.revalidate();
+            numberOfLines = txtUserInfo.getLineCountAsSeen(); //getWantedHeight is dependant on numberOfLines
+            scroll.setPreferredSize(new Dimension(w, getWantedHeight()));
+            scroll.revalidate();
+            scroll.getVerticalScrollBar().setValue(0);
             super.componentResized(e);
         }
 
@@ -1131,7 +1167,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p) {
         try {
-
             DeptArray depts = p.get_userinfo().get_departments();
 
             for (Object dept : depts) {
