@@ -73,7 +73,6 @@ import java.awt.image.ImageObserver;
 		
 		public Draw(Component component, int l_pri, int x, int y)
 		{
-			//this.setPriority(l_pri);
 			m_parent = component;
 			m_n_currenttrackerid = 0;
 			m_tracker = new MediaTracker(component);
@@ -87,14 +86,12 @@ import java.awt.image.ImageObserver;
         public void setPainted() {
 			if(m_b_needrepaint>0) 
 				m_b_needrepaint --;
-			//log.debug("m_b_needrepaint="+m_b_needrepaint);
 		}
 		public MediaTracker get_tracker() { return m_tracker; }
 		public Dimension get_dimension() { return m_dimension; }
 		public void remove_image(Image img) {
 			get_tracker().removeImage(img, m_n_currenttrackerid);	
 		}
-		//private PAS get_pas() { return m_pas; }
 		public void add_image(Image img) {
 			get_tracker().addImage(img, m_n_currenttrackerid);
 			m_n_currenttrackerid++;
@@ -129,89 +126,16 @@ import java.awt.image.ImageObserver;
 			return true;
 
 		}
-		/*public void run()
-		{
-			m_b_isrunning = true;
-			try {
-				while(!m_b_stop)
-				{
-					try{
-						Thread.sleep(20);					
-					}catch(InterruptedException e){Error.getError().addError("Draw","Exception in run",e,1);}
-					if(m_b_needrepaint && !m_b_imageupdate)
-					//if(!m_b_imageupdate)
-					{
-						if(!get_suspended())
-						{
-							if(need_new_coors())
-							{
-								calc_new_coors();
-								//set_neednewcoors(false);
-							}
-	
-							//log.debug("Repaint");
-							if(m_mapimg!=null) {
-								try {
-									m_gfx_buffer.drawImage(m_mapimg, 0, 0, m_dimension.width, m_dimension.height, this);
-									m_b_imgpaint_success = true;
-								} catch(Exception e) {
-									Error.getError().addError("Draw","Exception in run",e,1);
-									set_lasterror("m_gfx_buffer.drawImage failed " + e.getMessage());
-									log.debug(get_lasterror());
-									m_b_imgpaint_success = false;
-								}
-							}
-							else {
-								set_lasterror("m_mapimg == null");
-								//log.debug(get_lasterror());
-								continue;
-							}
-							draw_layers();
-							//m_b_needrepaint = false;
-							map_repaint();
-						}
-					}
-					checkforupdates();
-				}
-			} catch(Exception e) {
-				//set_lasterror("Error " + e.getMessage());
-				
-				//log.debug(get_lasterror());
-				log.debug(e.getMessage());
-				log.warn(e.getMessage(), e);
-				Error.getError().addError("Draw","Exception in run",e,1);
-			}
-			m_b_isrunning = false;
-		}
-		*/
 		public void create_image() {
 			try
 			{
 			if(m_b_needrepaint>=0 || m_mappane.isLoading())//&& !m_b_imageupdate)
 			{
-				//if(!get_suspended()) 
+
 				{
-						//set_neednewcoors(false);
-					//m_mapimg = null;
-                    final Image m_mapimg = (get_mappane() == null) ? null : get_mappane().get_image();
+				    final Image m_mapimg = (get_mappane() == null) ? null : get_mappane().get_image();
 					if(m_mapimg!=null) {
 						try {
-							/*MediaTracker tracker = new MediaTracker(get_mappane());
-							tracker.addImage(m_mapimg, 0);
-							try {
-								//Thread.sleep(100);
-								tracker.waitForID(0);
-								if (tracker.isErrorAny()) {
-									log.debug("Error loading image ");
-								}
-							} catch (Exception ex) { log.warn(ex.getMessage(), ex); }
-							*/
-							/*if(PAS.get_pas().get_mappane().getMapLoader().getMediaTracker().statusID(0, false) != MediaTracker.COMPLETE)
-							{
-								log.debug("!!!REPAINT AGAIN!!!!");
-								PAS.get_pas().kickRepaint();
-								//return;
-							}*/
 							Graphics2D g2d = (Graphics2D)m_gfx_buffer;
 							g2d.clearRect(0, 0, m_dimension.width, m_dimension.height);
 							AlphaComposite prev_alpha = (AlphaComposite)g2d.getComposite();
@@ -232,13 +156,11 @@ import java.awt.image.ImageObserver;
 						if(need_new_coors())
 						{
 							calc_new_coors();
-							//log.debug("DRAW: Calc new coors");
 						}
 						
 					}
 					else {
-						//get_mappane().superPaint(m_gfx_buffer);
-						//get_mappane().paint(m_gfx_buffer);
+
 						
 						Graphics2D g2d = (Graphics2D)m_gfx_buffer;
 						//clear screen
@@ -246,13 +168,10 @@ import java.awt.image.ImageObserver;
 						g2d.setBackground(SystemColor.control);
 						g2d.clearRect(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 						g2d.setBackground(oldBg);
-						//FontSet g2d.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
 
 						
 						g2d.setColor(SystemColor.textText);
-												
 
-						//if(get_suspended())
 						if(!get_mappane().getMapLoader().isLoadingMapImage() && !b_firstmap)
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
@@ -267,7 +186,6 @@ import java.awt.image.ImageObserver;
 							}
 							
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 12));
-							//int sec = 10;
 							g2d.drawString(Localization.l("maps_error_auto_retry_in") + " " + get_mappane().getMapLoader().getSecondsToReload() + " " + Localization.l("common_seconds"), 20, 280);
 							g2d.setColor(new java.awt.Color(255, 0, 0));
 							g2d.drawString(Localization.l("maps_error_extended_error"), 20, 300);
@@ -291,12 +209,10 @@ import java.awt.image.ImageObserver;
 					}
 					b_firstmap = false;
 
-					//m_b_needrepaint = false;
 					draw_layers(m_gfx_buffer);
 					map_repaint();						
 				}
-				setPainted();
-				//setPainted();				//checkforupdates();
+				setPainted(); //checkforupdates();
 			
 			}
 			}
@@ -312,14 +228,11 @@ import java.awt.image.ImageObserver;
 		public void draw_layers(Graphics g) {
 			if(get_mappane()!=null)
 				get_mappane().drawOnEvents(m_gfx_buffer);
-			//m_b_needrepaint --;
 		}
 		protected void checkforupdates() {
 			
 		}
 		protected void map_repaint() {
-			//set_suspended(true);
-			//m_parent.repaint();
-			//set_suspended(false);
+
 		}
 	}

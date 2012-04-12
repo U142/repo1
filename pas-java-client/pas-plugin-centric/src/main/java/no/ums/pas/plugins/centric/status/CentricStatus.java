@@ -111,21 +111,18 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		l.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 		l.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 		l.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
-		
-		//cbsreq = new CBPROJECTSTATUSREQUEST();
+
 		cbsreq.setLProjectpk(last_sendingresult.getLProjectpk());
 		cbsreq.setLogon(l);
 		
 		try {
-			if(isClosed())
+ 			if(isClosed())
 			{
 				ready = true;
 				return;
 			}
             WSCentricStatus ws = new WSCentricStatus(this, "act_status_downloaded", cbsreq);
 			ws.start();
-			//WSCentricStatus getStatus = new WSCentricStatus(this,"act_status_downloaded",cbsreq,this);
-			//getStatus.start();
 		} catch(Exception ex) {
 			ready = true;
 		}
@@ -138,8 +135,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		add_controls();
 		cbsreq = new CBPROJECTSTATUSREQUEST();
 		cbsreq.setLTimefilter(0);
-		//getCBStatus(res);
-		
 	}
 	
 	//check if the event-tab is selected, or a sending-tab
@@ -300,9 +295,11 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
             //get or create a UI pane
             if (containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
             {
+                log.debug("Message with refno " + currentstatus.getLRefno() + " already exists");
                 currentui = getHashMessageStatus().get(currentstatus.getLRefno());
             } else //new status, needs to be added to tabbed pane
             {
+                log.debug("Added message with refno: " + currentstatus.getLRefno());
                 currentui = new CentricMessageStatus(get_messages(), currentstatus);
                 putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
                 currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());

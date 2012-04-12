@@ -11,29 +11,14 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.HouseItem;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.MapPointPix;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
-import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import org.jdesktop.beansbinding.AbstractBean;
 
-import javax.swing.SwingUtilities;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -589,7 +574,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	protected boolean checkSendingRestriction(boolean b_click, RESTRICTION_MODE mode, int n_deptpk, ShapeStruct shape, MapPoint mapPoint,
 			boolean bAllowDuplicates)
 	{
-		if(m_dim_cursorpos==null)
+        
+        if(m_dim_cursorpos==null)
 			return false;
 		intersects = new ArrayList<MapPointLL>();
         LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), m_dim_cursorpos.width, m_dim_cursorpos.height);
@@ -601,13 +587,13 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 
 
 		List<ShapeStruct> list = getRestrictionShapeList(n_deptpk);
-		if(list.isEmpty())
+        if(list.isEmpty() || hasNoCoors(list)) //
 			return true;
 		{
 			
 			for(int i=0;i < list.size(); i++)
 			{
-
+                
 				//check line intersects with last line (last polypoint and mouse pos)
 				PolygonStruct current_polygon = null;
 				try
@@ -635,7 +621,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					current_polygon.ellipseToRestrictionlines(list.get(i).typecast_polygon());
 					return true;
 				}
-				
+
 				boolean b = list.get(i).pointInsideShape(p.get_mappointll());
 				switch(mode)
 				{
@@ -770,6 +756,21 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		return false;
 	}
 	
+    private boolean hasNoCoors(List<ShapeStruct> list) {
+        boolean noCoors = false;
+        
+        for(ShapeStruct shape : list) {
+            if(shape.getType() == ShapeStruct.SHAPE_POLYGON) { // Should always be polygon
+                PolygonStruct ps = shape.typecast_polygon();
+                if(ps.get_coors_lat().size() == 0) { // Can never have lon without lat
+                    noCoors = true;
+                    break;
+                }
+            }
+        }
+        return noCoors;
+    }
+    
 	private void mouse_move(MouseEvent e) {
 		if(e instanceof no.ums.pas.send.SnapMouseEvent) {
 			do_snap(e);

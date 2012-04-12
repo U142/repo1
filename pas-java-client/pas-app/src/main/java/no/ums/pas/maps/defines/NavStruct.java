@@ -5,14 +5,14 @@ public class NavStruct {
 	public double _lbo, _rbo, _ubo, _bbo;
 	public boolean isSet()
 	{
-		return _lbo != -9999;
+		return _lbo != -180;
 	}
 	public NavStruct(double lbo, double rbo, double ubo, double bbo)
 	{
 		_lbo = lbo; _rbo = rbo; _ubo = ubo; _bbo = bbo;
 	}
 	public NavStruct() {
-		this(-9999, -9999, -9999, -9999);
+		this(-180, 90, 180, -90);
 	}
 	public String toString() {
 		return "lbo=" + _lbo + " ubo=" + _ubo + " rbo=" + _rbo + " bbo=" + _bbo;

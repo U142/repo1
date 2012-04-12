@@ -48,7 +48,6 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 
 	private JTabbedPane m_tabbed_operators = new JTabbedPane();
 	public JTabbedPane get_tpane() { return m_tabbed_operators; }
-	private JButton m_btn_confirmation = new JButton(Localization.l("common_show_message_authorization_text"));
     private JButton m_btn_kill = new JButton(Localization.l("common_kill_sending"));
     private JButton m_btn_new_message = new JButton(Localization.l("main_tas_panel_new_message"));
     private JButton m_btn_resend = new JButton(Localization.l("main_status_resend"));
@@ -115,7 +114,6 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		lastcbstatus = cbstatus;
 
 		this.get_txt_message().setText(lastcbstatus.getMdv().getSzMessagetext());
-		m_btn_confirmation.setEnabled(lastcbstatus.getMessageconfirmation()!=null);
 		setName(lastcbstatus.getSzSendingname());
 		List<ULBASENDING> arr_operators = cbstatus.getOperators().getULBASENDING();
 
@@ -228,14 +226,6 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 				send.start();
 			}
 		}
-		else if(e.getSource().equals(m_btn_confirmation)) {
-			if(lastcbstatus!=null && lastcbstatus.getMessageconfirmation() != null) {
-                JOptionPane.showMessageDialog(this, formatText(lastcbstatus.getMessageconfirmation().getSzName()), Localization.l("common_show_message_authorization_text"), JOptionPane.INFORMATION_MESSAGE);
-            }
-			else {
-                JOptionPane.showMessageDialog(this, "No info...", Localization.l("common_show_message_authorization_text"), JOptionPane.WARNING_MESSAGE);
-            }
-		}
 		else if(e.getSource().equals(m_btn_new_message)) {
 			if(checkResendRights())
 			{
@@ -310,7 +300,6 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 
 	@Override
 	public void add_controls() {
-		m_btn_confirmation.addActionListener(this);
 		m_btn_kill.addActionListener(this);
 		m_btn_new_message.addActionListener(this);
 		m_btn_new_message.setEnabled(checkResendRights());
@@ -352,10 +341,8 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_btn_kill, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
-		add(m_btn_confirmation, m_gridconst);
-		set_gridconst(2, get_panel(), 1, 1);
 		add(m_btn_new_message, m_gridconst);
-		set_gridconst(3, get_panel(), 1, 1);
+		set_gridconst(2, get_panel(), 2, 1);
 		add(m_btn_send_to_address_book, m_gridconst);
 
 
