@@ -19,6 +19,6 @@
 		<argument>-whttp://10.120.51.10/NLAlertWS/ws/</argument>
 		<argument>-pno.ums.pas.plugins.centric.plugin_Centric</argument>
 		<argument>-cNLALERT</argument>
-		<argument>-mhttp://10.120.51.15/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>
+		<argument>-mhttp://10.120.51.15/mapguide/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;4326</argument>
   </application-desc>
 </jnlp>

@@ -21,7 +21,7 @@
 		<argument>-pno.ums.pas.plugins.centric.plugin_Centric</argument>
 		<argument>-cNLALERT</argument>
 		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>-->
-		<argument>-mhttp://SRV9934/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>
+		<argument>-mhttp://SRV9934/mapguide/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;4326</argument>
 		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/Background_LatLon,BurgerAlert/Layers/Road_LatLon,BurgerAlert/Layers/River_LatLon,BurgerAlert/Layers/MunicipalityBorder_LatLon,BurgerAlert/Layers/CityPoint_LatLon,BurgerAlert/Layers/CityArea_LatLon;4326</argument>-->
 		<!--<argument>-mdefault</argument>-->
 		<!--<argument>-mhttp://10.120.51.13/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/Background_LatLon,BurgerAlert/Layers/Road_LatLon,BurgerAlert/Layers/River_LatLon,BurgerAlert/Layers/MunicipalityBorder_LatLon,BurgerAlert/Layers/CityPoint_LatLon,BurgerAlert/Layers/CityArea_LatLon;4326</argument>-->
