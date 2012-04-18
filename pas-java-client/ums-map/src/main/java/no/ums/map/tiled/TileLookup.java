@@ -27,7 +27,8 @@ public interface TileLookup {
      */
     TileInfo getTileInfo(int zoom, LonLat topLeft, Dimension size);
 
-    BoundsMatch getBestMatch(LonLat topLeft, LonLat bottomRight, Dimension size);
+    BoundsMatch getBestMatch(LonLat topLeft, LonLat bottomRight, Dimension size, int maxZoomLevel);
+    
 
     ZoomLookup getZoomLookup(int zoom);
 

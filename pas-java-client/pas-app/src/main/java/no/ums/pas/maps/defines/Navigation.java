@@ -212,7 +212,7 @@ public class Navigation extends AbstractBean{
 			ubo = bbo;
 			bbo = tmp;
 		}
-        final TileLookup.BoundsMatch bounds = PAS.get_pas().get_mappane().getTileLookup().getBestMatch(new LonLat(lbo, ubo), new LonLat(rbo, bbo), m_dimension);
+        final TileLookup.BoundsMatch bounds = PAS.get_pas().get_mappane().getTileLookup().getBestMatch(new LonLat(lbo, ubo), new LonLat(rbo, bbo), m_dimension, PAS.get_pas().get_mappane().getMapController().maxZoomLevel);
         m_f_nav_lbo = bounds.getTopLeft().getLon();
         m_f_nav_rbo = bounds.getBottomRight().getLon();
         m_f_nav_ubo = bounds.getTopLeft().getLat();
@@ -224,7 +224,9 @@ public class Navigation extends AbstractBean{
         m_f_bbo = m_f_nav_bbo;
         calc_prpix();
         calc_mapmeters();
+                
         PAS.get_pas().get_mappane().getMapModel().setTopLeft(bounds.getTopLeft());
+        
         PAS.get_pas().get_mappane().getMapModel().setZoom(bounds.getZoom());
 
         return true;

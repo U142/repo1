@@ -237,7 +237,7 @@ public class MapApplet extends JApplet implements ActionListener {
 
             LonLat[] bounds = mapComponent.getBounds(lonLats);
 
-            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
+            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height), Variables.getMapFrame().getMapController().maxZoomLevel);
             Variables.setZoomLevel(tileLookup.getZoom());
 
             // Sets bounds based on restriction area

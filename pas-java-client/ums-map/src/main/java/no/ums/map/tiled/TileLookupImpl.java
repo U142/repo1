@@ -45,11 +45,13 @@ public final class TileLookupImpl implements TileLookup {
         return new TileInfo(tiles);
     }
 
-    @Override
-    public BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size) {
-        return tileCache.getBestMatch(topLeft, bottomRight, size);
-    }
 
+    @Override
+    public BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size,
+    								final int maxZoomLevel) {
+    	return tileCache.getBestMatch(topLeft, bottomRight, size, maxZoomLevel);
+    }
+    
     @Override
     public ZoomLookup getZoomLookup(final int zoom) {
         return tileCache.getZoomLookup(zoom);

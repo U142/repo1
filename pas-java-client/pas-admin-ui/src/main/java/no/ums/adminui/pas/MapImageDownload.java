@@ -119,7 +119,7 @@ public class MapImageDownload extends JApplet {
         LonLat[] bounds = mapComponent.getBounds(shape);
 
 
-        final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height));
+        final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height), Variables.getMapFrame().getMapController().maxZoomLevel);
         Variables.setZoomLevel(tileLookup.getZoom());
 
         mapComponent.getModel().setTopLeft(bounds[0]);
