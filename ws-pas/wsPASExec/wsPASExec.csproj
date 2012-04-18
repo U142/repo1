@@ -265,6 +265,7 @@
     </Content>
     <Content Include="Web.Orange_QA.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -286,6 +287,15 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="TTSLib">
+      <Guid>{BA65B40D-6865-11D4-905A-0050DAD9C842}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="WAV2RAWLib">
       <Guid>{57F1B6C1-693C-11D4-905A-0050DAD9C842}</Guid>
       <VersionMajor>1</VersionMajor>
