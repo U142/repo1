@@ -7,10 +7,14 @@ import javax.imageio.ImageIO;
 
 import no.ums.map.tiled.CoorConverter.RdCoordinate;
 import no.ums.map.tiled.CoorConverter.UTMCoor;
+import no.ums.map.tiled.CoorConverter.WGS84Coordinate;
 
 import org.jfree.util.Log;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -35,6 +39,17 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
     
 
     @Override
+	public Image applyImageFilter(final Image img, final TileCell input) {
+    	Image returnImage = img;
+    	switch(getSrs())
+    	{
+    	case 28992:
+    		break;
+    	}
+    	return returnImage;
+    }
+
+	@Override
     protected URI createUri(int zoom, int row, int column) {
         try {
     // http://webatlas.no/wms-UMs?SERVICE=WMS&LAYERS=ortofoto,Navn&FORMAT=image/png&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=,&SRS=EPSG:4326&VERSION=1.1.1

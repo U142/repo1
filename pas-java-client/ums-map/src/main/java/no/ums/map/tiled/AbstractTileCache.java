@@ -5,8 +5,10 @@ import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nullable;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.lang.Math;
 import java.lang.Override;
@@ -114,13 +116,24 @@ public abstract class AbstractTileCache {
     public void clear() {
         cache.clear();
     }
+    
+    /**
+     * If an alternate coordinate system is used, here's the place to reproject the image.
+     * @param img The downloaded image
+     * @param input The TileCell parameters for the image
+     * @return modified image
+     */
+    public Image applyImageFilter(final Image img, final TileCell input)
+    {
+    	return img;
+    }
 
-    public TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size) {
+    public TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size, int maxZoomLevel) {
         for (int i = 0; i < zoomLookups.length; i++) {
             final ZoomLookup zoomLookup = zoomLookups[i];
             final Point p1 = zoomLookup.getPoint(topLeft);
             final Point p2 = zoomLookup.getPoint(bottomRight);
-            if (Math.abs(p1.x-p2.x) > size.width || Math.abs(p1.y-p2.y) > size.height) {
+            if ((Math.abs(p1.x-p2.x) > size.width || Math.abs(p1.y-p2.y) > size.height) || i > maxZoomLevel) {
                 return new BoundsMatchImpl(Math.max(0, i-1), topLeft, bottomRight, size);
             }
         }
