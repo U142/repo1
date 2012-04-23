@@ -48,9 +48,7 @@ public class WSCentricRRO extends WSThread {
 			logon.setSzPassword(i.get_passwd());
 			//ret = new ParmAdmin(wsdl, service).getParmAdminSoap12().getMessageFields();
 			ret = new Parmws(wsdl, service).getParmwsSoap12().getCBSendingFields(logon);
-			
-			
-			onDownloadFinished();
+
 		}
 		catch(Exception e)
 		{
