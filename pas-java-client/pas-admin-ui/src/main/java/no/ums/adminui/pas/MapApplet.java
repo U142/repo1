@@ -59,6 +59,9 @@ public class MapApplet extends JApplet implements ActionListener {
 	public static String OVERRIDE_WMS_SITE = null;
 	public int applet_width;
 	public int applet_height;
+    
+    public int zoom_level = 7;
+    public int max_zoom_level = 12;
 	
 	public void init() {
 		try {
@@ -208,8 +211,8 @@ public class MapApplet extends JApplet implements ActionListener {
             mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
             mapComponent.getModel().setZoom(Variables.getZoomLevel());
 
-            mapComponent.getMapController().setZoomLevel(7);
-            mapComponent.getMapController().setMaxZoomLevel(12);
+            mapComponent.getMapController().setZoomLevel(zoom_level);
+            mapComponent.getMapController().setMaxZoomLevel(max_zoom_level);
 
             String scheme="", host="", path="";
             final URI base = URI.create(Variables.getSettings().getWmsSite());
@@ -237,7 +240,7 @@ public class MapApplet extends JApplet implements ActionListener {
 
             LonLat[] bounds = mapComponent.getBounds(lonLats);
 
-            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height), Variables.getMapFrame().getMapController().maxZoomLevel);
+            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height),max_zoom_level);
             Variables.setZoomLevel(tileLookup.getZoom());
 
             // Sets bounds based on restriction area
