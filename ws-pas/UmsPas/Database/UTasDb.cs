@@ -146,18 +146,25 @@ namespace com.ums.PAS.Database
                         
                         ccs = new List<ULBACOUNTRY>();
 
-                        String sqlCC = String.Format("SELECT l_cc_to, isnull(sz_iso_to,'') FROM LBASEND_COUNTRIES WHERE l_refno={0}", tmp.n_refno);
-                        rsCC = ExecReader(sqlCC, UmsDb.UREADER_KEEPOPEN);
-                        while (rsCC.Read())
+
+                        using (OdbcConnection con2 = new OdbcConnection(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString))
                         {
-                            ULBACOUNTRY country = new ULBACOUNTRY();
-                            country.l_cc = rsCC.GetInt32(0);
-                            country.sz_iso = rsCC.GetString(1).Trim();
-                            ccs.Add(country);
+                            String sqlCC = String.Format("SELECT l_cc_to, isnull(sz_iso_to,'') FROM LBASEND_COUNTRIES WHERE l_refno={0}", tmp.n_refno);
+                            OdbcCommand cmd2 = new OdbcCommand(sqlCC, con2);
+                            rsCC = cmd2.ExecuteReader();
+                            while (rsCC.Read())
+                            {
+                                ULBACOUNTRY country = new ULBACOUNTRY();
+                                country.l_cc = rsCC.GetInt32(0);
+                                country.sz_iso = rsCC.GetString(1).Trim();
+                                ccs.Add(country);
+                            }
+                            rsCC.Close();
+                            cmd2.Dispose();
+                            con2.Close();
+                            tmp.list = ccs;
+                            res.Add(tmp);
                         }
-                        rsCC.Close();
-                        tmp.list = ccs;
-                        res.Add(tmp);
 
                         n_prev_request = tmp.n_requestpk;
                         n_prev_operator = tmp.n_operator;

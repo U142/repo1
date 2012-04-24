@@ -546,10 +546,11 @@ namespace com.ums.UmsDbLib
         protected bool init()
         {
             m_b_dbconn = false;
-            conn = new OdbcConnection(sz_constring);
             //conn.ConnectionTimeout = timeout;
             try
             {
+                // Dette var problemet med NLAlert
+                conn = new OdbcConnection(sz_constring);
                 conn.Open();
                 m_b_dbconn = true;
             }
