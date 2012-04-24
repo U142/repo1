@@ -53,6 +53,7 @@ public partial class predefine_text : System.Web.UI.Page
             rebuildTree(false);
 
             paswsSoapClient pc = new paswsSoapClient();
+            pws.Endpoint.Address = new EndpointAddress(ConfigurationManager.AppSettings["Pas"]);
             var parameters = pc.GetCBParameters(Util.convertLogonInfoPas(l));
             string maxCharacters = ((parameters.l_maxpages - 1) * parameters.l_pagesize).ToString();
             txt_char.Text = maxCharacters;
