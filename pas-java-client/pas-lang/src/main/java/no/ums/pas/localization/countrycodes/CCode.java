@@ -2,10 +2,14 @@ package no.ums.pas.localization.countrycodes;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 
 import java.util.Iterator;
 
 public class CCode implements Cloneable {
+
+    private static final Log log = UmsLog.getLogger(CCode.class);
 
     @Override
 	public CCode clone() throws CloneNotSupportedException {
@@ -66,7 +70,14 @@ public class CCode implements Cloneable {
         sz_ccode = code;
         sz_country = country;
         sz_short = sh;
-        n_ccode = Integer.parseInt(code);
+        int ccode;
+        try {
+            ccode = Integer.parseInt(code);
+        } catch (NumberFormatException ne) {
+            ccode = 0;
+            log.warn("Could not parse CC: " + code);
+        }
+        n_ccode = ccode;
         b_visible = visible;
     }
 
