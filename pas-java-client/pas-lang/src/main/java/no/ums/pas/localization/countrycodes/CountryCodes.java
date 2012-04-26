@@ -1,14 +1,14 @@
 package no.ums.pas.localization.countrycodes;
 
-import java.io.IOException;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.pas.localization.Localization;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import no.ums.pas.localization.Localization;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /***
  * 
@@ -19,7 +19,8 @@ import com.google.common.collect.Maps;
  */
 public enum CountryCodes {
 	INSTANCE;
-	
+
+    private static final Log log = UmsLog.getLogger(CountryCodes.class);
     private final Map<String, CCode> codesById = Maps.newHashMap();
 
     CountryCodes() {
@@ -48,7 +49,12 @@ public enum CountryCodes {
 
     public static CCode getCountryByCCode(final String ccode) {
     	final String fixedCode = (ccode.startsWith("00")) ? ccode.substring(2) : ccode;
-        return (INSTANCE.codesById.containsKey(fixedCode)) ? INSTANCE.codesById.get(fixedCode) : new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", false);
+        try {
+            return (INSTANCE.codesById.containsKey(fixedCode)) ? INSTANCE.codesById.get(fixedCode) : new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", false);
+        } catch (Exception e) {
+            log.info("CCode Not found [" + ccode + "]");
+            return new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", false);
+        }
     }
 
     public static Iterable<CCode> getCountryCodes() {
