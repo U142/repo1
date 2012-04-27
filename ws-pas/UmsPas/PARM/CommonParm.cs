@@ -182,6 +182,8 @@ namespace com.ums.UmsParm
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
     [XmlInclude(typeof(UPolygon))]
     [XmlInclude(typeof(UEllipse))]
+    [XmlInclude(typeof(UBoundingRect))]
+    [XmlInclude(typeof(UPLMN))]
     public abstract class UShape
     {
         //public static USENDINGTYPES operator !=(USENDINGTYPES s, long n) { return new USENDINGTYPES(); }
