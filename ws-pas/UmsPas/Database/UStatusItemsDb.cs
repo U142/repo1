@@ -599,7 +599,7 @@ namespace com.ums.PAS.Database
                     if (rs_poly.Read())
                     {
 
-                        UPLMN shape = UPLMN.Deserialize(rs_poly.GetString(0));
+                        UShape shape = UShape.Deserialize(rs_poly.GetString(0));
                         cb.shape = shape;
                     }
                     rs_poly.Close();
