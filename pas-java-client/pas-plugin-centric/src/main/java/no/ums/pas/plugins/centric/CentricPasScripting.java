@@ -1322,6 +1322,8 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onCloseProject() {
         try {
+            Variables.getSendController().resetActiveProject();
+            PAS.get_pas().set_current_project(null);
             ((CentricStatusController) Variables.getStatusController()).stopUpdates();
             PAS.pasplugin.clearShapesToPaint();
             PAS.get_pas().kickRepaint();
@@ -1385,8 +1387,9 @@ public class CentricPasScripting extends DefaultPasScripting {
                 // Inform and close open status
                 answer = confirmClosing();
                 if (answer == JOptionPane.YES_OPTION)
-                    if (onCloseProject())
+                    if (onCloseProject()) {
                         return answer;
+                    }
             }
             return answer;
         } catch (Exception e) {
