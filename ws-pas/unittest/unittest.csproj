@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4AAF2FB5-BFF4-420B-82E3-46B6F049DA1F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>unittest</RootNamespace>
+    <AssemblyName>unittest</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializeTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CapProxy\CapProxy.csproj">
+      <Project>{AFA1CF4A-03FA-402D-A8E0-D4F0CC6AC6A3}</Project>
+      <Name>CapProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsAudio\UmsAudio.csproj">
+      <Project>{C44B04EA-5C9D-4BB0-B365-FC9B0C87E93F}</Project>
+      <Name>UmsAudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">
+      <Project>{21957982-6FBC-49F9-8F75-C0DE18558133}</Project>
+      <Name>UmsCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsDbLib\UmsDbLib.csproj">
+      <Project>{F0B76F05-656E-43FA-A965-A233B0F2C8A9}</Project>
+      <Name>UmsDbLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsFile\UmsFile.csproj">
+      <Project>{BFF1C26F-955E-4A56-B781-D0CA89912B8A}</Project>
+      <Name>UmsFile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsPas\UmsPas.csproj">
+      <Project>{8CDBBCD2-D0EA-4A62-B60C-A500D5CB68DA}</Project>
+      <Name>UmsPas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\wsPASExec\wsPASExec.csproj">
+      <Project>{E7B727D0-451A-45A3-8C75-FA2FF881263B}</Project>
+      <Name>wsPASExec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZipLib\ZipLib.csproj">
+      <Project>{9EF07252-75DF-4359-B46A-30F3A84DFA41}</Project>
+      <Name>ZipLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

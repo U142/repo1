@@ -149,6 +149,7 @@ namespace com.ums.PAS.Database
 
                         using (OdbcConnection con2 = new OdbcConnection(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString))
                         {
+                            con2.Open();
                             String sqlCC = String.Format("SELECT l_cc_to, isnull(sz_iso_to,'') FROM LBASEND_COUNTRIES WHERE l_refno={0}", tmp.n_refno);
                             OdbcCommand cmd2 = new OdbcCommand(sqlCC, con2);
                             rsCC = cmd2.ExecuteReader();
@@ -159,7 +160,6 @@ namespace com.ums.PAS.Database
                                 country.sz_iso = rsCC.GetString(1).Trim();
                                 ccs.Add(country);
                             }
-                            rsCC.Close();
                             cmd2.Dispose();
                             con2.Close();
                             tmp.list = ccs;

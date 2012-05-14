@@ -180,6 +180,10 @@ namespace com.ums.UmsParm
 
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
+    [XmlInclude(typeof(UPolygon))]
+    [XmlInclude(typeof(UEllipse))]
+    [XmlInclude(typeof(UBoundingRect))]
+    [XmlInclude(typeof(UPLMN))]
     public abstract class UShape
     {
         //public static USENDINGTYPES operator !=(USENDINGTYPES s, long n) { return new USENDINGTYPES(); }
@@ -1168,21 +1172,23 @@ namespace com.ums.UmsParm
                 return false;
             }
         }
+        public String Serialize()
+        {
+            XmlSerializer s = new XmlSerializer(typeof(UEllipse), "http://ums.no/ws/common/parm");
+            MemoryStream m = new MemoryStream();
+            XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
+            s.Serialize(xmlWriter, this);
+            String xml = Encoding.UTF8.GetString(m.ToArray());
+            // Skip illegal characters before the first < and after the last >
+            return xml.Substring(xml.IndexOf('<'), (xml.LastIndexOf('>')));
+        }
+
         public static UEllipse Deserialize(String xml)
         {
-            UEllipse cob = new UEllipse();
             StringReader read = new StringReader(xml);
-            XmlSerializer serializer = new XmlSerializer(cob.GetType());
-            XmlReader reader = new XmlTextReader(read);
-            try
-            {
-                cob = (UEllipse)serializer.Deserialize(reader);
-                return cob;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            XmlSerializer serializer = new XmlSerializer(typeof(UEllipse), "http://ums.no/ws/common/parm");
+            var xmlReader = new XmlTextReader(read);
+            return (UEllipse)serializer.Deserialize(xmlReader);
         }
     }
 
@@ -1293,33 +1299,20 @@ namespace com.ums.UmsParm
     {
         public static UPLMN Deserialize(String xml)
         {
-            UPLMN cob = new UPLMN();
             StringReader read = new StringReader(xml);
-            XmlSerializer serializer = new XmlSerializer(cob.GetType());
-            XmlReader reader = new XmlTextReader(read);
-            try
-            {
-                cob = (UPLMN)serializer.Deserialize(reader);
-                return cob;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            XmlSerializer serializer = new XmlSerializer(typeof(UPLMN), "http://ums.no/ws/common/parm");
+            var xmlReader = new XmlTextReader(read);
+            return (UPLMN)serializer.Deserialize(xmlReader);
         }
         public String Serialize()
         {
-            XmlSerializer s = new XmlSerializer(typeof(UPLMN));
-            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-            xmlnsEmpty.Add("", "");
+            XmlSerializer s = new XmlSerializer(typeof(UPLMN), "http://ums.no/ws/common/parm");
             MemoryStream m = new MemoryStream();
             XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
-            s.Serialize(xmlWriter, this, xmlnsEmpty);
-            String xml;
-            xml = Encoding.UTF8.GetString(m.GetBuffer());
-            xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));
-            xml = xml.Substring(0, (xml.LastIndexOf(Convert.ToChar(62)) + 1));
-            return xml;
+            s.Serialize(xmlWriter, this);
+            String xml = Encoding.UTF8.GetString(m.ToArray());
+            // Skip illegal characters before the first < and after the last >
+            return xml.Substring(xml.IndexOf('<'), (xml.LastIndexOf('>')));
         }
         protected override string CreateXml(ref USimpleXmlWriter d)
         {
@@ -1411,36 +1404,21 @@ namespace com.ums.UmsParm
 
         public static UPolygon Deserialize(String xml)
         {
-            UPolygon cob = new UPolygon();
             StringReader read = new StringReader(xml);
-            XmlSerializer serializer = new XmlSerializer(cob.GetType());
-            XmlReader reader = new XmlTextReader(read);
-            try
-            {
-                cob = (UPolygon)serializer.Deserialize(reader);
-                return cob;
-            }
-            catch (Exception e)
-            {
-                String s = e.Message;
-                throw;
-            }
+            XmlSerializer serializer = new XmlSerializer(typeof(UPolygon), "http://ums.no/ws/common/parm");
+            var xmlReader = new XmlTextReader(read);
+            return (UPolygon) serializer.Deserialize(xmlReader);
         }
-
 
         public String Serialize()
         {
-            XmlSerializer s = new XmlSerializer(typeof(UPolygon));
-            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-            xmlnsEmpty.Add("", "");
+            XmlSerializer s = new XmlSerializer(typeof(UPolygon), "http://ums.no/ws/common/parm");
             MemoryStream m = new MemoryStream();
             XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
-            s.Serialize(xmlWriter, this, xmlnsEmpty);
-            String xml;
-            xml = Encoding.UTF8.GetString(m.GetBuffer());
-            xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));
-            xml = xml.Substring(0, (xml.LastIndexOf(Convert.ToChar(62)) + 1));
-            return xml;
+            s.Serialize(xmlWriter, this);
+            String xml = Encoding.UTF8.GetString(m.ToArray());
+            // Skip illegal characters before the first < and after the last >
+            return xml.Substring(xml.IndexOf('<'), (xml.LastIndexOf('>')));
         }
 
         [XmlElement("polypoint")]
