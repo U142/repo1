@@ -2,6 +2,7 @@ package no.ums.pas.tas;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.LonLat;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -1652,11 +1653,14 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(ll==null)
 					continue;
 				UMapPoint screen = new UMapPoint();
-				Dimension d = Variables.getNavigation().coor_to_screen(ll.getLon(), ll.getLat(), true);
-				if(d!=null)
+            	Point pointPin = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(ll.getLon(), ll.getLat()));
+            	Point topLeft = Variables.getMapFrame().getZoomLookup().getPoint(Variables.getMapFrame().getMapModel().getTopLeft());
+            	Point p = new Point(pointPin.x - topLeft.x, pointPin.y - topLeft.y);
+            	Rectangle scrRect = new Rectangle(Variables.getMapFrame().getSize());
+				if(scrRect.contains(p))
 				{
-					screen.setLon(d.width);
-					screen.setLat(d.height);
+					screen.setLon(p.getX());
+					screen.setLat(p.getY());
 				}
 				else
 				{
@@ -1673,12 +1677,17 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(ll==null)
 					continue;
 				UMapPoint screen = new UMapPoint();
-				Dimension d = Variables.getNavigation().coor_to_screen(ll.getLon(), ll.getLat(), false);
-				if(d!=null)
+            	Point pointPin = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(ll.getLon(), ll.getLat()));
+            	Point topLeft = Variables.getMapFrame().getZoomLookup().getPoint(Variables.getMapFrame().getMapModel().getTopLeft());
+            	Point p = new Point(pointPin.x - topLeft.x, pointPin.y - topLeft.y);
+            	Rectangle scrRect = new Rectangle(Variables.getMapFrame().getSize());
+				if(scrRect.contains(p))
 				{
-					screen.setLon(d.width);
-					screen.setLat(d.height);
+					screen.setLon(p.getX());
+					screen.setLat(p.getY());
 				}
+				else
+					screen = null;
 				cont.setWeightpointScreen(screen);				
 			}
 		}	
