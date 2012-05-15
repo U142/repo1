@@ -64,6 +64,9 @@ public class StatusListObject extends Object implements TooltipItem {
 		else if(type==5) {
             return Localization.l("main_status_channel_tas");
         }
+        else if(type==7) {
+            return Localization.l("main_status_channel_cb");
+        }
 		return "Unknown";		
 	}
 	
