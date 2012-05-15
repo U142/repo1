@@ -421,8 +421,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 		}
 		if(m_resendpanel == null || low < 8000) {
-        m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
-							m_settings,
+	        m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
+								m_settings,
                 Localization.l("main_sending_settings_tooltip"));
 		}
 		int tmp = obj.get_sendproperties().get_addresstypes();
