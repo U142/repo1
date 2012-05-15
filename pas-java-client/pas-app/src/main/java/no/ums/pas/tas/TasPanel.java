@@ -218,6 +218,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				prevsel = (CommonTASListItem)dmtn;
 				CommonTASListItem ctli = (CommonTASListItem)dmtn;
 				ctli.b_selected = true;
+				setSelectedNode(ctli);
 				if(dmtn.getUserObject().getClass().equals(ULBACOUNTRY.class))
 				{
 					ULBACOUNTRY c = (ULBACOUNTRY)dmtn.getUserObject();
@@ -301,9 +302,9 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 					column.setCellRenderer(new DefaultTableCellRenderer() {
 						public static final long serialVersionUID = 1;
 					    public Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-					        Component renderer =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);    //---
-				        	//renderer.setBackground(SystemColor.control);
-				        	
+					        
+					    	Component renderer =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);    //---
+					    	
 					        Object o = (CommonTASListItem)m_tbl_list.getValueAt(row, 0);
 					        if(selected_node!=null && selected_node.equals(o))
 					        {
@@ -313,6 +314,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				        	{
 				        		CommonTASListItem item = (CommonTASListItem)m_tbl_list.getValueAt(row, 0);				        		
 				        		renderer.setForeground(item.getOutdatedColor());
+				        		renderer.setBackground(Color.red);
 				        	}
 				        	else if(n_col==0)
 				        	{
@@ -411,6 +413,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 							//this.setForeground(new java.awt.Color(255,0,0));
 						}
 						m_tbl_list.m_tbl.setRowHeight(getRowHeight());
+
 						return m_tbl_list.m_tbl;
 					}
 					else if(o.getClass().equals(ULBACONTINENT.class)) {
@@ -425,7 +428,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						int remaining_width = w - getSize().width - colwidths[0] - 30 + (pane.getVerticalScrollBar().isVisible() ? pane.getVerticalScrollBar().getWidth() : 0);
 						//this.setSize(new Dimension(w, 30));
 
-						Color c1 = SystemColor.controlHighlight;
+						Color c1 = SystemColor.control;
 						int transparency = 255;
 						if(leaf)
 							transparency = 127;
@@ -433,7 +436,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						Color item_bg = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 255);
 						this.setBackground(item_bg);
 						this.setOpaque(true);
-						this.setText("<html><tr><td width=" + (width) + ">" + c.getSzName() + "</td><td>" + c.getNTouristcount() + "</td></tr></html>");
+						this.setText("<html><tr><td width=" + (colwidths[0]+15) + ">" + c.getSzName() + "</td><td width=" + (colwidths[1]+15) + ">" + c.getNTouristcount() + "</td><td width="+ (colwidths[2]) +"></td></tr></html>");
 						return this;
 					}
 					setFont(UIManager.getFont("Tree.font"));			

@@ -122,6 +122,7 @@ public class StatusSending {
 				percent = 0;
 			break;
 		case 4: // LBA
+		case 5: // TAS
 			if(m_lba != null && (this.m_lba.n_status == LBASEND.LBASTATUS_CANCELLED || this.m_lba.n_status == LBASEND.LBASTATUS_FINISHED || this.m_lba.n_status > 42000 || this.m_lba.n_status == -1))
 				percent = 100.0f;
 			else if(m_lba != null) {
@@ -138,8 +139,6 @@ public class StatusSending {
 			}
 			else
 				percent = 0;
-			break;
-		case 5: // TAS
 			break;
 		}
 		return percent;
@@ -1050,7 +1049,9 @@ public class StatusSending {
 			if(get_type()==5) {
 				//pnl_cell.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/2));
 				pnl_cell.setPreferredSize(new Dimension(w, (getHeight()/2)+40));
-				pnl_lbasmsreply.setPreferredSize(new Dimension(w, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/3));
+				//pnl_lbasmsreply.setPreferredSize(new Dimension(w, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/3));
+				pnl_lbasmsreply.setPreferredSize(new Dimension(w, (getHeight()/2)-40-iconPanelSize-100));
+
 			}
 			else if(get_type()==6) { // Centric
 				pnl_pa.setPreferredSize(new Dimension(w, (getHeight()-iconPanelSize)));

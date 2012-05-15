@@ -51,10 +51,15 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		FillSMSTemplates();
 		if(parentwin.get_sendobject().get_sendproperties() != null) {
 			m_txt_messagetext.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_message());
-			if(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc().trim().length()>0)
+			String oadc = parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc().trim();
+			if(oadc.length()>0 && !oadc.equals("N/A"))
+			{
 				m_txt_oadc_text.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc());
+			}
 			else
-				m_txt_oadc_text.setText(sz_default_oadc);				
+			{
+				m_txt_oadc_text.setText(sz_default_oadc);
+			}
 		}
 		else {
 			//m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
