@@ -628,25 +628,31 @@ namespace com.ums.UmsParm
             {
                 String szSQL = String.Format("SELECT l_refno, isnull(l_type, 0), isnull(l_parentrefno,0) FROM BBPROJECT_X_REFNO WHERE l_projectpk={0} AND l_type in (0,2)", project.sz_projectpk);
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                List<MDVSENDINGINFO> sendingInfos = new List<MDVSENDINGINFO>();
                 while (rs.Read())
                 {
-                    int n_refno = rs.GetInt32(0);
-                    int n_linktype = rs.GetInt32(1);
-                    int n_parentrefno = rs.GetInt32(2);
                     MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-
+                    mdv.l_refno = rs.GetInt32(0);
+                    mdv.l_linktype = rs.GetInt32(1);
+                    mdv.l_resendrefno = rs.GetInt32(2);
+                    sendingInfos.Add(mdv);
+                }
+                rs.Close();
+                foreach(MDVSENDINGINFO mdv in sendingInfos)
+                {
                     try
                     {
-                        if (GetSendingInfo(n_refno, ref mdv))
+                        MDVSENDINGINFO mdvSendinginfo = new MDVSENDINGINFO();
+                        if (GetSendingInfo(mdv.l_refno, ref mdvSendinginfo))
                         {
-                            mdv.l_linktype = n_linktype;
-                            mdv.l_resendrefno = n_parentrefno;
-                            project.mdvsendinginfo.Add(mdv);
+                            mdvSendinginfo.l_linktype = mdv.l_linktype;
+                            mdvSendinginfo.l_resendrefno = mdv.l_resendrefno;
+                            project.mdvsendinginfo.Add(mdvSendinginfo);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
+                        ULog.error(e.ToString());
                     }
 
                 }
