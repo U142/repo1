@@ -9,39 +9,22 @@ import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.send.AddressCount;
-import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.SendPropertiesTAS;
-import no.ums.pas.send.TTSLang;
+import no.ums.pas.send.*;
 import no.ums.pas.sound.SoundFile;
 import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusCodeList;
 import no.ums.pas.status.StatusItemObject;
-import no.ums.pas.status.StatusSending.ResendPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Utils;
 import no.ums.pas.ums.tools.calendarutils.SchedCalendar.Day;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -271,9 +254,11 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	public SendWindow(SendController controller, SendObject obj, 
 			Sending_Cell_Broadcast_text cb_info,
 			Sending_SMS_Broadcast_text sms_info) {
-		//super(controller.get_pas());
-		super();
+
+		super(PAS.get_pas(),true);
 		this.setIconImage(PAS.get_pas().getIconImage());
+
+
 
 		PAS.get_pas().get_statuscontroller().set_pause(true);
 		m_sendobject = obj;
@@ -281,13 +266,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_sendobject.set_sendwindow(this);
 		//generate_sendingid();
 		load_background();
-		try {
-			this.setAlwaysOnTop(true);
-			//this.setAlwaysOnTop(false);
-			//this.setModal(false);
-		} catch(Exception e) {
-            Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
-		}
+
 
 		setWindowTitle(m_sendobject.get_sendproperties().get_sendingname());
 		setLayout(new BorderLayout());
@@ -938,7 +917,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						public void Complete(boolean bStatusClosed) {
 							if(bStatusClosed)
 							{
-								PAS.get_pas().get_statuscontroller().retrieve_statusitems(null, get_sendobject().get_sendproperties().get_projectpk(), get_sendobject().get_sendproperties().get_refno(), true);
+								PAS.get_pas().get_statuscontroller().retrieve_statusitems(get_sendobject().get_sendproperties().get_projectpk(), get_sendobject().get_sendproperties().get_refno(), true);
 								setVisible(false);
 							}							
 						}
@@ -968,7 +947,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
 		frame.setLocation(p);
 		frame.setVisible(true);
-		frame.setAlwaysOnTop(true);
+		//frame.setAlwaysOnTop(true);
 		return frame;
 	}
 	

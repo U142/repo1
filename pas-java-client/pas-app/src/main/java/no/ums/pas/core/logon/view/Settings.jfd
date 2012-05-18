@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_20" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_29" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void method="setProperty"> 
    <string>i18n.bundlePackage</string> 
@@ -21,17 +21,13 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space ::436:x, comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p, space :::p}, seq l {space :::p, comp tabbedPane1:::p:637:p, space :::x}}</string> 
+        <string>par l {seq {space ::439:x, comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p, space :::p}, seq l {space :::p, comp tabbedPane1:::p:637:p, space :::x}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::p, comp tabbedPane1::::426:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, comp tabbedPane1::::434:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
        </void> 
       </object> 
-      <void method="setProperty"> 
-       <string>alwaysOnTop</string> 
-       <boolean>true</boolean> 
-      </void> 
       <void method="setProperty"> 
        <string>modalityType</string> 
        <object class="java.lang.Enum" method="valueOf"> 
@@ -118,7 +114,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::332:x}}</string> 
+            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::346:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -201,11 +197,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::366:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::371:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}}, space :::p}}</string> 
+            <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::359:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::366:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::165:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::227:x}, space :::p}}</string> 
+            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::192:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::254:x}, space :::p}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -518,11 +514,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::292:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::91:x}}</string> 
+            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::288:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::86:x}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::300:x}}</string> 
+            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::320:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -666,11 +662,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::232:x:1, comp lblMailAddress::l::232:x:1, comp lblMailDisplayname::l::232:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer::::161:x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string> 
+            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::225:x:1, comp lblMailAddress::l::225:x:1, comp lblMailDisplayname::l::225:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer::::161:x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::290:x}}</string> 
+            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::305:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -792,11 +788,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:612:x:1}}, space :::p}}</string> 
+            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:614:x:1}}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p:178:p, space ::42:x}}</string> 
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::66:x}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -819,12 +815,7 @@
             <void method="setProperty"> 
              <string>border</string> 
              <object class="javax.swing.border.TitledBorder"> 
-              <null/> 
               <string>Auto startup</string> 
-              <int>4</int> 
-              <int>0</int> 
-              <null/> 
-              <null/> 
              </object> 
             </void> 
             <void property="name"> 
@@ -860,7 +851,7 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::246:x}}</string> 
+              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::243:x}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
@@ -870,12 +861,7 @@
             <void method="setProperty"> 
              <string>border</string> 
              <object class="javax.swing.border.TitledBorder"> 
-              <null/> 
               <string>LBA</string> 
-              <int>4</int> 
-              <int>0</int> 
-              <null/> 
-              <null/> 
              </object> 
             </void> 
             <void method="auxiliary"> 
@@ -931,18 +917,13 @@
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
-              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable::::33:x, comp toggleBlocklist::::33:x:1, comp toggleCompanyMobile::t::33:x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba::::33:x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string> 
+              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable:::::x, comp toggleBlocklist:::::x:1, comp toggleCompanyMobile::t:::x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba:::::x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string> 
              </void> 
             </object> 
             <void method="setProperty"> 
              <string>border</string> 
              <object class="javax.swing.border.TitledBorder"> 
-              <null/> 
               <string>i18nKey=main_pas_settings_misc_auto_channel_select</string> 
-              <int>4</int> 
-              <int>0</int> 
-              <null/> 
-              <null/> 
              </object> 
             </void> 
             <void property="name"> 

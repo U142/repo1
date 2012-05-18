@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 /**
  * @author User #3
  */
-public class AddressSearchDlg extends JFrame {
+public class AddressSearchDlg extends JDialog {
 
     private static final Log log = UmsLog.getLogger(AddressSearchDlg.class);
 	
@@ -382,9 +382,8 @@ public class AddressSearchDlg extends JFrame {
         addressSearchModel1 = new AddressSearchModel();
 
         //======== this ========
-        setAlwaysOnTop(true);
         setTitle(bundle.getString("adrsearch_dlg_title"));
-        setIconImage(null);
+        setModal(true);
         Container contentPane = getContentPane();
 
         //---- lblAddress ----
@@ -411,93 +410,93 @@ public class AddressSearchDlg extends JFrame {
         //======== scrollPane1 ========
         {
 
-			//---- tblResults ----
-			tblResults.setModel(new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"Hit", "Address", "Region", "Lon", "Lat"
-				}
-			) {
-				boolean[] columnEditable = new boolean[] {
-					false, false, false, false, false
-				};
-				@Override
-				public boolean isCellEditable(int rowIndex, int columnIndex) {
-					return columnEditable[columnIndex];
-				}
-			});
-			{
-				TableColumnModel cm = tblResults.getColumnModel();
-				cm.getColumn(0).setResizable(false);
-				cm.getColumn(3).setResizable(false);
-				cm.getColumn(4).setResizable(false);
-			}
-			tblResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			tblResults.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					tblResultsMouseClicked(e);
-				}
-			});
-			scrollPane1.setViewportView(tblResults);
-		}
+            //---- tblResults ----
+            tblResults.setModel(new DefaultTableModel(
+                new Object[][] {
+                },
+                new String[] {
+                    "Hit", "Address", "Region", "Lon", "Lat"
+                }
+            ) {
+                boolean[] columnEditable = new boolean[] {
+                    false, false, false, false, false
+                };
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return columnEditable[columnIndex];
+                }
+            });
+            {
+                TableColumnModel cm = tblResults.getColumnModel();
+                cm.getColumn(0).setResizable(false);
+                cm.getColumn(3).setResizable(false);
+                cm.getColumn(4).setResizable(false);
+            }
+            tblResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tblResults.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    tblResultsMouseClicked(e);
+                }
+            });
+            scrollPane1.setViewportView(tblResults);
+        }
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(lblPostCode, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(lblCountry, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(lblRegion, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(lblAddress, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtPlace, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
                                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                                        .addGroup(contentPaneLayout.createParallelGroup()
-                                                .addComponent(lblPostCode, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                                .addComponent(lblCountry, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                                .addComponent(lblRegion, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                                .addComponent(lblAddress, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(contentPaneLayout.createParallelGroup()
-                                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                                        .addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(txtPlace, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
-                                                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                                                        .addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))
-                                                .addComponent(txtRegion, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
-                                                .addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(btnSearch, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
+                                    .addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtRegion, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                                .addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnSearch, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblAddress)
-                                .addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtPlace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblPostCode)
-                                .addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtRegion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblRegion))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblCountry)
-                                .addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(13, 13, 13)
-                        .addComponent(btnSearch)
-                        .addGap(18, 18, 18)
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblAddress)
+                        .addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtPlace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblPostCode)
+                        .addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtRegion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblRegion))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblCountry)
+                        .addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(13, 13, 13)
+                    .addComponent(btnSearch)
+                    .addGap(18, 18, 18)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         contentPaneLayout.linkSize(SwingConstants.VERTICAL, new Component[] {txtPlace, txtPostCode});
         pack();

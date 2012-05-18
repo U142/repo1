@@ -8,7 +8,7 @@ import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusListObject;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class OpenStatusFrame extends JFrame implements ActionListener {
+public class OpenStatusFrame extends JDialog implements ActionListener {
 	public static final long serialVersionUID = 1;
     //private static final Log logger = UmsLog.getLogger(OpenStatusFrame.class);
     private SearchPanelStatusList m_statuspanel;
@@ -26,7 +26,7 @@ public class OpenStatusFrame extends JFrame implements ActionListener {
 	
 	public OpenStatusFrame()
 	{
-        super(Localization.l("mainmenu_status_open"));
+        super(PAS.get_pas(), Localization.l("mainmenu_status_open"),true);
 		//m_statuscontroller = controller;
 		this.setIconImage(PAS.get_pas().getIconImage());
 		Dimension dim = new Dimension(800, 400);

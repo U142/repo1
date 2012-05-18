@@ -507,7 +507,7 @@ public class SendController implements ActionListener {
 					TasStruct ts = sending.get_shape().typecast_tas();
 					tas.set_resend(sending.get_refno());
 					obj.set_sendproperties(tas);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					tas.setCountryList(ts.getCountryList());
 					tas.setSmsInStats(sending.getSmsInStats());
 					tas.set_sms_broadcast_message(sending.get_sms_message_text());

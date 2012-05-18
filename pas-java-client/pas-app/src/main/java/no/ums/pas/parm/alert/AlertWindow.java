@@ -124,15 +124,18 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		super(PAS.get_pas().get_sendcontroller());
 		this.setIconImage(PAS.get_pas().getIconImage());
 
+        try {
+            this.setModal(false);
+            this.setAlwaysOnTop(true);
+        } catch(Exception e) {
+            Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
+        }
+
 		edit = false;
 		m_sendobject = obj;
 		load_background();
 		//register window with toolbar
-		try {
-			this.setAlwaysOnTop(true);
-		} catch(Exception e) {
-            Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
-		}
+
 				
 		setLayout(new BorderLayout());
 		int n_width = 770, n_height = 550;
@@ -364,7 +367,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
 		frame.setLocation(p);
 		frame.setVisible(true);
-		frame.setAlwaysOnTop(true);
+		//frame.setAlwaysOnTop(true);
 		return frame;
 	}
 	

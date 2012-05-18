@@ -62,7 +62,6 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		this.setIconImage(PAS.get_pas().getIconImage());
 		try
 		{
-			this.setAlwaysOnTop(true);
 			this.setModal(true);
 		}
 		catch (Exception e) {

@@ -35,10 +35,7 @@ import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -996,7 +993,7 @@ public class StatusController extends Controller implements ActionListener {
 		m_statuslistframe.open(); 
 	}
 
-	public boolean retrieve_statuslist(JFrame parent_frame) {
+	public boolean retrieve_statuslist(JDialog parent_frame) {
 		// get_xmlstatuslist().start(/*"PAS_getstatuslist_zipped.asp?"*/"",
 		// true); //, parent_frame); //l_companypk=" +
 		// PAS.get_pas().get_userinfo().get_comppk()
@@ -1007,8 +1004,17 @@ public class StatusController extends Controller implements ActionListener {
 
 	boolean b_newrefno = false;
 
-	public boolean retrieve_statusitems(JFrame parent_frame,
-			final String sz_projectpk, final int n_refno, boolean b_init) {
+    public boolean retrieve_statusitems(JFrame parent_frame,
+                                        final String sz_projectpk, final int n_refno, boolean b_init) {
+        return retrieve_statusitems(sz_projectpk, n_refno, b_init);
+    }
+
+    public boolean retrieve_statusitems(JDialog parent_frame,
+                                        final String sz_projectpk, final int n_refno, boolean b_init) {
+        return retrieve_statusitems(sz_projectpk, n_refno, b_init);
+    }
+
+	public boolean retrieve_statusitems(final String sz_projectpk, final int n_refno, boolean b_init) {
 		setOpen();
 		if (b_init) {
 			new Thread("StatusController thread") {
@@ -1047,7 +1053,7 @@ public class StatusController extends Controller implements ActionListener {
 		return true;
 	}
 
-	public boolean exec_statusitems(JFrame parent_frame, boolean b_auto) {
+	public boolean exec_statusitems(JDialog parent_frame, boolean b_auto) {
 		// get_xmlstatusitems().start("PAS_getstatusitems_zipped.asp?l_projectpk="
 		// + get_current_projectpk() + "&l_refno=" + get_current_refno() +
 		// "&n_item_filter=" + get_item_filter() + "&n_date_filter=" +

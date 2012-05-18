@@ -16,7 +16,7 @@
    <object class="com.jformdesigner.model.FormRoot"> 
     <void method="add"> 
      <object class="com.jformdesigner.model.FormWindow"> 
-      <string>javax.swing.JFrame</string> 
+      <string>javax.swing.JDialog</string> 
       <object class="com.jformdesigner.model.FormLayoutManager"> 
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
@@ -33,10 +33,6 @@
        <int>0</int> 
       </void> 
       <void method="setProperty"> 
-       <string>alwaysOnTop</string> 
-       <boolean>true</boolean> 
-      </void> 
-      <void method="setProperty"> 
        <string>title</string> 
        <object class="com.jformdesigner.model.FormMessage"> 
         <null/> 
@@ -44,8 +40,8 @@
        </object> 
       </void> 
       <void method="setProperty"> 
-       <string>iconImage</string> 
-       <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
+       <string>modal</string> 
+       <boolean>true</boolean> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 

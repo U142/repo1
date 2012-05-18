@@ -1,26 +1,10 @@
 package no.ums.pas.core.logon.view;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.swing.AbstractButton;
-import javax.swing.JComboBox;
-import javax.swing.SwingWorker;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.tree.DefaultTreeModel;
-
-import org.geotools.data.ows.Layer;
-import org.jdesktop.beansbinding.validation.VisibleValidation;
-
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.UserInfo;
@@ -33,6 +17,14 @@ import no.ums.pas.maps.MapLoader;
 import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendOptionToolbar;
+import org.geotools.data.ows.Layer;
+
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsCtrl implements ISettingsUpdate {
     private static final Log log = UmsLog.getLogger(SettingsCtrl.class);
@@ -45,10 +37,10 @@ public class SettingsCtrl implements ISettingsUpdate {
     {
     	dlg = new Settings(null, this);
     	dlg.setIconImage(ImageFetcher.getImage("pas_appicon_16.png"));
-    	initializeGui(settings, mailaccount, userinfo);
+        dlg.setModal(modal);
+        initializeGui(settings, mailaccount, userinfo);
     	dlg.initValues();
     	dlg.setLocationRelativeTo(parent);
-    	dlg.setModal(modal);
     	dlg.setVisible(true);
     }
     

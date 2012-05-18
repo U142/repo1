@@ -4,32 +4,30 @@
 
 package no.ums.pas.core.logon.view;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
-import java.util.regex.Pattern;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.text.JTextComponent;
-
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.pas.PAS;
-import no.ums.pas.core.Variables;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.WmsLayerTree;
 import no.ums.pas.localization.Localization;
-import no.ums.pas.send.*;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.send.SendOptionToolbar.ADRGROUPS;
-
-import org.jdesktop.beansbinding.*;
+import no.ums.pas.send.ToggleAddresstype;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
-import org.jdesktop.beansbinding.converters.*;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.converters.StringToInt;
 import org.jdesktop.beansbinding.validation.VisibleValidation;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.util.ResourceBundle;
 
 /**
  * @author User #2
@@ -485,8 +483,6 @@ public class Settings extends JDialog {
 		stringToInt1 = new StringToInt();
 
 		//======== this ========
-		setAlwaysOnTop(true);
-		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		setTitle(bundle.getString("mainmenu_settings"));
 		Container contentPane = getContentPane();
 
