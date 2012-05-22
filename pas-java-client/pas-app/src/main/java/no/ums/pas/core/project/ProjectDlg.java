@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 //import Core.MainUI.*;
 
-public class ProjectDlg extends JDialog implements ComponentListener, WindowListener {
+public class ProjectDlg extends JFrame implements ComponentListener, WindowListener {
 
     private static final Log log = UmsLog.getLogger(ProjectDlg.class);
 
@@ -58,14 +58,8 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	
 	public ProjectDlg(JFrame parent, ActionListener callback, String sz_callback_action, boolean bNewSending) {
 		//super(parent, "Create/Open Project", true);
-        super(parent, Localization.l("mainmenu_file_project"));
+        super(Localization.l("mainmenu_file_project"));
 		this.setIconImage(PAS.get_pas().getIconImage());
-		try
-		{
-			this.setModal(true);
-		}
-		catch (Exception e) {
-		}
 
 		m_parent = parent;
 		m_callback = callback;

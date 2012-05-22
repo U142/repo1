@@ -16,7 +16,7 @@
    <object class="com.jformdesigner.model.FormRoot"> 
     <void method="add"> 
      <object class="com.jformdesigner.model.FormWindow"> 
-      <string>javax.swing.JDialog</string> 
+      <string>javax.swing.JFrame</string> 
       <object class="com.jformdesigner.model.FormLayoutManager"> 
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
@@ -38,10 +38,6 @@
         <null/> 
         <string>adrsearch_dlg_title</string> 
        </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>modal</string> 
-       <boolean>true</boolean> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 

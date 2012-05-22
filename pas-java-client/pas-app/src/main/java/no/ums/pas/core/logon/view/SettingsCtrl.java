@@ -37,7 +37,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     {
     	dlg = new Settings(null, this);
     	dlg.setIconImage(ImageFetcher.getImage("pas_appicon_16.png"));
-        dlg.setModal(modal);
+
         initializeGui(settings, mailaccount, userinfo);
     	dlg.initValues();
     	dlg.setLocationRelativeTo(parent);

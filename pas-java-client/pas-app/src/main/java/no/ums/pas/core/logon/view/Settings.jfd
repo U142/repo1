@@ -16,7 +16,7 @@
    <object class="com.jformdesigner.model.FormRoot"> 
     <void method="add"> 
      <object class="com.jformdesigner.model.FormWindow"> 
-      <string>javax.swing.JDialog</string> 
+      <string>javax.swing.JFrame</string> 
       <object class="com.jformdesigner.model.FormLayoutManager"> 
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
@@ -28,13 +28,6 @@
         <string>par l {seq t {space :::p, comp tabbedPane1::::434:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
        </void> 
       </object> 
-      <void method="setProperty"> 
-       <string>modalityType</string> 
-       <object class="java.lang.Enum" method="valueOf"> 
-        <class>java.awt.Dialog$ModalityType</class> 
-        <string>APPLICATION_MODAL</string> 
-       </object> 
-      </void> 
       <void method="setProperty"> 
        <string>title</string> 
        <object class="com.jformdesigner.model.FormMessage"> 

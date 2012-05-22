@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 /**
  * @author User #3
  */
-public class AddressSearchDlg extends JDialog {
+public class AddressSearchDlg extends JFrame {
 
     private static final Log log = UmsLog.getLogger(AddressSearchDlg.class);
 	
@@ -383,7 +383,6 @@ public class AddressSearchDlg extends JDialog {
 
         //======== this ========
         setTitle(bundle.getString("adrsearch_dlg_title"));
-        setModal(true);
         Container contentPane = getContentPane();
 
         //---- lblAddress ----
