@@ -301,7 +301,21 @@ namespace com.ums.UmsParm
              * if this is a resend, then reorganize resend statuscodes
              * 
              */
+
+            // Used to set schedule now if it's missing
+            DateTime now = DateTime.Now;
             
+            if (sending.n_scheddate == -1)
+            {
+
+                sending.n_scheddate = long.Parse(now.ToString("yyyyMMdd"));
+            }
+            if (sending.n_schedtime == -1)
+            {
+
+                sending.n_schedtime = long.Parse(now.ToString("HHmmss"));
+            }
+
             db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
             resend_tas.setSendingInfo(ref smssendinginfo);
             resend_tas.createShape(ref sending);
