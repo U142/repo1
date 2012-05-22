@@ -117,7 +117,7 @@ public class Sending_AddressResend extends Sending_AddressPanel implements Compo
 		}
 
 		protected void onMouseLClick(int n_row, int n_col, Object[] rowcontent, Point p) {
-			if(get_statuscodes().get_table().isEnabled())
+			//if(get_statuscodes().get_table().isEnabled())
 				checkStatus(n_col, rowcontent);
 		}
 

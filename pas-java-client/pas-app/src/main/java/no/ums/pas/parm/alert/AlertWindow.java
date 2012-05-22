@@ -125,7 +125,6 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		this.setIconImage(PAS.get_pas().getIconImage());
 
         try {
-            this.setModal(false);
             this.setAlwaysOnTop(true);
         } catch(Exception e) {
             Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);

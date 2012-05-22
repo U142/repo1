@@ -35,7 +35,7 @@ import java.util.SortedSet;
 
 
 
-public class SendWindow extends JDialog implements ActionListener, ChangeListener, WindowListener {
+public class SendWindow extends JFrame implements ActionListener, ChangeListener, WindowListener {
 	public static final long serialVersionUID = 1;
     private static final Log log = UmsLog.getLogger(SendWindow.class);
 
@@ -255,7 +255,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			Sending_Cell_Broadcast_text cb_info,
 			Sending_SMS_Broadcast_text sms_info) {
 
-		super(PAS.get_pas(),true);
+		super();
 		this.setIconImage(PAS.get_pas().getIconImage());
 
 
