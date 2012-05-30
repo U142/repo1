@@ -224,11 +224,14 @@ namespace com.ums.PAS.Status
                             }
                             else if (shape.GetType().Equals(typeof(UMunicipalShape)) && shape.municipal().m_bounds!=null)
                             {
+                                UMunicipalShape s = (UMunicipalShape)shape;
+                                var adrdb = new UAdrDb(m_logon.sz_stdcc, 120);
+                                var mapbounds = adrdb.GetMunicipalBounds(s.m_municipals);
                                 bounding = new UBoundingRect();
-                                bounding._left = shape.municipal().m_bounds.l_bo;
-                                bounding._right = shape.municipal().m_bounds.r_bo;
-                                bounding._top = shape.municipal().m_bounds.u_bo;
-                                bounding._bottom = shape.municipal().m_bounds.b_bo;
+                                bounding._left = mapbounds.l_bo;
+                                bounding._right = mapbounds.r_bo;
+                                bounding._top = mapbounds.u_bo;
+                                bounding._bottom = mapbounds.b_bo;
                             }
                         }
                     }
