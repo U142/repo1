@@ -76,19 +76,31 @@ namespace com.ums.PAS.Database
             }
         }
 
+        public UMapBounds GetMunicipalBounds(UMunicipalShape mun)
+        {
+            return GetMunicipalBounds(mun);
+        }
+
         public UMapBounds GetMunicipalBounds(ref UMUNICIPALSENDING mun)
         {
+            var mapBounds = GetMunicipalBounds(ref mun);
+            mun.mapbounds = mapBounds;
+            return mapBounds;
+        }
+
+        public UMapBounds GetMunicipalBounds(List<UMunicipalDef> municipals)
+        {
             UMapBounds b = new UMapBounds();
-            if (mun.municipals == null)
+            if (municipals == null)
                 return b;
-            if (mun.municipals.Count <= 0)
+            if (municipals.Count <= 0)
                 return b;
             String szMunicipal = "";
-            for (int i = 0; i < mun.municipals.Count; i++)
+            for (int i = 0; i < municipals.Count; i++)
             {
                 if (i > 0)
                     szMunicipal += ", ";
-                szMunicipal += mun.municipals[i].sz_municipalid;
+                szMunicipal += municipals[i].sz_municipalid;
             }
             /*String szSQL = String.Format("SELECT MIN(lon), MAX(lon), MIN(lat), MAX(lat) FROM " +
                                         "ADR_KONSUM WHERE KOMMUNENR IN ({0}) AND not lon=0 AND not lat=0",
@@ -147,7 +159,6 @@ namespace com.ums.PAS.Database
                 //b.r_bo = avg_lat + Math.Abs(stddev_lat);
                 //b.b_bo = avg_lon - Math.Abs(stddev_lon);
                 //b.u_bo = avg_lon + Math.Abs(stddev_lon);
-                mun.mapbounds = b;
                 rs.Close();
             }
             catch (Exception)
