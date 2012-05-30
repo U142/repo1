@@ -25,7 +25,11 @@
                 <groupId>org.codehaus.mojo.webstart</groupId>
                 <artifactId>webstart-maven-plugin</artifactId>
             </plugin>
-			<plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>no.ums.maven</groupId>
                 <artifactId>maven-ums-plugin</artifactId>
                 <executions>
