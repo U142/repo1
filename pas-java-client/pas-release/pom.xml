@@ -38,9 +38,6 @@
 							</goals>
 						</execution>
 					</executions>
-					<configuration>
-						<dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory> <!-- required, you have to specify this path -->
-					</configuration>
 				</plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo.webstart</groupId>
