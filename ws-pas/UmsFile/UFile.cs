@@ -41,9 +41,14 @@ namespace com.ums.UmsFile
 
         public void MoveOperation(UFile dest, bool b_overwrite)
         {
+            // PLF-478
+            // To avoid parser starting before file is completed copying
+            string temp = dest.full().Substring(0, dest.full().LastIndexOf('.')) + ".tmp";
+
             try
             {
-                File.Copy(this.full(), dest.full(), b_overwrite);
+                File.Copy(this.full(), temp, b_overwrite);
+                File.Move(temp, dest.full());
             }
             catch (Exception e)
             {
@@ -76,9 +81,14 @@ namespace com.ums.UmsFile
 
         public void CopyOperation(UFile dest)
         {
+            // PLF-478
+            // To avoid parser starting before file is completed copying
+            string temp = dest.full().Substring(0, dest.full().LastIndexOf('.')) + ".tmp";
+
             try
             {
-                File.Copy(this.full(), dest.full());
+                File.Copy(this.full(), temp);
+                File.Move(temp, dest.full());
             }
             catch (Exception e)
             {
