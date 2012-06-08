@@ -75,7 +75,15 @@ public final class MapComponent extends JComponent {
             boolean canDraw;
             Polygon restricionPoly = MapTools.createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
 
-            canDraw = restricionPoly != null && (!restricionPoly.contains(p));
+            if(restricionPoly == null) { // Can draw, no restriction area defined
+                canDraw = true;
+            } else if(restricionPoly != null && (!restricionPoly.contains(p))) {
+                canDraw = true;
+            }
+            else {
+                canDraw = false;
+            }
+
 
             if(mapComponent.getDrawLayer().shape.size()>2 && canDraw) {
                 PathIterator pi = mapComponent.getRestrictionLayer().path.getPathIterator(new AffineTransform());
@@ -278,14 +286,13 @@ public final class MapComponent extends JComponent {
 
         public void paintShapes(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
-
             if (isDrawing && currentPoint != null) {
                 BasicStroke stroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {3f, 3f}, 0.0f);
                 g2.setStroke(stroke);
                 g2.setColor(Color.BLUE);
                 g2.draw(new Line2D.Double(path.getCurrentPoint(), currentPoint));
             }
-            if (path != null) {
+            if (path != null && MapTools.getNumberOfPathPoints(path) > 2) {
                 g2.setStroke(new BasicStroke(2));
                 g2.setColor(Color.BLUE);
                 g2.draw(path);
@@ -414,7 +421,7 @@ public final class MapComponent extends JComponent {
 
             fillPolygon(g2, path);
 
-            if (path != null) {
+            if (path != null && MapTools.getNumberOfPathPoints(path) > 2) {
                 g2.setStroke(new BasicStroke(1));
                 g2.setColor(Color.BLACK);
                 g2.draw(path);
@@ -616,13 +623,14 @@ public final class MapComponent extends JComponent {
         for (Future<?> task : tasks) {
             task.cancel(false);
         }
+
         tasks.clear();
         if (tileLookup != null && model.getTopLeft() != null) {
             final TileInfo tileInfo = tileLookup.getTileInfo(model.getZoom(), model.getTopLeft(), getSize());
             for (final TileData tileData : tileInfo.getTileData()) {
                 final Image image = tileLookup.getImageFast(tileData);
-                g.drawImage(image, tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
 
+                g.drawImage(image, tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
                 if (!tileLookup.exists(tileData)) {
                     tasks.add(executor.submit(new Runnable() {
                         @Override

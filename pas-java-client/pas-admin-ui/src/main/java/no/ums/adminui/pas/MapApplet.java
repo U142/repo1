@@ -5,6 +5,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.map.tiled.*;
 import no.ums.map.tiled.component.MapComponent;
+import no.ums.map.tiled.component.MapTools;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptInfo;
@@ -134,23 +135,29 @@ public class MapApplet extends JApplet implements ActionListener {
             new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_logon");
 			log.warn(e.getMessage(), e);
 		}
-		
-		
+
 	}
 	
 	private void afterLogon() {
-		Container contentpane = getContentPane();
-		contentpane.setLayout(new FlowLayout());
+		final Container contentpane = getContentPane();
+		contentpane.setLayout(new BorderLayout());
 
-		contentpane.add(mapComponent, BorderLayout.PAGE_END);
-		contentpane.setSize(applet_width, applet_height);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                contentpane.setSize(applet_width, applet_height);
+                contentpane.add(mapComponent, BorderLayout.CENTER);
+                contentpane.paint(contentpane.getGraphics());
+            }
+        });
 
-        mapComponent.repaint();
         setFocusable(true);
         requestFocus();
 	}
 
-
+    @Override
+    public void paint(Graphics g) {
+    }
     
 	@Override
 	public void actionPerformed(final ActionEvent e) {
@@ -208,7 +215,7 @@ public class MapApplet extends JApplet implements ActionListener {
             mapComponent.setPreferredSize(new Dimension(applet_width, applet_height));
 
             // Sets the map somewhere just to be able to calculate restriction area
-            mapComponent.getModel().setTopLeft(new LonLat(8.180480787158013,52.76231045722961));
+            mapComponent.getModel().setTopLeft(new LonLat(2.180480787158013,54.76231045722961));
             mapComponent.getModel().setZoom(Variables.getZoomLevel());
 
             mapComponent.getMapController().setZoomLevel(zoom_level);
@@ -232,21 +239,35 @@ public class MapApplet extends JApplet implements ActionListener {
 
             Path2D.Double restrictionShapesPath = null;
             List<LonLat> lonLats = null;
+            LonLat[] bounds = new LonLat[2];
             if(m_info.get_departments().get_combined_restriction_shape() != null) {
                 List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
                 lonLats = convertCombinedRestrictionShapeCoordinatesToLonLat(list);
                 restrictionShapesPath = mapComponent.convertLonLatToPath2D(lonLats, zoomLookup);
+
+                if(MapTools.getNumberOfPathPoints(restrictionShapesPath) == 0) {
+                    //bounds = mapComponent.getBounds(lonLats);
+                    bounds[0] = new LonLat(5.180480787158013, 51.76231045722961);
+                    bounds[1] = new LonLat(5.680480787158013, 51.96231045722961);
+                    lonLats.add(bounds[0]);
+                    lonLats.add(bounds[1]);
+                    mapComponent.getModel().setTopLeft(bounds[0]);
+                }
+
             }
 
-            LonLat[] bounds = mapComponent.getBounds(lonLats);
 
-            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height),max_zoom_level);
+
+
+            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(lonLats.get(0), lonLats.get(1), new Dimension(applet_width,applet_height),max_zoom_level);
             Variables.setZoomLevel(tileLookup.getZoom());
 
-            // Sets bounds based on restriction area
-            mapComponent.getModel().setTopLeft(bounds[0]);
+            // Sets bounds based on restriction area if no area then set default
+
             mapComponent.getModel().setZoom(tileLookup.getZoom());
 
+            //mapComponent.getModel().setTopLeft(new LonLat(2.180480787158013,54.76231045722961));
+            //mapComponent.getModel().setZoom(Variables.getZoomLevel());
 
 
 
