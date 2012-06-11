@@ -835,7 +835,9 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    //mod for å bruke OSM en liten periode.
+    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheOsm(TileCacheOsm.Layer.MAPNIK));
+    //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
     private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
 
         private String lastLookup = null;
