@@ -246,20 +246,18 @@ public class MapApplet extends JApplet implements ActionListener {
                 restrictionShapesPath = mapComponent.convertLonLatToPath2D(lonLats, zoomLookup);
 
                 if(MapTools.getNumberOfPathPoints(restrictionShapesPath) == 0) {
-                    //bounds = mapComponent.getBounds(lonLats);
                     bounds[0] = new LonLat(5.180480787158013, 51.76231045722961);
                     bounds[1] = new LonLat(5.680480787158013, 51.96231045722961);
-                    lonLats.add(bounds[0]);
-                    lonLats.add(bounds[1]);
-                    mapComponent.getModel().setTopLeft(bounds[0]);
                 }
-
+                else {
+                    bounds = mapComponent.getBounds(lonLats);
+                }
             }
 
 
 
-
-            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(lonLats.get(0), lonLats.get(1), new Dimension(applet_width,applet_height),max_zoom_level);
+            mapComponent.getModel().setTopLeft(bounds[0]);
+            final TileLookup.BoundsMatch tileLookup = mapComponent.getTileLookup().getBestMatch(bounds[0], bounds[1], new Dimension(applet_width,applet_height),max_zoom_level);
             Variables.setZoomLevel(tileLookup.getZoom());
 
             // Sets bounds based on restriction area if no area then set default

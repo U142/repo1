@@ -155,7 +155,6 @@ public class ExecApp {
         });
     }
 
-
     public static PasScriptingInterface loadPlugin() {
         SortedSet<PasScriptingInterface> plugins = new TreeSet<PasScriptingInterface>(PasScriptingInterface.COMPARATOR);
         plugins.add(new DefaultPasScripting());

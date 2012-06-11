@@ -21,7 +21,6 @@ public abstract class AbstractTileCacheUri extends AbstractTileCache {
     @Override
     protected final Image getImage(final TileCell input) {
         final URI uri = createUri(input.getZoom(), input.getRow(), input.getColumn());
-
         try {
             final URL url = uri.toURL();
             final byte[] img = Resources.toByteArray(url);

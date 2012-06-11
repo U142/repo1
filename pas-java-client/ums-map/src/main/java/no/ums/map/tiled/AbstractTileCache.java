@@ -4,16 +4,10 @@ import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nullable;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.Math;
-import java.lang.Override;
-import java.util.Map;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 

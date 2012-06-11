@@ -73,7 +73,12 @@ public final class MapComponent extends JComponent {
         
         public boolean canDrawHere(Point p) {
             boolean canDraw;
-            Polygon restricionPoly = MapTools.createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
+            Polygon restricionPoly;
+            try {
+                restricionPoly = MapTools.createPolygon(mapComponent.getRestrictionLayer().path, mapComponent.getRestrictionLayer().shape);
+            } catch (Exception e) {
+                restricionPoly = null;
+            }
 
             if(restricionPoly == null) { // Can draw, no restriction area defined
                 canDraw = true;
@@ -85,7 +90,8 @@ public final class MapComponent extends JComponent {
             }
 
 
-            if(mapComponent.getDrawLayer().shape.size()>2 && canDraw) {
+            if(restricionPoly != null && mapComponent.getDrawLayer().shape.size()>2 && canDraw) {
+                
                 PathIterator pi = mapComponent.getRestrictionLayer().path.getPathIterator(new AffineTransform());
                 Path2D tmp = new Path2D.Double();
                 tmp.append(pi,true);
@@ -403,7 +409,7 @@ public final class MapComponent extends JComponent {
             Graphics2D g2 = (Graphics2D) g;
 
             ZoomLookup zoomLookup = mapComponent.tileLookup.getZoomLookup(mapComponent.getModel().getZoom());
-            if(shape.size()>0) {
+            if(shape.size()>0 && path != null) {
                 path.reset();
                 path = new Path2D.Double();
                 for(int i=0; i< shape.size(); i++) {
@@ -419,9 +425,8 @@ public final class MapComponent extends JComponent {
                 path.closePath();
             }
 
-            fillPolygon(g2, path);
-
             if (path != null && MapTools.getNumberOfPathPoints(path) > 2) {
+                fillPolygon(g2, path);
                 g2.setStroke(new BasicStroke(1));
                 g2.setColor(Color.BLACK);
                 g2.draw(path);
