@@ -45,7 +45,7 @@ public abstract class AbstractTileCache {
 				doInvalidImageCleanup();
 			}
 		};
-        new Timer().scheduleAtFixedRate(task, 500, 500);
+        new Timer().scheduleAtFixedRate(task, 5000, 5000);
         cache = new MapMaker()
         		.softValues()
 				.makeComputingMap(new Function<TileCell, Image>() {
