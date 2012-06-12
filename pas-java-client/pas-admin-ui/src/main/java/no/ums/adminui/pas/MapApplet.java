@@ -318,7 +318,7 @@ public class MapApplet extends JApplet implements ActionListener {
         
         if(combinedRestrictionShape.get(0) instanceof PolygonStruct) {
             PolygonStruct polygonStruct = (PolygonStruct) combinedRestrictionShape.get(0);
-            polygonStruct.POINT_PRECISION = Double.MAX_VALUE;
+            polygonStruct.POINT_PRECISION = 10000.0;//Double.MAX_VALUE;
 
             for(int i=0;i<polygonStruct.get_coors_lat().size();i++) {
 
@@ -435,7 +435,23 @@ public class MapApplet extends JApplet implements ActionListener {
 
         try {
             List<LonLat> shape = mapComponent.getDrawLayer().getShape();
+            
+            PolygonStruct p = new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL,10000.0);
+            
+            for( LonLat lonlat : shape) {
+                p.add_coor(lonlat.getLon(),lonlat.getLat(),10000.0);
+            }
 
+            for(int i=0;i<p.get_coors_lon().size();++i) {
+                lat += String.valueOf(p.get_coors_lat().get(i));
+                if(i+1<p.get_coors_lat().size())
+                    lat += "|";
+
+                lon += String.valueOf(p.get_coors_lon().get(i));
+                if(i+1<p.get_coors_lon().size())
+                    lon += "|";
+            }
+            /*
             for(int i=0;i<shape.size();++i) {
                 lat += String.valueOf(shape.get(i).getLat());
                 if(i+1<shape.size())
@@ -444,7 +460,7 @@ public class MapApplet extends JApplet implements ActionListener {
                 lon += String.valueOf(shape.get(i).getLon());
                 if(i+1<shape.size())
                     lon += "|";
-            }
+            }*/
         } catch (Exception e) {
             System.out.println("Exception adding coordinates: " + e.getMessage());
         }

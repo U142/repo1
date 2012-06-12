@@ -114,7 +114,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	SouthContent m_southcontent;
 	EastContent m_eastcontent;
-	
+
 	private String PAS_SITENAME;
 	private String PAS_OVERRIDE_USERID = null;
 	private String PAS_OVERRIDE_COMPID = null;
