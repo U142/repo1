@@ -125,12 +125,10 @@ namespace com.ums.PAS.messagelib
                     if (!Directory.Exists(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\"))
                         Directory.CreateDirectory(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\");
 
-                    UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
                     UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
-                    StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("iso-8859-1"));
+                    StreamWriter sw = new StreamWriter(file.full(), false, Encoding.GetEncoding("iso-8859-1"));
                     sw.Write(msg.sz_message);
                     sw.Close();
-                    file_tmp.MoveOperation(file, true);
                 }
                 return msg;
             }
