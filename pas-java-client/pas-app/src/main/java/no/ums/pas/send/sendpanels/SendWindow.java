@@ -405,7 +405,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
                 Localization.l("main_sending_settings_tooltip"));
 		}
 		int tmp = obj.get_sendproperties().get_addresstypes();
-		if(hasSMS(tmp))
+		if(hasSMS(tmp) || obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
 		{
             m_tabbedpane.addTab(Localization.l("main_sending_sms_heading"), null,
 								m_sms_broadcast_text_panel,
