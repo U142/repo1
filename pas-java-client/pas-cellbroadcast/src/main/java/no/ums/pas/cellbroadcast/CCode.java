@@ -2,10 +2,8 @@ package no.ums.pas.cellbroadcast;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 
 @Deprecated

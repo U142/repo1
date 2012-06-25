@@ -464,7 +464,7 @@ public class MapApplet extends JApplet implements ActionListener {
         } catch (Exception e) {
             System.out.println("Exception adding coordinates: " + e.getMessage());
         }
-        
+
 		return lat + "¤" + lon;
 	}
 	

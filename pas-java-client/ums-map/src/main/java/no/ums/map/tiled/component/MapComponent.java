@@ -305,8 +305,7 @@ public final class MapComponent extends JComponent {
                 fillPolygon(g2, path);
             }
         }
-        
-        @Override
+
         public void paint(Graphics g) {
             paintShapes(g);
         }
@@ -377,13 +376,10 @@ public final class MapComponent extends JComponent {
             return newPath;
         }
 
-        @Override
         public void keyTyped(KeyEvent e) { }
 
-        @Override
         public void keyPressed(KeyEvent e) { }
 
-        @Override
         public void keyReleased(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_DELETE) {
                 path = removeLastPoint(path, shape);
@@ -404,7 +400,6 @@ public final class MapComponent extends JComponent {
             shape = restrictionShape;
         }
 
-        @Override
         public void paint(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
 
@@ -577,13 +572,11 @@ public final class MapComponent extends JComponent {
         addMouseWheelListener(mouseAdapter);
 
         model.addPropertyChangeListener("zoom", new PropertyChangeListener() {
-            @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 repaint();
             }
         });
         model.addPropertyChangeListener("topLeft", new PropertyChangeListener() {
-            @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 repaint();
             }
@@ -638,7 +631,6 @@ public final class MapComponent extends JComponent {
                 g.drawImage(image, tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
                 if (!tileLookup.exists(tileData)) {
                     tasks.add(executor.submit(new Runnable() {
-                        @Override
                         public void run() {
                             tileLookup.getImage(tileData);
                             repaint();

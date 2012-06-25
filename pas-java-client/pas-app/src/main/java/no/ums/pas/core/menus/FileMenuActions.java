@@ -3,25 +3,13 @@ package no.ums.pas.core.menus;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
-import no.ums.pas.core.Variables;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.view.PasswordUpdateCtrl;
-import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.ImportPolygon;
-import no.ums.pas.maps.MapFrame;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.swing.UmsAction;
-import no.ums.ws.common.UGENERICRESULT;
-import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.common.UMapBounds;
-import no.ums.ws.pas.Pasws;
 
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.xml.namespace.QName;
-
+import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.net.URL;
 
 /**
  * Actions in the FileMenu.
