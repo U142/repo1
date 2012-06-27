@@ -83,7 +83,7 @@ namespace com.ums.PAS.Database
 
         public UMapBounds GetMunicipalBounds(ref UMUNICIPALSENDING mun)
         {
-            var mapBounds = GetMunicipalBounds(ref mun);
+            var mapBounds = GetMunicipalBounds(mun.municipals);
             mun.mapbounds = mapBounds;
             return mapBounds;
         }
