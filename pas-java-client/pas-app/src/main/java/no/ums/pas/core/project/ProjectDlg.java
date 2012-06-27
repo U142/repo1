@@ -62,7 +62,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		this.setIconImage(PAS.get_pas().getIconImage());
 
         try {
-            setModal(false);
+            setModal(true);
         } catch (Exception e) {
 
         }
