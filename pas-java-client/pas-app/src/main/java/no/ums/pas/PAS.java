@@ -910,13 +910,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		pasplugin.onShowMainWindow();
 		pasplugin.onStartSystemMessageThread(this.get_pasactionlistener(), 1000 * pasplugin.getSystemMessagesPollInterval());
 	}
-	/*public void setAppTitle(String s)
-	{
-		if(s.length()==0)
-			s = PAS.l("common_app_title");
-		m_sz_maintitle = s + " - " + m_sz_sitename;
-		this.setTitle(m_sz_maintitle + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project")); //+ m_sz_sitename);		
-	}*/
 	
 	protected void afterLogon()
 	{

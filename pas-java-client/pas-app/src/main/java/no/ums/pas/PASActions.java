@@ -537,49 +537,17 @@ public class PASActions implements ActionListener {
 				//PAS.get_pas().close_active_project(true, true);
 				//PAS.get_pas().get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 			}
-			/*switch(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights())
-			{
-			case 4: //TAS
-				actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_show_world"));
-				break;
-			default: 
-				if(PAS.get_pas().get_userinfo().get_current_department().get_nav_init()!=null)
-					actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-			}*/
-			// Sets the departments default map if it is not the default department for the user 
-			//if(PAS.get_pas().get_userinfo().get_default_dept().get_deptpk() == PAS.get_pas().get_userinfo().get_current_department().get_deptpk())
-			//	PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
-			//else {
-				try {
-					UserInfo ui = (UserInfo)PAS.get_pas().get_userinfo().clone();
-					//UserInfo ui = PAS.get_pas().get_userinfo();
-					ui.set_nav_init(PAS.get_pas().get_userinfo().get_current_department().get_nav_init());
-					PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), ui);
-				}
-				catch(Exception err) {
-					log.warn(err.getMessage(), err);
-				}
-				
-			//}
+
+            try {
+                UserInfo ui = (UserInfo)PAS.get_pas().get_userinfo().clone();
+                ui.set_nav_init(PAS.get_pas().get_userinfo().get_current_department().get_nav_init());
+                PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), ui);
+            }
+            catch(Exception err) {
+                log.warn(err.getMessage(), err);
+            }
+
 			PAS.get_pas().get_mappane().load_map(true);
-			/*
-			// Denne skal oppdatere weatherdata
-			try
-			{
-				//SwingUtilities.invokeLater(new Runnable() {
-				//	public void run()
-					{
-						try 
-						{
-							if(!parm_open)
-								actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-							PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
-						}
-						catch(Exception err) {}
-					}
-				//});
-			}catch(Exception err) { }
-			*/
 		}
 		else if("act_dept_changed".equals(e.getActionCommand())) {
 			deptChanged();
