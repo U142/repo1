@@ -1004,33 +1004,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			
 		}
-		
-		
-		//m_drawthread.start();
-		/*try
-		{
-			new Installer().save_jnlp();
-		}
-		catch(Exception e)
-		{
-			
-		}*/
 
-		
-
-		
-		
-		
-		//get_eastcontent().get_infopanel().actionPerformed(new ActionEvent(m_userinfo, ActionEvent.ACTION_PERFORMED, "act_update_accountinfo"));
-		/*try
-		{
-			if(get_eastcontent().get_infopanel()!=null)
-				get_eastcontent().get_infopanel().update_accountinfo(m_userinfo);
-		}
-		catch(Exception e)
-		{
-			
-		}*/
 		try {
 			//Dimension dim_pos = new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight());
 			//Dimension dim_size = new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight());
@@ -1065,20 +1039,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			Error.getError().addError(Localization.l("common_error"), "Error setting GUI size", e, Error.SEVERITY_ERROR);
 		}
 
-		/*UIManager.put(LafWidget.TABBED_PANE_PREVIEW_PAINTER,
-				 org.jvnet.lafwidget.tabbed.TabPreviewPainter.class);*/
-		
-		try
-		{
-			//SubstanceLookAndFeel.setCurrentWatermark(new org.jvnet.substance.watermark.SubstanceMagneticFieldWatermark());
-			//Substance 3.3
-			//SubstanceLookAndFeel.permanentlyShowHeapStatusPanel(getRootPane());
-			
-		}
-		catch(Exception e)
-		{
-			
-		}
+
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable(){
@@ -1115,6 +1076,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				}
 			}
 		}.start();
+
+
 	}
 	
 	protected boolean checkWindowBoundsToScreen(Dimension pos, Dimension size)
@@ -1249,9 +1212,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		if(!m_b_creategui_finished)
 			return;
-		//get_eastcontent().setPreferredSize(new Dimension(this.get_eastwidth(), getHeight()));
-		//get_eastcontent().revalidate();
-		//get_mappane().revalidate();
+
 		boolean b_need_new_map = false;
 		try
 		{
@@ -1638,42 +1599,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				} catch(Exception e) { }
 			}
 		}
-		/*public void run() {
-			b_running = true;
-			final Timeout time = new Timeout(10, 50);
-			try
-			{
-                get_mappane().setIsLoading(true, Localization.l("main_status_closing"));
-				while(get_statuscontroller().isOpen() && get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
-					try { 
-						Thread.sleep(time.get_msec_interval()); 
-					} 
-					catch(InterruptedException e ) { }
-					time.inc_timer();
-				}
-						
-						
-				if(b_close_all)
-				{
-					get_sendcontroller().resetActiveProject();
-					get_eastcontent().setIndexZero();
-					get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
-					get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
-					m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-					Variables.setStatusController(PAS.get_pas().m_statuscontroller);
-					Variables.getStatusController().set_autoupdate(false);
-					//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
-					PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
-					m_current_project = null;
-				}
-				get_mappane().setIsLoading(false, "");
-				b_running = false;
-			}
-			catch(Exception e)
-			{
-				b_running = false;
-			}
-		}*/
 	}
 	
 	public void init_parmcontroller() {
@@ -1729,48 +1654,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		System.exit(0);
 	}
-	
-	/*class cScheme implements ColorScheme
-	{
-
-		@Override
-		public Color getDarkColor() {
-			//return null;
-			return Color.black;
-		}
-
-		@Override
-		public Color getExtraLightColor() {
-			return Color.white;
-		}
-
-		@Override
-		public Color getForegroundColor() {
-			//return null;
-			return Color.white;
-		}
-
-		@Override
-		public Color getLightColor() {
-			return Color.LIGHT_GRAY;
-		}
-
-		@Override
-		public Color getMidColor() {
-			return Color.GRAY;
-		}
-
-		@Override
-		public Color getUltraDarkColor() {
-			return Color.DARK_GRAY;
-		}
-
-		@Override
-		public Color getUltraLightColor() {
-			return Color.white;
-		}
-		
-	}*/
 	
 	@Override
 	public void skinChanged() {

@@ -205,32 +205,7 @@ public class PASActions implements ActionListener {
 			n_y = ((MapPoint)e.getSource()).get_y();			
 			
 			switch(PAS.get_pas().get_mappane().get_mode()) {
-				/*case MapFrame.MAP_MODE_SENDING_POLY:
-					try {
-						PolySnapStruct p = PAS.get_pas().get_sendcontroller().snap_to_point(new Point(n_x, n_y), 20);
-						if(p==null && PAS.get_pas().get_parmcontroller()!=null) {
-							p = PAS.get_pas().get_parmcontroller().snap_to_point(new Point(n_x, n_y), 20);
-						}
-						if(p != null) { //do snap
-							SnapMouseEvent mouseevent = new SnapMouseEvent(PAS.get_pas(), 0, System.currentTimeMillis(), 16, p.p().x, p.p().y, 0, false);
-							try {
-								PAS.get_pas().get_mappane().get_actionhandler().mouseMoved(mouseevent);
-								PAS.get_pas().get_mappane().set_current_snappoint(p);
-							} catch(Exception err) {
-								log.debug(err.getMessage());
-								log.warn(err.getMessage(), err);
-								Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
-							}
-							//get_pas().get_mappane().robot_movecursor(p);
-						} else {
-							PAS.get_pas().get_mappane().set_current_snappoint(null);
-						}
-					} catch(Exception err) {
-						log.debug(err.getMessage());
-						log.warn(err.getMessage(), err);
-						Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
-					}	
-					break;*/
+
 				default:
 					PAS.get_pas().get_housecontroller().check_mouseover(n_x, n_y);
 					java.util.ArrayList<Object> arr = PAS.get_pas().get_housecontroller().get_found_houses();
@@ -288,11 +263,6 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_mousemoved".equals(e.getActionCommand())) {
 		}
-		/*else if("act_mousesnap_house".equals(e.getActionCommand())) {
-			java.util.ArrayList arr = get_housecontroller().get_found_houses();
-			if(arr!=null)
-				get_mappane().get_actionhandler().actionPerformed(new ActionEvent(arr, ActionEvent.ACTION_PERFORMED, "act_onmouseover_houses"));
-		}*/
 		else if("act_search_houses".equals(e.getActionCommand())) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
@@ -440,11 +410,7 @@ public class PASActions implements ActionListener {
 		else if("act_no_project".equals(e.getActionCommand())) {
 			PAS.get_pas().setTitle(PAS.get_pas().get_maintitle() + "        " + e.getSource().toString());
 		}
-//		else if("act_set_new_active_project".equals(e.getActionCommand())) {
-//			// Skal sette nytt prosjekt, må 
-//			//Project.this.
-//			Project source = (Project)e.getSource();
-//		}
+
 		else if("act_cancel_openproject".equals(e.getActionCommand())) {
 			
 		}
