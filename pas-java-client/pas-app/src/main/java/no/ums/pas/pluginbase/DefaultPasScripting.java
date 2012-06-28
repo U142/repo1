@@ -272,9 +272,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		{
 		case 4: //TAS
 			ui.set_nav_init(Navigation.NAV_WORLD);
+            PAS.get_pas().get_mainmenu().get_btn_zoom_to_world().doClick();
 			break;
+        default:
+            nav.setNavigation(ui.get_nav_init());
 		}
-		nav.setNavigation(ui.get_nav_init());
 
 		return true;
 	}
@@ -408,7 +410,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			pas.get_eastcontent().InitTAS();
 			pas.get_eastcontent().flip_to(EastContent.PANEL_TAS_);
 			pas.get_mainmenu().enable_mapsite(false);
-            pas.get_mainmenu().get_btn_zoom_to_world().doClick();
 			break;
 		}
 
