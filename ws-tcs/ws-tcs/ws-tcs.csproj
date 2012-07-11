@@ -138,7 +138,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <Import Project="$(MSBuildProjectDirectory)\ums.targets" />
   <PropertyGroup>
-    <DeployUrl>secure.ums.no/soap/tcs</DeployUrl>
+    <DeployUrl>secure.ums.no/soap/tcs/1.0</DeployUrl>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
