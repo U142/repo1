@@ -760,6 +760,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		try
 		{
 			new WSTas(this, n_timefilter, n_timefilter_requestlog);
+			System.out.println("TreeUpdater downloaded");
 			return true;
 		}
 		catch(Exception e)
@@ -789,11 +790,13 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			//	PAS.get_pas().kickRepaint(prevsel.rect);
 			//else 
 			System.out.println("repaint_timer: kick repaint");
-				PAS.get_pas().kickRepaint();
+			PAS.get_pas().kickRepaint();
 		}
 		else if(TreeUpdater.LOADING_START.equals(e.getActionCommand()))
 		{
+			System.out.println("Starting TreeUpdater");
 			m_callback.actionPerformed(e);
+			System.out.println("TreeUpdater Downloading");
 			Download();
 		}
 		else if(TreeUpdater.LOADING_FINISHED.equals(e.getActionCommand()))
