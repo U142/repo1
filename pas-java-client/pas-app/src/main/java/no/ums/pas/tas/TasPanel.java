@@ -788,6 +788,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			//if(prevsel!=null && prevsel.rect!=null)
 			//	PAS.get_pas().kickRepaint(prevsel.rect);
 			//else 
+			System.out.println("repaint_timer: kick repaint");
 				PAS.get_pas().kickRepaint();
 		}
 		else if(TreeUpdater.LOADING_START.equals(e.getActionCommand()))
@@ -803,6 +804,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		{
 			try
 			{
+				System.out.println("act_download_finished");
 				UTASUPDATES updates = (UTASUPDATES)e.getSource();
 				SERVER_CLOCK = updates.getNServerclock();
 				n_timefilter = SERVER_CLOCK;
@@ -906,10 +908,14 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				List<ULBACOUNTRY> list = new ArrayList<ULBACOUNTRY>();
 				if(e.getSource().getClass().equals(JButton.class)) //from detailview
 				{
+					System.out.println("Starting count");
 					if(pnl_details.m_selected_item!=null && pnl_details.m_selected_item.getClass().equals(CountryListItem.class))
 					{
+						System.out.println("Starting count");
 						list.add(((CountryListItem)pnl_details.m_selected_item).getCountry());
+						System.out.println("Added to list");
 						prevsel.setCountInProgress(true);
+						System.out.println("Setting country");
 						pnl_details.setCountry(prevsel);
 						//markItemAsCountInProgress(pnl_details.m_selected_country, true);
 					}
@@ -942,6 +948,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(list.size()>0)
 				{
 					log.debug("Request tourist count");
+					System.out.println("Running WSTasCount");
 					new WSTasCount(this, list).start();
 				}
 			}

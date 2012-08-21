@@ -44,7 +44,9 @@ public class WSTasCount extends WSThread
 			{
 				arr.getULBACOUNTRY().add(m_countries.get(i));
 			}
+			System.out.println("Calling tas.getAdrCount");
 			result = new Tasws(wsdl, service).getTaswsSoap12().getAdrCount(logon, arr); //new Pasws(wsdl, service).getPaswsSoap12().uCreateProject(logon, projectrequest);
+			System.out.println("tas.getAdrCount called, waiting for finished");
 		}
 		catch(Exception e)
 		{
@@ -66,6 +68,7 @@ public class WSTasCount extends WSThread
 	@Override
 	public void onDownloadFinished()
 	{
+		System.out.println("TAS count finished");
 		m_callback.actionPerformed(new ActionEvent(result, ActionEvent.ACTION_PERFORMED, "act_tascount_finished"));
 	}
 }
