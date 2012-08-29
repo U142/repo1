@@ -1,5 +1,7 @@
 package org.jdesktop.beansbinding.validation;
 
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
@@ -30,15 +32,25 @@ public class VisibleValidation {
         c.setForeground(bIsOk ? colOkText : colError);
         boolean tooltipShowing = (c.getClientProperty("UToolTipShowing") == null ? false : (Boolean) c.getClientProperty("UToolTipShowing"));
         boolean hasFocus = c.hasFocus();
+        
         if (bForced || (!tooltipShowing && !bIsOk && hasFocus && toolTip != null && toolTip.length() > 0)) {
             c.setToolTipText(toolTip);
+            for (Object o : c.getActionMap().allKeys()) {
+            	System.out.println(o);
+            }
             ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
-            c.getActionMap().get("postTip").actionPerformed(postTip);
+            Action action = c.getActionMap().get("postTip");
+            if(action != null) {
+            	action.actionPerformed(postTip);
+            }
             c.putClientProperty("UToolTipShowing", Boolean.TRUE);
-			isToolTipShowing = true;
+        	isToolTipShowing = true;
         } else if (bIsOk && tooltipShowing) {
             ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
-            c.getActionMap().get("postTip").actionPerformed(postTip);
+            Action action = c.getActionMap().get("postTip");
+            if(action != null) {
+            	action.actionPerformed(postTip);
+            }
             c.putClientProperty("UToolTipShowing", Boolean.FALSE);
 			c.setToolTipText(null);
 			isToolTipShowing = false;
