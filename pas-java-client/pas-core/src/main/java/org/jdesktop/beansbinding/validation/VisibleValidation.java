@@ -35,9 +35,6 @@ public class VisibleValidation {
         
         if (bForced || (!tooltipShowing && !bIsOk && hasFocus && toolTip != null && toolTip.length() > 0)) {
             c.setToolTipText(toolTip);
-            for (Object o : c.getActionMap().allKeys()) {
-            	System.out.println(o);
-            }
             ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
             Action action = c.getActionMap().get("postTip");
             if(action != null) {
