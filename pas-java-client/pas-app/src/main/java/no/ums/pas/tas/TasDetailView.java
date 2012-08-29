@@ -314,7 +314,7 @@ public class TasDetailView extends DefaultPanel
 		CountryListItem ci = (CountryListItem)item;
 		if(m_selected_item!=null && m_selected_item.getClass().equals(CountryListItem.class))
 			c = ((CountryListItem)item).getCountry();
-		
+
 		boolean b_selected = true;
 		String szcountrycode = "";
 		String sziso = "";
@@ -326,8 +326,16 @@ public class TasDetailView extends DefaultPanel
 		String szlastupdatediff = "";
 		if(c==null)
 			b_selected = false;
-		if(!b_selected)
-			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));//PAS.l("adrsearch_dlg_country")));
+		if(!b_selected) {
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));//PAS.l("adrsearch_dlg_country")));
+				}
+			});
+			
+		}
 		else
 		{
 			szcountrycode = new Long(c.getLCc()).toString();
@@ -352,23 +360,37 @@ public class TasDetailView extends DefaultPanel
 					szlastupdatediff += diff /60 + " " + PAS.l("common_hours_maybe") + " " + PAS.l("common_ago");
 				else
 					szlastupdatediff += diff + " " + PAS.l("common_minutes_maybe") + " " + PAS.l("common_ago");*/
+				
 				txt_lastupdate.setForeground(TasHelpers.getOutdatedColor(c));
 				szlastupdatediff = TasHelpers.getOutdatedText(c);
 			}
 			else {
                 szlastupdatediff = Localization.l("common_na");
             }
-			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(szname));
+			
+			final String invokeLaterName = szname;
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(invokeLaterName));		
+				}
+			});
+			
 			if(c.getOperators()!=null)
 			{
 				String tooltip = "<html><table>";
+				
 				List<UTOURISTCOUNT> operators = c.getOperators().getUTOURISTCOUNT();
+				
 				int i=0;
+				
 				for(i=0; i < operators.size(); i++)
 				{
 					tooltip += "<tr><td><b>" + operators.get(i).getSzOperator() + "</b></td><td><b>" + operators.get(i).getLTouristcount() + "</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(operators.get(i).getLLastupdate()) + "</td></tr>";
 				}
 				tooltip += "</html>";
+				
 				if(i>0)
 					txt_lastupdate.setToolTipText(tooltip);
 				else
@@ -415,11 +437,13 @@ public class TasDetailView extends DefaultPanel
 		{
 			//AddressCount count = new AddressCount();
 			//count.set_privatesms(c.getNTouristcount());
-			PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow().actionPerformed(new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "act_adrcount_changed"));
+			if(PAS.get_pas().get_sendcontroller().get_activesending() != null) {
+				PAS.get_pas().get_sendcontroller().get_activesending().get_sendwindow().actionPerformed(new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "act_adrcount_changed"));
+			}
 		}
 		catch(Exception e)
 		{
-			
+			log.debug(e.getMessage(), e);
 		}
 		
 	}

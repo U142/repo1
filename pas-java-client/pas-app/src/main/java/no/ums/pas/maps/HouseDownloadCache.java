@@ -26,7 +26,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class HouseDownloadCache {
+public class
+        HouseDownloadCache {
 
     private static final List<UAddress> EMPTY = Collections.emptyList();
     private static final Log log = UmsLog.getLogger(HouseDownloadCache.class);

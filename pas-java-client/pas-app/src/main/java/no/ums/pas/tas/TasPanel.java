@@ -760,7 +760,6 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		try
 		{
 			new WSTas(this, n_timefilter, n_timefilter_requestlog);
-			System.out.println("TreeUpdater downloaded");
 			return true;
 		}
 		catch(Exception e)
@@ -789,14 +788,11 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			//if(prevsel!=null && prevsel.rect!=null)
 			//	PAS.get_pas().kickRepaint(prevsel.rect);
 			//else 
-			System.out.println("repaint_timer: kick repaint");
 			PAS.get_pas().kickRepaint();
 		}
 		else if(TreeUpdater.LOADING_START.equals(e.getActionCommand()))
 		{
-			System.out.println("Starting TreeUpdater");
 			m_callback.actionPerformed(e);
-			System.out.println("TreeUpdater Downloading");
 			Download();
 		}
 		else if(TreeUpdater.LOADING_FINISHED.equals(e.getActionCommand()))
@@ -807,20 +803,17 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		{
 			try
 			{
-				System.out.println("act_download_finished");
 				UTASUPDATES updates = (UTASUPDATES)e.getSource();
 				SERVER_CLOCK = updates.getNServerclock();
 				n_timefilter = SERVER_CLOCK;
 				n_timefilter_requestlog = SERVER_CLOCK;
 				ArrayOfULBACONTINENT arr = updates.getContinents(); //(ArrayOfULBACONTINENT)e.getSource();
 				temp_continents = arr.getULBACONTINENT();
-				System.out.println("Sync update tree");
 				syncUpdateTree(false, false);
 				if(prevsel!=null)
 				{
 					if(prevsel.getClass().equals(CountryListItem.class))
 					{
-						System.out.println("Performing prevsel");
 						CountryListItem c = (CountryListItem)prevsel;
 						pnl_details.setCountry(prevsel);
 					}
@@ -913,14 +906,10 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				List<ULBACOUNTRY> list = new ArrayList<ULBACOUNTRY>();
 				if(e.getSource().getClass().equals(JButton.class)) //from detailview
 				{
-					System.out.println("Starting count");
 					if(pnl_details.m_selected_item!=null && pnl_details.m_selected_item.getClass().equals(CountryListItem.class))
 					{
-						System.out.println("Starting count");
 						list.add(((CountryListItem)pnl_details.m_selected_item).getCountry());
-						System.out.println("Added to list");
 						prevsel.setCountInProgress(true);
-						System.out.println("Setting country");
 						pnl_details.setCountry(prevsel);
 						//markItemAsCountInProgress(pnl_details.m_selected_country, true);
 					}
@@ -953,7 +942,6 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(list.size()>0)
 				{
 					log.debug("Request tourist count");
-					System.out.println("Running WSTasCount");
 					new WSTasCount(this, list).start();
 				}
 			}
@@ -1174,7 +1162,6 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	
 	protected void updateTree(boolean force_delete, boolean auto_arrange_folders)
 	{
-		System.out.println("Inside update tree");
 		Iterator<ULBACONTINENT> it_cont = temp_continents.iterator();
 		while(it_cont.hasNext())
 		{
@@ -1223,13 +1210,11 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			//treeInsertDelete(arr_countries);
 			//contitem.getContinent().setNTouristcount(touristcount_pr_continent);
 		}
-		System.out.println("Finished synching tree");
 		_filterProc(false, false, true);
 	}
 	
 	protected void _filterProc(boolean force_delete, boolean auto_arrange_folders, boolean b_new_continentcount)
 	{
-		System.out.println("Filter proc starting");
 		if(b_new_continentcount)
 		{
 			for(int i=0; i < arr_continents.size(); i++)
@@ -1291,7 +1276,6 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			}
 
 		}
-		System.out.println("Filter proc starting");
 		Collections.sort(arr_countries);
 		treeInsertDelete(arr_countries);
 

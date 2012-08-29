@@ -26,7 +26,6 @@ public class WSTas extends WSThread
 
 	@Override
 	public void onDownloadFinished() {
-		System.out.println("Download finished WSTas line 29");
 		if(m_callback!=null)
 			m_callback.actionPerformed(new ActionEvent(m_updates, ActionEvent.ACTION_PERFORMED, "act_download_finished"));
 	}
