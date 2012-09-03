@@ -1508,6 +1508,8 @@ namespace com.ums.UmsCommon
         public int l_autologoff;
         public String sz_adminemail;
         public int l_channelno;
+        public int l_second_channelno;
+        public Boolean b_second_channel_active;
         public int l_test_channelno;
         public int l_heartbeat;
         public int l_duration;
