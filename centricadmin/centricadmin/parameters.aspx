@@ -43,6 +43,21 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
+                <asp:Label ID="lbl_second_channel" runat="server" Text="Second channel number for NL-Alert-messages"></asp:Label>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:TextBox ID="txt_second_channel" runat="server"></asp:TextBox>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="*" ErrorMessage="Channel number for NL-Alert-messages missing" ControlToValidate="txt_channel"></asp:RequiredFieldValidator>
+                <asp:RangeValidator id="RangeValidator1" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_channel" Text="*" ErrorMessage="Integer value required for Channel number for NL-Alert-messages"></asp:RangeValidator>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:CheckBox ID="chk_second_channel" runat="server" />
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
                 <asp:Label ID="lbl_test_channel" runat="server" Text="Channel number for Test messages"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
