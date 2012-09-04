@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="1U10/iw6RlBkjiSUEnfbKFWUSdc=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="XsCfeFJlJ0r0KAIm/+Tqb37UbXM=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="paswsSoap1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="paswsSoap">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>paswsSoap1</serializedValue>
+          <serializedValue>paswsSoap</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>00:01:00</serializedValue>
@@ -112,7 +112,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="paswsSoap" contract="com.ums.ws.pas.paswsSoap" bindingType="basicHttpBinding" address="http://localhost/ws_pas/ws/pas.asmx" bindingConfiguration="paswsSoap1">
+    <endpoint name="paswsSoap" contract="com.ums.ws.pas.paswsSoap" bindingType="basicHttpBinding" address="http://localhost/ws_pas/ws/pas.asmx" bindingConfiguration="paswsSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://localhost/ws_pas/ws/pas.asmx</serializedValue>
@@ -124,7 +124,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>paswsSoap1</serializedValue>
+          <serializedValue>paswsSoap</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>com.ums.ws.pas.paswsSoap</serializedValue>

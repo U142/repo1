@@ -62,8 +62,21 @@ namespace com.ums.PAS.Settings
                     param.l_autologoff = odr.GetInt32(2);
                     param.sz_adminemail = odr.GetString(3);
                     param.l_channelno = odr.GetInt32(4);
-                    param.l_second_channelno = odr.GetInt32(odr.GetOrdinal("l_second_channel"));
-                    param.b_second_channel_active = odr.GetBoolean(odr.GetOrdinal("b_second_channel_active"));
+                    if (!odr.IsDBNull(odr.GetOrdinal("l_second_channelno")))
+                    {
+                        param.l_second_channelno = odr.GetInt32(odr.GetOrdinal("l_second_channelno"));
+                    }
+                    else
+                    {
+                        param.l_second_channelno = 0;
+                    }
+                    if (!odr.IsDBNull(odr.GetOrdinal("b_second_channel_active")))
+                    {
+                        param.b_second_channel_active = odr.GetBoolean(odr.GetOrdinal("b_second_channel_active"));
+                    }
+                    else {
+                        param.b_second_channel_active = false;
+                    }
                     param.l_test_channelno = odr.GetInt32(5);
                     param.l_heartbeat = odr.GetInt32(6);
                     param.l_duration = odr.GetInt32(7);

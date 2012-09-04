@@ -259,6 +259,17 @@
            }
            return false; //any other values, bad date
        }
+
+
+       function validateSecondChannel(oSrc, args) {
+            //Use JQuery to look for the checked checkbox and only if it is found, validate
+            if (!document.getElementById('body_chk_second_channel').checked) {
+                args.IsValid = true;
+            }
+            else {
+                args.IsValid = (args.Value >= 100);
+            }
+        }
        
 
     -->

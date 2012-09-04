@@ -49,11 +49,15 @@
                 <asp:TextBox ID="txt_second_channel" runat="server"></asp:TextBox>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="*" ErrorMessage="Channel number for NL-Alert-messages missing" ControlToValidate="txt_channel"></asp:RequiredFieldValidator>
-                <asp:RangeValidator id="RangeValidator1" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_channel" Text="*" ErrorMessage="Integer value required for Channel number for NL-Alert-messages"></asp:RangeValidator>
+                <asp:Label ID="lbl_activate_second_channel" runat="server" Text="Activate/Deactivate:"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:CheckBox ID="chk_second_channel" runat="server" />
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:RequiredFieldValidator ID="req_second_channel" runat="server" Text="*" ErrorMessage="Channel number for second channel missing" ControlToValidate="txt_second_channel"></asp:RequiredFieldValidator>
+                <asp:RangeValidator id="rng_second_channel" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_second_channel" Text="*" ErrorMessage="Integer value required for Second channel number for NL-Alert-messages"></asp:RangeValidator>
+                <asp:CustomValidator ID="val_second_channel" runat="server" Text="*" ErrorMessage="There is a problem with the second channel number for NL-Alert-messages" ControlToValidate="txt_second_channel" ClientValidationFunction="validateSecondChannel" ></asp:CustomValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>

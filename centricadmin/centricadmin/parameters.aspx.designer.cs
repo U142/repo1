@@ -156,22 +156,13 @@ public partial class parameters {
     protected global::System.Web.UI.WebControls.TextBox txt_second_channel;
     
     /// <summary>
-    /// RequiredFieldValidator1 control.
+    /// lbl_activate_second_channel control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-    
-    /// <summary>
-    /// RangeValidator1 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
+    protected global::System.Web.UI.WebControls.Label lbl_activate_second_channel;
     
     /// <summary>
     /// chk_second_channel control.
@@ -181,6 +172,33 @@ public partial class parameters {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox chk_second_channel;
+    
+    /// <summary>
+    /// req_second_channel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RequiredFieldValidator req_second_channel;
+    
+    /// <summary>
+    /// rng_second_channel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RangeValidator rng_second_channel;
+    
+    /// <summary>
+    /// val_second_channel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CustomValidator val_second_channel;
     
     /// <summary>
     /// lbl_test_channel control.
