@@ -201,6 +201,15 @@ public partial class parameters {
     protected global::System.Web.UI.WebControls.CustomValidator val_second_channel;
     
     /// <summary>
+    /// cmp_first_second_channel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CompareValidator cmp_first_second_channel;
+    
+    /// <summary>
     /// lbl_test_channel control.
     /// </summary>
     /// <remarks>

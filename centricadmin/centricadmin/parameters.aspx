@@ -58,6 +58,7 @@
                 <asp:RequiredFieldValidator ID="req_second_channel" runat="server" Text="*" ErrorMessage="Channel number for second channel missing" ControlToValidate="txt_second_channel"></asp:RequiredFieldValidator>
                 <asp:RangeValidator id="rng_second_channel" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_second_channel" Text="*" ErrorMessage="Integer value required for Second channel number for NL-Alert-messages"></asp:RangeValidator>
                 <asp:CustomValidator ID="val_second_channel" runat="server" Text="*" ErrorMessage="There is a problem with the second channel number for NL-Alert-messages" ControlToValidate="txt_second_channel" ClientValidationFunction="validateSecondChannel" ></asp:CustomValidator>
+                <asp:CompareValidator ID="cmp_first_second_channel" runat="server" Text="*" ErrorMessage="Primary and Secondary channels cannot be the same" ControlToValidate="txt_channel" ControlToCompare="txt_second_channel" Type="Integer" Operator="NotEqual"></asp:CompareValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>

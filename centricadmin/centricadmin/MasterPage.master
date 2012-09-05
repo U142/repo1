@@ -267,7 +267,7 @@
                 args.IsValid = true;
             }
             else {
-                args.IsValid = (args.Value >= 100);
+                args.IsValid = (args.Value > 0);
             }
         }
        
