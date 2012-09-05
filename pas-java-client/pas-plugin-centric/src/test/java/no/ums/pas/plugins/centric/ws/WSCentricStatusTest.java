@@ -4,6 +4,8 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.cb.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.PasStatus;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.namespace.QName;
@@ -14,6 +16,7 @@ import java.net.URL;
  */
 public class WSCentricStatusTest {
 
+	@Ignore
     @Test
     public void testGetCBStatus() throws Exception {
         CBPROJECTSTATUSREQUEST cbsreq = new CBPROJECTSTATUSREQUEST();
