@@ -1407,7 +1407,18 @@ namespace com.ums.UmsParm
             StringReader read = new StringReader(xml);
             XmlSerializer serializer = new XmlSerializer(typeof(UPolygon), "http://ums.no/ws/common/parm");
             var xmlReader = new XmlTextReader(read);
-            return (UPolygon) serializer.Deserialize(xmlReader);
+            try
+            {
+                return (UPolygon)serializer.Deserialize(xmlReader);
+            }
+            catch (Exception e)
+            {
+                read.Close();
+                read = new StringReader(xml);
+                serializer = new XmlSerializer(typeof(UPolygon), "");
+                xmlReader = new XmlTextReader(read);
+                return (UPolygon)serializer.Deserialize(xmlReader);
+            }
         }
 
         public String Serialize()
