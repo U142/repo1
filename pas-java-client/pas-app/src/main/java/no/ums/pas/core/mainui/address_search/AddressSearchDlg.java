@@ -54,11 +54,13 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { }
+            public void keyPressed(KeyEvent e) { 
+            	cut(e, txtAddress);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                cutCopyPaste(e, txtAddress);
+                copyPaste(e, txtAddress);
             }
         });
         txtNumber.addKeyListener(new KeyListener() {
@@ -66,11 +68,13 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { }
+            public void keyPressed(KeyEvent e) {
+            	cut(e, txtNumber);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                cutCopyPaste(e, txtNumber);
+                copyPaste(e, txtNumber);
             }
         });
         txtPlace.addKeyListener(new KeyListener() {
@@ -78,11 +82,13 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { }
+            public void keyPressed(KeyEvent e) { 
+            	cut(e, txtPlace);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                cutCopyPaste(e, txtPlace);
+                copyPaste(e, txtPlace);
             }
         });
         txtPostCode.addKeyListener(new KeyListener() {
@@ -90,11 +96,13 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { }
+            public void keyPressed(KeyEvent e) {
+            	cut(e, txtPostCode);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                cutCopyPaste(e, txtPostCode);
+                copyPaste(e, txtPostCode);
             }
         });
         txtRegion.addKeyListener(new KeyListener() {
@@ -102,16 +110,18 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { }
+            public void keyPressed(KeyEvent e) {
+            	cut(e,txtRegion);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                cutCopyPaste(e, txtRegion);
+                copyPaste(e, txtRegion);
             }
         });
 	}
 
-    private void cutCopyPaste(KeyEvent e, JTextField textField) {
+    private void copyPaste(KeyEvent e, JTextField textField) {
         if((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             Transferable clipData = clipboard.getContents(clipboard);
@@ -137,6 +147,21 @@ public class AddressSearchDlg extends JFrame {
             StringSelection selection = new StringSelection(textField.getText().substring(start,end));
             clipboard.setContents(selection, null);
         }
+        /*
+        if((e.getKeyCode() == KeyEvent.VK_X) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+            int start = textField.getSelectionStart();
+            int end = textField.getSelectionEnd();
+            String startContent = textField.getText().substring(0,start);
+            String endContent = textField.getText().substring(end);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            StringSelection selection = new StringSelection(textField.getText().substring(start,end));
+            clipboard.setContents(selection, null);
+            textField.setText(startContent + endContent);
+            textField.setCaretPosition(start);
+        }*/
+    }
+
+    private void cut(KeyEvent e, JTextField textField) {
         if((e.getKeyCode() == KeyEvent.VK_X) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             int start = textField.getSelectionStart();
             int end = textField.getSelectionEnd();
@@ -149,7 +174,7 @@ public class AddressSearchDlg extends JFrame {
             textField.setCaretPosition(start);
         }
     }
-
+    
     public AddressSearchCountry newAddressSearchCountry(int cc, String country)
 	{
 		return new AddressSearchCountry(cc, country);
