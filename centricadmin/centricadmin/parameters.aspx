@@ -49,7 +49,7 @@
                 <asp:TextBox ID="txt_second_channel" runat="server"></asp:TextBox>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:Label ID="lbl_activate_second_channel" runat="server" Text="Activate/Deactivate:"></asp:Label>
+                <asp:Label ID="lbl_activate_second_channel" runat="server" Text="Active:"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:CheckBox ID="chk_second_channel" runat="server" />
