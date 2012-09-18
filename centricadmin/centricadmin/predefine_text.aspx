@@ -15,8 +15,19 @@
          } else {   
              arguments.IsValid = false;
          }
-         
+
      }
+
+     function nameLengthCheck() {
+         var num_char = 50;
+         var name = document.getElementById("body_txt_name");
+
+         if (name.value.length > num_char) {
+             var substr = name.value.substring(0, num_char);  //substring
+             name.value = substr;
+         }
+     }
+
      function getLength() {
         var slen = document.getElementById("body_txt_message").value.length;
         var text = document.getElementById("body_txt_message").value;

@@ -116,7 +116,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
         lbl_name = new StdTextLabel(Localization.l("common_name"), 150);
     }
 
-    protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(150,20));
+    protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(300,20));
 	protected StdTextLabel lbl_lang = new StdTextLabel("Language", 150);
 	protected cccombo cbx_lang = new cccombo();
 	
@@ -280,7 +280,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	public void add_controls() {
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(lbl_name, m_gridconst);
-		set_gridconst(1, get_panel(), 1, 1);
+		set_gridconst(1, get_panel(), 2, 1);
 		add(txt_name, m_gridconst);
 		if(b_enable_multi_cc)
 		{
