@@ -11,7 +11,7 @@ import no.ums.ws.common.UDeleteStatusResponse;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 
-public class Project extends Object implements TooltipItem {
+public class Project extends Object implements TooltipItem, Comparable<Project> {
 	
 	
 	private UDeleteStatusResponse may_be_deleted = UDeleteStatusResponse.ERROR;
@@ -279,6 +279,12 @@ public class Project extends Object implements TooltipItem {
 		sb.append("</html>");
 		
 		return sb.toString();
+	}
+	@Override
+	public int compareTo(Project o) {
+		int projectPK = Integer.parseInt(o.get_projectpk()); 
+		int localProjectPK = Integer.parseInt(get_projectpk());
+		return localProjectPK - projectPK;
 	}
 	
 }
