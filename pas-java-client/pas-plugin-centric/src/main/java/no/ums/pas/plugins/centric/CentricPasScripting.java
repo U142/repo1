@@ -195,17 +195,19 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.change_buttoncolor(menu.get_btn_zoom(), false);
         menu.change_buttoncolor(menu_btn_draw_ellipse, false);
         menu.change_buttoncolor(menu_btn_draw_polygon, false);
+        menu.change_buttoncolor(menu_btn_draw_plmn, false);
 
         // For native GUI
         menu.get_btn_pan().setSelected(false);
         menu.get_btn_zoom().setSelected(false);
         menu_btn_draw_ellipse.setSelected(false);
         menu_btn_draw_polygon.setSelected(false);
+        menu_btn_draw_plmn.setSelected(false);
 
         switch(Variables.getMapFrame().get_mode())
         {
             case PAN:
-                menu.get_btn_pan().setSelected(true);
+            	menu.get_btn_pan().setSelected(true);
             case PAN_BY_DRAG:
                 menu.change_buttoncolor(menu.get_btn_pan(), true);
                 menu.get_btn_pan().setSelected(true);
@@ -228,7 +230,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
 	@Override
-    public boolean onAddMainMenuButtons(MainMenu menu) {
+    public boolean onAddMainMenuButtons(final MainMenu menu) {
         menu.set_gridconst(menu.inc_xpanels(), 0, 15, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu.get_selectmenu().get_bar(), menu.m_gridconst);
 
@@ -285,8 +287,15 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu_btn_draw_plmn.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_plmn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
+            	Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
                 Variables.getMapFrame().set_active_shape(new PLMNShape());
+                PAS.get_pas().get_mainmenu().reset_buttons_foreground();
+                // Select and activate blue color on national button
+                menu_btn_draw_plmn.setSelected(true);
+                menu.change_buttoncolor(menu_btn_draw_plmn, true);
+                // Select and deactivate blue color on pan button
+                menu.get_btn_pan().setSelected(false);
+                menu.change_buttoncolor(menu.get_btn_pan(), false);
                 PAS.get_pas().repaint();
             }
         });
