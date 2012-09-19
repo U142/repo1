@@ -78,19 +78,17 @@ public class Logon implements ActionListener {
 	public boolean canTryAgain() { 
 		return m_b_cantryagain;
 	}
-	public boolean triesExceeded(boolean hasError) {
-		if((m_n_logontries >= m_n_max_tries) && !hasError)
-			return true;
+	public boolean triesExceeded() {
 		return false; 		
 	}
-	private void incLogonTries(int logonTries, boolean hasError) {
+	private void incLogonTries(int logonTries) {
 		if(logonTries > 0) {
 			m_n_logontries = logonTries;
 		}
-		else {
+		else if(m_n_logontries < m_n_max_tries) {
 			m_n_logontries++;
 		}
-		if(triesExceeded(hasError))
+		if(triesExceeded())
 			m_b_cantryagain = false;
 	}
 	
@@ -203,9 +201,8 @@ public class Logon implements ActionListener {
 		if(timer.timer_exceeded()) {
 			set_last_error(Localization.l("error_logon_request_timed_out"));
 			if(canTryAgain()) {
-				boolean error = proc.getLogonResponse().getReason() != BBUSERBLOCKREASONS.NONE;
 				dlg.set_errortext(get_last_error());
-				incLogonTries(proc.getLogonResponse().getLogonTries(), error);
+				incLogonTries(proc.getLogonResponse().getLogonTries());
 				return start();
 			}
 			else {
@@ -236,6 +233,10 @@ public class Logon implements ActionListener {
 			if(proc.getLogonResponse().getLogonTries()> 0) {
 				m_n_logontries = proc.getLogonResponse().getLogonTries();
 			}
+			// To not differentiate between actual users and non-existing ones.
+			if(m_n_logontries >= m_n_max_tries && proc.getLogonResponse().getReason() == BBUSERBLOCKREASONS.NONE) {
+				proc.setReason(BBUSERBLOCKREASONS.REACHED_RETRY_LIMIT);
+			}
 			switch(proc.getReason())
 			{
 			case BLOCKED_BY_ADMIN:
@@ -250,8 +251,7 @@ public class Logon implements ActionListener {
 			}
 			m_logoninfo = null;
 			if(canTryAgain()) {
-				boolean error = proc.getLogonResponse().getReason() != BBUSERBLOCKREASONS.NONE;
-				incLogonTries(proc.getLogonResponse().getLogonTries(), error);
+				incLogonTries(proc.getLogonResponse().getLogonTries());
 				return start();
 			}
 			else {
@@ -271,7 +271,7 @@ public class Logon implements ActionListener {
 
 		//get_userinfo().set_passwd(info.get_passwd());
 		//get_userinfo().set_sessionid(info.get_sessionid());
-		//dlg.setVisible(false);
+		dlg.setVisible(false);
 		//dlg.setTitle(get_last_error());
 		return m_info;
 	}
