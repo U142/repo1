@@ -21,6 +21,7 @@ public class WSLogon extends WSThread
 	protected String sz_username, sz_companyid, sz_password, sz_onetimekey;
 	public String getGeneratedPassword() { return sz_password; } 
 	UPASLOGON ret;
+	public UPASLOGON getLogonResponse() { return ret; }
 	BBUSERBLOCKREASONS reason = BBUSERBLOCKREASONS.NONE;
 	public BBUSERBLOCKREASONS getReason() { return reason; }
 	protected boolean b_responded = false;

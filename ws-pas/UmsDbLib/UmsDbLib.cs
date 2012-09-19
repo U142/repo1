@@ -709,6 +709,32 @@ namespace com.ums.UmsDbLib
             return n_ret;
         }
 
+        public int getMaxTries()
+        {
+            OdbcDataReader rs = null;
+            int tries = 0;
+            try
+            {
+                rs = ExecReader("SELECT l_incorrect FROM LBAPARAMETER", UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    tries = rs.GetInt32(0);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw new UDbQueryException(e.Message);
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return tries;
+        }
+
+
         public OdbcCommand CreateCommand(String s, int OPENMODE)
         {
             if (!m_b_dbconn)

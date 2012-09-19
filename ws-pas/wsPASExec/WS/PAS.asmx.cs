@@ -205,7 +205,17 @@ namespace com.ums.ws.pas
         public UPOWERUP_RESPONSE Powerup()
         {
             UPOWERUP_RESPONSE r = new UPOWERUP_RESPONSE();
-            r.l_max_logontries = UCommon.USETTINGS.l_max_logontries;
+            try
+            {
+                // Get max logon tries from database
+                UmsDb db = new UmsDb();
+                r.l_max_logontries = db.getMaxTries();
+            }
+            catch (Exception e)
+            {
+                // On failure return default
+                r.l_max_logontries = UCommon.USETTINGS.l_max_logontries;
+            }
             return r;
         }
 
