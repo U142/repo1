@@ -92,7 +92,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="lbl_interval" runat="server" Text="Interval between broadcasts on a channel"></asp:Label>
+                <asp:Label ID="lbl_interval" runat="server" Text="Interval between broadcasts on a channel in seconds"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:TextBox ID="txt_interval" runat="server"></asp:TextBox>
@@ -105,7 +105,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="lbl_duration" runat="server" Text="Duration of the broadcast message"></asp:Label>
+                <asp:Label ID="lbl_duration" runat="server" Text="Duration of the broadcast message in minutes"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:TextBox ID="txt_duration" runat="server"></asp:TextBox>
