@@ -266,7 +266,7 @@
                             <artifactId>maven-ums-plugin</artifactId>
                             <configuration>
                                 <destinations>
-                                    <destination>smb://Administrator:digi20ums@192.168.3.40/www/PAS/nlalert/
+                                    <destination>smb://Administrator:digi20ums@192.168.3.40/www/nlalert/nlalert/
                                     </destination>
                                 </destinations>
                             </configuration>
