@@ -160,44 +160,6 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
-
-            /*if(operator.getLStatus()<1000) // All statuses under 1000 are still active
-                   active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
-
-               for(int i=0;i<m_tabbed_operators.getComponentCount();++i) {
-                   ms = (CentricMessageStatus)m_tabbed_operators.getComponentAt(i);
-
-                   // Does the message already exist?
-                   if(ms.get_refno() == cbs.getLRefno()) {
-                       ms.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
-                       ms.setName(cbs.getSzSendingname());
-
-                       if(operator.getLStatus() >= 540)  // Active
-                           tp.setTitleAt(i,"A " + cbs.getSzSendingname());
-                       if(operator.getLStatus() == 1000) // Finished
-                           tp.setTitleAt(i,"F " + cbs.getSzSendingname());
-
-                       CentricOperatorStatus cos;
-
-
-                       boolean operator_found = false;
-                       for(int k=0;k<ms.get_tpane().getComponentCount();++k) {
-                           //cos.get_lbl_channel().setText(histcell.g);
-                           cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(k);
-                           if(cos.get_operator() == operator.getLOperator()) {
-                               setOperatorValues(cbp, cbs, operator, cos);
-                               operator_found = true;
-                           }
-                       }
-                       if(!operator_found) {
-                           cos = new CentricOperatorStatus(ms, false, operator.getLOperator());
-                           setOperatorValues(cbp, cbs, operator, cos);
-                           ms.get_tpane().add(operator.getSzOperator(), cos);
-                       }
-
-                       found = true;
-                   }
-               }*/
         }
 		updateTotal(project_timestamp);
 
@@ -488,8 +450,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		total_statuspane.unknown = unknown;
 		total_statuspane.total_ok = total_ok;
 		int num_operators = getOperators().size()-1;
-		total_percent = (num_operators>=1 ? total_percent/num_operators : 0);
-		//total_percent = (total_percent/(ms.get_tpane().getComponentCount()-1));
+		total_percent = (num_operators>=1 ? Math.round(((float)total_ok/(float)total * 100)) : 0);
 		total_statuspane.percent = total_percent;
 		total_statuspane.get_lbl_channel().setText(String.valueOf(channel));
 		total_statuspane.get_lbl_completed().setText(String.valueOf(total_ok<0?"N/A":total_ok));
