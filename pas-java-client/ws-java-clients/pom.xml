@@ -234,7 +234,7 @@
         <profile>
             <id>nlbeta</id>
             <properties>
-                <wsdl.base>https://secure.ums2.no/PAS/ws_nlutv/WS</wsdl.base>
+                <wsdl.base>http://192.168.3.41/nlalertws/WS</wsdl.base>
             </properties>
         </profile>
         <profile>
