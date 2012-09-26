@@ -298,8 +298,17 @@ public partial class user_admin : System.Web.UI.Page
                 }
                 else
                 {
-                    users[users.Length - 1] = user;
-                    Session["users"] = users;
+                    
+                    centric.com.ums.ws.pas.admin.UBBUSER[] tmpusers = new centric.com.ums.ws.pas.admin.UBBUSER[users.Length + 1];
+                    
+                    for (int i = 0; i < users.Length;i++)
+                    {
+                        tmpusers[i] = users[i];
+                    }
+
+                    tmpusers[tmpusers.Length - 1] = user;
+
+                    Session["users"] = tmpusers;
                     if (lst_users.SelectedIndex == -1)
                         lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
                     else
@@ -310,7 +319,7 @@ public partial class user_admin : System.Web.UI.Page
                         lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
                     }
                     tbl_users.Rows.Clear();
-                    buildTable(users);
+                    buildTable(tmpusers);
                 }
                 deselect();
             }
