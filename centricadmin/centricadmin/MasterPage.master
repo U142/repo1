@@ -267,7 +267,9 @@
                 args.IsValid = true;
             }
             else {
-                args.IsValid = (args.Value > 0);
+                if(!isNaN(args.valueOf)) {
+                    args.IsValid = (args.Value > 0);
+                }
             }
         }
        

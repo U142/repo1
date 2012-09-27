@@ -15,7 +15,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" text="*" ErrorMessage="Number of incorrect logons missing" ControlToValidate="txt_inclogons"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="inclogons_range" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_inclogons" Text="*" ErrorMessage="Integer value required for incorrect logons"></asp:RangeValidator>
+                <asp:RangeValidator id="inclogons_range" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_inclogons" Text="*" ErrorMessage="Integer value required for incorrect logons"></asp:RangeValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -40,7 +40,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="req_channel" runat="server" Text="*" ErrorMessage="Channel number for NL-Alert-messages missing" ControlToValidate="txt_channel"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="rng_channel" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_channel" Text="*" ErrorMessage="Integer value required for Channel number for NL-Alert-messages"></asp:RangeValidator>
+                <asp:RangeValidator id="rng_channel" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_channel" Text="*" ErrorMessage="Integer value required for Channel number for NL-Alert-messages"></asp:RangeValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -59,7 +59,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="req_second_channel" runat="server" Text="*" ErrorMessage="Channel number for second channel missing" ControlToValidate="txt_second_channel"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="rng_second_channel" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_second_channel" Text="*" ErrorMessage="Integer value required for Second channel number for NL-Alert-messages"></asp:RangeValidator>
+                <asp:RangeValidator id="rng_second_channel" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_second_channel" Text="*" ErrorMessage="Integer value required for Second channel number for NL-Alert-messages"></asp:RangeValidator>
                 <asp:CustomValidator ID="val_second_channel" runat="server" Text="*" ErrorMessage="There is a problem with the second channel number for NL-Alert-messages" ControlToValidate="txt_second_channel" ClientValidationFunction="validateSecondChannel" ></asp:CustomValidator>
                 <asp:CompareValidator ID="cmp_first_second_channel" runat="server" Text="*" ErrorMessage="Primary and Secondary channels cannot be the same" ControlToValidate="txt_channel" ControlToCompare="txt_second_channel" Type="Integer" Operator="NotEqual"></asp:CompareValidator>
             </asp:TableCell>
@@ -74,7 +74,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="req_test_channel" runat="server" Text="*" ErrorMessage="Channel number for Test messages missing" ControlToValidate="txt_test_channel"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="rng_test_channel" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_test_channel" Text="*" ErrorMessage="Integer value required for Channel number for Test messages"></asp:RangeValidator>
+                <asp:RangeValidator id="rng_test_channel" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_test_channel" Text="*" ErrorMessage="Integer value required for Channel number for Test messages"></asp:RangeValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -87,7 +87,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="req_heartbeat" runat="server" Text="*" ErrorMessage="Days delayed sending missing" ControlToValidate="txt_heartbeat"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="rng_heartbeat" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_heartbeat" Text="*" ErrorMessage="Integer value required for Channel number for Heartbeat"></asp:RangeValidator>
+                <asp:RangeValidator id="rng_heartbeat" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_heartbeat" Text="*" ErrorMessage="Integer value required for Channel number for Heartbeat"></asp:RangeValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -100,7 +100,7 @@
             <asp:TableCell>
                 <asp:RequiredFieldValidator ID="req_interval" runat="server" Text="*" ErrorMessage="Sending interval missing" ControlToValidate="txt_interval"></asp:RequiredFieldValidator>
                 <!-- Error message is specified in page_load -->
-                <asp:RangeValidator id="rng_interval" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_interval" Text="*" ErrorMessage="Integer value required for sending interval"></asp:RangeValidator>
+                <asp:RangeValidator id="rng_interval" Type="Integer" runat="server" MinimumValue="1" ControlToValidate="txt_interval" Text="*" ErrorMessage="Integer value required for sending interval"></asp:RangeValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
