@@ -342,7 +342,7 @@
   <Import Project="$(MSBuildProjectDirectory)\ums.targets" />
   <PropertyGroup>
     <DeployTargetFolderBeta>\PAS\ws_pasutv\</DeployTargetFolderBeta>
-    <DeployTargetFolderNlbeta>\PAS\ws_nlutv\</DeployTargetFolderNlbeta>
+    <DeployTargetFolderNlbeta>\nlalert\ws_nlutv\</DeployTargetFolderNlbeta>
     <DeployTargetFolderQa>\www\pas\ws_pasqa</DeployTargetFolderQa>
     <DeployTargetFolderProd>\www\pas\ws_pasprod</DeployTargetFolderProd>
     <DeployUrl>secure.ums.no/pas/ws_pas</DeployUrl>
