@@ -711,7 +711,7 @@ namespace com.ums.PAS.Database
                 //l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
 
-                szSQL = String.Format("sp_cb_pasadmin_logon '{0}', '{1}', '{2}'",
+                szSQL = String.Format("sp_cb_pasadmin_logon '{0}', '{1}', '{2}', 0",
                     l.sz_userid,
                     l.sz_password,
                     l.sz_compid);
