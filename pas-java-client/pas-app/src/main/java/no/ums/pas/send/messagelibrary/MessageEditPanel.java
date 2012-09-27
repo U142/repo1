@@ -113,10 +113,10 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	protected StdTextLabel lbl_name = new StdTextLabel(Localization.l("common_name"), 150);
 
     {
-        lbl_name = new StdTextLabel(Localization.l("common_name"), 150);
+        lbl_name = new StdTextLabel(Localization.l("common_name"), 120);
     }
 
-    protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(300,20));
+    protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(360,20));
 	protected StdTextLabel lbl_lang = new StdTextLabel("Language", 150);
 	protected cccombo cbx_lang = new cccombo();
 	
