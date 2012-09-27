@@ -6,6 +6,7 @@ import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.SearchPanelStatusList;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.send.SendController;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.common.UDeleteStatusResponse;
 
@@ -152,25 +153,42 @@ public class StatusListObject extends Object implements TooltipItem {
 		m_sz_deptid	= sz_values[11];*/
 	}
 	public String get_groupdesc() {
-		switch(get_group())
-		{
-			case 0:
-			case 1:
-				return "N/A";
-			case 2:
-				return "Square";
-			case 3:
-				return "Polygon";
-			case 4:
-				return "Import";
-			case 5:
-				return "TAS";
-			case 8:
-				return "Ellipse";
-			case 9:
-				return "Municipal";
+		// To get correct group for NLAlert
+		if(get_sendingtype() == 7) {
+			switch(get_group())
+			{
+				case 0:
+				case 1:
+					return "N/A";
+				case 2:
+					return "Polygoon";
+				case 16:
+					return "Nationaal";
+				case 32:
+					return "Ovaal";
+			}
+			return "N/A";
+		} else {
+			switch(get_group())
+			{
+				case 0:
+				case 1:
+					return "N/A";
+				case 2:
+					return "Square";
+				case 3:
+					return "Polygon";
+				case 4:
+					return "Import";
+				case 5:
+					return "TAS";
+				case 8:
+					return "Ellipse";
+				case 9:
+					return "Municipal";
+			}
+			return "N/A";
 		}
-		return "N/A";
 	}
 	
 	public boolean HasFinalStatus()
