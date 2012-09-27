@@ -7,6 +7,8 @@
 		<Error Condition="$(Configuration) == 'Prod' And $(DeployTargetFolderProd) == ''" Text="Missing DeployTargetFolderProd parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_Prod' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_QA' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
+		<Error Condition="$(Configuration) == 'Gas-se_Prod' And $(DeployUrl-se) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
+		<Error Condition="$(Configuration) == 'Gas-se_QA' And $(DeployUrl-se) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<PropertyGroup Condition="$(Configuration) == 'Beta'">
 			<DeployShare1>\\192.168.3.40\www</DeployShare1>
 			<DeployUser1>Administrator</DeployUser1>
@@ -52,6 +54,22 @@
 			<DeployPath1>$(DeployUrl)</DeployPath1>
 			<DeployUrl2>https://192.168.5.26:8172/MsDeploy.axd</DeployUrl2>
 			<DeployPath2>$(DeployUrl)</DeployPath2>
+			<username>Administrator</username>
+			<password>Digi20ums</password>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration) == 'Gas-se_QA'">
+			<DeployUrl1>https://192.168.9.21:8172/MsDeploy.axd</DeployUrl1>
+			<DeployPath1>$(DeployUrl-se)_qa</DeployPath1>
+			<DeployUrl2>https://192.168.9.22:8172/MsDeploy.axd</DeployUrl2>
+			<DeployPath2>$(DeployUrl-se)_qa</DeployPath2>
+			<username>Administrator</username>
+			<password>Digi20ums</password>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration) == 'Gas-se_Prod'">
+			<DeployUrl1>https://192.168.9.21:8172/MsDeploy.axd</DeployUrl1>
+			<DeployPath1>$(DeployUrl-se)</DeployPath1>
+			<DeployUrl2>https://192.168.9.22:8172/MsDeploy.axd</DeployUrl2>
+			<DeployPath2>$(DeployUrl-se)</DeployPath2>
 			<username>Administrator</username>
 			<password>Digi20ums</password>
 		</PropertyGroup>
