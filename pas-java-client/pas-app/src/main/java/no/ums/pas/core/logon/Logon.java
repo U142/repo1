@@ -232,6 +232,7 @@ public class Logon implements ActionListener {
 			// sets logontries if it has found a user
 			if(proc.getLogonResponse().getLogonTries()> 0) {
 				m_n_logontries = proc.getLogonResponse().getLogonTries();
+				setMaxTries(proc.getLogonResponse().getMaxLogonTries());
 			}
 			// To not differentiate between actual users and non-existing ones.
 			if(m_n_logontries >= m_n_max_tries && proc.getLogonResponse().getReason() == BBUSERBLOCKREASONS.NONE) {
