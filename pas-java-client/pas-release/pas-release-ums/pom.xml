@@ -227,7 +227,7 @@
             </build>
         </profile>
         <profile>
-            <id>gas-se_qa</id>
+            <id>gas-se_prod</id>
             <properties>
                 <jnlp_title>UMS Population Alert System</jnlp_title>
                 <jnlp_codebase_url>https://secure.umscom.se/PAS/pasprod/</jnlp_codebase_url>
