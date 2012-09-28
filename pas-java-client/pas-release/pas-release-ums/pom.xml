@@ -217,7 +217,7 @@
                                 <destinations>
                                     <destination>smb://Administrator:Digi20ums@192.168.9.21/e$/www/secure/pas/pasqa/
                                     </destination>
-                                    <destination>smb://Administrator:Digi20ums@192.168.9.26/e$/www/secure/pas/pasqa/
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.22/e$/www/secure/pas/pasqa/
                                     </destination>
                                 </destinations>
                             </configuration>
@@ -245,7 +245,7 @@
                                 <destinations>
                                     <destination>smb://Administrator:Digi20ums@192.168.9.21/e$/www/secure/pas/pasprod/
                                     </destination>
-                                    <destination>smb://Administrator:Digi20ums@192.168.9.26/e$/www/secure/pas/pasprod/
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.22/e$/www/secure/pas/pasprod/
                                     </destination>
                                 </destinations>
                             </configuration>
