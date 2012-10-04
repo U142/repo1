@@ -236,7 +236,16 @@ public partial class user_admin : System.Web.UI.Page
         {
             // Only on region
             user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_regional"]);
-            user.l_deptpk = int.Parse(lst_regions.SelectedValue);
+            try
+            {
+                user.l_deptpk = int.Parse(lst_regions.SelectedValue);
+            }
+            catch (Exception ex)
+            {
+                lbl_feedback.Text = "Error getting region id";
+                lbl_feedback.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
         }
 
         centric.com.ums.ws.pas.admin.UBBUSER[] users = (centric.com.ums.ws.pas.admin.UBBUSER[])Session["users"];
@@ -360,6 +369,7 @@ public partial class user_admin : System.Web.UI.Page
         lst_regions.SelectedIndex = -1;
         lst_users.SelectedIndex = -1;
         selected.Text = "";
+        lbl_feedback.Text = "";
     }
 
     private void deselect()
