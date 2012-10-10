@@ -18,8 +18,6 @@ public partial class logon : System.Web.UI.Page
         {                                   
             txt_company.Text = ConfigurationManager.AppSettings["company"];
         }
-
-
     }
 
     protected void btn_ok_Click(object sender, EventArgs e)
