@@ -414,7 +414,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 
 			
 			m_lbl_errormsg.setForeground(Color.RED);
-			m_btn_submit = new JButton(Localization.l("common_submit"));
+			m_btn_submit = new JButton(Localization.l("logon_submit"));
 
 			m_txt_userid.setPreferredSize(new Dimension(110, 19));
 			m_txt_compid.setPreferredSize(new Dimension(110, 19));
