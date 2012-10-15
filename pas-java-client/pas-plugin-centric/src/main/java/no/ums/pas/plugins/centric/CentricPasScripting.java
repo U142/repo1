@@ -1065,7 +1065,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         dlg.get_logonpanel().getLblCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);
-        dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("common_submit"));
+        dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("logon_submit"));
         dlg.get_logonpanel().getErrorScroller().setPreferredSize(new Dimension(390, 50));
         return super.onCustomizeLogonDlg(dlg);
     }
