@@ -203,7 +203,7 @@ namespace com.ums.UmsCommon.Audio
                 UFile file_dest_wav = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_wavfile);
                 UFile file_dest_raw = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_rawfile);
 
-                file_temp.MoveOperation(file_dest_wav);
+                file_temp.CopyOperation(file_dest_wav);
                 WAV2RAWLib.convert w2r = new WAV2RAWLib.convert();
                 w2r.WAV2RAWNormalize(file_dest_wav.full(), file_dest_raw.full());
 
