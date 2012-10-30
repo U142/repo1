@@ -452,19 +452,19 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			return;
 		m_projectpanel.setPreferredSize(new Dimension(getWidth()-20, getHeight()));
 		Dimension d = new Dimension(getWidth()-40, getHeight()-150);
-		m_projectpanel.get_projectlist().get_scrollpane().setPreferredSize(d);
+		m_projectpanel.get_projectlist().get_scrollpane().setSize(getWidth()-47,getHeight()-178);
 		m_projectpanel.m_project_list.setPreferredSize(d);
 		//m_projectpanel.get_projectlist().get_scrollpane().setSize(d);
 		//m_projectpanel.get_projectlist().get_scrollpane().get_table().setPreferredSize(d);
 		m_projectpanel.revalidate();
-		m_projectpanel.get_projectlist().get_scrollpane().revalidate();
 		m_projectpanel.get_projectlist().get_table().revalidate();
+		m_projectpanel.get_projectlist().get_scrollpane().revalidate();
 		validate();
 		repaint();
 	}
 
 	public void componentShown(ComponentEvent e) {
-		
+
 	}
 
 	public void windowOpened(WindowEvent e) {
