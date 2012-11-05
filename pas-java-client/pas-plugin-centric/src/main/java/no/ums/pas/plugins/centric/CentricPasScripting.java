@@ -36,9 +36,11 @@ import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.status.StatusListObject;
 import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.common.UBBNEWS;
 import no.ums.ws.common.USYSTEMMESSAGES;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
@@ -1517,6 +1519,60 @@ public class CentricPasScripting extends DefaultPasScripting {
 	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
 			ShapeIntegrity integrity) {
 		log.debug("shape-integrity reports %s", integrity.toString());
+	}
+	
+	@Override
+	public String onSetProjectListToolTip(
+			ArrayList<StatusListObject> status_sendings) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		//sb.append("<b><font size=3>");
+		//sb.append(get_projectname());
+		//sb.append("</b>");
+		sb.append("<table CELLPADDING=5>");
+		//headings
+		//String bgcolor = "#" + Integer.toHexString(SystemColor.controlLtHighlight.getRGB()).substring(2);
+		//sb.append("<tr bgcolor=");
+		//sb.append(bgcolor);
+		//sb.append(">");
+		sb.append("<tr>");
+		sb.append("<td><b>");
+		sb.append(Localization.l("common_owner"));
+		sb.append("</b></td><td><b>");
+		sb.append(Localization.l("common_refno"));
+		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_channel"));
+		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_type"));
+		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_created"));
+		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_time"));
+		sb.append("</td>");
+		sb.append("</tr>");
+		for(StatusListObject slo : status_sendings)
+		{
+			sb.append("<tr>");
+			sb.append("<td>");
+			sb.append(slo.get_deptid());
+			sb.append("</td><td>");
+			sb.append(slo.get_refno());
+			sb.append("</td><td>");
+			sb.append(slo.getChannel());
+			sb.append("</td><td>");
+			//Localization.l("common_items"), 
+			//Localization.l("common_type"), 
+			sb.append(slo.get_groupdesc());
+			sb.append("</td><td>");
+			sb.append(TextFormat.format_date(slo.get_createdate()));
+			sb.append("</td><td>");
+			sb.append(TextFormat.format_time(slo.get_createtime(),4));
+			sb.append("</td>");
+			sb.append("</tr>");
+		}
+		sb.append("</html>");
+		
+		return sb.toString();
 	}
     
     

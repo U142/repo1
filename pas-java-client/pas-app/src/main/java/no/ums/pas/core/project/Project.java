@@ -1,5 +1,6 @@
 package no.ums.pas.core.project;
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.TooltipItem;
 import no.ums.pas.core.logon.DeptInfo;
@@ -202,7 +203,7 @@ public class Project extends Object implements TooltipItem, Comparable<Project> 
 				return "Restricted by ownership";
 			}
 		}
-		return toTooltipString();
+		return PAS.pasplugin.onSetProjectListToolTip(get_status_sendings());
 	}
 	@Override
 	public String toTooltipString() {

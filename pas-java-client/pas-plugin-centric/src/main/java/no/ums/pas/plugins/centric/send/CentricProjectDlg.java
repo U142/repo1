@@ -24,6 +24,7 @@ public class CentricProjectDlg extends ProjectDlg
 		if(deleteColumn != null) {
 			m_projectpanel.get_projectlist().get_table().removeColumn(deleteColumn);
 		}
+		String TooltipText = m_projectpanel.get_projectlist().get_table().getToolTipText();
         m_projectpanel.start();
 	}
 	

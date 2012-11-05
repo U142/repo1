@@ -30,6 +30,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.status.StatusListObject;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.geotools.data.ows.Layer;
 
@@ -39,6 +40,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
@@ -532,4 +534,6 @@ public interface PasScriptingInterface {
     boolean onDeleteStatus(long refno, IDeleteStatus callback);
     
     boolean onDeleteProject(long projectpk, IDeleteProject callback);
+    
+    String onSetProjectListToolTip(ArrayList<StatusListObject> status_sendings);
 }
