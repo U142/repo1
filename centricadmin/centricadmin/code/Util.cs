@@ -184,9 +184,9 @@ public class Util
 
     private static void WriteMonthlyTotalReportColumnName()
     {
-        string columnNames = "Total number of events, Total number of regional messages sent, Total number of national messages sent, Total number of test messages sent";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Total number of events", "Total number of regional messages sent", 
+                                   "Total number of national messages sent", "Total number of test messages sent" };
+        WriteColums(columnNames);
     }
 
     /*************************
@@ -225,9 +225,8 @@ public class Util
 
     private static void WriteMonthlyReportColumnName()
     {
-        string columnNames = "Regional/National/Test, Message, Username, Operator, #addressed cells, Operator performance";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Regional/National/Test", "Message", "Username", "Operator", "#addressed cells", "Operator performance" };
+        WriteColums(columnNames);
     }
 
     /*************************
@@ -235,9 +234,8 @@ public class Util
      *************************/
     private static void WriteMonthlyPerformanceColumnName()
     {
-        string columnNames = "Operator, Performance";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Operator", "Performance" };
+        WriteColums(columnNames);
     }
 
     public static void WriteMonthlyPerformanceToCSV(CB_MESSAGE_MONTHLY_REPORT_RESPONSE[] MonthlyPerformance)
@@ -299,9 +297,8 @@ public class Util
 
     private static void WriteSystemMessagesColumnName()
     {
-        string columnNames = "Message, Operator, Type, Activated on, Deactivated on";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Message", "Operator", "Type", "Activated on", "Deactivated on" };
+        WriteColums(columnNames);
     }
 
     /*******************************
@@ -350,11 +347,21 @@ public class Util
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
 
+    private static void WriteColums(string[] columnNames)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        foreach (var column in columnNames)
+        {
+            AddComma(column, stringBuilder);
+        }
+        HttpContext.Current.Response.Write(stringBuilder.ToString());
+        HttpContext.Current.Response.Write(Environment.NewLine);
+    }
+
     private static void WriteUserActivityMonthlyColumnName()
     {
-        string columnNames = "Log id, Username, Operation, Timestamp, Description";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Log id", "Username", "Operation", "Timestamp", "Description" };
+        WriteColums(columnNames);
     }
 
     /*******************************
@@ -389,9 +396,8 @@ public class Util
 
     private static void WriteAccessPerUserColumnName()
     {
-        string columnNames = "Username, Authorization area name,";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Username", "Authorization area name"};
+        WriteColums(columnNames);
     }
 
     /*******************************
@@ -425,9 +431,8 @@ public class Util
 
     private static void WriteUsersPerAccessPermissionColumnName()
     {
-        string columnNames = "Authorization area name, Username";
-        HttpContext.Current.Response.Write(columnNames);
-        HttpContext.Current.Response.Write(Environment.NewLine);
+        string[] columnNames = { "Authorization area name", "Username" };
+        WriteColums(columnNames);
     }
 
 
