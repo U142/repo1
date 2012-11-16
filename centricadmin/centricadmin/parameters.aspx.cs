@@ -10,22 +10,27 @@ using System.ServiceModel;
 
 public partial class parameters : System.Web.UI.Page
 {
+    string rng_channel_max = "30000";
+    string rng_second_channel_max = "30000";
+    string rng_heartbeat_max = "30000";
+    string rng_test_channel_max = "30000";
+
     protected void Page_Load(object sender, EventArgs e)
     {
         inclogons_range.MaximumValue = Int32.MaxValue.ToString();
         inclogons_range.ErrorMessage = "Maximum value for incorrect logons is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
         //autologoff_range.MaximumValue = Int32.MaxValue.ToString();
-        rng_channel.MaximumValue = Int32.MaxValue.ToString();
-        rng_channel.ErrorMessage = "Maximum value in channel number for NL-Alert-messages is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
-        rng_second_channel.MaximumValue = Int32.MaxValue.ToString();
-        rng_second_channel.ErrorMessage = "Maximum value in second channel number for NL-Alert-messages is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
-        rng_heartbeat.MaximumValue = Int32.MaxValue.ToString();
-        rng_heartbeat.ErrorMessage = "Maximum value in channel number for heartbeat-messages is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
+        rng_channel.MaximumValue = rng_channel_max;
+        rng_channel.ErrorMessage = "Maximum value in channel number for NL-Alert-messages is " + rng_channel_max + " and needs to be of type integer";
+        rng_second_channel.MaximumValue = rng_second_channel_max;
+        rng_second_channel.ErrorMessage = "Maximum value in second channel number for NL-Alert-messages is " + rng_second_channel_max + " and needs to be of type integer";
+        rng_heartbeat.MaximumValue = rng_heartbeat_max;
+        rng_heartbeat.ErrorMessage = "Maximum value in channel number for heartbeat-messages is " + rng_heartbeat_max + " and needs to be of type integer";
         rng_interval.MaximumValue = Int32.MaxValue.ToString();
         rng_interval.ErrorMessage = "Maximum value in interval for NL-Alert-messages is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
         //rng_repetitions.MaximumValue = Int32.MaxValue.ToString();
-        rng_test_channel.MaximumValue = Int32.MaxValue.ToString();
-        rng_test_channel.ErrorMessage = "Maximum value in test channel for NL-Alert-messages is " + Int32.MaxValue.ToString() + " and needs to be of type integer";
+        rng_test_channel.MaximumValue = rng_test_channel_max;
+        rng_test_channel.ErrorMessage = "Maximum value in test channel for NL-Alert-messages is " + rng_test_channel_max + " and needs to be of type integer";
 
         if (!IsPostBack)
         {
