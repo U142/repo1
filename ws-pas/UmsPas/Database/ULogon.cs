@@ -96,30 +96,36 @@ namespace com.ums.PAS.Database
         {
             UmsDb dbNsLookup = new UmsDb();
             OdbcDataReader rs = null;
+            OdbcCommand cmd = null;
             try
             {
-                String szSQL = String.Format("SELECT l_userpk, sz_location FROM BBUSER_NSLOOKUP WHERE l_userpk={0} AND "+
-                                            "sz_ip='{1}'",
-                                            n_userpk, ns.sz_ip);
+                cmd = dbNsLookup.CreateCommand("SELECT l_userpk, sz_location FROM BBUSER_NSLOOKUP WHERE l_userpk=? AND " +
+                                            "sz_ip=?", UmsDb.UREADER_KEEPOPEN);
+                cmd.Parameters.Add("@l_userpk", OdbcType.Numeric).Value = n_userpk;
+                cmd.Parameters.Add("@sz_ip", OdbcType.VarChar, 16).Value = ns.sz_ip;
+                rs = cmd.ExecuteReader();
 
-                rs = dbNsLookup.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                cmd.Parameters.Clear();
+                
+                cmd.Parameters.Add("@l_lastdatetime", OdbcType.Numeric).Value = ns.l_lastdatetime;
+                cmd.Parameters.Add("@sz_domain", OdbcType.VarChar, 50).Value = ns.sz_domain;
+                cmd.Parameters.Add("@f_success", OdbcType.TinyInt).Value = ns.f_success ? 1 : 0;
+                cmd.Parameters.Add("@sz_location", OdbcType.VarChar, 100).Value = ns.sz_location;
+                cmd.Parameters.Add("@l_userpk", OdbcType.Numeric).Value = n_userpk;
+                cmd.Parameters.Add("@sz_ip", OdbcType.VarChar, 16).Value = ns.sz_ip;
+
                 if (rs.Read())
                 {
-                    rs.Close();
-                    szSQL = String.Format("UPDATE BBUSER_NSLOOKUP SET l_lastdatetime={0}, sz_domain='{1}', f_success={2}, " +
-                                          "sz_location='{3}' WHERE l_userpk={4} AND sz_ip='{5}' ",
-                                          ns.l_lastdatetime, ns.sz_domain, (ns.f_success ? 1 : 0), ns.sz_location,
-                                          n_userpk, ns.sz_ip);
-                    dbNsLookup.ExecNonQuery(szSQL);
+                    cmd.CommandText = "UPDATE BBUSER_NSLOOKUP SET l_lastdatetime=?, sz_domain=?, f_success=?, " +
+                                          "sz_location=? WHERE l_userpk=? AND sz_ip=?";
                 }
                 else
                 {
-                    rs.Close();
-                    szSQL = String.Format("INSERT INTO BBUSER_NSLOOKUP(l_userpk, sz_domain, sz_ip, l_lastdatetime, f_success, sz_location) " +
-                                        "VALUES({0}, '{1}', '{2}', {3}, {4}, '{5}')",
-                                        n_userpk, ns.sz_domain, ns.sz_ip, ns.l_lastdatetime, (ns.f_success ? 1 : 0), ns.sz_location);
-                    dbNsLookup.ExecNonQuery(szSQL);
+                    cmd.CommandText = "INSERT INTO BBUSER_NSLOOKUP(l_lastdatetime, sz_domain, f_success, sz_location, l_userpk, sz_ip) " +
+                        "VALUES(?, ?, ?, ?, ?, ?)";
                 }
+                rs.Close();
+                cmd.ExecuteNonQuery();
                 return true;
             }
             catch (Exception)
@@ -130,6 +136,10 @@ namespace com.ums.PAS.Database
             {
                 if (rs != null && !rs.IsClosed)
                     rs.Close();
+                if (cmd != null)
+                {
+                    cmd.Dispose();
+                }
                 dbNsLookup.close();
             }
         }
