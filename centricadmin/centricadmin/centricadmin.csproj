@@ -541,6 +541,7 @@
   <PropertyGroup>
     <DeployUrl>secure.ums.no/centricadmin</DeployUrl>
     <DeployTargetFolderBeta>\centricadmin</DeployTargetFolderBeta>
+	<DeployTargetFolderNlBeta>\centricadmin</DeployTargetFolderNlBeta>
     <DeployTargetFolderQa>\www\Secure\centricadmin</DeployTargetFolderQa>
     <DeployTargetFolderProd>\www\Secure\centricadmin</DeployTargetFolderProd>
   </PropertyGroup>
