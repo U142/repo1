@@ -224,13 +224,13 @@
             </properties>
         </profile>
         <profile>
-            <id>qa</id>
+            <id>orange_qa</id>
             <properties>
                 <wsdl.base>https://secure.ums.no/PAS/ws_pasqa/WS</wsdl.base>
             </properties>
         </profile>
         <profile>
-            <id>prod</id>
+            <id>orange_prod</id>
             <properties>
                 <wsdl.base>https://secure.ums.no/PAS/ws_pas/WS</wsdl.base>
             </properties>
