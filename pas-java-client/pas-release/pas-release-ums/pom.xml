@@ -197,5 +197,62 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>gas-se_qa</id>
+            <properties>
+                <jnlp_title>UMS Population Alert System</jnlp_title>
+                <jnlp_codebase_url>https://secure.umscom.se/PAS/pasqa/</jnlp_codebase_url>
+                <jnlp_s>https://secure.umscom.se/PAS/</jnlp_s>
+                <jnlp_w>https://secure.umscom.se/PAS/ws_pas_qa/WS/</jnlp_w>
+                <jnlp_v>https://secure.umscom.se/gas/</jnlp_v>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>no.ums.maven</groupId>
+                            <artifactId>maven-ums-plugin</artifactId>
+                            <configuration>
+
+                                <destinations>
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.21/e$/www/secure/pas/pasqa/
+                                    </destination>
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.22/e$/www/secure/pas/pasqa/
+                                    </destination>
+                                </destinations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>gas-se_prod</id>
+            <properties>
+                <jnlp_title>UMS Population Alert System</jnlp_title>
+                <jnlp_codebase_url>https://secure.umscom.se/PAS/pasprod/</jnlp_codebase_url>
+                <jnlp_s>https://secure.umscom.se/PAS/</jnlp_s>
+                <jnlp_w>https://secure.umscom.se/PAS/ws_pas/WS/</jnlp_w>
+                <jnlp_v>https://secure.umscom.se/gas/</jnlp_v>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>no.ums.maven</groupId>
+                            <artifactId>maven-ums-plugin</artifactId>
+                            <configuration>
+                                <destinations>
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.21/e$/www/secure/pas/pasprod/
+                                    </destination>
+                                    <destination>smb://Administrator:Digi20ums@192.168.9.22/e$/www/secure/pas/pasprod/
+                                    </destination>
+                                </destinations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
     </profiles>
 </project>
