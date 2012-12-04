@@ -55,6 +55,22 @@
 			<username>Administrator</username>
 			<password>Digi20ums</password>
 		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration) == 'Gas-se_QA'">
+			<DeployUrl1>https://192.168.9.21:8172/MsDeploy.axd</DeployUrl1>
+			<DeployPath1>$(DeployUrl-se)_qa</DeployPath1>
+			<DeployUrl2>https://192.168.9.22:8172/MsDeploy.axd</DeployUrl2>
+			<DeployPath2>$(DeployUrl-se)_qa</DeployPath2>
+			<username>Administrator</username>
+			<password>Digi20ums</password>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration) == 'Gas-se_Prod'">
+			<DeployUrl1>https://192.168.9.21:8172/MsDeploy.axd</DeployUrl1>
+			<DeployPath1>$(DeployUrl-se)</DeployPath1>
+			<DeployUrl2>https://192.168.9.22:8172/MsDeploy.axd</DeployUrl2>
+			<DeployPath2>$(DeployUrl-se)</DeployPath2>
+			<username>Administrator</username>
+			<password>Digi20ums</password>
+		</PropertyGroup>
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="MsDeployServiceUrl=$(DeployUrl1);username=$(username);password=$(password);DeployIisAppPath=$(DeployPath1);AllowUntrustedCertificate=True" Targets="ResolveReferences;MSDeployPublish" Condition="$(DeployUrl1) != ''" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Properties="MsDeployServiceUrl=$(DeployUrl2);username=$(username);password=$(password);DeployIisAppPath=$(DeployPath2);AllowUntrustedCertificate=True" Targets="ResolveReferences;MSDeployPublish" Condition="$(DeployUrl2) != ''" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" Condition="$(DeployLocation1) != ''" />
