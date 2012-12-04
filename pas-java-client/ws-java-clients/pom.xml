@@ -271,5 +271,17 @@
                 <wsdl.base>http://192.168.5.21/pas/ws_pas/WS</wsdl.base>
             </properties>
         </profile>
+        <profile>
+            <id>gas-se_qa</id>
+            <properties>
+                <wsdl.base>https://secure.umscom.se/pas/ws_pas_qa/WS</wsdl.base>
+            </properties>
+        </profile>
+		<profile>
+            <id>gas-se_prod</id>
+            <properties>
+                <wsdl.base>https://secure.umscom.se/pas/ws_pas/WS</wsdl.base>
+            </properties>
+        </profile>
     </profiles>
 </project>
