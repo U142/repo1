@@ -25,6 +25,7 @@ public class GisImport {
 	public static void main(String[] args) {
 		PasApplication pasApp = PasApplication.init("http://localhost:8080/WS/");
 		
+		
 		try {
 			ULOGONINFO logoninfo = new ULOGONINFO();
 			logoninfo.setOnetimekey(pasApp.getPaswsSoap().getOneTimeKey());
