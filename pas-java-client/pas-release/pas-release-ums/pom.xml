@@ -204,7 +204,7 @@
                 <jnlp_codebase_url>https://secure.umscom.se/PAS/pasqa/</jnlp_codebase_url>
                 <jnlp_s>https://secure.umscom.se/PAS/</jnlp_s>
                 <jnlp_w>https://secure.umscom.se/PAS/ws_pas_qa/WS/</jnlp_w>
-                <jnlp_v>https://secure.umscom.se/gas/</jnlp_v>
+                <jnlp_v>https://secure.umscom.se/gasqa/</jnlp_v>
             </properties>
             <build>
                 <pluginManagement>
