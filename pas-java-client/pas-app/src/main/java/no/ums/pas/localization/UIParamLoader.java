@@ -168,7 +168,7 @@ public class UIParamLoader extends ClassLoader
 	public static boolean loadServerUIParams()
 	throws FileNotFoundException
 	{
-		String file = /*PAS.get_pas().get_sitename() +*/PAS.get_pas().get_codebase() +  "/pas-site-setup.txt";
+		String file = PAS.get_pas().get_pasappsite() +  "/pas-site-setup.txt";
 		
 		try
 		{

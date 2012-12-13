@@ -122,6 +122,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String PAS_OVERRIDE_LANGUAGE = null;
 	private String PAS_WS_SITE;;
 	private String PAS_CODEBASE;
+    private String PAS_APP_SITE;
 	public String ADDRESSSEARCH_URL = "";
 	public String VB4_URL = "";
 	StatusController m_statuscontroller = null;
@@ -197,6 +198,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public String get_sitename() { return PAS_SITENAME; }
 	public String get_pasws() { return PAS_WS_SITE; }
 	public String get_codebase() { return PAS_CODEBASE; }
+    public String get_pasappsite() { return PAS_APP_SITE; }
 
     public StatusController get_statuscontroller() { return m_statuscontroller; }
 	public GPSController get_gpscontroller() { return m_gpscontroller; }
@@ -334,6 +336,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			PAS_WS_SITE = s;
 	}
 	public void setCodeBase(String s) { PAS_CODEBASE = s; }
+    public void setPasAppSite(String s) { PAS_APP_SITE = s; }
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
 	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }

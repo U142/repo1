@@ -47,6 +47,7 @@ public class ExecApp {
         String sz_force_wms = null;
         boolean debug = false;
         String sz_codebase = null;
+        String sz_pasappsite = "";
         String sz_addresssearch_url = null;
         String sz_vb4_url = null;
         String codebaseFolder = "";
@@ -108,12 +109,14 @@ public class ExecApp {
 
         if (ServiceManager.getServiceNames() == null) {
             sz_codebase = sz_sitename;
+            sz_pasappsite = sz_sitename;
         }
         else {
             try {
                 BasicService basicService = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
                 URL url = basicService.getCodeBase();
                 sz_codebase = url.toExternalForm() + codebaseFolder;
+                sz_pasappsite = url.toExternalForm();
                 log.debug("Codebase=" + sz_codebase);
             } catch (UnavailableServiceException e) {
                 log.error("Failed to initialized JNLP BasicService", e);
@@ -130,6 +133,7 @@ public class ExecApp {
         m_pas.setPasWsSite(sz_pasws);
         m_pas.setDebug(debug);
         m_pas.setCodeBase(sz_codebase);
+        m_pas.setPasAppSite(sz_pasappsite);
         m_pas.setProgramArguments(args);
         m_pas.setForceWMSSite(sz_force_wms);
         m_pas.setAddressSeachUrl(sz_addresssearch_url);
