@@ -101,14 +101,15 @@ public class LogFrame extends javax.swing.JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				
-				if(isVisible())
-				{
+
+                // commented out isVisible, otherwise changing language doesn't affect the log window
+				//if(isVisible())
+				//{
 			    	getContentPane().removeAll();
 			    	initComponents();
 			    	afterInitComponents();
 					log.info("Locale changed to %s", l.getDisplayLanguage());
-				}					
+				//}
 			}
 		});
     }
