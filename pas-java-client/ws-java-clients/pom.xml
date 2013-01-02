@@ -250,13 +250,13 @@
             </properties>
         </profile>
 		<profile>
-            <id>Orange_QA</id>
+            <id>orange_qa</id>
             <properties>
                 <wsdl.base>http://192.168.5.21/pas/ws_pas/WS</wsdl.base>
             </properties>
         </profile>
 		<profile>
-            <id>Orange_Prod</id>
+            <id>orange_prod</id>
             <properties>
                 <wsdl.base>http://192.168.5.21/pas/ws_pas/WS</wsdl.base>
             </properties>
