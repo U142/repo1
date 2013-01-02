@@ -95,7 +95,7 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
 
             }
             
-            String query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=,&SRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
+            String query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&SRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
             return new URI(getScheme(), getHost(), getPath(), query, null);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Failed to create URI", e);
