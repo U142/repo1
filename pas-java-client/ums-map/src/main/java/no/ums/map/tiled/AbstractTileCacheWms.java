@@ -98,7 +98,7 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
             if(getVersion().contains("1.3")) {
             	query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&CRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_bbo, n_lbo, n_ubo, n_rbo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
             } else {
-            	query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&SRS=EPSG:%s&CRS=CRS:83&VERSION=%s", getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
+            	query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&SRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
             }
             return new URI(getScheme(), getHost(), getPath(), query, null);
         } catch (URISyntaxException e) {
