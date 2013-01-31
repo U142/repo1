@@ -162,6 +162,7 @@ namespace com.ums.PAS.Address.gab
      * input : searchparams and logoninfo
      * returns a collection of UGabResult (in a UGabSearchResultList)
      */
+
     public class UGabSearch : IAddressSearch
     {
         protected UGabSearchParams m_params;
@@ -189,9 +190,20 @@ namespace com.ums.PAS.Address.gab
             if (m_params.sz_no.Length > 0)
                 n_unique = 1;
             
+            string sz_server;
+            string sz_params;
+            string authorizationHeader = ""; // For http authentication
 
-            string sz_server = "http://api.fleximap.com/servlet/FlexiMap";
-            string sz_params = "UID=" + m_params.sz_uid +
+            if(m_params.sz_country.Equals("SE")) {
+                sz_server = "http://testmaps.metria.se/geokodning/Geocode";
+                sz_params = "address=" + m_params.sz_address + " " + m_params.sz_no + ", " +
+                                    m_params.sz_postno + " " + m_params.sz_postarea +
+                                    ", Sverige&scheme=adress_WGS84";
+                authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("umsas:Zyl00pon"));
+
+            } else {
+                    sz_server = "http://api.fleximap.com/servlet/FlexiMap";
+                    sz_params = "UID=" + m_params.sz_uid +
                                 "&UPA=" + m_params.sz_pwd +
                                 "&Language=" + m_params.sz_language +
                                 "&Street=" + m_params.sz_address +
@@ -202,6 +214,7 @@ namespace com.ums.PAS.Address.gab
                                 "&count=" + m_params.n_count +
                                 "&Sort=" + m_params.n_sort +
                                 "&Unique=" + n_unique;
+            }
             //Byte[] param_bytes = encoder.GetBytes(sz_params);
             //string sz_params_8859 = Encoding.GetEncoding("iso-8859-1").GetString(param_bytes);
 
@@ -221,6 +234,10 @@ namespace com.ums.PAS.Address.gab
                 web.Method = "POST";
                 web.ContentType = "application/x-www-form-urlencoded";
                 web.ContentLength = postDataBytes.Length;
+                if (authorizationHeader.Length > 0)
+                {
+                    web.Headers["Authorization"] = authorizationHeader;
+                }
                 Stream requestStream = web.GetRequestStream();
                 requestStream.Write(postDataBytes, 0, postDataBytes.Length);
                 requestStream.Close();
@@ -254,7 +271,14 @@ namespace com.ums.PAS.Address.gab
             try
             {
                 doc.LoadXml(xmldata_utf8);
-                return parse(ref doc);
+                if (m_params.sz_country.Equals("SE"))
+                {
+                    return parseSE(ref doc);
+                }
+                else
+                {
+                    return parse(ref doc);
+                }
             }
             catch (Exception e)
             {
@@ -269,7 +293,7 @@ namespace com.ums.PAS.Address.gab
                 return list;
             }
         }
-
+        
         public UGabSearchResultList parse(ref XmlDocument doc)
         {
             UGabSearchResultList list = new UGabSearchResultList();
@@ -319,7 +343,6 @@ namespace com.ums.PAS.Address.gab
             while (en.MoveNext())
             {
                 node = (XmlNode)en.Current;
-                
                 /*check for specific houses*/
                 if (node.HasChildNodes)
                 {
@@ -354,7 +377,57 @@ namespace com.ums.PAS.Address.gab
             return list;
 
         }
+
+        public UGabSearchResultList parseSE(ref XmlDocument doc)
+        {
+            UGabSearchResultList list = new UGabSearchResultList();
+            XmlElement AdrList = doc.DocumentElement;
+
+            XmlNodeList nl_location = AdrList.GetElementsByTagName("location");
+
+            IEnumerator en;
+            UGabResult item;
+            XmlNode node;
+
+            en = nl_location.GetEnumerator();
+            while (en.MoveNext())
+            {
+                node = (XmlNode)en.Current;
+                String[] address = node.Attributes["address"].Value.Split(',');
+                item = new UGabResult();
+                item.match = float.Parse(node.Attributes["rank"].Value, UCommon.UGlobalizationInfo);
+                item.name = address[0];
+                item.postno = address.Length > 2 ? tryParsePostNo(address[(address.Length - 2)])[0] : ""; // 2nd to last
+                item.region = address.Length > 2 ? tryParsePostNo(address[(address.Length - 2)])[1] : address.Length > 1 ? address[0] : "";
+                item.lon = float.Parse(node.Attributes["x"].Value, UCommon.UGlobalizationInfo);
+                item.lat = float.Parse(node.Attributes["y"].Value, UCommon.UGlobalizationInfo);
+                item.type = GABTYPE.Street;
+                list.addLine(ref item);
+
+            }
+
+            list.finalize();
+            return list;
+
+        }
+        
+        private String[] tryParsePostNo(String postNoRegion)
+        {
+            String[] address = postNoRegion.Split(' ');
+            if (address.Length > 1)
+            {
+                int postno;
+                bool success = int.TryParse(address[0], out postno);
+                if (success)
+                {
+                    address[0] = postno.ToString();
+                }
+                else
+                {
+                    address[0] = "";
+                }
+            }
+            return address;
+        }
     }
-
-
 }
