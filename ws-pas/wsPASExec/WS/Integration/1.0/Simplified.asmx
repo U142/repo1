@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="C#" CodeBehind="Simplified.asmx.cs" Class="wsPASExec.WS.Powel" %>
+﻿<%@ WebService Language="C#" CodeBehind="Simplified.asmx.cs" Class="com.ums.ws.integration.Simplified" %>

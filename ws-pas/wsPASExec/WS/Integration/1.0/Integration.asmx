@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="C#" CodeBehind="Integration.asmx.cs" Class="com.ums.ws.Integration" %>
+﻿<%@ WebService Language="C#" CodeBehind="Integration.asmx.cs" Class="com.ums.ws.integration.Integration" %>
