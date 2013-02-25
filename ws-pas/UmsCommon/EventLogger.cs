@@ -134,7 +134,10 @@ namespace com.ums.UmsCommon
             String o = String.Format("ERROR Refno {0}\n{1}\n{2}", l_refno, s, e);
             error(o);
         }
-
+        public static void write(String s, params object[] args)
+        {
+            write(String.Format(s, args));
+        }
         public static void write(String s)
         {
             _insert(s, EventLogEntryType.Information);
@@ -143,9 +146,17 @@ namespace com.ums.UmsCommon
         {
             _insert(s, EventLogEntryType.Error);
         }
+        public static void error(String s, params object[] args)
+        {
+            error(String.Format(s, args));
+        }
         public static void warning(String s)
         {
             _insert(s, EventLogEntryType.Warning);
+        }
+        public static void warning(String s, params object[] args)
+        {
+            warning(String.Format(s, args));
         }
         private static void _insert(String s, EventLogEntryType type)
         {
