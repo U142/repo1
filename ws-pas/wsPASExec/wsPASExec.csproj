@@ -125,6 +125,12 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Apache.NMS">
+      <HintPath>..\ExtLib\Apache.NMS-1.5.1-bin\net-3.5\release\Apache.NMS.dll</HintPath>
+    </Reference>
+    <Reference Include="Apache.NMS.ActiveMQ">
+      <HintPath>..\ExtLib\Apache.NMS.ActiveMQ-1.5.6-bin\build\net-3.5\release\Apache.NMS.ActiveMQ.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\ExtLib\DotNetZipLib-DevKit-v1.9\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -135,12 +141,16 @@
     <Reference Include="Lucene.Net">
       <HintPath>..\ExtLib\Lucene-2.9.2\Lucene.Net.dll</HintPath>
     </Reference>
+    <Reference Include="PasIntegrationInterface">
+      <HintPath>..\..\..\morten\PasIntegrationService\PasIntegrationInterface\bin\Debug\PasIntegrationInterface.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions.Design" />
@@ -166,6 +176,8 @@
     </Content>
     <Content Include="WS\PasAdmin.asmx" />
     <Content Include="WS\PasStatus.asmx" />
+    <Content Include="WS\Integration\1.0\Integration.asmx" />
+    <Content Include="WS\Integration\1.0\Simplified.asmx" />
     <Content Include="WS\TAS.asmx" />
     <Content Include="WS\VB.asmx" />
     <Content Include="WS\Voice.asmx" />
@@ -222,6 +234,14 @@
     </Compile>
     <Compile Include="WS\PasStatus.asmx.cs">
       <DependentUpon>PasStatus.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WS\Integration\1.0\Integration.asmx.cs">
+      <DependentUpon>Integration.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WS\Integration\1.0\Simplified.asmx.cs">
+      <DependentUpon>Simplified.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WS\TAS.asmx.cs">
