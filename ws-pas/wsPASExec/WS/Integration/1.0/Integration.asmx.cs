@@ -12,7 +12,7 @@ using com.ums.UmsDbLib;
 using com.ums.PAS.Project;
 using System.Xml.Serialization;
 
-namespace com.ums.ws
+namespace com.ums.ws.integration
 {
     /// <summary>
     /// external PARM Alert and Event execution
