@@ -35,9 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Apache.NMS, Version=1.5.1.2739, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternComAudio\Apache.NMS.dll</HintPath>
+    <Reference Include="Apache.NMS">
+      <HintPath>..\ExtLib\Apache.NMS.ActiveMQ-1.5.6-bin\lib\Apache.NMS\net-3.5\Apache.NMS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -48,12 +47,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
-    <Reference Include="UmsCommon">
-      <HintPath>..\..\..\pas\ws-pas\UmsCommon\bin\Beta\UmsCommon.dll</HintPath>
-    </Reference>
-    <Reference Include="UmsDbLib">
-      <HintPath>..\..\..\pas\ws-pas\UmsDbLib\bin\Release\UmsDbLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataHandlerImpl.cs" />
@@ -74,6 +67,14 @@
     <ProjectReference Include="..\PasIntegrationInterface\PasIntegrationInterface.csproj">
       <Project>{5F25B3F4-CA67-4BB1-B693-A7AF76170ABF}</Project>
       <Name>PasIntegrationInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">
+      <Project>{21957982-6FBC-49F9-8F75-C0DE18558133}</Project>
+      <Name>UmsCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsDbLib\UmsDbLib.csproj">
+      <Project>{F0B76F05-656E-43FA-A965-A233B0F2C8A9}</Project>
+      <Name>UmsDbLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
