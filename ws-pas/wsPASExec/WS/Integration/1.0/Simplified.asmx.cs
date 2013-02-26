@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using com.ums.pas.integration;
+using System.Xml.Serialization;
 
 namespace com.ums.ws.integration
 {
@@ -17,16 +18,20 @@ namespace com.ums.ws.integration
     // [System.Web.Script.Services.ScriptService]
     public class Simplified : System.Web.Services.WebService
     {
-        [WebMethod]
-        public AlertResponse Test()
-        {
-            return AlertResponseFactory.Ok(new AlertId(), "12345");
-        }
+        [XmlInclude(typeof(Phone))]
 
         [WebMethod]
-        public AlertResponse StartAlert(Account account, String Title, String Message, Boolean StartImmediately, DateTime DateTime, 
-            Int32 Repeats, Int32 Frequency, Boolean Exercise, List<StreetAddress> StreetAddresses, 
-            List<PropertyAddress> PropertyAddresses, List<AlertTarget> Alert)
+        public AlertResponse StartAlert(Account account,
+                                        String Title,
+                                        String Message, 
+                                        Boolean StartImmediately, 
+                                        DateTime DateTime, 
+                                        Int32 Repeats, 
+                                        Int32 Frequency, 
+                                        Boolean Exercise, 
+                                        List<StreetAddress> StreetAddresses,
+                                        List<PropertyAddress> PropertyAddresses, 
+                                        List<AlertObject> Alert)
         {
             throw new NotImplementedException();
         }
@@ -44,13 +49,25 @@ namespace com.ums.ws.integration
         }
 
         [WebMethod]
-        public void StopAlert(Account Account, long ProjectPk)
+        public DefaultResponse StopAlert(Account Account, long ProjectPk)
         {
             throw new NotImplementedException();
         }
 
         [WebMethod]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebMethod]
+        public List<LogSummary> GetAlertLog(Account Account, AlertId AlertId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebMethod]
+        public List<LogLineDetailed> GetAlertObjectLog(Account Account, AlertId AlertId, int StatusCodeFilter, int StartIndex, int PageSize)
         {
             throw new NotImplementedException();
         }

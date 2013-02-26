@@ -524,7 +524,7 @@ namespace com.ums.pas.integration
 
     /// <summary>
     /// Specify common for the alert, for all channels.
-    /// 
+    /// Should be singleton for each alert.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
@@ -778,7 +778,137 @@ namespace com.ums.pas.integration
         }
     }
 
+    /// <summary>
+    /// Log/Status summary of a specific alert.
+    /// Extension of the AlertSummary. Also containing overall status/log details.
+    /// </summary>
     [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogSummary : AlertSummary
+    {
+        private int _voiceAnswered;
+
+        public int VoiceAnswered
+        {
+            get { return _voiceAnswered; }
+            set { _voiceAnswered = value; }
+        }
+        private int _voiceUnanswered;
+
+        public int VoiceUnanswered
+        {
+            get { return _voiceUnanswered; }
+            set { _voiceUnanswered = value; }
+        }
+        private int _voiceConfirmed;
+
+        public int VoiceConfirmed
+        {
+            get { return _voiceConfirmed; }
+            set { _voiceConfirmed = value; }
+        }
+        private int _voiceTotal;
+
+        public int VoiceTotal
+        {
+            get { return _voiceTotal; }
+            set { _voiceTotal = value; }
+        }
+        private int _smsSent;
+
+        public int SmsSent
+        {
+            get { return _smsSent; }
+            set { _smsSent = value; }
+        }
+        private int _smsReceived;
+
+        public int SmsReceived
+        {
+            get { return _smsReceived; }
+            set { _smsReceived = value; }
+        }
+        private int _smsTotal;
+
+        public int SmsTotal
+        {
+            get { return _smsTotal; }
+            set { _smsTotal = value; }
+        }
+        private List<LogLine> _errors;
+
+        public List<LogLine> Errors
+        {
+            get { return _errors; }
+            set { _errors = value; }
+        }
+
+        
+    }
+
+    /// <summary>
+    /// Detailed Log/status per recipient.
+    /// The logline consists of 
+    /// 
+    /// </summary>
+    public class LogLineDetailed : AlertTarget
+    {
+        private String _name;
+
+        public String Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        private Endpoint _endpoint;
+
+        public Endpoint Endpoint
+        {
+            get { return _endpoint; }
+            set { _endpoint = value; }
+        }
+                
+    }
+
+    /// <summary>
+    /// Log line specifies an Endpoint and it's status.
+    /// It does not specify who owns the Endpoint (Recipient)
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogLine
+    {
+        private Endpoint _endpoint;
+
+        public Endpoint EndPoint
+        {
+            get { return _endpoint; }
+            set { _endpoint = value; }
+        }
+
+        private int _statusCode;
+
+        public int StatusCode
+        {
+            get { return _statusCode; }
+            set { _statusCode = value; }
+        }
+        private String _statusText;
+
+        public String StatusText
+        {
+            get { return _statusText; }
+            set { _statusText = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// Base class for responses.
+    /// </summary>
+    /// 
+    /// <typeparam name="T">Defined when overriding for fluent interface of common setters</typeparam>
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class GenericResponse<T> where T : GenericResponse<T>
     {
@@ -810,6 +940,19 @@ namespace com.ums.pas.integration
 
     }
 
+    /// <summary>
+    /// Response with code and text, default for put/post operations.
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class DefaultResponse : GenericResponse<DefaultResponse>
+    {
+
+    }
+
+    /// <summary>
+    /// Response object with code and text for return when generating alerts.
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertResponse : GenericResponse<AlertResponse>
@@ -834,6 +977,10 @@ namespace com.ums.pas.integration
         }
     }
 
+    /// <summary>
+    /// Factory for creating return values for Alert.
+    /// Generates AlertResponse objects
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertResponseFactory
@@ -860,9 +1007,13 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Account
     {
+        [XmlElement(IsNullable = false)]
         public String userId;
+        [XmlElement(IsNullable = false)]
         public String companyId;
+        [XmlElement(IsNullable = false)]
         public String password;
+        [XmlElement(IsNullable = false)]
         public String departmentId;
     }
 
