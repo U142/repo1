@@ -29,10 +29,22 @@ namespace com.ums.ws.integration
         [XmlInclude(typeof(StoredAddress))]
         [XmlInclude(typeof(StreetAddress))]
         [XmlInclude(typeof(Recipient))]
+        [XmlInclude(typeof(Phone))]
         [XmlInclude(typeof(AlertConfiguration))]
         [XmlInclude(typeof(ChannelConfiguration))]
         [XmlInclude(typeof(SmsConfiguration))]
         [XmlInclude(typeof(VoiceConfiguration))]
+
+        [XmlInclude(typeof(AlertResponse))]
+        [XmlInclude(typeof(DefaultResponse))]
+
+        [WebMethod]
+        public AlertResponse StartAlert(Account account, AlertConfiguration alertConfigurations, List<AlertTarget> alertTargets)
+        {
+            return AlertResponseFactory.Ok(new AlertId(12345), "12345-123");
+        }
+
+
 
         [WebMethod]
         public AlertResponse ActiveMqTest()
