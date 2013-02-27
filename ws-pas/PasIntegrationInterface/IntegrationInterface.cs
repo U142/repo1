@@ -1123,6 +1123,8 @@ namespace com.ums.pas.integration
         }
     }
 
+
+
     /// <summary>
     /// Factory for creating return values for Alert.
     /// Generates AlertResponse objects
@@ -1209,9 +1211,14 @@ namespace com.ums.pas.integration
     #endregion
 
     #region Templates
+
+
+    /// <summary>
+    /// Id for a MessageTemplate
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public class TemplateId
+    public class MessageTemplateId
     {
         private long _id;
 
@@ -1220,6 +1227,67 @@ namespace com.ums.pas.integration
             get { return _id; }
             set { _id = value; }
         }
+    }
+
+
+    /// <summary>
+    /// Message template item for listing, containing id and title.
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class MessageTemplateListItem
+    {
+        private MessageTemplateId _templateId;
+
+        public MessageTemplateId TemplateId
+        {
+            get { return _templateId; }
+            set { _templateId = value; }
+        }
+        private String _title;
+
+        public String Title
+        {
+            get { return _title; }
+            set { _title = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// Message template, title and a content.
+    /// Override the list-version MessageTemplateListItem
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class MessageTemplate : MessageTemplateListItem
+    {
+        private String _messageText;
+
+        public String MessageText
+        {
+            get { return _messageText; }
+            set { _messageText = value; }
+        }
+
+        
+    }
+
+    /// <summary>
+    /// Response object when creating or altering a MessageTemplate
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class MessageTemplateResponse : GenericResponse<MessageTemplateResponse>
+    {
+        private MessageTemplateId _templateId;
+
+        public MessageTemplateId TemplateId
+        {
+            get { return _templateId; }
+            set { _templateId = value; }
+        }
+
     }
 
     #endregion Templates
