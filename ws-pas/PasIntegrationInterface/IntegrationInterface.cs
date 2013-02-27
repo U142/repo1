@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 
 namespace com.ums.pas.integration
 {
+
+    #region Alert
     [Serializable]
     [Flags]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
@@ -265,6 +267,33 @@ namespace com.ums.pas.integration
 
 
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class AlertTargetEndpoints
+    {
+        private AlertTarget _alertTarget;
+
+        public AlertTarget AlertTarget
+        {
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
+        }
+
+        private List<Endpoint> _endPoints;
+
+        public List<Endpoint> EndPoints
+        {
+            get { return _endPoints; }
+            set { _endPoints = value; }
+        }
+
+
+    }
+
 
     /// <summary>
     /// Properties/buildings are specified by municipal, bruksnr, gårdsnr, festenr and seksjonsnr.
@@ -572,33 +601,7 @@ namespace com.ums.pas.integration
 
     }
 
-    [Serializable]
-    [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public static class Helpers
-    {
-        /// <summary>
-        /// Extension of ToString that will list all properties within a class with format "prop: value newline"
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string ToStringExtension(this object obj)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (FieldInfo property in obj.GetType().GetFields())
-            {
 
-                sb.Append(property.Name);
-                sb.Append(": ");
-                {
-                    sb.Append(property.GetValue(obj));
-                }
-
-                sb.Append(System.Environment.NewLine);
-            }
-
-            return sb.ToString();
-        }
-    }
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
@@ -738,9 +741,16 @@ namespace com.ums.pas.integration
         }
         public AlertId(long projectPk)
         {
-            this.ProjectPk = projectPk;
+            this.Id = projectPk;
         }
-        public long ProjectPk;
+        private long _id;
+
+        public long Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
     }
 
     /// <summary>
@@ -787,6 +797,9 @@ namespace com.ums.pas.integration
         }
     }
 
+    #endregion Alert
+
+    #region Log
     /// <summary>
     /// Log/Status summary of a specific alert.
     /// Extension of the AlertSummary. Also containing overall status/log details.
@@ -855,11 +868,52 @@ namespace com.ums.pas.integration
         
     }
 
+
+    /// <summary>
+    /// Class containing information about an AlertTarget that didn't result in an Endpoint (Phone)
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogLineNotFound
+    {
+        private String _name;
+
+        /// <summary>
+        /// The name of person or organization
+        /// </summary>
+        public String Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        private String _externalId;
+
+        public String ExternalId
+        {
+            get { return _externalId; }
+            set { _externalId = value; }
+        }
+
+
+        private AlertTarget _requestedAlertTarget;
+
+        /// <summary>
+        /// The requested alert target that didn't result in an Endpoint (phone number)
+        /// </summary>
+        public AlertTarget RequestedAlertTarget
+        {
+            get { return _requestedAlertTarget; }
+            set { _requestedAlertTarget = value; }
+        }
+
+    }
+
     /// <summary>
     /// Detailed Log/status per recipient.
-    /// The logline consists of 
-    /// 
     /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class LogLineDetailed : AlertTarget
     {
         private String _name;
@@ -878,6 +932,84 @@ namespace com.ums.pas.integration
             set { _endpoint = value; }
         }
                 
+    }
+
+    /// <summary>
+    /// Single object from Log, also containing alert information.
+    /// Used when searching for specific persons and numbers
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogObject
+    {
+        private String _name;
+
+        public String Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        private String _externalId;
+
+        public String ExternalId
+        {
+            get { return _externalId; }
+            set { _externalId = value; }
+        }
+        private String _phoneNumber;
+
+        public String PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set { _phoneNumber = value; }
+        }
+        private DateTime _dateTime;
+
+        public DateTime DateTime
+        {
+            get { return _dateTime; }
+            set { _dateTime = value; }
+        }
+        private int _statusCode;
+
+        public int StatusCode
+        {
+            get { return _statusCode; }
+            set { _statusCode = value; }
+        }
+
+        private AlertId _alertId;
+
+        public AlertId AlertId
+        {
+            get { return _alertId; }
+            set { _alertId = value; }
+        }
+
+        private String _alertTitle;
+
+        public String AlertTitle
+        {
+            get { return _alertTitle; }
+            set { _alertTitle = value; }
+        }
+
+        private String _alertMessage;
+
+        public String AlertMessage
+        {
+            get { return _alertMessage; }
+            set { _alertMessage = value; }
+        }
+
+        private List<AlertTarget> _alertTargets;
+
+        public List<AlertTarget> AlertTargets
+        {
+            get { return _alertTargets; }
+            set { _alertTargets = value; }
+        }
+
     }
 
     /// <summary>
@@ -913,6 +1045,10 @@ namespace com.ums.pas.integration
 
     }
 
+    #endregion Log
+
+
+    #region Responses
     /// <summary>
     /// Base class for responses.
     /// </summary>
@@ -958,6 +1094,7 @@ namespace com.ums.pas.integration
     {
 
     }
+
 
     /// <summary>
     /// Response object with code and text for return when generating alerts.
@@ -1011,7 +1148,9 @@ namespace com.ums.pas.integration
                 .SetAlertId(new AlertId(-1));
         }
     }
+    #endregion Responses
 
+    #region Div
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Account
@@ -1028,6 +1167,37 @@ namespace com.ums.pas.integration
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public static class Helpers
+    {
+        /// <summary>
+        /// Extension of ToString that will list all properties within a class with format "prop: value newline"
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string ToStringExtension(this object obj)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (FieldInfo property in obj.GetType().GetFields())
+            {
+
+                sb.Append(property.Name);
+                sb.Append(": ");
+                {
+                    sb.Append(property.GetValue(obj));
+                }
+
+                sb.Append(System.Environment.NewLine);
+            }
+
+            return sb.ToString();
+        }
+    }
+    #endregion Div
+
+
+    #region ActiveMq
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertMqPayload
     {
         public long projectPk = -1;
@@ -1036,4 +1206,21 @@ namespace com.ums.pas.integration
         public List<AlertTarget> AlertTargets = new List<AlertTarget>();
         public List<ChannelConfiguration> ChannelConfigurations = new List<ChannelConfiguration>();
     }
+    #endregion
+
+    #region Templates
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class TemplateId
+    {
+        private long _id;
+
+        public long Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+    }
+
+    #endregion Templates
 }

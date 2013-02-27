@@ -71,5 +71,51 @@ namespace com.ums.ws.integration
         {
             throw new NotImplementedException();
         }
+
+        [WebMethod]
+        public List<LogLineNotFound> GetAlertNumberNotFoundLog(Account Account, AlertId AlertId, int StartIndex, int PageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Search for a specific recipient, either by name or number
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="SearchText">Search by name or number</param>
+        /// <param name="StartIndex">Start at index</param>
+        /// <param name="PageSize">Number of rows</param>
+        [WebMethod]
+        public List<LogObject> GetObjectLog(Account Account, String SearchText, int StartIndex, int PageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Search for a list of endpoints (phonenumbers, email etc) based on a list of AlertTargets.
+        /// The alert targets used are StreetAddress or PropertyAddress
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="AlertTargets"></param>
+        /// <returns></returns>
+        [WebMethod]
+        public List<AlertTargetEndpoints> GetEndpoints(Account Account, List<AlertTarget> AlertTargets)
+        {
+            throw new NotImplementedException();
+        }
+
+#region Templates
+        [WebMethod]
+        public void SaveTemplate(Account Account, TemplateId TemplateId, String Title, String MessageText)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebMethod]
+        public void DeleteTemplate(Account Account, TemplateId TemplateId)
+        {
+            throw new NotImplementedException();
+        }
     }
+#endregion Templates
 }
