@@ -49,7 +49,7 @@ namespace com.ums.ws.integration
         }
 
         [WebMethod]
-        public DefaultResponse StopAlert(Account Account, long ProjectPk)
+        public DefaultResponse StopAlert(Account Account, AlertId ProjectPk)
         {
             throw new NotImplementedException();
         }

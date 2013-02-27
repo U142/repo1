@@ -530,6 +530,15 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertConfiguration
     {
+        private String _alertName;
+
+        public String AlertName
+        {
+            get { return _alertName; }
+            set { _alertName = value; }
+        }
+
+
         private bool _startImmediately;
 
         public bool StartImmediately

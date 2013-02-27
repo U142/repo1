@@ -39,11 +39,28 @@ namespace com.ums.ws.integration
         [XmlInclude(typeof(DefaultResponse))]
 
         [WebMethod]
-        public AlertResponse StartAlert(Account account, AlertConfiguration alertConfigurations, List<AlertTarget> alertTargets)
+        public AlertResponse StartAlert(Account account, AlertConfiguration alertConfiguration, List<ChannelConfiguration> channelConfigurations, List<AlertTarget> alertTargets)
         {
-            return AlertResponseFactory.Ok(new AlertId(12345), "12345-123");
+            throw new NotImplementedException();
         }
 
+        [WebMethod]
+        public AlertResponse StartFollowUpAlert(Account Account, AlertConfiguration alertConfiguration, String Message)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebMethod]
+        public DefaultResponse StopAlert(Account Account, AlertId AlertId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebMethod]
+        public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
+        {
+            throw new NotImplementedException();
+        }
 
 
         [WebMethod]
