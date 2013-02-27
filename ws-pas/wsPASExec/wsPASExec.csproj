@@ -129,9 +129,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExtLib\Apache.NMS-1.5.1-bin\net-3.5\release\Apache.NMS.dll</HintPath>
     </Reference>
-    <Reference Include="Apache.NMS.ActiveMQ">
-      <HintPath>..\ExtLib\Apache.NMS.ActiveMQ-1.5.6-bin\build\net-3.5\release\Apache.NMS.ActiveMQ.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\ExtLib\DotNetZipLib-DevKit-v1.9\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
