@@ -12,7 +12,7 @@ namespace com.ums.pas.integration
     [Serializable]
     [Flags]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public enum ADRTYPES
+    public enum AdrTypes
     {
         NOPHONE_PRIVATE = 1 << 0,
         NOPHONE_COMPANY = 1 << 1,
@@ -44,7 +44,7 @@ namespace com.ums.pas.integration
     }
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public enum SENDCHANNEL
+    public enum SendChannel
     {
         VOICE = 1,
         SMS = 2,
@@ -914,7 +914,7 @@ namespace com.ums.pas.integration
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public class LogLineDetailed : AlertTarget
+    public class LogLineDetailed
     {
         private String _name;
 
@@ -931,6 +931,38 @@ namespace com.ums.pas.integration
             get { return _endpoint; }
             set { _endpoint = value; }
         }
+
+        private DateTime _dateTime;
+
+        public DateTime DateTime
+        {
+            get { return _dateTime; }
+            set { _dateTime = value; }
+        }
+
+        private int _status;
+
+        public int Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
+        private String _externalId;
+
+        public String ExternalId
+        {
+            get { return _externalId; }
+            set { _externalId = value; }
+        }
+
+        private AlertObject _alertObject;
+
+        public AlertObject AlertObject
+        {
+            get { return _alertObject; }
+            set { _alertObject = value; }
+        }
+
                 
     }
 
