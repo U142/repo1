@@ -117,7 +117,7 @@ namespace com.ums.ws.integration
         /// <param name="Account">The account</param>
         /// <param name="AlertId">The alert id</param>
         /// <returns></returns>
-        [WebMethod(Description = @"Get status of a previously sent alert.")]
+        [WebMethod(Description = @"<b>Get status of a previously sent alert.</b>")]
         public List<LogSummary> GetAlertLog(Account Account, AlertId AlertId)
         {
             throw new NotImplementedException();
