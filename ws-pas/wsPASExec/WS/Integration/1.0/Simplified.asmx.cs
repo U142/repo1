@@ -19,6 +19,7 @@ namespace com.ums.ws.integration
     public class Simplified : System.Web.Services.WebService
     {
         [XmlInclude(typeof(Phone))]
+        [XmlInclude(typeof(Recipient))]
 
         /// <summary>
         /// Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).
@@ -32,11 +33,12 @@ namespace com.ums.ws.integration
         /// <param name="Repeats">Number of repeats (only voice)</param>
         /// <param name="Frequency">Frequency in minutes between repeats</param>
         /// <param name="Exercise">If true, it's a simulated alert</param>
-        /// <param name="AlertTargets">AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress and AlertObject</param>
+        /// <param name="AlertTargets">AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject</param>
         /// <returns></returns>
-        [WebMethod(Description="<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress and AlertObject")]
+        [WebMethod(Description = "<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject")]
         [XmlInclude(typeof(StreetAddress))]
         [XmlInclude(typeof(PropertyAddress))]
+        [XmlInclude(typeof(OwnerAddress))]
         [XmlInclude(typeof(AlertObject))]
         public AlertResponse StartAlert(Account account,
                                         String Title,

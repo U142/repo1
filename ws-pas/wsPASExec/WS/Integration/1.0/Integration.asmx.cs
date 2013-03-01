@@ -26,8 +26,8 @@ namespace com.ums.ws.integration
     {
         [XmlInclude(typeof(PropertyAddress))]
         [XmlInclude(typeof(StoredAddress))]
-        [XmlInclude(typeof(StoredAddress))]
         [XmlInclude(typeof(StreetAddress))]
+        [XmlInclude(typeof(OwnerAddress))]
         [XmlInclude(typeof(Recipient))]
         [XmlInclude(typeof(Phone))]
         [XmlInclude(typeof(AlertConfiguration))]
