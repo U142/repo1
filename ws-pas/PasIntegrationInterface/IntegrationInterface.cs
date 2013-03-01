@@ -1189,14 +1189,38 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Account
     {
+        private String  _userId;
+
         [XmlElement(IsNullable = false)]
-        public String userId;
+        public String  UserId
+        {
+            get { return _userId; }
+            set { _userId = value; }
+        }
+        private String _companyId;
+
         [XmlElement(IsNullable = false)]
-        public String companyId;
+        public String CompanyId
+        {
+            get { return _companyId; }
+            set { _companyId = value; }
+        }
+        private String  _password;
+
         [XmlElement(IsNullable = false)]
-        public String password;
+        public String  Password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
+        private String _departmentId;
+
         [XmlElement(IsNullable = false)]
-        public String departmentId;
+        public String DepartmentId
+        {
+            get { return _departmentId; }
+            set { _departmentId = value; }
+        }
     }
 
     [Serializable]

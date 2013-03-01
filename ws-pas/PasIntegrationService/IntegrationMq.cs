@@ -149,7 +149,7 @@ namespace com.ums.pas.integration
                                         payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + Helpers.ToStringExtension(val) + "\n");
 
                                         ULog.write("Received message from account Company/Department/User {0}/{1}/{2}\n\n ProjectPk {3}\n\n MessageId {4}\n\n{5}",
-                                            payload.Account.companyId, payload.Account.departmentId, payload.Account.userId, payload.projectPk, objectMessage.NMSMessageId, summary);
+                                            payload.Account.CompanyId, payload.Account.DepartmentId, payload.Account.UserId, payload.projectPk, objectMessage.NMSMessageId, summary);
 
                                         try
                                         {
