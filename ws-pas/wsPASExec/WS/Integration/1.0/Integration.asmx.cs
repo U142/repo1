@@ -39,13 +39,70 @@ namespace com.ums.ws.integration
         [XmlInclude(typeof(DefaultResponse))]
 
         [WebMethod]
-        public AlertResponse StartAlert(Account account, AlertConfiguration alertConfiguration, List<ChannelConfiguration> channelConfigurations, List<AlertTarget> alertTargets)
+        public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets)
         {
-            throw new NotImplementedException();
+            String ActiveMqUri = System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"];
+            String ActiveMqDestination = System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"];
+
+            if (ActiveMqDestination == null || ActiveMqDestination.Length == 0 
+                || ActiveMqUri == null || ActiveMqUri.Length == 0)
+            {
+                ULog.error("Active MQ setup is faulty");
+                return AlertResponseFactory.Failed(-9, @"Active MQ destination not specified");
+            }
+
+            AlertResponse responseObject = new AlertResponse();
+            Uri connectionUri = new Uri(ActiveMqUri);
+            IConnectionFactory mqFactory = new NMSConnectionFactory(connectionUri);
+            try
+            {
+                using (IConnection mqConnection = mqFactory.CreateConnection())
+                using (ISession mqSession = mqConnection.CreateSession())
+                {
+                    IDestination destination = SessionUtil.GetDestination(mqSession, ActiveMqDestination);
+                    using (IMessageProducer mqProducer = mqSession.CreateProducer())
+                    {
+                        //IMessage message = mqSession.CreateObjectMessage("tester");
+                        AlertMqPayload payload = new AlertMqPayload();
+
+                        ULOGONINFO logonInfo = new ULOGONINFO();
+                        logonInfo.sz_compid = Account.CompanyId;
+                        logonInfo.sz_deptid = Account.DepartmentId;
+                        logonInfo.sz_userid = Account.UserId;
+                        logonInfo.sz_password = Account.Password;
+
+                        UPROJECT_REQUEST req = new UPROJECT_REQUEST();
+                        req.sz_name = "ActiveMq";
+                        payload.projectPk = new UProject().uproject(ref logonInfo, ref req).n_projectpk;
+                        payload.Account.CompanyId = Account.CompanyId;
+                        payload.Account.DepartmentId = Account.DepartmentId;
+                        payload.Account.UserId = Account.UserId;
+                        payload.Account.Password = Account.Password;
+
+                        payload.AlertTargets = AlertTargets;
+                        payload.AlertConfiguration = AlertConfiguration;
+                        payload.ChannelConfigurations = ChannelConfigurations;
+
+                        IObjectMessage message = mqSession.CreateObjectMessage(payload);
+                        mqProducer.Send(destination, message);
+                        responseObject.AlertId = new AlertId(payload.projectPk);
+                        return responseObject;
+                    }
+                }
+            }
+            catch (NMSConnectionException e)
+            {
+                return AlertResponseFactory.Failed(-1, e.Message);
+            }
+            catch (Exception e)
+            {
+                return AlertResponseFactory.Failed(-2, e.Message);
+            }
+
         }
 
         [WebMethod]
-        public AlertResponse StartFollowUpAlert(Account Account, AlertConfiguration alertConfiguration, String Message)
+        public AlertResponse StartFollowUpAlert(Account Account, AlertConfiguration AlertConfiguration, String Message)
         {
             throw new NotImplementedException();
         }
@@ -89,10 +146,10 @@ namespace com.ums.ws.integration
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
                         req.sz_name = "ActiveMq";
                         payload.projectPk = new UProject().uproject(ref logonInfo, ref req).n_projectpk;
-                        payload.Account.companyId = logonInfo.sz_compid;
-                        payload.Account.departmentId = logonInfo.sz_deptid;
-                        payload.Account.userId = logonInfo.sz_userid;
-                        payload.Account.password = logonInfo.sz_password;
+                        payload.Account.CompanyId = logonInfo.sz_compid;
+                        payload.Account.DepartmentId = logonInfo.sz_deptid;
+                        payload.Account.UserId = logonInfo.sz_userid;
+                        payload.Account.Password = logonInfo.sz_password;
 
                         payload.AlertTargets.Add(AlertTargetFactory.newStreetAddress("1102", 123, 20, "", ""));
                         payload.AlertTargets.Add(AlertTargetFactory.newPropertyAddress("1102", 69, 2977, 0, 0));

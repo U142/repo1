@@ -51,7 +51,32 @@ namespace com.ums.ws.integration
                                         Boolean Exercise, 
                                         List<AlertTarget> AlertTargets)
         {
-            throw new NotImplementedException();
+            AlertConfiguration alertConfiguration = new AlertConfiguration();
+            alertConfiguration.AlertName = Title;
+            alertConfiguration.Scheduled = DateTime;
+            alertConfiguration.SendToAllChannels = true;
+            alertConfiguration.SimulationMode = true;
+            alertConfiguration.StartImmediately = StartImmediately;
+            List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
+
+            //TODO - Get default voice origin number.
+            channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
+                                                                                        Frequency,
+                                                                                        2200,
+                                                                                        60 * 10,
+                                                                                        7,
+                                                                                        true,
+                                                                                        -1,
+                                                                                        true,
+                                                                                        "23500801",
+                                                                                        VoiceMessage));
+            //TODO - Get default SMS oadc
+            channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
+                                                                                        SmsMessage,
+                                                                                        false));
+
+
+            return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets);
         }
 
         /// <summary>
