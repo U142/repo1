@@ -174,7 +174,7 @@ namespace com.ums.ws.integration
         /// <param name="Account"></param>
         /// <param name="AlertTargets"></param>
         /// <returns></returns>
-        [WebMethod(Description = @"<b>Search for a list of endpoints (phonenumbers, email etc) based on a list of AlertTargets.</b><br>The alert targets used are StreetAddress or PropertyAddress")]
+        [WebMethod(Description = @"<b>Search for a list of endpoints (phonenumbers, email etc) based on a list of AlertTargets.</b><br>The alert targets used are StreetAddress, PropertyAddress or OwnerAddress")]
         public List<AlertTargetEndpoints> GetEndpoints(Account Account, List<AlertTarget> AlertTargets)
         {
             throw new NotImplementedException();
