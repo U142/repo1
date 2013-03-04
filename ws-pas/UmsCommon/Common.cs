@@ -1605,4 +1605,41 @@ namespace com.ums.UmsCommon
         public long l_refno;
         public UCancelSending response;
     }
+
+    /// <summary>
+    /// Use this to make an easy timer profiling.
+    /// <br></br>
+    /// <example>Example of usage
+    /// <code>
+    /// 
+    /// using(new TimeProfiler("Do something"))
+    /// {
+    ///     //do something
+    /// }
+    /// 
+    /// </code>
+    /// </example>
+    /// </summary>
+    public class TimeProfiler : IDisposable
+    {
+        public String TimerName { get; private set; }
+        public Stopwatch Timer { get; private set; }
+        public TimeProfiler(String TimerName)
+        {
+            this.TimerName = TimerName;
+            Console.WriteLine("Starting timer for {0}", TimerName);
+            Timer = new Stopwatch();
+            Timer.Start();
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Timer.Stop();
+            Console.WriteLine("Stopping timer for {0} - used {1}", TimerName, Timer.Elapsed);
+        }
+
+        #endregion
+    }
 }

@@ -55,7 +55,7 @@ namespace com.ums.ws.integration
             alertConfiguration.AlertName = Title;
             alertConfiguration.Scheduled = DateTime;
             alertConfiguration.SendToAllChannels = true;
-            alertConfiguration.SimulationMode = true;
+            alertConfiguration.SimulationMode = Exercise;
             alertConfiguration.StartImmediately = StartImmediately;
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
