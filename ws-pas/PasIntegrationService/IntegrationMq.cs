@@ -7,6 +7,7 @@ using Apache.NMS.Util;
 using System.Threading;
 using com.ums.UmsCommon;
 using System.Configuration;
+using Apache.NMS.ActiveMQ;
 
 namespace com.ums.pas.integration
 {
@@ -92,7 +93,17 @@ namespace com.ums.pas.integration
                     Thread.Sleep(5000);
                     continue;
                 }
-                IConnectionFactory mqFactory = new NMSConnectionFactory(connectionUri);
+                IConnectionFactory mqFactory = null;
+                try
+                {
+                    mqFactory = new ConnectionFactory(connectionUri);
+                }
+                catch (Exception e)
+                {
+                    ULog.error(e.ToString());
+                    Thread.Sleep(5000);
+                    continue;
+                }
                 using (IConnection mqConnection = mqFactory.CreateConnection())
                 using (ISession mqSession = mqConnection.CreateSession(AcknowledgementMode.ClientAcknowledge))
                 {
@@ -140,12 +151,13 @@ namespace com.ums.pas.integration
                                         String summary = "SUMMARY\n\n";
                                         //payload.alertTargets.ForEach(val => summary += Helpers.ToStringExtension(val) + "\n");
                                         //typeof(AlertTarget).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(AlertTarget))).ToList().ForEach(val => payload.alertTargets.OfType<val>().Count());
-
+                                        summary += "AdHoc AlertObject = " + payload.AlertTargets.OfType<AlertObject>().Count() + "\n";
                                         summary += "AdHoc Recipient = " + payload.AlertTargets.OfType<Recipient>().Count() + "\n";
                                         summary += "StoredAddress = " + payload.AlertTargets.OfType<StoredAddress>().Count() + "\n";
                                         summary += "StoredList = " + payload.AlertTargets.OfType<StoredList>().Count() + "\n";
                                         summary += "PropertyAddress = " + payload.AlertTargets.OfType<PropertyAddress>().Count() + "\n";
-                                        summary += "StreetAddress = " + payload.AlertTargets.OfType<StreetAddress>().Count() + "\n\n";
+                                        summary += "StreetAddress = " + payload.AlertTargets.OfType<StreetAddress>().Count() + "\n";
+                                        summary += "OwnerAddress = " + payload.AlertTargets.OfType<OwnerAddress>().Count() + "\n\n";
                                         payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + Helpers.ToStringExtension(val) + "\n");
 
                                         ULog.write("Received message from account Company/Department/User {0}/{1}/{2}\n\n ProjectPk {3}\n\n MessageId {4}\n\n{5}",
@@ -153,7 +165,10 @@ namespace com.ums.pas.integration
 
                                         try
                                         {
-                                            new DataHandlerImpl().HandleAlert(payload);
+                                            using (new TimeProfiler("Handle entire alert"))
+                                            {
+                                                new DataHandlerImpl().HandleAlert(payload);
+                                            }
                                             message.Acknowledge();
                                         }
                                         catch (Exception e)

@@ -53,7 +53,15 @@ namespace com.ums.ws.integration
 
             AlertResponse responseObject = new AlertResponse();
             Uri connectionUri = new Uri(ActiveMqUri);
-            IConnectionFactory mqFactory = new NMSConnectionFactory(connectionUri);
+            IConnectionFactory mqFactory = null;
+            try
+            {
+                mqFactory = new NMSConnectionFactory(connectionUri);
+            }
+            catch (Exception e)
+            {
+                return AlertResponseFactory.Failed(-3, e.Message);
+            }
             try
             {
                 using (IConnection mqConnection = mqFactory.CreateConnection())
