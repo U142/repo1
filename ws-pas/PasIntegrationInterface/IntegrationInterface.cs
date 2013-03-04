@@ -1225,7 +1225,7 @@ namespace com.ums.pas.integration
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public static class Helpers
+    public static class StringHelpers
     {
         /// <summary>
         /// Extension of ToString that will list all properties within a class with format "prop: value newline"
