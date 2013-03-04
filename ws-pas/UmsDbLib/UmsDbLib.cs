@@ -100,6 +100,65 @@ namespace com.ums.UmsDbLib
             this.timeout = n_timeout;
         }
 
+        public bool CheckGASLogonLiteral(ref ULOGONINFO info)
+        {
+            bool b_ret = false;
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc, BU.l_userpk, BD.l_deptpk, BC.l_comppk FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.sz_userid='{0}' AND " +
+                                            "BC.sz_compid='{1}' AND BD.sz_deptid='{2}' AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
+                                            "BU.sz_password='{3}'",
+                                            info.sz_userid, info.sz_compid, info.sz_deptid, info.sz_password);
+            OdbcDataReader rs = null;
+            try
+            {
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    Int64 l_fromdb = rs.GetInt64(0);
+                    //if (l_fromdb == info.l_userpk)
+                    {
+                        info.l_deptpri = rs.GetInt32(1);
+                        info.sz_stdcc = rs.GetString(2);
+                        info.l_userpk = rs.GetInt64(3);
+                        info.l_deptpk = rs.GetInt32(4);
+                        info.l_comppk = rs.GetInt32(5);
+                        info.l_priserver = 2;
+                        info.l_altservers = 1;
+                        b_ret = true;
+                    }
+                }
+                rs.Close();
+            }
+            catch (SoapException e)
+            {
+                throw e;
+            }
+            catch (USessionDoesNotExsistException e)
+            {
+                throw e;
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                throw new UDbQueryException("CheckLogon");
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            if (!b_ret)
+            {
+                setLastError(String.Format("Error in logon credentials for userid/compid {0}/{1}", info.sz_userid, info.sz_compid));
+                throw new ULogonFailedException();
+            }
+            return b_ret;
+        }
 
         public bool CheckLogonLiteral(ref ULOGONINFO info, bool b_update_session)
         {

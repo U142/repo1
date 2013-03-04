@@ -79,9 +79,13 @@ namespace com.ums.ws.integration
                         logonInfo.sz_userid = Account.UserId;
                         logonInfo.sz_password = Account.Password;
 
+                        new UmsDb().CheckGASLogonLiteral(ref logonInfo);
+
+                        //Create and retrieve a project
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
-                        req.sz_name = "ActiveMq";
+                        req.sz_name = String.Format("ActiveMq {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
                         payload.projectPk = new UProject().uproject(ref logonInfo, ref req).n_projectpk;
+
                         payload.Account.CompanyId = Account.CompanyId;
                         payload.Account.DepartmentId = Account.DepartmentId;
                         payload.Account.UserId = Account.UserId;
