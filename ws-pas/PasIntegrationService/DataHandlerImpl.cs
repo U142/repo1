@@ -20,25 +20,28 @@ namespace com.ums.pas.integration
         #region IDataHandler Members
 
 
-        IDictionary<AlertTarget, List<Endpoint>> targets = new Dictionary<AlertTarget, List<Endpoint>>();
+        IDictionary<AlertTarget, List<Recipient>> targets = new Dictionary<AlertTarget, List<Recipient>>();
         HashSet<Endpoint> AddedEndpoints = new HashSet<Endpoint>();
 
         protected int CountEndpoints(SendChannel byChannel)
         {
             int returnCount = 0;
-            foreach(KeyValuePair<AlertTarget, List<Endpoint>> kvp in targets)
+            foreach(KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
             {
-                foreach (Endpoint endPoint in kvp.Value)
+                foreach (Recipient Recipient in kvp.Value)
                 {
-                    //if(endPoint is Phone &&
-                    switch (byChannel)
+                    foreach (Endpoint endPoint in Recipient.EndPoints)
                     {
-                        case SendChannel.VOICE:
-                            returnCount += (endPoint is Phone ? 1 : 0);
-                            break;
-                        case SendChannel.SMS:
-                            returnCount += (endPoint is Phone && ((Phone)endPoint).CanReceiveSms ? 1 : 0);
-                            break;
+                        //if(endPoint is Phone &&
+                        switch (byChannel)
+                        {
+                            case SendChannel.VOICE:
+                                returnCount += (endPoint is Phone ? 1 : 0);
+                                break;
+                            case SendChannel.SMS:
+                                returnCount += (endPoint is Phone && ((Phone)endPoint).CanReceiveSms ? 1 : 0);
+                                break;
+                        }
                     }
                 }
             }
@@ -75,9 +78,19 @@ namespace com.ums.pas.integration
                     //check if endpoint is added, if not add it to targets.
                     if (TryAddEndpoint(alertObject.Phone))
                     {
-                        targets.Add(alertObject, new List<Endpoint>()
+                        targets.Add(alertObject, new List<Recipient>()
                         {
-                            alertObject.Phone,
+                            new Recipient()
+                            {
+                                EndPoints = new List<Endpoint>()
+                                        {
+                                            alertObject.Phone,
+                                        },
+                                Attributes = new List<DataItem>()
+                                {
+                                    new DataItem("AlertObject", alertObject.Phone.Address),
+                                }
+                            }
                         });
                     }
                 }
@@ -126,11 +139,7 @@ namespace com.ums.pas.integration
                     InsertBbValid(Refno, voiceConfig.ValidDays);
                     //if forced hidden number or no numbers assigned
                     InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : payload.AccountDetails.AvailableVoiceNumbers.First());
-                    if (voiceConfig.UseDefaultVoiceProfile)
-                    {
-                        //default is defined as the first one created - for municipalities, probably the only one created
-
-                    }
+                    WriteVoiceBackboneFile(Refno);
                 }
                 else if (channelConfig is SmsConfiguration)
                 {
@@ -148,7 +157,15 @@ namespace com.ums.pas.integration
         }
 
 
- 
+        /// <summary>
+        /// Write voice address file and move it to backbone eat path
+        /// </summary>
+        /// <param name="Refno"></param>
+        private void WriteVoiceBackboneFile(long Refno)
+        {
+
+        }
+
 
         /// <summary>
         /// Voice insert origin number for voice alert.
@@ -195,23 +212,26 @@ namespace com.ums.pas.integration
         private void InsertSmsQ(long Refno, AccountDetails Account, AlertConfiguration AlertConfig)
         {
             int itemNumber = 0;
-            foreach (KeyValuePair<AlertTarget, List<Endpoint>> kvp in targets)
+            foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
             {
-                foreach (Endpoint endPoint in kvp.Value)
+                foreach (Recipient recipient in kvp.Value)
                 {
-                    if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms)
+                    foreach (Endpoint endPoint in recipient.EndPoints)
                     {
-                        String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
-                                                                    Refno,
-                                                                    ++itemNumber,
-                                                                    Account.PrimarySmsServer,
-                                                                    0,
-                                                                    0,
-                                                                    AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"),
-                                                                    endPoint.Address,
-                                                                    -1);
-                        Database.ExecNonQuery(Sql);
+                        if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms)
+                        {
+                            String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                                                                        Refno,
+                                                                        ++itemNumber,
+                                                                        Account.PrimarySmsServer,
+                                                                        0,
+                                                                        0,
+                                                                        AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"),
+                                                                        endPoint.Address,
+                                                                        -1);
+                            Database.ExecNonQuery(Sql);
 
+                        }
                     }
                 }
             }

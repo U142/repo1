@@ -11,6 +11,7 @@ using com.ums.pas.integration;
 using com.ums.UmsDbLib;
 using com.ums.PAS.Project;
 using System.Xml.Serialization;
+using Apache.NMS.ActiveMQ;
 
 namespace com.ums.ws.integration
 {
@@ -56,7 +57,7 @@ namespace com.ums.ws.integration
             IConnectionFactory mqFactory = null;
             try
             {
-                mqFactory = new NMSConnectionFactory(connectionUri);
+                mqFactory = new ConnectionFactory(connectionUri);
             }
             catch (Exception e)
             {
@@ -102,7 +103,12 @@ namespace com.ums.ws.integration
                         {
                             if (voiceConfig.UseDefaultVoiceProfile)
                             {
-                                voiceConfig.VoiceProfilePk = umsDb.GetDefaultVoiceProfile(accountDetails.Deptpk);
+                                int tmpProfile = umsDb.GetDefaultVoiceProfile(accountDetails.Deptpk);
+                                if (tmpProfile < 0)
+                                {
+                                    return AlertResponseFactory.Failed(-4, "No default voice profile set up for this department ({0})", accountDetails.Deptpk);
+                                }
+                                voiceConfig.VoiceProfilePk = tmpProfile;
                             }
                             else
                             {
