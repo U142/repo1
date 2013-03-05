@@ -130,21 +130,21 @@ namespace com.ums.pas.integration
                                     AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
 
                                     Account account = payload.Account;
-                                    if (payload.projectPk <= 0)
+                                    if (payload.AlertId.Id <= 0)
                                     {
                                         ULog.error("No projectpk specified for\n\n MessageId {1}", objectMessage.NMSMessageId);
                                     }
                                     else if (account == null)
                                     {
-                                        ULog.error("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.projectPk, objectMessage.NMSMessageId);
+                                        ULog.error("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
                                     }
                                     else if (payload.AlertTargets == null || payload.AlertTargets.Count == 0)
                                     {
-                                        ULog.error("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.projectPk, objectMessage.NMSMessageId);
+                                        ULog.error("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
                                     }
                                     else if (payload.ChannelConfigurations == null || payload.AlertTargets.Count == 0)
                                     {
-                                        ULog.error("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.projectPk, objectMessage.NMSMessageId);
+                                        ULog.error("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
                                     }
                                     else
                                     {
@@ -161,7 +161,7 @@ namespace com.ums.pas.integration
                                         payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + StringHelpers.ToStringExtension(val) + "\n");
 
                                         ULog.write("Received message from account Company/Department/User {0}/{1}/{2}\n\n ProjectPk {3}\n\n MessageId {4}\n\n{5}",
-                                            payload.Account.CompanyId, payload.Account.DepartmentId, payload.Account.UserId, payload.projectPk, objectMessage.NMSMessageId, summary);
+                                            payload.Account.CompanyId, payload.Account.DepartmentId, payload.Account.UserId, payload.AlertId.Id, objectMessage.NMSMessageId, summary);
 
                                         try
                                         {

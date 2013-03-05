@@ -81,6 +81,10 @@
       <Project>{F0B76F05-656E-43FA-A965-A233B0F2C8A9}</Project>
       <Name>UmsDbLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UmsPas\UmsPas.csproj">
+      <Project>{8CDBBCD2-D0EA-4A62-B60C-A500D5CB68DA}</Project>
+      <Name>UmsPas</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
