@@ -1173,6 +1173,11 @@ namespace com.ums.pas.integration
                 .SetAlertId(projectPk)
                 .SetQueueId(queueId);
         }
+
+        public static AlertResponse Failed(int code, String description, params object[] args)
+        {
+            return Failed(code, String.Format(description, args));
+        }
         public static AlertResponse Failed(int code, String description)
         {
             return new AlertResponse()

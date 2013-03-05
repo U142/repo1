@@ -142,6 +142,7 @@ namespace com.ums.UmsDbLib
         /// <summary>
         /// Get default voice profile.
         /// Per now, default is the one with the lowest profilepk.
+        /// It also checks for shared profiles, but prioritizes owned.
         /// Municipalities will probably only have one profile for all purposes (pr dept).
         /// May be extended in database
         /// </summary>
@@ -150,7 +151,7 @@ namespace com.ums.UmsDbLib
         public int GetDefaultVoiceProfile(int DeptPk)
         {
             int defaultProfile = -1;
-            String Sql = String.Format("SELECT l_profilepk FROM BBACTIONPROFILESNAME WHERE l_deptpk={0} ORDER BY l_profilepk", DeptPk);
+            String Sql = String.Format("SELECT l_profilepk, rank=1 FROM BBACTIONPROFILESNAME WHERE l_deptpk={0} UNION SELECT l_profilepk, rank=2 FROM BBACTIONPROFILES_X_DEPT WHERE l_deptpk={0} ORDER BY rank, l_profilepk", DeptPk);
             using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
             {
                 if (rs.Read())
