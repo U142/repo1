@@ -79,19 +79,40 @@ namespace com.ums.ws.integration
                         logonInfo.sz_userid = Account.UserId;
                         logonInfo.sz_password = Account.Password;
 
-                        new UmsDb().CheckGASLogonLiteral(ref logonInfo);
+                        
+                        UmsDb umsDb = new UmsDb();
+
+                        umsDb.CheckGASLogonLiteral(ref logonInfo);
 
                         //fill internal account info
-                        AccountInvoicing accountInvoicing = new AccountInvoicing();
-                        accountInvoicing.Comppk = logonInfo.l_comppk;
-                        accountInvoicing.Deptpk = logonInfo.l_deptpk;
-                        accountInvoicing.DeptPri = logonInfo.l_deptpri;
-                        accountInvoicing.Userpk = logonInfo.l_userpk;
-                        accountInvoicing.PrimarySmsServer = logonInfo.l_priserver;
-                        accountInvoicing.SecondarySmsServer = logonInfo.l_altservers;
-                        accountInvoicing.StdCc = logonInfo.sz_stdcc;
+                        AccountDetails accountDetails = new AccountDetails();
+                        accountDetails.Comppk = logonInfo.l_comppk;
+                        accountDetails.Deptpk = logonInfo.l_deptpk;
+                        accountDetails.DeptPri = logonInfo.l_deptpri;
+                        accountDetails.Userpk = logonInfo.l_userpk;
+                        accountDetails.PrimarySmsServer = logonInfo.l_priserver;
+                        accountDetails.SecondarySmsServer = logonInfo.l_altservers;
+                        accountDetails.StdCc = logonInfo.sz_stdcc;
+                        accountDetails.MaxVoiceChannels = umsDb.GetMaxAlloc(accountDetails.Deptpk);
+                        accountDetails.AvailableVoiceNumbers = umsDb.GetAvailableVoiceNumbers(accountDetails.Deptpk);
+                        
+                        payload.AccountDetails = accountDetails;
 
-                        payload.AccountInvoicing = accountInvoicing;
+                        foreach (VoiceConfiguration voiceConfig in ChannelConfigurations.OfType<VoiceConfiguration>())
+                        {
+                            if (voiceConfig.UseDefaultVoiceProfile)
+                            {
+                                voiceConfig.VoiceProfilePk = umsDb.GetDefaultVoiceProfile(accountDetails.Deptpk);
+                            }
+                            else
+                            {
+                                if (!umsDb.ValidateUseOfProfile(voiceConfig.VoiceProfilePk, accountDetails.Deptpk))
+                                {
+                                    return AlertResponseFactory.Failed(-4, "You are not allowed to use the voice profile specified");
+                                }
+                            }
+                        }
+                        
 
                         //Create and retrieve a project
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();

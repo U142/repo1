@@ -5,6 +5,7 @@ using System.Text;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
+using System.Data.Odbc;
 
 
 namespace com.ums.pas.integration
@@ -119,18 +120,26 @@ namespace com.ums.pas.integration
                     //BBVALID
                     //BBSENDNUM
                     //BBACTIONPROFILESEND
-                    InsertMdvSendinginfoVoice(Refno, payload.AccountInvoicing, channelConfig, payload.AlertConfiguration);
+                    VoiceConfiguration voiceConfig = (VoiceConfiguration) channelConfig;
+                    InsertMdvSendinginfoVoice(Refno, payload.AccountDetails, channelConfig, payload.AlertConfiguration);
+                    InsertResched(Refno, voiceConfig);
+                    InsertBbValid(Refno, voiceConfig.ValidDays);
+                    //if forced hidden number or no numbers assigned
+                    InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : payload.AccountDetails.AvailableVoiceNumbers.First());
+                    if (voiceConfig.UseDefaultVoiceProfile)
+                    {
+                        //default is defined as the first one created - for municipalities, probably the only one created
 
-
+                    }
                 }
                 else if (channelConfig is SmsConfiguration)
                 {
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    InsertSmsQref(Refno, payload.AccountInvoicing, payload.AlertConfiguration, (SmsConfiguration) channelConfig);
+                    InsertSmsQref(Refno, payload.AccountDetails, payload.AlertConfiguration, (SmsConfiguration) channelConfig);
                     UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
-                    InsertSmsQ(Refno, payload.AccountInvoicing, payload.AlertConfiguration);
+                    InsertSmsQ(Refno, payload.AccountDetails, payload.AlertConfiguration);
                 }
             }
 
@@ -139,7 +148,51 @@ namespace com.ums.pas.integration
         }
 
 
-        private void InsertSmsQ(long Refno, AccountInvoicing Account, AlertConfiguration AlertConfig)
+ 
+
+        /// <summary>
+        /// Voice insert origin number for voice alert.
+        /// If blank is specified, backbone uses hidden number
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <param name="number"></param>
+        private void InsertBbSendnum(long Refno, String Number)
+        {
+            String Sql = String.Format("INSERT INTO BBSENDNUM(l_refno, sz_number) VALUES({0}, '{1}')", Refno, Number);
+            Database.ExecNonQuery(Sql);
+        }
+
+        /// <summary>
+        /// Voice Insert validity in days for callback
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <param name="ValidDays"></param>
+        private void InsertBbValid(long Refno, int ValidDays)
+        {
+            String Sql = String.Format("INSERT INTO BBVALID(l_valid, l_refno) VALUES({0}, {1})", ValidDays, Refno);
+            Database.ExecNonQuery(Sql);
+        }
+
+        /// <summary>
+        /// Voice Insert resched profile parameters, retries etc.
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <param name="VoiceConfig"></param>
+        private void InsertResched(long Refno, VoiceConfiguration VoiceConfig)
+        {
+            String Sql = String.Format("INSERT INTO BBDYNARESCHED(l_refno, l_retries, l_interval, l_canceltime, l_canceldate, l_pausetime, l_pauseinterval) " +
+                                        "VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                                        Refno,
+                                        VoiceConfig.Repeats,
+                                        VoiceConfig.FrequencyMinutes,
+                                        -1,
+                                        -1,
+                                        VoiceConfig.PauseAtTime,
+                                        VoiceConfig.PauseDurationMinutes);
+            Database.ExecNonQuery(Sql);
+        }
+
+        private void InsertSmsQ(long Refno, AccountDetails Account, AlertConfiguration AlertConfig)
         {
             int itemNumber = 0;
             foreach (KeyValuePair<AlertTarget, List<Endpoint>> kvp in targets)
@@ -181,7 +234,7 @@ namespace com.ums.pas.integration
         }
 
 
-        private void InsertSmsQref(long Refno, AccountInvoicing Account, AlertConfiguration alertConfig, SmsConfiguration smsConfig)
+        private void InsertSmsQref(long Refno, AccountDetails Account, AlertConfiguration alertConfig, SmsConfiguration smsConfig)
         {
             String Sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
                     "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
@@ -224,7 +277,7 @@ namespace com.ums.pas.integration
 
 
         private void InsertMdvSendinginfoVoice(long Refno, 
-                                        AccountInvoicing Account, 
+                                        AccountDetails Account, 
                                         ChannelConfiguration ChannelConfig, 
                                         AlertConfiguration AlertConfig)
         {

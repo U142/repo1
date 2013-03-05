@@ -60,20 +60,20 @@ namespace com.ums.ws.integration
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
             //TODO - Get default voice origin number.
-            /*channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
+            channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
                                                                                         Frequency,
                                                                                         2200,
                                                                                         60 * 10,
                                                                                         7,
-                                                                                        true,
-                                                                                        -1,
+                                                                                        false,
+                                                                                        1,
                                                                                         true,
                                                                                         "23500801",
-                                                                                        VoiceMessage));*/
+                                                                                        VoiceMessage));
             //TODO - Get default SMS oadc
-            channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
+            /*channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
                                                                                         SmsMessage,
-                                                                                        false));
+                                                                                        false));*/
 
 
             return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets);

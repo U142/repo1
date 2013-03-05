@@ -100,6 +100,86 @@ namespace com.ums.UmsDbLib
             this.timeout = n_timeout;
         }
 
+        /// <summary>
+        /// Retrieve list of all available voice numbers for department (and common numbers, owner=-1)
+        /// </summary>
+        /// <param name="DeptPk"></param>
+        /// <returns></returns>
+        public List<String> GetAvailableVoiceNumbers(int DeptPk)
+        {
+            List<string> listOfNumbers = new List<string>();
+            String Sql = String.Format("SELECT sz_number FROM BBDEPTNUMBERS WHERE l_deptpk in ({0}, -1)", DeptPk);
+            OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE);
+            while (rs.Read())
+            {
+                listOfNumbers.Add(rs.GetString(0));
+            }
+            rs.Close();
+            return listOfNumbers;
+        }
+
+        /// <summary>
+        /// Check if a department may use an action profile
+        /// Either it owns the profile or it's shared to the department
+        /// </summary>
+        /// <param name="ProfilePk"></param>
+        /// <param name="DeptPk"></param>
+        /// <returns>true if ok to use</returns>
+        public bool ValidateUseOfProfile(int ProfilePk, int DeptPk)
+        {
+            bool bValidate = false;
+            String Sql = String.Format("SELECT l_profilepk FROM BBACTIONPROFILESNAME WHERE l_profilepk={0} AND l_deptpk={1} UNION SELECT l_profilepk FROM BBACTIONPROFILES_X_DEPT WHERE l_profilepk={0} AND l_deptpk={1}", ProfilePk, DeptPk);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                if(rs.Read())
+                {
+                    bValidate = true;
+                }
+            }
+            return bValidate;
+        }
+
+        /// <summary>
+        /// Get default voice profile.
+        /// Per now, default is the one with the lowest profilepk.
+        /// Municipalities will probably only have one profile for all purposes (pr dept).
+        /// May be extended in database
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <returns>-1 if no profiles exist</returns>
+        public int GetDefaultVoiceProfile(int DeptPk)
+        {
+            int defaultProfile = -1;
+            String Sql = String.Format("SELECT l_profilepk FROM BBACTIONPROFILESNAME WHERE l_deptpk={0} ORDER BY l_profilepk", DeptPk);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    defaultProfile = rs.GetInt32(0);
+                }
+                rs.Close();
+            }
+            return defaultProfile;                        
+        }
+
+        /// <summary>
+        /// Get max channels available for simultaneous allocation for a specific department
+        /// </summary>
+        /// <param name="DeptPk"></param>
+        /// <returns></returns>
+        public int GetMaxAlloc(int DeptPk)
+        {
+            int maxChannels = 0;
+            String Sql = String.Format("SELECT l_maxalloc FROM BBDEPARTMENT WHERE l_deptpk={0}", DeptPk);
+            OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE);
+            if (rs.Read())
+            {   
+                maxChannels = rs.GetInt32(0);
+            }
+            rs.Close();
+            return maxChannels;
+        }
+
         public bool CheckGASLogonLiteral(ref ULOGONINFO info)
         {
             bool b_ret = false;
