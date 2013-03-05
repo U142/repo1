@@ -116,17 +116,25 @@ namespace com.ums.UmsDbLib
                 if (rs.Read())
                 {
                     Int64 l_fromdb = rs.GetInt64(0);
-                    //if (l_fromdb == info.l_userpk)
+                    info.l_deptpri = rs.GetInt32(1);
+                    info.sz_stdcc = rs.GetString(2);
+                    info.l_userpk = rs.GetInt64(3);
+                    info.l_deptpk = rs.GetInt32(4);
+                    info.l_comppk = rs.GetInt32(5);
+                    info.l_priserver = 0;
+                    info.l_altservers = 0;
+                    b_ret = true;
+                    rs.Close();
+                    rs = ExecReader(String.Format("SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk={0} ORDER BY l_pri", info.l_deptpk), UREADER_AUTOCLOSE);
+                    if (rs.Read())
                     {
-                        info.l_deptpri = rs.GetInt32(1);
-                        info.sz_stdcc = rs.GetString(2);
-                        info.l_userpk = rs.GetInt64(3);
-                        info.l_deptpk = rs.GetInt32(4);
-                        info.l_comppk = rs.GetInt32(5);
-                        info.l_priserver = 2;
-                        info.l_altservers = 1;
-                        b_ret = true;
+                        info.l_priserver = rs.GetInt32(0);
                     }
+                    if (rs.Read())
+                    {
+                        info.l_altservers = rs.GetInt32(1);
+                    }
+                    rs.Close();
                 }
                 rs.Close();
             }
