@@ -81,10 +81,22 @@ namespace com.ums.ws.integration
 
                         new UmsDb().CheckGASLogonLiteral(ref logonInfo);
 
+                        //fill internal account info
+                        AccountInvoicing accountInvoicing = new AccountInvoicing();
+                        accountInvoicing.Comppk = logonInfo.l_comppk;
+                        accountInvoicing.Deptpk = logonInfo.l_deptpk;
+                        accountInvoicing.DeptPri = logonInfo.l_deptpri;
+                        accountInvoicing.Userpk = logonInfo.l_userpk;
+                        accountInvoicing.PrimarySmsServer = logonInfo.l_priserver;
+                        accountInvoicing.SecondarySmsServer = logonInfo.l_altservers;
+                        accountInvoicing.StdCc = logonInfo.sz_stdcc;
+
+                        payload.AccountInvoicing = accountInvoicing;
+
                         //Create and retrieve a project
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
                         req.sz_name = String.Format("ActiveMq {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
-                        payload.projectPk = new UProject().uproject(ref logonInfo, ref req).n_projectpk;
+                        payload.AlertId = new AlertId(new UProject().uproject(ref logonInfo, ref req).n_projectpk);
 
                         payload.Account.CompanyId = Account.CompanyId;
                         payload.Account.DepartmentId = Account.DepartmentId;
@@ -97,7 +109,7 @@ namespace com.ums.ws.integration
 
                         IObjectMessage message = mqSession.CreateObjectMessage(payload);
                         mqProducer.Send(destination, message);
-                        responseObject.AlertId = new AlertId(payload.projectPk);
+                        responseObject.AlertId = payload.AlertId;
                         return responseObject;
                     }
                 }
@@ -157,7 +169,7 @@ namespace com.ums.ws.integration
 
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
                         req.sz_name = "ActiveMq";
-                        payload.projectPk = new UProject().uproject(ref logonInfo, ref req).n_projectpk;
+                        payload.AlertId = new AlertId(new UProject().uproject(ref logonInfo, ref req).n_projectpk);
                         payload.Account.CompanyId = logonInfo.sz_compid;
                         payload.Account.DepartmentId = logonInfo.sz_deptid;
                         payload.Account.UserId = logonInfo.sz_userid;
@@ -177,7 +189,7 @@ namespace com.ums.ws.integration
 
                         IObjectMessage message = mqSession.CreateObjectMessage(payload);
                         mqProducer.Send(destination, message);
-                        responseObject.AlertId = new AlertId(payload.projectPk);
+                        responseObject.AlertId = payload.AlertId;
                         return responseObject;
                     }
                 }

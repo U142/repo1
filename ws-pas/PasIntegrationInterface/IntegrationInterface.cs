@@ -1185,6 +1185,20 @@ namespace com.ums.pas.integration
     #endregion Responses
 
     #region Div
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class AccountInvoicing
+    {
+        public int Comppk { get; set; }
+        public int Deptpk { get; set; }
+        public long Userpk { get; set; }
+        public int DeptPri { get; set; }
+        public int PrimarySmsServer { get; set; }
+        public int SecondarySmsServer { get; set; }
+        public String StdCc { get; set; }
+    }
+
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Account
@@ -1258,8 +1272,9 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertMqPayload
     {
-        public long projectPk = -1;
+        public AlertId AlertId;
         public Account Account = new Account();
+        public AccountInvoicing AccountInvoicing = new AccountInvoicing();
         public AlertConfiguration AlertConfiguration = new AlertConfiguration();
         public List<AlertTarget> AlertTargets = new List<AlertTarget>();
         public List<ChannelConfiguration> ChannelConfigurations = new List<ChannelConfiguration>();

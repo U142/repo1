@@ -1216,44 +1216,44 @@ namespace com.ums.UmsParm
  
 
 
-                sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
-                                    "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
-                                    "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
-                                    "{26}, {27}, {28}, '{29}', {30}, {31}",
-                                            0, //0 projectpk
-                                            s.l_refno, //1
-                                            s.m_sendinginfo.l_companypk, //2
-                                            s.m_sendinginfo.l_deptpk, //3
-                                            n_oadctype, //4
-                                            n_msgclass, //5
-                                            logon.l_deptpri, //6
-                                            n_localsched, //7
-                                            s.n_expirytime_minutes, //8
-                                            n_scheddatetime, //9
-                    //s.m_sendinginfo.l_scheddate, //9
-                    //s.m_sendinginfo.l_schedtime, //9
-                                            n_priserver, //10
-                                            n_altserver, //11
-                                            sz_tarifclass.Replace("'", "''"), //12
-                                            s.sz_smsoadc.Replace("'", "''"), //13
-                                            s.m_sendinginfo.sz_sendingname.Replace("'", "''"), //14
-                                            (s.getSimulation() ? 1 : 0), //15
-                                            0,//parent refno //16
-                                            0,//expected items //17
-                                            s.sz_smsmessage.Replace("'", "''"), //18
-                                            n_fromapplication, //19
-                                            s.m_sendinginfo.l_group, //20
-                                            s.m_sendinginfo.sz_sepused.Replace("'", "''"), //21
-                                            s.m_sendinginfo.l_lastantsep, //22
-                                            s.m_sendinginfo.l_addresspos, //23
-                                            s.m_sendinginfo.l_createdate, //24
-                                            s.m_sendinginfo.l_createtime, //25
-                                            s.m_sendinginfo.l_userpk, //26
-                                            s.m_sendinginfo.l_nofax, //27
-                                            s.m_sendinginfo.l_removedup, //28
-                                            sz_stdcc.Replace("'", "''"), //29
-                                            s.m_sendinginfo.l_addresstypes, //30
-                                            s.m_sendinginfo.f_dynacall); //31
+                    sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
+                                        "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
+                                        "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
+                                        "{26}, {27}, {28}, '{29}', {30}, {31}",
+                                                0, //0 projectpk
+                                                s.l_refno, //1
+                                                s.m_sendinginfo.l_companypk, //2
+                                                s.m_sendinginfo.l_deptpk, //3
+                                                n_oadctype, //4
+                                                n_msgclass, //5
+                                                logon.l_deptpri, //6
+                                                n_localsched, //7
+                                                s.n_expirytime_minutes, //8
+                                                n_scheddatetime, //9
+                        //s.m_sendinginfo.l_scheddate, //9
+                        //s.m_sendinginfo.l_schedtime, //9
+                                                n_priserver, //10
+                                                n_altserver, //11
+                                                sz_tarifclass.Replace("'", "''"), //12
+                                                s.sz_smsoadc.Replace("'", "''"), //13
+                                                s.m_sendinginfo.sz_sendingname.Replace("'", "''"), //14
+                                                (s.getSimulation() ? 1 : 0), //15
+                                                0,//parent refno //16
+                                                0,//expected items //17
+                                                s.sz_smsmessage.Replace("'", "''"), //18
+                                                n_fromapplication, //19
+                                                s.m_sendinginfo.l_group, //20
+                                                s.m_sendinginfo.sz_sepused.Replace("'", "''"), //21
+                                                s.m_sendinginfo.l_lastantsep, //22
+                                                s.m_sendinginfo.l_addresspos, //23
+                                                s.m_sendinginfo.l_createdate, //24
+                                                s.m_sendinginfo.l_createtime, //25
+                                                s.m_sendinginfo.l_userpk, //26
+                                                s.m_sendinginfo.l_nofax, //27
+                                                s.m_sendinginfo.l_removedup, //28
+                                                sz_stdcc.Replace("'", "''"), //29
+                                                s.m_sendinginfo.l_addresstypes, //30
+                                                s.m_sendinginfo.f_dynacall); //31
                 return ExecNonQuery(sql);
             }
             catch (Exception e)
