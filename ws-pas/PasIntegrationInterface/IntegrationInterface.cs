@@ -1188,7 +1188,7 @@ namespace com.ums.pas.integration
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
-    public class AccountInvoicing
+    public class AccountDetails
     {
         public int Comppk { get; set; }
         public int Deptpk { get; set; }
@@ -1197,6 +1197,8 @@ namespace com.ums.pas.integration
         public int PrimarySmsServer { get; set; }
         public int SecondarySmsServer { get; set; }
         public String StdCc { get; set; }
+        public int MaxVoiceChannels { get; set; }
+        public List<String> AvailableVoiceNumbers { get; set; }
     }
 
     [Serializable]
@@ -1274,7 +1276,7 @@ namespace com.ums.pas.integration
     {
         public AlertId AlertId;
         public Account Account = new Account();
-        public AccountInvoicing AccountInvoicing = new AccountInvoicing();
+        public AccountDetails AccountDetails = new AccountDetails();
         public AlertConfiguration AlertConfiguration = new AlertConfiguration();
         public List<AlertTarget> AlertTargets = new List<AlertTarget>();
         public List<ChannelConfiguration> ChannelConfigurations = new List<ChannelConfiguration>();
