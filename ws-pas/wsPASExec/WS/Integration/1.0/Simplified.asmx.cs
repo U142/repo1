@@ -65,8 +65,8 @@ namespace com.ums.ws.integration
                                                                                         2200,
                                                                                         60 * 10,
                                                                                         7,
-                                                                                        false,
-                                                                                        1,
+                                                                                        true,
+                                                                                        -1,
                                                                                         true,
                                                                                         "23500801",
                                                                                         VoiceMessage));
