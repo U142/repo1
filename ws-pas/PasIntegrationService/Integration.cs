@@ -14,7 +14,7 @@ namespace com.ums.pas.integration
 {
     public partial class Integration : ServiceBase
     {
-        IntegrationMq integrationMq;
+        IntegrationMq integrationMq = new IntegrationMq();
 
         public Integration()
         {
@@ -32,13 +32,22 @@ namespace com.ums.pas.integration
         public void StartActiveMq()
         {
             ULog.write("Starting up PAS Integration Service");
-            integrationMq = new IntegrationMq();
             integrationMq.startUpQueue();
         }
 
         protected override void OnStop()
         {
+            StopQueue();
+        }
+
+        protected void StopQueue()
+        {
             integrationMq.KeepRunning.GetAndSet(false);
+        }
+
+        public void StopManually(Delegate Callback)
+        {
+            StopQueue();
         }
     }
 }

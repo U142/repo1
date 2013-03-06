@@ -16,7 +16,9 @@ namespace com.ums.pas.integration
         Atomic<Boolean> _keepRunning = new Atomic<bool>();
         private Dictionary<string, AsyncMessageHelper> responseBuffer;
 
-
+        /// <summary>
+        /// Signal to false if stop is requested
+        /// </summary>
         public Atomic<Boolean> KeepRunning
         {
             get
@@ -24,6 +26,20 @@ namespace com.ums.pas.integration
                 return _keepRunning;
             }
         }
+
+
+        private Atomic<Boolean> _isRunning = new Atomic<bool>(false);
+
+        /// <summary>
+        /// Will be set to true when Queue starts up.
+        /// Sets to false when Queue ends after KeepRunning signalling
+        /// </summary>
+        public Atomic<Boolean> IsRunning
+        {
+            get { return _isRunning; }
+            set { _isRunning = value; }
+        }
+
 
 
         public IntegrationMq()
@@ -77,6 +93,7 @@ namespace com.ums.pas.integration
         public void startUpQueue()
         {
             KeepRunning.GetAndSet(true);
+            IsRunning.GetAndSet(true);
 
             //keep on going until stopped
             while (KeepRunning.Value)
@@ -86,6 +103,7 @@ namespace com.ums.pas.integration
                 try
                 {
                     connectionUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"]);
+                    ULog.write("Connecting to ActiveMqUri={0}", connectionUri);
                 }
                 catch (Exception e)
                 {
@@ -120,7 +138,7 @@ namespace com.ums.pas.integration
 
                             if (message == null)
                             {
-                                Console.WriteLine("No message received");
+                                //Console.WriteLine("No message received");
                             }
                             else if(message is IObjectMessage)
                             {
@@ -191,6 +209,7 @@ namespace com.ums.pas.integration
                     }
                 }
             }
+            IsRunning.GetAndSet(false);
         }
     }
 }

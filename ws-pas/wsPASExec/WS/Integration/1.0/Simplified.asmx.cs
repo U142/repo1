@@ -71,9 +71,9 @@ namespace com.ums.ws.integration
                                                                                         "23500801",
                                                                                         VoiceMessage));
             //TODO - Get default SMS oadc
-            /*channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
+            channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
                                                                                         SmsMessage,
-                                                                                        false));*/
+                                                                                        false));
 
 
             return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets);
