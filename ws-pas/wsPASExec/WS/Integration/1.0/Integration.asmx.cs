@@ -137,6 +137,8 @@ namespace com.ums.ws.integration
                         IObjectMessage message = mqSession.CreateObjectMessage(payload);
                         mqProducer.Send(destination, message);
                         responseObject.AlertId = payload.AlertId;
+                        responseObject.Message = "OK";
+                        responseObject.Description = String.Format("Message sent to Queue={0}", ActiveMqDestination);
                         return responseObject;
                     }
                 }
