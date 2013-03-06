@@ -69,7 +69,9 @@ namespace com.ums.pas.integration
 
         public void HandleAlert(AlertMqPayload payload)
         {
-            Database = new PASUmsDb();
+            //PasIntegrationService.Default.DatabaseConnection
+
+            Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
             foreach (AlertObject alertObject in payload.AlertTargets.OfType<AlertObject>())
             {
