@@ -102,6 +102,7 @@ namespace com.ums.pas.integration
                 //connect to activemq
                 try
                 {
+                    //System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"];
                     connectionUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"]);
                     ULog.write("Connecting to ActiveMqUri={0}", connectionUri);
                 }
@@ -125,8 +126,13 @@ namespace com.ums.pas.integration
                 using (IConnection mqConnection = mqFactory.CreateConnection())
                 using (ISession mqSession = mqConnection.CreateSession(AcknowledgementMode.ClientAcknowledge))
                 {
-                    IDestination destination = SessionUtil.GetDestination(mqSession, System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"]);
+                    String mqDestination = System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"];
+                        //PasIntegrationService.Default.ActiveMqDestination;
+                    IDestination destination = SessionUtil.GetDestination(mqSession, mqDestination);
                     Console.WriteLine("Using destination = {0}", destination);
+                    String connString = ConfigurationManager.ConnectionStrings["backbone"].ConnectionString;
+                    String dbConn = String.Format("Using database {0}", connString.Remove(connString.LastIndexOf("PWD") + 4));
+                    Console.WriteLine(dbConn);
 
                     using (IMessageConsumer mqConsumer = mqSession.CreateConsumer(destination))
                     {

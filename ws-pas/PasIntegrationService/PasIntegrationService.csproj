@@ -16,7 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>\\192.168.3.57\ums\PasIntegrationService\</PublishUrl>
-    <Install>true</Install>
+    <Install>false</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Beta|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -93,13 +93,29 @@
     </Compile>
     <Compile Include="IntegrationMq.cs" />
     <Compile Include="IntegrationService.cs" />
+    <Compile Include="PasIntegrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.Beta.config" />
     <None Include="app.config" />
     <None Include="PasIntegrationService_TemporaryKey.pfx" />
   </ItemGroup>
+  <!--<ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <None Include="app.config" />
+    <None Include="PasIntegrationService.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PasIntegrationService.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PasIntegrationService_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Beta' ">
+    <None Include="app.config" />
+    <None Include="PasIntegrationService.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PasIntegrationService.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PasIntegrationService_TemporaryKey.pfx" />
+  </ItemGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\PasIntegrationInterface\PasIntegrationInterface.csproj">
       <Project>{5F25B3F4-CA67-4BB1-B693-A7AF76170ABF}</Project>
@@ -141,10 +157,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <Copy Condition=" '$(Configuration)' == 'Beta' " SourceFiles="config-beta\app.config" DestinationFolder="." ContinueOnError="false" />
+    <Copy Condition=" '$(Configuration)' == 'Debug' " SourceFiles="config-debug\app.config" DestinationFolder="." ContinueOnError="false" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
   </Target>
   -->
