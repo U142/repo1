@@ -67,10 +67,37 @@
         </plugins>
     </build>
     <profiles>
-        <profile>
+	        <profile>
             <id>beta</id>
             <properties>
                 <jnlp_title>PAS - BETA</jnlp_title>
+                <jnlp_codebase_url>http://192.168.3.52/PAS/pasbeta/</jnlp_codebase_url>
+                <jnlp_s>http://192.168.3.52/PAS/</jnlp_s>
+                <jnlp_w>http://192.168.3.52/PAS/ws_beta/WS/</jnlp_w>
+                <jnlp_v>http://192.168.3.52/gas/</jnlp_v>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>no.ums.maven</groupId>
+                            <artifactId>maven-ums-plugin</artifactId>
+                            <configuration>
+                                <destinations>
+                                    <destination>smb://Administrator:Digi20ums@192.168.3.52/www/PAS/pasbeta/
+                                    </destination>
+                                </destinations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>oldbeta</id>
+            <properties>
+                <jnlp_title>PAS - OLDBETA</jnlp_title>
                 <jnlp_codebase_url>https://secure.ums2.no/PAS/pasbeta/</jnlp_codebase_url>
                 <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
                 <jnlp_w>https://secure.ums2.no/PAS/ws_pasutv/WS/</jnlp_w>

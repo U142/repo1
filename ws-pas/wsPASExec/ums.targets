@@ -7,9 +7,13 @@
 		<Error Condition="$(Configuration) == 'Prod' And $(DeployTargetFolderProd) == ''" Text="Missing DeployTargetFolderProd parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_Prod' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_QA' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
-		<Error Condition="$(Configuration) == 'Gas-se_Prod' And $(DeployUrl-se) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
-		<Error Condition="$(Configuration) == 'Gas-se_QA' And $(DeployUrl-se) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
-		<PropertyGroup Condition="$(Configuration) == 'Beta'">
+		<PropertyGroup Condition="$(Configuration) == 'beta'">
+			<DeployShare1>\\192.168.3.52\www</DeployShare1>
+			<DeployUser1>Administrator</DeployUser1>
+			<DeployPassword1>Digi20ums</DeployPassword1>
+			<DeployLocation1>$(DeployShare1)$(DeployTargetFolderBeta)</DeployLocation1>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration) == 'oldbeta'">
 			<DeployShare1>\\192.168.3.40\www</DeployShare1>
 			<DeployUser1>Administrator</DeployUser1>
 			<DeployPassword1>digi20ums</DeployPassword1>
