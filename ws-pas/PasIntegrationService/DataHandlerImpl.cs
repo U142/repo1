@@ -6,6 +6,7 @@ using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using System.Data.Odbc;
+using System.IO;
 
 
 namespace com.ums.pas.integration
@@ -67,13 +68,13 @@ namespace com.ums.pas.integration
         }
 
 
-        public void HandleAlert(AlertMqPayload payload)
+        public void HandleAlert(AlertMqPayload Payload)
         {
             //PasIntegrationService.Default.DatabaseConnection
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
-            foreach (AlertObject alertObject in payload.AlertTargets.OfType<AlertObject>())
+            foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
             {
                 using (new TimeProfiler("AlertObject"))
                 {
@@ -97,35 +98,35 @@ namespace com.ums.pas.integration
                     }
                 }
             }
-            foreach (StoredList storedList in payload.AlertTargets.OfType<StoredList>())
+            foreach (StoredList storedList in Payload.AlertTargets.OfType<StoredList>())
             {
 
             }
-            foreach (StoredAddress storedAddress in payload.AlertTargets.OfType<StoredAddress>())
+            foreach (StoredAddress storedAddress in Payload.AlertTargets.OfType<StoredAddress>())
             {
 
             }
-            foreach (StreetAddress streetAddress in payload.AlertTargets.OfType<StreetAddress>())
+            foreach (StreetAddress streetAddress in Payload.AlertTargets.OfType<StreetAddress>())
             {
 
             }
-            foreach (PropertyAddress propertyAddress in payload.AlertTargets.OfType<PropertyAddress>())
+            foreach (PropertyAddress propertyAddress in Payload.AlertTargets.OfType<PropertyAddress>())
             {
 
             }
-            foreach (OwnerAddress ownerAddress in payload.AlertTargets.OfType<OwnerAddress>())
+            foreach (OwnerAddress ownerAddress in Payload.AlertTargets.OfType<OwnerAddress>())
             {
 
             }
 
             //now we have all data
-            foreach (ChannelConfiguration channelConfig in payload.ChannelConfigurations)
+            foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
                 long Refno = Database.newRefno();
 
                 //connect refno to AlertId (project)
                 BBPROJECT project = new BBPROJECT();
-                project.sz_projectpk = payload.AlertId.Id.ToString();
+                project.sz_projectpk = Payload.AlertId.Id.ToString();
                 Database.linkRefnoToProject(ref project, Refno, 0, 0);
 
                 if (channelConfig is VoiceConfiguration)
@@ -136,21 +137,21 @@ namespace com.ums.pas.integration
                     //BBSENDNUM
                     //BBACTIONPROFILESEND
                     VoiceConfiguration voiceConfig = (VoiceConfiguration) channelConfig;
-                    InsertMdvSendinginfoVoice(Refno, payload.AccountDetails, channelConfig, payload.AlertConfiguration);
+                    InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                     InsertResched(Refno, voiceConfig);
                     InsertBbValid(Refno, voiceConfig.ValidDays);
                     //if forced hidden number or no numbers assigned
-                    InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : payload.AccountDetails.AvailableVoiceNumbers.First());
-                    WriteVoiceBackboneFile(Refno);
+                    InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                    WriteVoiceBackboneFile(Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                 }
                 else if (channelConfig is SmsConfiguration)
                 {
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    InsertSmsQref(Refno, payload.AccountDetails, payload.AlertConfiguration, (SmsConfiguration) channelConfig);
+                    InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration) channelConfig);
                     UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
-                    InsertSmsQ(Refno, payload.AccountDetails, payload.AlertConfiguration);
+                    InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
                 }
             }
 
@@ -163,11 +164,54 @@ namespace com.ums.pas.integration
         /// Write voice address file and move it to backbone eat path
         /// </summary>
         /// <param name="Refno"></param>
-        private void WriteVoiceBackboneFile(long Refno)
+        private void WriteVoiceBackboneFile(AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
+            String tempFile = String.Format("{0}\\d{1}.tmp", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno);
+            String publishFile = String.Format("{0}\\d{1}.adr", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno);
+            TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
+            tw.WriteLine("/MDV");
+            tw.WriteLine("/MPC");
+            tw.WriteLine(String.Format("/Company={0}", Account.CompanyId));
+            tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId));
+            tw.WriteLine(String.Format("/Pri={0}", AccountDetails.DeptPri));
+            tw.WriteLine(String.Format("/Channels={0}", AccountDetails.MaxVoiceChannels));
+            tw.WriteLine(String.Format("/SchedDate={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("yyyyMMdd") : AlertConfiguration.Scheduled.ToString("yyyyMMdd")));
+            tw.WriteLine(String.Format("/SchedTime={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("HHmm") : AlertConfiguration.Scheduled.ToString("HHmm")));
+            tw.WriteLine(String.Format("/Item=1"));
+            tw.WriteLine(String.Format("/Name={0}", AlertConfiguration.AlertName));
+
+            //Dynamic voice
+            //foreach
+            int counter = 0;
+            String voiceFile = String.Format("{0}\\v{1}_{2}.raw", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno, ++counter);
+            //file exists
+            tw.WriteLine(String.Format("/FILE={0}", voiceFile));
+
+            //Items
+            //tw.WriteLine(String.Format("/PCODE {0}", ""));
+            tw.Write(String.Format("/DCALL NA {0}"));
+            //more numbers?
+            //tw.Write(String.Format(",{1}", ""));
+            tw.WriteLine("");
 
         }
 
+
+        /// <summary>
+        /// Write mdvhist data to comply with GAS UI
+        /// </summary>
+        private void WriteToMdvhist()
+        {
+            //TODO
+        }
+
+        /// <summary>
+        /// Write meta data to database to be able to lookup why a recipient was called (e.g. living on a streetaddress)
+        /// </summary>
+        private void WriteMetaData()
+        {
+            //TODO
+        }
 
         /// <summary>
         /// Voice insert origin number for voice alert.
