@@ -42,6 +42,17 @@ namespace com.ums.ws.integration
 
 
 
+        [WebMethod]
+        public byte[] GetTexttoSpeechWavTest()
+        {
+            Account account = new Account();
+            account.CompanyId = "UMS";
+            account.DepartmentId = "DEVELOPMENT";
+            account.Password = "mh123";
+            account.UserId = "MH";
+            return GetTextToSpeechWav(account, "tester");
+        }
+
         /// <summary>
         /// Convert text to speech using default department tts-language
         /// </summary>
