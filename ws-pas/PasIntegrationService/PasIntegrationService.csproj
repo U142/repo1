@@ -96,6 +96,7 @@
     <Compile Include="IntegrationService.cs" />
     <Compile Include="PasIntegrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TtsFacadeImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -121,6 +122,10 @@
     <ProjectReference Include="..\PasIntegrationInterface\PasIntegrationInterface.csproj">
       <Project>{5F25B3F4-CA67-4BB1-B693-A7AF76170ABF}</Project>
       <Name>PasIntegrationInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsAudio\UmsAudio.csproj">
+      <Project>{C44B04EA-5C9D-4BB0-B365-FC9B0C87E93F}</Project>
+      <Name>UmsAudio</Name>
     </ProjectReference>
     <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">
       <Project>{21957982-6FBC-49F9-8F75-C0DE18558133}</Project>
