@@ -117,6 +117,11 @@ namespace com.ums.ws.integration
                                     return AlertResponseFactory.Failed(-4, "You are not allowed to use the voice profile specified");
                                 }
                             }
+                            int dynVoice = umsDb.getNumDynfilesInProfile(voiceConfig.VoiceProfilePk);
+                            if (dynVoice != 1)
+                            {
+                                return AlertResponseFactory.Failed(-5, "There are {0} dynamic audio-files in voice profile {1}, to send there can only be one.", dynVoice, voiceConfig.VoiceProfilePk);
+                            }
                         }
                         
 
