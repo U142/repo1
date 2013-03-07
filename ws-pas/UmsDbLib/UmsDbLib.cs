@@ -119,6 +119,26 @@ namespace com.ums.UmsDbLib
         }
 
         /// <summary>
+        /// Get default langpk for TTS per department.
+        /// To get this, department must have access to a tts language and it must be set as default in bbadmin
+        /// </summary>
+        /// <param name="DeptPk">The department</param>
+        /// <returns>default if > 0</returns>
+        public int GetDefaultTtsLanguage(int DeptPk)
+        {
+            int toReturn = -1;
+            String Sql = String.Format("SELECT BD.l_langpk FROM BBDEPARTMENT BD, BBTTSLANG_X_DEPT TTS WHERE BD.l_deptpk={0} AND BD.l_langpk=TTS.l_langpk AND TTS.l_deptpk=BD.l_deptpk",
+                                        DeptPk);
+            OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE);
+            if (rs.Read())
+            {
+                toReturn = rs.GetInt32(0);
+            }
+            rs.Close();
+            return toReturn;
+        }
+
+        /// <summary>
         /// Check if a department may use an action profile
         /// Either it owns the profile or it's shared to the department
         /// </summary>

@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="IDataHandler.cs" />
     <Compile Include="IntegrationInterface.cs" />
+    <Compile Include="ITtsFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

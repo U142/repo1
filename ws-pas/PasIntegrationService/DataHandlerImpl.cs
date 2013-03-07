@@ -189,7 +189,8 @@ namespace com.ums.pas.integration
 
             //Items
             //tw.WriteLine(String.Format("/PCODE {0}", ""));
-            tw.Write(String.Format("/DCALL NA {0}"));
+            tw.Write(String.Format("/DCALL NA "));
+            tw.Write(String.Format("/SIMU NA "));
             //more numbers?
             //tw.Write(String.Format(",{1}", ""));
             tw.WriteLine("");

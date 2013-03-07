@@ -12,6 +12,7 @@ using com.ums.UmsDbLib;
 using com.ums.PAS.Project;
 using System.Xml.Serialization;
 using Apache.NMS.ActiveMQ;
+using com.ums.UmsCommon.Audio;
 
 namespace com.ums.ws.integration
 {
@@ -38,6 +39,44 @@ namespace com.ums.ws.integration
 
         [XmlInclude(typeof(AlertResponse))]
         [XmlInclude(typeof(DefaultResponse))]
+
+
+
+        /// <summary>
+        /// Convert text to speech using default department tts-language
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="Text"></param>
+        /// <returns>the wav file</returns>
+        [WebMethod(Description = @"Convert text to speech using default department tts-language")]
+        public byte[] GetTextToSpeechWav(Account Account, String Text)
+        {
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_userid = Account.UserId;
+            logonInfo.sz_password = Account.Password;
+            
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckGASLogonLiteral(ref logonInfo);
+            int defaultLanguage = umsDb.GetDefaultTtsLanguage(logonInfo.l_deptpk);
+            if (defaultLanguage <= 0)
+            {
+                throw new Exception(String.Format("No default TTS language set on department {0}", logonInfo.l_deptpk));
+            }
+
+            UCONVERT_TTS_REQUEST convertReq = new UCONVERT_TTS_REQUEST();
+            
+            convertReq.sz_text = Text;
+            convertReq.n_langpk = defaultLanguage;
+            UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(convertReq);
+            if (response.n_responsecode == 0)
+            {
+                return response.wav;
+            }
+            throw new Exception(response.sz_responsetext);
+        }
+
 
         [WebMethod]
         public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets)
