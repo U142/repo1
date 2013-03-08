@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="UmsDeploy">
 		<Error Condition="$(Configuration) == 'Beta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderBeta parameter required for $(Configuration)" />
+		<Error Condition="$(Configuration) == 'oldbeta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderOldBeta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'nlbeta' And $(DeployTargetFolderNlbeta) == ''" Text="Missing DeployTargetFolderNlbeta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'QA' And $(DeployTargetFolderQa) == ''" Text="Missing DeployTargetFolderQa parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Prod' And $(DeployTargetFolderProd) == ''" Text="Missing DeployTargetFolderProd parameter required for $(Configuration)" />
