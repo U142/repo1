@@ -80,7 +80,9 @@ namespace com.ums.ws.integration
             
             convertReq.sz_text = Text;
             convertReq.n_langpk = defaultLanguage;
-            UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(convertReq);
+            String tempPath = System.Configuration.ConfigurationManager.AppSettings["TempPath"];
+            String ttsPath = System.Configuration.ConfigurationManager.AppSettings["TtsPath"];
+            UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(tempPath, ttsPath, convertReq);
             if (response.n_responsecode == 0)
             {
                 return response.wav;
@@ -146,6 +148,12 @@ namespace com.ums.ws.integration
                         accountDetails.StdCc = logonInfo.sz_stdcc;
                         accountDetails.MaxVoiceChannels = umsDb.GetMaxAlloc(accountDetails.Deptpk);
                         accountDetails.AvailableVoiceNumbers = umsDb.GetAvailableVoiceNumbers(accountDetails.Deptpk);
+                        accountDetails.DefaultTtsLang = umsDb.GetDefaultTtsLanguage(accountDetails.Deptpk);
+
+                        if (accountDetails.DefaultTtsLang <= 0)
+                        {
+                            AlertResponseFactory.Failed(-6, "No Text to Speech engine set to default on department {0}", accountDetails.Deptpk);
+                        }
                         
                         payload.AccountDetails = accountDetails;
 
