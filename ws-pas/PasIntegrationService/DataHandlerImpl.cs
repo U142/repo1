@@ -7,6 +7,7 @@ using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using System.Data.Odbc;
 using System.IO;
+using com.ums.pas.integration.AddressLookup;
 
 
 namespace com.ums.pas.integration
@@ -71,6 +72,9 @@ namespace com.ums.pas.integration
         public void HandleAlert(AlertMqPayload Payload)
         {
             //PasIntegrationService.Default.DatabaseConnection
+            String FolkeregDatabaseConnectionString = String.Format("vb_adr_{0}_reg", Payload.AccountDetails.StdCc);
+            String NorwayDatabaseConnectionString = String.Format("vb_adr_{0}", Payload.AccountDetails.StdCc);
+
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
@@ -106,10 +110,14 @@ namespace com.ums.pas.integration
             {
 
             }
-            foreach (StreetAddress streetAddress in Payload.AlertTargets.OfType<StreetAddress>())
-            {
+            //foreach (StreetAddress streetAddress in Payload.AlertTargets.OfType<StreetAddress>())
+            //{
+            IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+            IEnumerable<String> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                        FolkeregDatabaseConnectionString,
+                                                        Payload.AlertTargets.OfType<StreetAddress>().ToList());
 
-            }
+            //}
             foreach (PropertyAddress propertyAddress in Payload.AlertTargets.OfType<PropertyAddress>())
             {
 
