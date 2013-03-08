@@ -1259,19 +1259,49 @@ namespace com.ums.pas.integration
             StringBuilder sb = new StringBuilder();
             foreach (FieldInfo property in obj.GetType().GetFields())
             {
-
-                sb.Append(property.Name);
-                sb.Append(": ");
+                try
                 {
-                    sb.Append(property.GetValue(obj));
-                }
+                    sb.Append(property.Name);
+                    sb.Append(": ");
+                    {
+                        sb.Append(property.GetValue(obj).ToString());
+                    }
 
+                }
+                catch (Exception e)
+                {
+                    sb.Append("Unable to append property.GetValue(obj)");
+                    sb.Append(System.Environment.NewLine);
+                    sb.Append(e);
+                }
                 sb.Append(System.Environment.NewLine);
             }
 
             return sb.ToString();
         }
     }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class TtsLanguage
+    {
+        private int _langId;
+
+        public int LangId
+        {
+            get { return _langId; }
+            set { _langId = value; }
+        }
+        private String _name;
+
+        public String Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+    }
+
     #endregion Div
 
 

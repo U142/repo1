@@ -182,7 +182,14 @@ namespace com.ums.pas.integration
                                         summary += "PropertyAddress = " + payload.AlertTargets.OfType<PropertyAddress>().Count() + "\n";
                                         summary += "StreetAddress = " + payload.AlertTargets.OfType<StreetAddress>().Count() + "\n";
                                         summary += "OwnerAddress = " + payload.AlertTargets.OfType<OwnerAddress>().Count() + "\n\n";
-                                        payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + StringHelpers.ToStringExtension(val) + "\n");
+                                        try
+                                        {
+                                            payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + StringHelpers.ToStringExtension(val) + "\n");
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            summary += "Unable to append channel configurations to summary";
+                                        }
 
                                         ULog.write("Received message from account Company/Department/User {0}/{1}/{2}\n\n ProjectPk {3}\n\n MessageId {4}\n\n{5}",
                                             payload.Account.CompanyId, payload.Account.DepartmentId, payload.Account.UserId, payload.AlertId.Id, objectMessage.NMSMessageId, summary);
