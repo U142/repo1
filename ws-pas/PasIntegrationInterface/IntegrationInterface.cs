@@ -125,6 +125,10 @@ namespace com.ums.pas.integration
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
+    [XmlInclude(typeof(AlertObject))]
+    [XmlInclude(typeof(StreetAddress))]
+    [XmlInclude(typeof(PropertyAddress))]
+    [XmlInclude(typeof(OwnerAddress))]
     public abstract class AlertTarget
     {
 
@@ -605,6 +609,8 @@ namespace com.ums.pas.integration
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
+    [XmlInclude(typeof(VoiceConfiguration))]
+    [XmlInclude(typeof(SmsConfiguration))]
     public abstract class ChannelConfiguration
     {
         private String _baseMessageContent;
