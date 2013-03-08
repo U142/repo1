@@ -84,6 +84,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressLookup\IStreetAddressLookupFacade.cs" />
+    <Compile Include="AddressLookup\StreetAddressLookupImpl.cs" />
     <Compile Include="DataHandlerImpl.cs" />
     <Compile Include="IChannelItemStorage.cs" />
     <Compile Include="Integration.cs">
