@@ -110,14 +110,14 @@ namespace com.ums.pas.integration
             {
 
             }
-            //foreach (StreetAddress streetAddress in Payload.AlertTargets.OfType<StreetAddress>())
-            //{
-            IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
-            IEnumerable<String> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
-                                                        FolkeregDatabaseConnectionString,
-                                                        Payload.AlertTargets.OfType<StreetAddress>().ToList());
+            using (new TimeProfiler("StreetId"))
+            {
+                IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+                IEnumerable<Recipient> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                            FolkeregDatabaseConnectionString,
+                                                            Payload.AlertTargets.OfType<StreetAddress>().ToList());
+            }
 
-            //}
             foreach (PropertyAddress propertyAddress in Payload.AlertTargets.OfType<PropertyAddress>())
             {
 

@@ -24,11 +24,11 @@ namespace com.ums.pas.integration.AddressLookup
 
         #region IStreetAddressLookupFacade Members
 
-        public IEnumerable<string> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
+        public IEnumerable<Recipient> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
         {
             if(streetAddresses.Count == 0)
             {
-                return new List<string>();
+                return new List<Recipient>();
             }
             ConnectionString = connectionString;
             return GetMatchingStreetAddressesUsingTempTbl(streetAddresses);
@@ -38,10 +38,10 @@ namespace com.ums.pas.integration.AddressLookup
 
 
         #region Impl_TempTbl
-        public List<string> GetMatchingStreetAddressesUsingTempTbl(List<StreetAddress> streetAddresses)
+        public List<Recipient> GetMatchingStreetAddressesUsingTempTbl(List<StreetAddress> streetAddresses)
         {
-            List<string> numbers = new List<string>();
-
+            //List<string> numbers = new List<string>();
+            List<Recipient> recipients = new List<Recipient>();
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
             {
@@ -85,13 +85,40 @@ namespace com.ums.pas.integration.AddressLookup
                 Console.WriteLine("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT FR.MOBIL FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GATEKODE=SA.GATEKODE AND FR.HUSNR=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                Command.CommandText = "SELECT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GATEKODE=SA.GATEKODE AND FR.HUSNR=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 using (OdbcDataReader rs = Command.ExecuteReader())
                 {
                     while (rs.Read())
                     {
                         if (!rs.IsDBNull(0))
-                            numbers.Add(rs.GetString(10));
+                        {
+                            Recipient r = new Recipient()
+                            {
+                                Attributes = new List<DataItem>()
+                                {
+                                    new DataItem()
+                                    {
+                                        Key = "NAVN",
+                                        Value = rs.IsDBNull(rs.GetOrdinal("NAVN")) ? "" : rs.GetString(rs.GetOrdinal("NAVN"))
+                                    },
+                                },
+
+                                EndPoints = new List<Endpoint>()
+                                {
+                                    new Phone()
+                                    {
+                                        CanReceiveSms = true,
+                                        Address = rs.IsDBNull(rs.GetOrdinal("MOBIL")) ? "" : rs.GetString(rs.GetOrdinal("MOBIL"))
+                                    },
+                                    new Phone()
+                                    {
+                                        CanReceiveSms = false,
+                                        Address = rs.IsDBNull(rs.GetOrdinal("TELEFON")) ? "" : rs.GetString(rs.GetOrdinal("TELEFON"))
+                                    },
+                                }
+                            };
+                            recipients.Add(r);
+                        }
                     }
                 }
                 duration = DateTime.Now - start;
@@ -106,7 +133,7 @@ namespace com.ums.pas.integration.AddressLookup
                 Connection.Close();
             }
 
-            return numbers;
+            return recipients;
         }
         #endregion
     }
