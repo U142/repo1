@@ -59,7 +59,7 @@ namespace com.ums.ws.integration
         /// <param name="Account"></param>
         /// <param name="Text"></param>
         /// <returns>the wav file</returns>
-        [WebMethod(Description = @"Convert text to speech using default department tts-language")]
+        [WebMethod(Description = @"<b>Convert text to speech using default department tts-language</b><br>Throws exception if it fails.")]
         public byte[] GetTextToSpeechWav(Account Account, String Text)
         {
             ULOGONINFO logonInfo = new ULOGONINFO();
@@ -75,19 +75,56 @@ namespace com.ums.ws.integration
             {
                 throw new Exception(String.Format("No default TTS language set on department {0}", logonInfo.l_deptpk));
             }
+            return GetTextToSpeechWavInLanguage(Account, Text, defaultLanguage);
+        }
 
+        [WebMethod(Description = @"<b>Convert text to speech using specified tts-language<br>Available Languages/Dialects may be obtained using GetTextToSpeechLanguages.</b><br>Throws exception if it fails.")]
+        public byte[] GetTextToSpeechWavInLanguage(Account Account, String Text, int Language)
+        {
             UCONVERT_TTS_REQUEST convertReq = new UCONVERT_TTS_REQUEST();
-            
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_userid = Account.UserId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckGASLogonLiteral(ref logonInfo);
+
             convertReq.sz_text = Text;
-            convertReq.n_langpk = defaultLanguage;
-            String tempPath = System.Configuration.ConfigurationManager.AppSettings["TempPath"];
-            String ttsPath = System.Configuration.ConfigurationManager.AppSettings["TtsPath"];
+            convertReq.n_langpk = Language;
+            String tempPath = System.Configuration.ConfigurationManager.AppSettings["sz_path_audiofiles"];
+            String ttsPath = System.Configuration.ConfigurationManager.AppSettings["sz_path_tts_server"];
             UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(tempPath, ttsPath, convertReq);
             if (response.n_responsecode == 0)
             {
                 return response.wav;
             }
             throw new Exception(response.sz_responsetext);
+        }
+
+        [WebMethod(Description = @"<b>Get available languages/dialects for use with text to speech</b>")]
+        public List<TtsLanguage> GetTextToSpeechLanguages(Account Account)
+        {
+            List<TtsLanguage> listToReturn = new List<TtsLanguage>();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_userid = Account.UserId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckGASLogonLiteral(ref logonInfo);
+            List<KeyValuePair<int, String>> list = umsDb.GetAvailableTtsLanguages(logonInfo.l_deptpk);
+            foreach(KeyValuePair<int, String> pair in list)
+            {
+                listToReturn.Add(new TtsLanguage()
+                {
+                    LangId = pair.Key,
+                    Name = pair.Value
+                });
+            }
+            return listToReturn;
         }
 
 

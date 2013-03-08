@@ -252,7 +252,25 @@ namespace com.ums.ws.integration
         {
             throw new NotImplementedException();
         }
-    
+
+
+        [WebMethod(Description = @"<b>Convert text to speech using default department tts-language</b><br>Throws exception if it fails.")]
+        public byte[] GetTextToSpeechWav(Account Account, String Text)
+        {
+            return new Integration().GetTextToSpeechWav(Account, Text);
+        }
+
+        [WebMethod(Description = @"<b>Convert text to speech using specified tts-language<br>Available Languages/Dialects may be obtained using GetTextToSpeechLanguages.</b><br>Throws exception if it fails.")]
+        public byte[] GetTextToSpeechWavInLanguage(Account Account, String Text, int Language)
+        {
+            return new Integration().GetTextToSpeechWavInLanguage(Account, Text, Language);
+        }
+
+        [WebMethod(Description = @"<b>Get available languages/dialects for use with text to speech</b>")]
+        public List<TtsLanguage> GetTextToSpeechLanguages(Account Account)
+        {
+            return new Integration().GetTextToSpeechLanguages(Account);
+        }
     }
 #endregion Templates
 }

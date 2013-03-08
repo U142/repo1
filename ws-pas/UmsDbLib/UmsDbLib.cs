@@ -138,6 +138,20 @@ namespace com.ums.UmsDbLib
             return toReturn;
         }
 
+        public List<KeyValuePair<int, String>> GetAvailableTtsLanguages(int DeptPk)
+        {
+            List<KeyValuePair<int, String>> retList = new List<KeyValuePair<int, string>>();
+            String Sql = String.Format("SELECT TTS.l_langpk, TTS.sz_name FROM BBTTSLANG_X_DEPT XD, BBTTSLANG TTS WHERE XD.l_deptpk={0} AND XD.l_langpk=TTS.l_langpk",
+                            DeptPk);
+            OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE);
+            while (rs.Read())
+            {
+                retList.Add(new KeyValuePair<int, String>(rs.GetInt32(0), rs.GetString(1)));
+            }
+            rs.Close();
+            return retList;
+        }
+
         /// <summary>
         /// Check if a department may use an action profile
         /// Either it owns the profile or it's shared to the department
