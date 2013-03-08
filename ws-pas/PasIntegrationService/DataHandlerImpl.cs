@@ -79,7 +79,7 @@ namespace com.ums.pas.integration
                 using (new TimeProfiler("AlertObject"))
                 {
                     //check if endpoint is added, if not add it to targets.
-                    if (TryAddEndpoint(alertObject.Phone))
+                    //if (TryAddEndpoint(alertObject.Phone))
                     {
                         targets.Add(alertObject, new List<Recipient>()
                         {
@@ -177,7 +177,7 @@ namespace com.ums.pas.integration
 
         private String GetVoiceFilenameFor(long Refno, int FileNo)
         {
-            return String.Format("{0}\\v{1}_{2}.raw", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno, FileNo);
+            return String.Format(@"{0}\v{1}_{2}.raw", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno, FileNo);
         }
 
 
@@ -207,21 +207,31 @@ namespace com.ums.pas.integration
             //file exists
             tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
 
-            //Items
-            //tw.WriteLine(String.Format("/PCODE {0}", ""));
-            if (AlertConfiguration.SimulationMode)
-            {
-                tw.Write(String.Format("/SIMU NA "));
-            }
-            else
-            {
-                tw.Write(String.Format("/DCALL NA "));
-            }
-            //iterate numbers
 
-            //more numbers?
-            //tw.Write(String.Format(",{1}", ""));
-            tw.WriteLine("");
+
+            foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+            {
+                foreach (Recipient Recipient in kvp.Value)
+                {
+                    //tw.WriteLine(String.Format("/PCODE {0}", ""));
+                    if (AlertConfiguration.SimulationMode)
+                    {
+                        tw.Write(String.Format("/SIMU NA"));
+                    }
+                    else
+                    {
+                        tw.Write(String.Format("/DCALL NA"));
+                    }
+                    //iterate numbers
+                    bool started = false;
+                    foreach (Endpoint endPoint in Recipient.EndPoints)
+                    {
+                        tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
+                        started = true;
+                    }
+                    tw.WriteLine("");
+                }
+            }
             
             tw.Close();
             File.Move(tempFile, publishFile);
