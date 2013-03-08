@@ -139,14 +139,17 @@ namespace com.ums.pas.integration
 
                 if (channelConfig is VoiceConfiguration)
                 {
-                    //prepare voice alert
-                    VoiceConfiguration voiceConfig = (VoiceConfiguration) channelConfig;
-                    InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
-                    InsertResched(Refno, voiceConfig);
-                    InsertBbValid(Refno, voiceConfig.ValidDays);
-                    InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
-                    //if forced hidden number or no numbers assigned
-                    InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                    VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
+                    using (new TimeProfiler("Voice config database inserts"))
+                    {
+                        //prepare voice alert
+                        InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
+                        InsertResched(Refno, voiceConfig);
+                        InsertBbValid(Refno, voiceConfig.ValidDays);
+                        InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
+                        //if forced hidden number or no numbers assigned
+                        InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                    }
 
                     CreateTtsBackboneAudioFiles(Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
                     
@@ -157,9 +160,12 @@ namespace com.ums.pas.integration
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration) channelConfig);
-                    UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
-                    InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
+                    using (new TimeProfiler("SMS config database inserts"))
+                    {
+                        InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
+                        UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
+                        InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
+                    }
                 }
             }
 
@@ -169,23 +175,26 @@ namespace com.ums.pas.integration
 
         private void CreateTtsBackboneAudioFiles(long Refno, List<String> Messages, int LangPk)
         {
-            try
+            using(new TimeProfiler("Text to Speech"))
             {
-                int counter = 0;
-                ITtsFacade ttsFacade = new TtsFacadeImpl();
-                foreach (String Message in Messages)
+                try
                 {
-                    byte[] bytes = ttsFacade.ConvertTtsRaw(Message, LangPk);
-                    String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, ++counter);
-                    File.WriteAllBytes(publishFile, bytes);
+                    int counter = 0;
+                    ITtsFacade ttsFacade = new TtsFacadeImpl();
+                    foreach (String Message in Messages)
+                    {
+                        byte[] bytes = ttsFacade.ConvertTtsRaw(Message, LangPk);
+                        String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, ++counter);
+                        File.WriteAllBytes(publishFile, bytes);
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                String errorText = String.Format("Unable to create TTS on Refno={0}\n{1}", Refno, e);
-                ULog.error(errorText);
-                Console.WriteLine(errorText);
-                throw e;
+                catch (Exception e)
+                {
+                    String errorText = String.Format("Unable to create TTS on Refno={0}\n{1}", Refno, e);
+                    ULog.error(errorText);
+                    Console.WriteLine(errorText);
+                    throw e;
+                }
             }
         }
 
@@ -201,63 +210,66 @@ namespace com.ums.pas.integration
         /// <param name="Refno"></param>
         private void WriteVoiceBackboneFile(AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
-            try
+            using (new TimeProfiler("Write address file to backbone"))
             {
-                String tempFile = String.Format("{0}\\d{1}.tmp", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
-                String publishFile = String.Format("{0}\\d{1}.adr", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
-                TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
-                tw.WriteLine("/MDV");
-                tw.WriteLine("/MPC");
-                tw.WriteLine(String.Format("/Company={0}", Account.CompanyId));
-                tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId));
-                tw.WriteLine(String.Format("/Pri={0}", AccountDetails.DeptPri));
-                tw.WriteLine(String.Format("/Channels={0}", AccountDetails.MaxVoiceChannels));
-                tw.WriteLine(String.Format("/SchedDate={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("yyyyMMdd") : AlertConfiguration.Scheduled.ToString("yyyyMMdd")));
-                tw.WriteLine(String.Format("/SchedTime={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("HHmm") : AlertConfiguration.Scheduled.ToString("HHmm")));
-                tw.WriteLine(String.Format("/Item=1"));
-                tw.WriteLine(String.Format("/Name={0}", AlertConfiguration.AlertName));
-
-                //Dynamic voice
-                //foreach
-                int counter = 0;
-                //file exists
-                tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
-
-
-
-                foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+                try
                 {
-                    foreach (Recipient Recipient in kvp.Value)
-                    {
-                        //tw.WriteLine(String.Format("/PCODE {0}", ""));
-                        if (AlertConfiguration.SimulationMode)
-                        {
-                            tw.Write(String.Format("/SIMU NA"));
-                        }
-                        else
-                        {
-                            tw.Write(String.Format("/DCALL NA"));
-                        }
-                        //iterate numbers
-                        bool started = false;
-                        foreach (Endpoint endPoint in Recipient.EndPoints)
-                        {
-                            tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
-                            started = true;
-                        }
-                        tw.WriteLine("");
-                    }
-                }
+                    String tempFile = String.Format("{0}\\d{1}.tmp", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
+                    String publishFile = String.Format("{0}\\d{1}.adr", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
+                    TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
+                    tw.WriteLine("/MDV");
+                    tw.WriteLine("/MPC");
+                    tw.WriteLine(String.Format("/Company={0}", Account.CompanyId));
+                    tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId));
+                    tw.WriteLine(String.Format("/Pri={0}", AccountDetails.DeptPri));
+                    tw.WriteLine(String.Format("/Channels={0}", AccountDetails.MaxVoiceChannels));
+                    tw.WriteLine(String.Format("/SchedDate={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("yyyyMMdd") : AlertConfiguration.Scheduled.ToString("yyyyMMdd")));
+                    tw.WriteLine(String.Format("/SchedTime={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("HHmm") : AlertConfiguration.Scheduled.ToString("HHmm")));
+                    tw.WriteLine(String.Format("/Item=1"));
+                    tw.WriteLine(String.Format("/Name={0}", AlertConfiguration.AlertName));
 
-                tw.Close();
-                File.Move(tempFile, publishFile);
-            }
-            catch (Exception e)
-            {
-                String errorText = String.Format("Unable to write backbone address file for refno {0}\n{1}", Refno, e);
-                ULog.error(errorText);
-                Console.WriteLine(errorText);
-                throw e;
+                    //Dynamic voice
+                    //foreach
+                    int counter = 0;
+                    //file exists
+                    tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
+
+
+
+                    foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+                    {
+                        foreach (Recipient Recipient in kvp.Value)
+                        {
+                            //tw.WriteLine(String.Format("/PCODE {0}", ""));
+                            if (AlertConfiguration.SimulationMode)
+                            {
+                                tw.Write(String.Format("/SIMU NA"));
+                            }
+                            else
+                            {
+                                tw.Write(String.Format("/DCALL NA"));
+                            }
+                            //iterate numbers
+                            bool started = false;
+                            foreach (Endpoint endPoint in Recipient.EndPoints)
+                            {
+                                tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
+                                started = true;
+                            }
+                            tw.WriteLine("");
+                        }
+                    }
+
+                    tw.Close();
+                    File.Move(tempFile, publishFile);
+                }
+                catch (Exception e)
+                {
+                    String errorText = String.Format("Unable to write backbone address file for refno {0}\n{1}", Refno, e);
+                    ULog.error(errorText);
+                    Console.WriteLine(errorText);
+                    throw e;
+                }
             }
         }
 

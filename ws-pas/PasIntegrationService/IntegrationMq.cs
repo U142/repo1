@@ -8,6 +8,8 @@ using System.Threading;
 using com.ums.UmsCommon;
 using System.Configuration;
 using Apache.NMS.ActiveMQ;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace com.ums.pas.integration
 {
@@ -151,7 +153,13 @@ namespace com.ums.pas.integration
                                 IObjectMessage objectMessage = (IObjectMessage)message;                                
                                 if (objectMessage.Body is AlertMqPayload)
                                 {
+                                    String logMsg = String.Format("Received new ActiveMq message");
+                                    Console.WriteLine(logMsg);
+                                    ULog.write(logMsg);
                                     AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
+                                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(AlertMqPayload));
+
+                                    xmlSerializer.Serialize(new FileStream(String.Format("{0}\\projectpk_{1}.xml", System.Configuration.ConfigurationManager.AppSettings["TempPath"], payload.AlertId.Id), FileMode.Create), payload);
 
                                     Account account = payload.Account;
                                     if (payload.AlertId.Id <= 0)
