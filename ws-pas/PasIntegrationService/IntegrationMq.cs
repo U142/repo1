@@ -197,7 +197,9 @@ namespace com.ums.pas.integration
                                         }
                                         catch (Exception e)
                                         {
-                                            ULog.error("Failed to generate alert\n\n" + e.ToString());
+                                            String errorText = String.Format("Failed to generate alert\n\n" + e.ToString());
+                                            ULog.error(errorText);
+                                            Console.WriteLine(errorText);
                                             //increment tries here, finally ack the message to make it go away.
                                         }
                                     }
@@ -205,7 +207,9 @@ namespace com.ums.pas.integration
                                 }
                                 else
                                 {
-                                    ULog.error("Received message of incompatible type {0} with MessageId {1}", message, message.NMSMessageId);
+                                    String errorText = String.Format("Received message of incompatible type {0} with MessageId {1}", message, message.NMSMessageId);
+                                    Console.WriteLine(errorText);
+                                    ULog.error(errorText);
                                     message.Acknowledge();
                                 }
 

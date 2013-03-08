@@ -168,7 +168,7 @@ namespace com.ums.UmsCommon.Audio
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        public UCONVERT_TTS_RESPONSE ConvertTTS(UCONVERT_TTS_REQUEST req)
+        public UCONVERT_TTS_RESPONSE ConvertTTS(String PathTemp, String PathTTS, UCONVERT_TTS_REQUEST req)
         {
             UCONVERT_TTS_RESPONSE response = new UCONVERT_TTS_RESPONSE();
             response.n_responsecode = -1;
@@ -195,7 +195,7 @@ namespace com.ums.UmsCommon.Audio
                 String sz_tempfile = sz_filebase + ".wav";
 
                 /*WRITE LANG FILE*/
-                UFile file_lang = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_langfile);
+                UFile file_lang = new UFile(PathTemp, sz_langfile);
                 StreamWriter w = new StreamWriter(file_lang.full(), false, Encoding.GetEncoding("iso-8859-1"));
                 w.WriteLine("$" + dbparams.sz_speaker);
                 w.WriteLine("£" + dbparams.sz_modename);
@@ -205,12 +205,12 @@ namespace com.ums.UmsCommon.Audio
                 //File.Copy(UCommon.UPATHS.sz_path_audiofiles + sz_langfile, UCommon.UPATHS.sz_path_ttsserver + sz_langfile);
 
                 /*CONVERT TTS*/
-                UFile file_txt = new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_txtfile);
+                UFile file_txt = new UFile(PathTTS, sz_txtfile);
                 tts.Say_wavex(req.sz_text, file_txt.full(), 60);
 
-                UFile file_temp = new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_tempfile);
-                UFile file_dest_wav = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_wavfile);
-                UFile file_dest_raw = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_rawfile);
+                UFile file_temp = new UFile(PathTTS, sz_tempfile);
+                UFile file_dest_wav = new UFile(PathTemp, sz_wavfile);
+                UFile file_dest_raw = new UFile(PathTemp, sz_rawfile);
 
                 file_temp.CopyOperation(file_dest_wav);
                 WAV2RAWLib.convert w2r = new WAV2RAWLib.convert();

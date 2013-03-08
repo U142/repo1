@@ -142,6 +142,10 @@ namespace com.ums.pas.integration
                     InsertBbValid(Refno, voiceConfig.ValidDays);
                     //if forced hidden number or no numbers assigned
                     InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                    
+                    
+                    CreateTtsBackboneAudioFiles(Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
+                    
                     WriteVoiceBackboneFile(Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                 }
                 else if (channelConfig is SmsConfiguration)
@@ -159,6 +163,23 @@ namespace com.ums.pas.integration
 
         }
 
+        private void CreateTtsBackboneAudioFiles(long Refno, List<String> Messages, int LangPk)
+        {
+            int counter = 0;
+            ITtsFacade ttsFacade = new TtsFacadeImpl();
+            foreach(String Message in Messages)
+            {
+                byte [] bytes = ttsFacade.ConvertTtsRaw(Message, LangPk);
+                String publishFile = GetVoiceFilenameFor(Refno, ++counter);
+                File.WriteAllBytes(publishFile, bytes);
+            }
+        }
+
+        private String GetVoiceFilenameFor(long Refno, int FileNo)
+        {
+            return String.Format("{0}\\v{1}_{2}.raw", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno, FileNo);
+        }
+
 
         /// <summary>
         /// Write voice address file and move it to backbone eat path
@@ -166,8 +187,8 @@ namespace com.ums.pas.integration
         /// <param name="Refno"></param>
         private void WriteVoiceBackboneFile(AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
-            String tempFile = String.Format("{0}\\d{1}.tmp", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno);
-            String publishFile = String.Format("{0}\\d{1}.adr", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno);
+            String tempFile = String.Format("{0}\\d{1}.tmp", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
+            String publishFile = String.Format("{0}\\d{1}.adr", System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"], Refno);
             TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
             tw.WriteLine("/MDV");
             tw.WriteLine("/MPC");
@@ -183,18 +204,27 @@ namespace com.ums.pas.integration
             //Dynamic voice
             //foreach
             int counter = 0;
-            String voiceFile = String.Format("{0}\\v{1}_{2}.raw", System.Configuration.ConfigurationManager.AppSettings["BackbonePath"], Refno, ++counter);
             //file exists
-            tw.WriteLine(String.Format("/FILE={0}", voiceFile));
+            tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
 
             //Items
             //tw.WriteLine(String.Format("/PCODE {0}", ""));
-            tw.Write(String.Format("/DCALL NA "));
-            tw.Write(String.Format("/SIMU NA "));
+            if (AlertConfiguration.SimulationMode)
+            {
+                tw.Write(String.Format("/SIMU NA "));
+            }
+            else
+            {
+                tw.Write(String.Format("/DCALL NA "));
+            }
+            //iterate numbers
+
             //more numbers?
             //tw.Write(String.Format(",{1}", ""));
             tw.WriteLine("");
-
+            
+            tw.Close();
+            File.Move(tempFile, publishFile);
         }
 
 

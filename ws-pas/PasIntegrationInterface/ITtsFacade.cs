@@ -16,18 +16,16 @@ namespace com.ums.pas.integration
         /// Convert TTS and return raw audiofile
         /// </summary>
         /// <param name="Text"></param>
-        /// <param name="Speaker"></param>
-        /// <param name="DestinationFile"></param>
+        /// <param name="LangPk"></param>
         /// <returns>File content</returns>
-        byte [] ConvertTtsRaw(String Text, String Speaker, String DestinationFile);
+        byte [] ConvertTtsRaw(String Text, int LangPk);
 
         /// <summary>
         /// Convert TTS and return wav audiofile
         /// </summary>
         /// <param name="Text"></param>
-        /// <param name="Speaker"></param>
-        /// <param name="DestinationFile"></param>
+        /// <param name="LangPk"></param>
         /// <returns>File content</returns>
-        byte [] ConvertTtsWav(String Text, String Speaker, String DestinationFile);
+        byte [] ConvertTtsWav(String Text, int LangPk);
     }
 }

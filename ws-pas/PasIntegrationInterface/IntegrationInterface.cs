@@ -1204,6 +1204,7 @@ namespace com.ums.pas.integration
         public String StdCc { get; set; }
         public int MaxVoiceChannels { get; set; }
         public List<String> AvailableVoiceNumbers { get; set; }
+        public int DefaultTtsLang { get; set; }
     }
 
     [Serializable]
