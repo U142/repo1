@@ -72,8 +72,8 @@ namespace com.ums.pas.integration
         public void HandleAlert(AlertMqPayload Payload)
         {
             //PasIntegrationService.Default.DatabaseConnection
-            String FolkeregDatabaseConnectionString = String.Format("vb_adr_{0}_reg", Payload.AccountDetails.StdCc);
-            String NorwayDatabaseConnectionString = String.Format("vb_adr_{0}", Payload.AccountDetails.StdCc);
+            String FolkeregDatabaseConnectionString = String.Format("DSN=vb_adr_{0}_reg; UID=sa; PWD=diginform", Payload.AccountDetails.StdCc);
+            String NorwayDatabaseConnectionString = String.Format("DSN=vb_adr_{0}; UID=sa; PWD=diginform", Payload.AccountDetails.StdCc);
 
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
@@ -140,14 +140,11 @@ namespace com.ums.pas.integration
                 if (channelConfig is VoiceConfiguration)
                 {
                     //prepare voice alert
-                    //BBRESCHEDPROFILE
-                    //BBVALID
-                    //BBSENDNUM
-                    //BBACTIONPROFILESEND
                     VoiceConfiguration voiceConfig = (VoiceConfiguration) channelConfig;
                     InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                     InsertResched(Refno, voiceConfig);
                     InsertBbValid(Refno, voiceConfig.ValidDays);
+                    InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
                     //if forced hidden number or no numbers assigned
                     InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
 
@@ -279,6 +276,13 @@ namespace com.ums.pas.integration
         private void WriteMetaData()
         {
             //TODO
+        }
+
+        private void InsertBbActionprofileSend(long Refno, int ProfilePk)
+        {
+            String Sql = String.Format("INSERT INTO BBACTIONPROFILESEND(l_refno, l_actionprofilepk) VALUES({0}, {1})",
+                                        Refno, ProfilePk);
+            Database.ExecNonQuery(Sql);
         }
 
         /// <summary>
