@@ -205,7 +205,7 @@ namespace com.ums.pas.integration
                                         try
                                         {
                                             ITimeProfilerCollector collector = new TimeProfilerCollector();
-                                            using (new TimeProfiler("Handle entire alert", collector))
+                                            using (new TimeProfiler(payload.AlertId.Id, "Handle entire alert", collector))
                                             {
                                                 new DataHandlerImpl().HandleAlert(payload);
                                             }

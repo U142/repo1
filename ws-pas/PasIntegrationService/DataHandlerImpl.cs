@@ -24,7 +24,8 @@ namespace com.ums.pas.integration
 
         //IDictionary<AlertTarget, List<Recipient>> targets = new Dictionary<AlertTarget, List<Recipient>>();
         HashSet<Endpoint> AddedEndpoints = new HashSet<Endpoint>();
-        ITimeProfilerCollector timeProfileCollector = new TimeProfilerCollector();
+        ITimeProfilerCollector timeProfileCollector = new TimeProfileDb.TimeProfileImpl();
+
 
         List<RecipientData> recipientDataList = new List<RecipientData>();
 
@@ -80,7 +81,7 @@ namespace com.ums.pas.integration
 
             foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
             {
-                using (new TimeProfiler("AlertObject", timeProfileCollector))
+                using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector))
                 {
                     //check if endpoint is added, if not add it to targets.
                     //if (TryAddEndpoint(alertObject.Phone))
@@ -121,12 +122,13 @@ namespace com.ums.pas.integration
             {
 
             }
-            using (new TimeProfiler("StreetId", timeProfileCollector))
+            using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                 IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                             FolkeregDatabaseConnectionString,
                                                             Payload.AlertTargets.OfType<StreetAddress>().ToList());
+                recipientDataList.AddRange(streetAddressLookup);
             }
 
             foreach (PropertyAddress propertyAddress in Payload.AlertTargets.OfType<PropertyAddress>())
@@ -151,7 +153,7 @@ namespace com.ums.pas.integration
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
-                    using (new TimeProfiler("Voice config database inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "Voice config database inserts", timeProfileCollector))
                     {
                         //prepare voice alert
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
@@ -162,16 +164,16 @@ namespace com.ums.pas.integration
                         InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
                     }
 
-                    CreateTtsBackboneAudioFiles(Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
-                    
-                    WriteVoiceBackboneFile(Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
+                    CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
+
+                    WriteVoiceBackboneFile(Payload.AlertId, Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                 }
                 else if (channelConfig is SmsConfiguration)
                 {
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    using (new TimeProfiler("SMS config database inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "SMS config database inserts", timeProfileCollector))
                     {
                         InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
@@ -184,9 +186,9 @@ namespace com.ums.pas.integration
 
         }
 
-        private void CreateTtsBackboneAudioFiles(long Refno, List<String> Messages, int LangPk)
+        private void CreateTtsBackboneAudioFiles(AlertId AlertId, long Refno, List<String> Messages, int LangPk)
         {
-            using (new TimeProfiler("Text to Speech", timeProfileCollector))
+            using (new TimeProfiler(AlertId.Id, "Text to Speech", timeProfileCollector))
             {
                 try
                 {
@@ -219,9 +221,9 @@ namespace com.ums.pas.integration
         /// Write voice address file and move it to backbone eat path
         /// </summary>
         /// <param name="Refno"></param>
-        private void WriteVoiceBackboneFile(AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
+        private void WriteVoiceBackboneFile(AlertId AlertId, AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
-            using (new TimeProfiler("Write address file to backbone", timeProfileCollector))
+            using (new TimeProfiler(AlertId.Id, "Write address file to backbone", timeProfileCollector))
             {
                 try
                 {

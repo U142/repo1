@@ -1625,19 +1625,23 @@ namespace com.ums.UmsCommon
         public String TimerName { get; private set; }
         public Stopwatch Timer { get; private set; }
         public ITimeProfilerCollector ProfilerCollector { get; private set; }
-        public TimeProfiler(String TimerName, ITimeProfilerCollector Collector)
+        public long Id { get; set; }
+        public TimeProfile TimeProfile { get; private set; }
+
+        public TimeProfiler(long Id, String TimerName, ITimeProfilerCollector Collector)
         {
+            this.Id = Id;
             this.TimerName = TimerName;
             this.ProfilerCollector = Collector;
-            Console.WriteLine("Starting timer for {0}", TimerName);
-            Timer = new Stopwatch();
-            ProfilerCollector.AddProfile(new TimeProfile()
-               {
-                  ElapsedMsec = Timer.ElapsedMilliseconds,
-                  TimerName = TimerName,
-               }
-            );
+            Console.WriteLine("Starting timer for Id={0}, {1}", Id, TimerName);
+            TimeProfile = new TimeProfile()
+            {
+                Id = Id,
+                TimerName = TimerName,
+            };
+            ProfilerCollector.AddProfile(TimeProfile);
 
+            Timer = new Stopwatch();
             Timer.Start();
         }
 
@@ -1646,6 +1650,9 @@ namespace com.ums.UmsCommon
         public void Dispose()
         {
             Timer.Stop();
+            TimeProfile.ElapsedMsec = Timer.ElapsedMilliseconds;
+            ProfilerCollector.OnTimerDispose(TimeProfile);
+            
             Console.WriteLine("Stopping timer for {0} - used {1}", TimerName, Timer.Elapsed);
         }
 
@@ -1659,6 +1666,7 @@ namespace com.ums.UmsCommon
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class TimeProfile
     {
+        public long Id { get; set; }
         public String TimerName { get; set; }
         public long ElapsedMsec { get; set; }
 
@@ -1671,6 +1679,7 @@ namespace com.ums.UmsCommon
     {
         void AddProfile(TimeProfile Profile);
         List<TimeProfile> GetProfileList();
+        void OnTimerDispose(TimeProfile Profile);
     }
 
     /// <summary>
@@ -1678,6 +1687,10 @@ namespace com.ums.UmsCommon
     /// </summary>
     public class TimeProfilerCollector : ITimeProfilerCollector
     {
+        public TimeProfilerCollector()
+        {
+            timeProfileList = new List<TimeProfile>();
+        }
         public List<TimeProfile> timeProfileList { get; private set; }
 
         #region ITimeProfilerCollector Members
@@ -1690,6 +1703,11 @@ namespace com.ums.UmsCommon
         public List<TimeProfile> GetProfileList()
         {
             return timeProfileList;
+        }
+
+        public void OnTimerDispose(TimeProfile Profile)
+        {
+
         }
 
         #endregion

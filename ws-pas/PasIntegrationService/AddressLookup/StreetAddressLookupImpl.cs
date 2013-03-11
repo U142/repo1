@@ -94,17 +94,6 @@ namespace com.ums.pas.integration.AddressLookup
                         {
                             RecipientData r = new RecipientData()
                             {
-
-
-                                /*Attributes = new List<DataItem>()
-                                {
-                                    new DataItem()
-                                    {
-                                        Key = "NAVN",
-                                        Value = rs.IsDBNull(rs.GetOrdinal("NAVN")) ? "" : rs.GetString(rs.GetOrdinal("NAVN"))
-                                    },
-                                },
-                                */
                                 AlertTarget = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(),
                                                                 rs.GetInt32(rs.GetOrdinal("GATEKDOE")),
                                                                 rs.GetInt32(rs.GetOrdinal("HUSNR")),
