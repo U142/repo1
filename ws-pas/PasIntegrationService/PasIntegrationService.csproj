@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressLookup\IStreetAddressLookupFacade.cs" />
+    <Compile Include="AddressLookup\RecipientData.cs" />
     <Compile Include="AddressLookup\StreetAddressLookupImpl.cs" />
     <Compile Include="DataHandlerImpl.cs" />
     <Compile Include="IChannelItemStorage.cs" />

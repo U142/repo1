@@ -26,6 +26,8 @@ namespace com.ums.pas.integration
         HashSet<Endpoint> AddedEndpoints = new HashSet<Endpoint>();
         ITimeProfilerCollector timeProfileCollector = new TimeProfilerCollector();
 
+        List<RecipientData> recipientDataList = new List<RecipientData>();
+
         protected int CountEndpoints(SendChannel byChannel)
         {
             int returnCount = 0;
@@ -114,7 +116,7 @@ namespace com.ums.pas.integration
             using (new TimeProfiler("StreetId", timeProfileCollector))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
-                IEnumerable<Recipient> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                             FolkeregDatabaseConnectionString,
                                                             Payload.AlertTargets.OfType<StreetAddress>().ToList());
             }
