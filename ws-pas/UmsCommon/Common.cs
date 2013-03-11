@@ -1638,6 +1638,7 @@ namespace com.ums.UmsCommon
             {
                 Id = Id,
                 TimerName = TimerName,
+                Started = Int64.Parse(DateTime.UtcNow.ToString("yyyyMMddHHmmss")),
             };
             ProfilerCollector.AddProfile(TimeProfile);
 
@@ -1669,6 +1670,7 @@ namespace com.ums.UmsCommon
         public long Id { get; set; }
         public String TimerName { get; set; }
         public long ElapsedMsec { get; set; }
+        public long Started { get; set; }
 
     }
 

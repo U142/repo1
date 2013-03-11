@@ -83,35 +83,16 @@ namespace com.ums.pas.integration
             {
                 using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector))
                 {
-                    //check if endpoint is added, if not add it to targets.
-                    //if (TryAddEndpoint(alertObject.Phone))
+                    recipientDataList.Add(new RecipientData()
                     {
-                        /*targets.Add(alertObject, new List<Recipient>()
-                        {
-                            new Recipient()
-                            {
-                                EndPoints = new List<Endpoint>()
-                                        {
-                                            alertObject.Phone,
-                                        },
-                                Attributes = new List<DataItem>()
-                                {
-                                    new DataItem("AlertObject", alertObject.Phone.Address),
-                                }
-                            }
-                        });*/
-                        recipientDataList.Add(new RecipientData()
-                        {
-                            AlertTarget = alertObject,
-                            Endpoints = new List<Endpoint>()
-                                        {
-                                            alertObject.Phone,
-                                        },
+                        AlertTarget = alertObject,
+                        Endpoints = new List<Endpoint>()
+                                    {
+                                        alertObject.Phone,
+                                    },
                             
                             
-                        });
-                         
-                    }
+                    });                         
                 }
             }
             foreach (StoredList storedList in Payload.AlertTargets.OfType<StoredList>())
@@ -247,9 +228,25 @@ namespace com.ums.pas.integration
                     //file exists
                     tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
 
-
+                    int itemCount = 0;
                     foreach (RecipientData recipientData in recipientDataList)
                     {
+                        //TODO - now only fixed numbers should get voice, may change later
+                        bool doContinue = false;
+                        foreach (Endpoint endPoint in recipientData.Endpoints)
+                        {
+                            if (endPoint is Phone && !((Phone)endPoint).CanReceiveSms)
+                            {
+                                doContinue = true;
+                                break;
+                            }
+                        }
+                        //only sms numbers here, ignore.
+                        if (!doContinue)
+                        {
+                            continue;
+                        }
+
                         if (AlertConfiguration.SimulationMode)
                         {
                             tw.Write(String.Format("/SIMU NA"));
@@ -262,10 +259,15 @@ namespace com.ums.pas.integration
                         bool started = false;
                         foreach (Endpoint endPoint in recipientData.Endpoints)
                         {
-                            tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
-                            started = true;
+                            //only send to phones that cannot receive SMS
+                            if (endPoint is Phone && !((Phone)endPoint).CanReceiveSms)
+                            {
+                                tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
+                                started = true;
+                            }
                         }
                         tw.WriteLine("");
+                        recipientData.AlertLink.Add(RecipientData.newRefnoItem(Refno, ++itemCount));
                     }
 
                     tw.Close();
@@ -354,9 +356,9 @@ namespace com.ums.pas.integration
             {
                 foreach (Endpoint endPoint in recipientData.Endpoints)
                 {
-                    if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms)
+                    if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms && endPoint.Address.Length > 0)
                     {
-                        String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                        String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, '{6}', {7})",
                                                                     Refno,
                                                                     ++itemNumber,
                                                                     Account.PrimarySmsServer,
@@ -366,6 +368,7 @@ namespace com.ums.pas.integration
                                                                     endPoint.Address,
                                                                     -1);
                         Database.ExecNonQuery(Sql);
+                        recipientData.AlertLink.Add(RecipientData.newRefnoItem(Refno, itemNumber));
 
                     }
                 }
