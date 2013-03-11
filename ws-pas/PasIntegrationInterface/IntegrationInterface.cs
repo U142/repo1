@@ -189,21 +189,38 @@ namespace com.ums.pas.integration
 		    set { _phone = value;}
 	    }
 
+        private String _name;
+
+        public String Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        private String _externalId;
+
+        public String ExternalId
+        {
+            get { return _externalId; }
+            set { _externalId = value; }
+        }
+
+
         public AlertObject()
         {
         }
         public AlertObject(String Name, String ExternalId, Phone Phone) 
             : this(Name, ExternalId, Phone.Address, Phone.CanReceiveSms)
         {
-            
+            this.Name = Name;
+            this.ExternalId = ExternalId;
+            this.Phone = Phone;
         }
         public AlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms)
         {
             this.Phone = new Phone();
             this.Phone.Address = PhoneNumber;
             this.Phone.CanReceiveSms = CanReceiveSms;
-            Attributes.Add(new DataItem("NAME", Name));
-            Attributes.Add(new DataItem("EXTID", ExternalId));
         }
     }
 
