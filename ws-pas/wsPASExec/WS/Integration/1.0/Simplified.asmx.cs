@@ -35,7 +35,8 @@ namespace com.ums.ws.integration
         /// <param name="Exercise">If true, it's a simulated alert</param>
         /// <param name="AlertTargets">AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject</param>
         /// <returns></returns>
-        [WebMethod(Description = "<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject")]
+        [WebMethod(Description = "<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject"
+                                    + "<b><i>Note that AlertTarget.Attributes are not implemented yet due to unknown performance impact.</i></b>")]
         [XmlInclude(typeof(StreetAddress))]
         [XmlInclude(typeof(PropertyAddress))]
         [XmlInclude(typeof(OwnerAddress))]
@@ -92,7 +93,7 @@ namespace com.ums.ws.integration
         /// <param name="Repeats">Number of repeats (only voice)</param>
         /// <param name="Frequency">Frequency in minutes between repeats</param>
         /// <returns>An alert response</returns>
-        [WebMethod(Description=@"<b>Send new alert to same receivers as a previous sent alert.</b><br>Message content may differ in SMS and Text-to-speech, may specify both indipendently.")]
+        [WebMethod(Description=@"<b>Send new alert to same receivers as a previous sent alert.</b><br>Message content may differ in SMS and Text-to-speech, may specify both indipendently.<br>")]
         public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, Boolean StartImmediately, DateTime StartDateTime,
             Int32 Repeats, Int32 Frequency)
         {

@@ -99,6 +99,7 @@
     <Compile Include="IntegrationService.cs" />
     <Compile Include="PasIntegrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeProfileDb\TimeProfileImpl.cs" />
     <Compile Include="TtsFacadeImpl.cs" />
   </ItemGroup>
   <ItemGroup>
