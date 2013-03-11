@@ -215,6 +215,72 @@ namespace com.ums.UmsDbLib
             return maxChannels;
         }
 
+        public bool CheckDepartmentLogonLiteral(ref ULOGONINFO info)
+        {
+            bool b_ret = false;
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            String szSQL = String.Format("SELECT BD.l_deptpri, BD.sz_stdcc, BD.l_deptpk, BC.l_comppk FROM BBCOMPANY BC, BBDEPARTMENT BD WHERE " +
+                                            "BC.sz_compid='{0}' AND BD.sz_deptid='{1}' AND BC.l_comppk=BD.l_comppk AND " +
+                                            "BD.sz_password='{2}'",
+                                            info.sz_compid, info.sz_deptid, info.sz_password);
+            OdbcDataReader rs = null;
+            try
+            {
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    info.l_deptpri = rs.GetInt32(0);
+                    info.sz_stdcc = rs.GetString(1);
+                    info.l_deptpk = rs.GetInt32(2);
+                    info.l_comppk = rs.GetInt32(3);
+                    info.l_priserver = 0;
+                    info.l_altservers = 0;
+                    b_ret = true;
+                    rs.Close();
+                    rs = ExecReader(String.Format("SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk={0} ORDER BY l_pri", info.l_deptpk), UREADER_AUTOCLOSE);
+                    if (rs.Read())
+                    {
+                        info.l_priserver = rs.GetInt32(0);
+                    }
+                    if (rs.Read())
+                    {
+                        info.l_altservers = rs.GetInt32(1);
+                    }
+                    rs.Close();
+                }
+                rs.Close();
+            }
+            catch (SoapException e)
+            {
+                throw e;
+            }
+            catch (USessionDoesNotExsistException e)
+            {
+                throw e;
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                throw new UDbQueryException("CheckLogon");
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            if (!b_ret)
+            {
+                setLastError(String.Format("Error in logon credentials for userid/compid {0}/{1}", info.sz_userid, info.sz_compid));
+                throw new ULogonFailedException();
+            }
+            return b_ret;
+        }
+
         public bool CheckGASLogonLiteral(ref ULOGONINFO info)
         {
             bool b_ret = false;
