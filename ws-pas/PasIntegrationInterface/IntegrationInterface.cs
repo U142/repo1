@@ -1234,14 +1234,6 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Account
     {
-        private String  _userId;
-
-        [XmlElement(IsNullable = false)]
-        public String  UserId
-        {
-            get { return _userId; }
-            set { _userId = value; }
-        }
         private String _companyId;
 
         [XmlElement(IsNullable = false)]

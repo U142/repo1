@@ -42,16 +42,6 @@ namespace com.ums.ws.integration
 
 
 
-        [WebMethod]
-        public byte[] GetTexttoSpeechWavTest()
-        {
-            Account account = new Account();
-            account.CompanyId = "UMS";
-            account.DepartmentId = "DEVELOPMENT";
-            account.Password = "mh123";
-            account.UserId = "MH";
-            return GetTextToSpeechWav(account, "tester");
-        }
 
         /// <summary>
         /// Convert text to speech using default department tts-language
@@ -65,11 +55,10 @@ namespace com.ums.ws.integration
             ULOGONINFO logonInfo = new ULOGONINFO();
             logonInfo.sz_compid = Account.CompanyId;
             logonInfo.sz_deptid = Account.DepartmentId;
-            logonInfo.sz_userid = Account.UserId;
             logonInfo.sz_password = Account.Password;
             
             UmsDb umsDb = new UmsDb();
-            umsDb.CheckGASLogonLiteral(ref logonInfo);
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             int defaultLanguage = umsDb.GetDefaultTtsLanguage(logonInfo.l_deptpk);
             if (defaultLanguage <= 0)
             {
@@ -85,11 +74,10 @@ namespace com.ums.ws.integration
             ULOGONINFO logonInfo = new ULOGONINFO();
             logonInfo.sz_compid = Account.CompanyId;
             logonInfo.sz_deptid = Account.DepartmentId;
-            logonInfo.sz_userid = Account.UserId;
             logonInfo.sz_password = Account.Password;
 
             UmsDb umsDb = new UmsDb();
-            umsDb.CheckGASLogonLiteral(ref logonInfo);
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
             convertReq.sz_text = Text;
             convertReq.n_langpk = Language;
@@ -110,11 +98,10 @@ namespace com.ums.ws.integration
             ULOGONINFO logonInfo = new ULOGONINFO();
             logonInfo.sz_compid = Account.CompanyId;
             logonInfo.sz_deptid = Account.DepartmentId;
-            logonInfo.sz_userid = Account.UserId;
             logonInfo.sz_password = Account.Password;
 
             UmsDb umsDb = new UmsDb();
-            umsDb.CheckGASLogonLiteral(ref logonInfo);
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             List<KeyValuePair<int, String>> list = umsDb.GetAvailableTtsLanguages(logonInfo.l_deptpk);
             foreach(KeyValuePair<int, String> pair in list)
             {
@@ -166,13 +153,12 @@ namespace com.ums.ws.integration
                         ULOGONINFO logonInfo = new ULOGONINFO();
                         logonInfo.sz_compid = Account.CompanyId;
                         logonInfo.sz_deptid = Account.DepartmentId;
-                        logonInfo.sz_userid = Account.UserId;
                         logonInfo.sz_password = Account.Password;
 
                         
                         UmsDb umsDb = new UmsDb();
 
-                        umsDb.CheckGASLogonLiteral(ref logonInfo);
+                        umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
                         //fill internal account info
                         AccountDetails accountDetails = new AccountDetails();
@@ -227,7 +213,6 @@ namespace com.ums.ws.integration
 
                         payload.Account.CompanyId = Account.CompanyId;
                         payload.Account.DepartmentId = Account.DepartmentId;
-                        payload.Account.UserId = Account.UserId;
                         payload.Account.Password = Account.Password;
 
                         payload.AlertTargets = AlertTargets;
@@ -273,66 +258,6 @@ namespace com.ums.ws.integration
         }
 
 
-        [WebMethod]
-        public AlertResponse ActiveMqTest()
-        {
-            AlertResponse responseObject = new AlertResponse();
-            Uri connectionUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"]);
-            IConnectionFactory mqFactory = new NMSConnectionFactory(connectionUri);
-            try
-            {
-                using (IConnection mqConnection = mqFactory.CreateConnection())
-                using (ISession mqSession = mqConnection.CreateSession())
-                {
-                    IDestination destination = SessionUtil.GetDestination(mqSession, System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"]);
-                    using (IMessageProducer mqProducer = mqSession.CreateProducer())
-                    {
-                        //IMessage message = mqSession.CreateObjectMessage("tester");
-                        AlertMqPayload payload = new AlertMqPayload();
-
-                        ULOGONINFO logonInfo = new ULOGONINFO();
-                        logonInfo.sz_compid = "UMS";
-                        logonInfo.sz_deptid = "TEST";
-                        logonInfo.sz_userid = "MH";
-                        logonInfo.sz_password = "mh123,11";
-
-                        UPROJECT_REQUEST req = new UPROJECT_REQUEST();
-                        req.sz_name = "ActiveMq";
-                        payload.AlertId = new AlertId(new UProject().uproject(ref logonInfo, ref req).n_projectpk);
-                        payload.Account.CompanyId = logonInfo.sz_compid;
-                        payload.Account.DepartmentId = logonInfo.sz_deptid;
-                        payload.Account.UserId = logonInfo.sz_userid;
-                        payload.Account.Password = logonInfo.sz_password;
-
-                        payload.AlertTargets.Add(AlertTargetFactory.newStreetAddress("1102", 123, 20, "", ""));
-                        payload.AlertTargets.Add(AlertTargetFactory.newPropertyAddress("1102", 69, 2977, 0, 0));
-
-                        payload.AlertConfiguration.Scheduled = new DateTime();
-                        payload.AlertConfiguration.SimulationMode = true;
-                        payload.AlertConfiguration.StartImmediately = true;
-                        payload.AlertConfiguration.SendToAllChannels = false;
-
-                        payload.ChannelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("98220213", "tester", false));
-                        payload.ChannelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(5, 10, 2100, 60 * 10, 2, true, 0, false, "23500801", "tester for voice"));
-
-
-                        IObjectMessage message = mqSession.CreateObjectMessage(payload);
-                        mqProducer.Send(destination, message);
-                        responseObject.AlertId = payload.AlertId;
-                        return responseObject;
-                    }
-                }
-            }
-            catch (NMSConnectionException e)
-            {
-                return AlertResponseFactory.Failed(-1, e.Message);
-            }
-            catch (Exception e)
-            {
-                return AlertResponseFactory.Failed(-2, e.Message);
-            }
-
-        }
 
 
     }
