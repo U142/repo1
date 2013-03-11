@@ -24,6 +24,7 @@ namespace com.ums.pas.integration
 
         IDictionary<AlertTarget, List<Recipient>> targets = new Dictionary<AlertTarget, List<Recipient>>();
         HashSet<Endpoint> AddedEndpoints = new HashSet<Endpoint>();
+        ITimeProfilerCollector timeProfileCollector = new TimeProfilerCollector();
 
         protected int CountEndpoints(SendChannel byChannel)
         {
@@ -80,7 +81,7 @@ namespace com.ums.pas.integration
 
             foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
             {
-                using (new TimeProfiler("AlertObject"))
+                using (new TimeProfiler("AlertObject", timeProfileCollector))
                 {
                     //check if endpoint is added, if not add it to targets.
                     //if (TryAddEndpoint(alertObject.Phone))
@@ -110,7 +111,7 @@ namespace com.ums.pas.integration
             {
 
             }
-            using (new TimeProfiler("StreetId"))
+            using (new TimeProfiler("StreetId", timeProfileCollector))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                 IEnumerable<Recipient> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
@@ -140,7 +141,7 @@ namespace com.ums.pas.integration
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
-                    using (new TimeProfiler("Voice config database inserts"))
+                    using (new TimeProfiler("Voice config database inserts", timeProfileCollector))
                     {
                         //prepare voice alert
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
@@ -160,7 +161,7 @@ namespace com.ums.pas.integration
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    using (new TimeProfiler("SMS config database inserts"))
+                    using (new TimeProfiler("SMS config database inserts", timeProfileCollector))
                     {
                         InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
@@ -175,7 +176,7 @@ namespace com.ums.pas.integration
 
         private void CreateTtsBackboneAudioFiles(long Refno, List<String> Messages, int LangPk)
         {
-            using(new TimeProfiler("Text to Speech"))
+            using (new TimeProfiler("Text to Speech", timeProfileCollector))
             {
                 try
                 {
@@ -210,7 +211,7 @@ namespace com.ums.pas.integration
         /// <param name="Refno"></param>
         private void WriteVoiceBackboneFile(AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
-            using (new TimeProfiler("Write address file to backbone"))
+            using (new TimeProfiler("Write address file to backbone", timeProfileCollector))
             {
                 try
                 {

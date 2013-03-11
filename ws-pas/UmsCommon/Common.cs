@@ -1626,11 +1626,20 @@ namespace com.ums.UmsCommon
     {
         public String TimerName { get; private set; }
         public Stopwatch Timer { get; private set; }
-        public TimeProfiler(String TimerName)
+        public ITimeProfilerCollector ProfilerCollector { get; private set; }
+        public TimeProfiler(String TimerName, ITimeProfilerCollector Collector)
         {
             this.TimerName = TimerName;
+            this.ProfilerCollector = Collector;
             Console.WriteLine("Starting timer for {0}", TimerName);
             Timer = new Stopwatch();
+            ProfilerCollector.AddProfile(new TimeProfile()
+               {
+                  ElapsedMsec = Timer.ElapsedMilliseconds,
+                  TimerName = TimerName,
+               }
+            );
+
             Timer.Start();
         }
 
@@ -1644,4 +1653,48 @@ namespace com.ums.UmsCommon
 
         #endregion
     }
+
+    /// <summary>
+    /// Store timer profile data
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class TimeProfile
+    {
+        public String TimerName { get; set; }
+        public long ElapsedMsec { get; set; }
+
+    }
+
+    /// <summary>
+    /// Interface for adding time profiles to a collection
+    /// </summary>
+    public interface ITimeProfilerCollector
+    {
+        void AddProfile(TimeProfile Profile);
+        List<TimeProfile> GetProfileList();
+    }
+
+    /// <summary>
+    /// Default implementation for storing multiple timer profiles.
+    /// </summary>
+    public class TimeProfilerCollector : ITimeProfilerCollector
+    {
+        public List<TimeProfile> timeProfileList { get; private set; }
+
+        #region ITimeProfilerCollector Members
+
+        public void AddProfile(TimeProfile Profile)
+        {
+            timeProfileList.Add(Profile);
+        }
+
+        public List<TimeProfile> GetProfileList()
+        {
+            return timeProfileList;
+        }
+
+        #endregion
+    }
+
 }
