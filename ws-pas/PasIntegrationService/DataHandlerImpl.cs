@@ -22,7 +22,7 @@ namespace com.ums.pas.integration
         #region IDataHandler Members
 
 
-        IDictionary<AlertTarget, List<Recipient>> targets = new Dictionary<AlertTarget, List<Recipient>>();
+        //IDictionary<AlertTarget, List<Recipient>> targets = new Dictionary<AlertTarget, List<Recipient>>();
         HashSet<Endpoint> AddedEndpoints = new HashSet<Endpoint>();
         ITimeProfilerCollector timeProfileCollector = new TimeProfilerCollector();
 
@@ -31,22 +31,19 @@ namespace com.ums.pas.integration
         protected int CountEndpoints(SendChannel byChannel)
         {
             int returnCount = 0;
-            foreach(KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+            foreach (RecipientData recipientData in recipientDataList)
             {
-                foreach (Recipient Recipient in kvp.Value)
+                foreach (Endpoint endPoint in recipientData.Endpoints)
                 {
-                    foreach (Endpoint endPoint in Recipient.EndPoints)
+                    //if(endPoint is Phone &&
+                    switch (byChannel)
                     {
-                        //if(endPoint is Phone &&
-                        switch (byChannel)
-                        {
-                            case SendChannel.VOICE:
-                                returnCount += (endPoint is Phone ? 1 : 0);
-                                break;
-                            case SendChannel.SMS:
-                                returnCount += (endPoint is Phone && ((Phone)endPoint).CanReceiveSms ? 1 : 0);
-                                break;
-                        }
+                        case SendChannel.VOICE:
+                            returnCount += (endPoint is Phone ? 1 : 0);
+                            break;
+                        case SendChannel.SMS:
+                            returnCount += (endPoint is Phone && ((Phone)endPoint).CanReceiveSms ? 1 : 0);
+                            break;
                     }
                 }
             }
@@ -88,7 +85,7 @@ namespace com.ums.pas.integration
                     //check if endpoint is added, if not add it to targets.
                     //if (TryAddEndpoint(alertObject.Phone))
                     {
-                        targets.Add(alertObject, new List<Recipient>()
+                        /*targets.Add(alertObject, new List<Recipient>()
                         {
                             new Recipient()
                             {
@@ -101,7 +98,18 @@ namespace com.ums.pas.integration
                                     new DataItem("AlertObject", alertObject.Phone.Address),
                                 }
                             }
+                        });*/
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = alertObject,
+                            Endpoints = new List<Endpoint>()
+                                        {
+                                            alertObject.Phone,
+                                        },
+                            
+                            
                         });
+                         
                     }
                 }
             }
@@ -238,29 +246,24 @@ namespace com.ums.pas.integration
                     tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
 
 
-
-                    foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+                    foreach (RecipientData recipientData in recipientDataList)
                     {
-                        foreach (Recipient Recipient in kvp.Value)
+                        if (AlertConfiguration.SimulationMode)
                         {
-                            //tw.WriteLine(String.Format("/PCODE {0}", ""));
-                            if (AlertConfiguration.SimulationMode)
-                            {
-                                tw.Write(String.Format("/SIMU NA"));
-                            }
-                            else
-                            {
-                                tw.Write(String.Format("/DCALL NA"));
-                            }
-                            //iterate numbers
-                            bool started = false;
-                            foreach (Endpoint endPoint in Recipient.EndPoints)
-                            {
-                                tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
-                                started = true;
-                            }
-                            tw.WriteLine("");
+                            tw.Write(String.Format("/SIMU NA"));
                         }
+                        else
+                        {
+                            tw.Write(String.Format("/DCALL NA"));
+                        }
+                        //iterate numbers
+                        bool started = false;
+                        foreach (Endpoint endPoint in recipientData.Endpoints)
+                        {
+                            tw.Write(String.Format("{0}{1}", started ? "," : " ", endPoint.Address));
+                            started = true;
+                        }
+                        tw.WriteLine("");
                     }
 
                     tw.Close();
@@ -345,26 +348,23 @@ namespace com.ums.pas.integration
         private void InsertSmsQ(long Refno, AccountDetails Account, AlertConfiguration AlertConfig)
         {
             int itemNumber = 0;
-            foreach (KeyValuePair<AlertTarget, List<Recipient>> kvp in targets)
+            foreach (RecipientData recipientData in recipientDataList)
             {
-                foreach (Recipient recipient in kvp.Value)
+                foreach (Endpoint endPoint in recipientData.Endpoints)
                 {
-                    foreach (Endpoint endPoint in recipient.EndPoints)
+                    if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms)
                     {
-                        if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms)
-                        {
-                            String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
-                                                                        Refno,
-                                                                        ++itemNumber,
-                                                                        Account.PrimarySmsServer,
-                                                                        0,
-                                                                        0,
-                                                                        AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"),
-                                                                        endPoint.Address,
-                                                                        -1);
-                            Database.ExecNonQuery(Sql);
+                        String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                                                                    Refno,
+                                                                    ++itemNumber,
+                                                                    Account.PrimarySmsServer,
+                                                                    0,
+                                                                    0,
+                                                                    AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"),
+                                                                    endPoint.Address,
+                                                                    -1);
+                        Database.ExecNonQuery(Sql);
 
-                        }
                     }
                 }
             }
