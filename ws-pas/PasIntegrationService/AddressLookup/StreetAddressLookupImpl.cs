@@ -24,11 +24,11 @@ namespace com.ums.pas.integration.AddressLookup
 
         #region IStreetAddressLookupFacade Members
 
-        public IEnumerable<Recipient> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
+        public IEnumerable<RecipientData> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
         {
             if(streetAddresses.Count == 0)
             {
-                return new List<Recipient>();
+                return new List<RecipientData>();
             }
             ConnectionString = connectionString;
             return GetMatchingStreetAddressesUsingTempTbl(streetAddresses);
@@ -38,10 +38,10 @@ namespace com.ums.pas.integration.AddressLookup
 
 
         #region Impl_TempTbl
-        public List<Recipient> GetMatchingStreetAddressesUsingTempTbl(List<StreetAddress> streetAddresses)
+        public List<RecipientData> GetMatchingStreetAddressesUsingTempTbl(List<StreetAddress> streetAddresses)
         {
             //List<string> numbers = new List<string>();
-            List<Recipient> recipients = new List<Recipient>();
+            List<RecipientData> recipients = new List<RecipientData>();
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
             {
@@ -92,9 +92,11 @@ namespace com.ums.pas.integration.AddressLookup
                     {
                         if (!rs.IsDBNull(0))
                         {
-                            Recipient r = new Recipient()
+                            RecipientData r = new RecipientData()
                             {
-                                Attributes = new List<DataItem>()
+
+
+                                /*Attributes = new List<DataItem>()
                                 {
                                     new DataItem()
                                     {
@@ -102,8 +104,15 @@ namespace com.ums.pas.integration.AddressLookup
                                         Value = rs.IsDBNull(rs.GetOrdinal("NAVN")) ? "" : rs.GetString(rs.GetOrdinal("NAVN"))
                                     },
                                 },
+                                */
+                                AlertTarget = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(),
+                                                                rs.GetInt32(rs.GetOrdinal("GATEKDOE")),
+                                                                rs.GetInt32(rs.GetOrdinal("HUSNR")),
+                                                                rs.GetString(rs.GetOrdinal("OPPGANG")),
+                                                                ""),
+                                Name = rs.GetString(rs.GetOrdinal("NAVN")),
 
-                                EndPoints = new List<Endpoint>()
+                                Endpoints = new List<Endpoint>()
                                 {
                                     new Phone()
                                     {
