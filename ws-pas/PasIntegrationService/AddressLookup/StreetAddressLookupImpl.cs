@@ -95,26 +95,29 @@ namespace com.ums.pas.integration.AddressLookup
                             RecipientData r = new RecipientData()
                             {
                                 AlertTarget = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(),
-                                                                rs.GetInt32(rs.GetOrdinal("GATEKDOE")),
+                                                                rs.GetInt32(rs.GetOrdinal("GATEKODE")),
                                                                 rs.GetInt32(rs.GetOrdinal("HUSNR")),
                                                                 rs.GetString(rs.GetOrdinal("OPPGANG")),
                                                                 ""),
                                 Name = rs.GetString(rs.GetOrdinal("NAVN")),
-
-                                Endpoints = new List<Endpoint>()
-                                {
-                                    new Phone()
-                                    {
-                                        CanReceiveSms = true,
-                                        Address = rs.IsDBNull(rs.GetOrdinal("MOBIL")) ? "" : rs.GetString(rs.GetOrdinal("MOBIL"))
-                                    },
-                                    new Phone()
-                                    {
-                                        CanReceiveSms = false,
-                                        Address = rs.IsDBNull(rs.GetOrdinal("TELEFON")) ? "" : rs.GetString(rs.GetOrdinal("TELEFON"))
-                                    },
-                                }
+                                Endpoints = new List<Endpoint>(),
                             };
+                            if (rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
+                            {
+                                r.Endpoints.Add(new Phone()
+                                {
+                                    CanReceiveSms = true,
+                                    Address = rs["MOBIL"].ToString(),
+                                });
+                            }
+                            if (rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs["TELEFON"].ToString().Length > 0)
+                            {
+                                r.Endpoints.Add(new Phone()
+                                {
+                                    CanReceiveSms = false,
+                                    Address = rs["TELEFON"].ToString(),
+                                });
+                            }
                             recipients.Add(r);
                         }
                     }
