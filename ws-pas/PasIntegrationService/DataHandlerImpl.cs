@@ -143,11 +143,12 @@ namespace com.ums.pas.integration
                         InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
                         //if forced hidden number or no numbers assigned
                         InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+
+                        CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
+
+                        WriteVoiceBackboneFile(Payload.AlertId, Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                     }
 
-                    CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
-
-                    WriteVoiceBackboneFile(Payload.AlertId, Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                 }
                 else if (channelConfig is SmsConfiguration)
                 {
@@ -161,6 +162,14 @@ namespace com.ums.pas.integration
                         InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
                     }
                 }
+            }
+            using (new TimeProfiler(Payload.AlertId.Id, "Write to MDVHIST", timeProfileCollector))
+            {
+                WriteToMdvhist(recipientDataList);
+            }
+            using (new TimeProfiler(Payload.AlertId.Id, "Write Metadata to MDVHIST_ADDRESS_SOURCE", timeProfileCollector))
+            {
+
             }
 
             Database.close();
@@ -287,9 +296,33 @@ namespace com.ums.pas.integration
         /// <summary>
         /// Write mdvhist data to comply with GAS UI
         /// </summary>
-        private void WriteToMdvhist()
+        private void WriteToMdvhist(List<RecipientData> recipientData)
         {
             //TODO
+            foreach (RecipientData data in recipientData)
+            {
+                foreach(RecipientData.RefnoItem alertLink in data.AlertLink)
+                {
+                    String Sql = String.Format("INSERT INTO MDVHIST(l_refno, l_item, sz_fields, l_adrpk2, l_adrpk, l_xcoord, l_ycoord, sz_adrinfo, l_lon, l_lat, sz_pin1, sz_pin2, l_prioritized) "+
+                                                "VALUES({0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', {8}, {9}, '{10}', '{11}', {12})",
+                                                alertLink.Refno,
+                                                alertLink.Item,
+                                                "",
+                                                -1,
+                                                -1,
+                                                0,
+                                                0,
+                                                data.Name,
+                                                data.Lon,
+                                                data.Lat,
+                                                "",
+                                                "",
+                                                0
+                                                );
+                    Database.ExecNonQuery(Sql);
+
+                }
+            }
         }
 
         /// <summary>
@@ -424,7 +457,7 @@ namespace com.ums.pas.integration
                             0, //23
                             UCommon.UGetDateNow(), //24
                             UCommon.UGetTimeNow(), //25
-                            Account.Userpk, //26
+                            -1,//Account.Userpk, //26
                             1, //27
                             1, //28
                             Account.StdCc.Replace("'", "''"), //29
@@ -463,7 +496,7 @@ namespace com.ums.pas.integration
                 1, //voice
                 AlertConfig.SimulationMode ? 2 : 1,
                 (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED),
-                Account.Userpk,
+                -1, //Account.Userpk,
                 360);
             Database.ExecNonQuery(Sql);
         }
