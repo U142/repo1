@@ -143,11 +143,10 @@ namespace com.ums.pas.integration
                         InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
                         //if forced hidden number or no numbers assigned
                         InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
-
-                        CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
-
-                        WriteVoiceBackboneFile(Payload.AlertId, Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
                     }
+                    CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
+
+                    WriteVoiceBackboneFile(Payload.AlertId, Payload.AlertConfiguration, Payload.Account, Payload.AccountDetails, Refno);
 
                 }
                 else if (channelConfig is SmsConfiguration)
