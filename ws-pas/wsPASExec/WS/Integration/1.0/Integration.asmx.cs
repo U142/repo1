@@ -13,6 +13,7 @@ using com.ums.PAS.Project;
 using System.Xml.Serialization;
 using Apache.NMS.ActiveMQ;
 using com.ums.UmsCommon.Audio;
+using System.Data.Odbc;
 
 namespace com.ums.ws.integration
 {
@@ -208,7 +209,8 @@ namespace com.ums.ws.integration
 
                         //Create and retrieve a project
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
-                        req.sz_name = String.Format("ActiveMq {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+                        //req.sz_name = String.Format("ActiveMq {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+                        req.sz_name = AlertConfiguration.AlertName;
                         payload.AlertId = new AlertId(new UProject().uproject(ref logonInfo, ref req).n_projectpk);
 
                         payload.Account.CompanyId = Account.CompanyId;
@@ -252,9 +254,63 @@ namespace com.ums.ws.integration
         }
 
         [WebMethod]
+        public List<AlertSummary> TestGetAlerts()
+        {
+            return GetAlerts(new Account()
+            {
+                CompanyId = "UMS",
+                DepartmentId = "DEVELOPMENT",
+                Password = "ums123",
+            }, 0, 50);
+        }
+
+        /// <summary>
+        /// Get array of previously sent alerts
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="StartIndex"></param>
+        /// <param name="PageSize"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get array of previously sent alerts.</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            List<AlertSummary> alertSummaryList = new List<AlertSummary>();
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            String Sql = String.Format("SELECT BP.l_projectpk, isnull(BP.sz_name,''), isnull(MDV.l_sendingstatus,1), isnull(MDV.l_scheddate,0), isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1) FROM BBPROJECT BP, BBPROJECT_X_REFNO XR, MDVSENDINGINFO MDV WHERE BP.l_deptpk={0} AND BP.l_projectpk=XR.l_projectpk AND XR.l_refno=MDV.l_refno ORDER BY BP.l_projectpk, XR.l_refno", logonInfo.l_deptpk);
+            OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
+            long prevProjectpk = -1;
+            AlertSummary currentSummary = null;
+            int worstStatus = 7;
+            while (rs.Read())
+            {
+                long projectPk = rs.GetInt64(0);
+                int status = rs.GetInt16(2);
+                if (!prevProjectpk.Equals(projectPk))
+                {
+                    currentSummary = new AlertSummary()
+                    {
+                        AlertId = new AlertId(rs.GetInt64(0)),
+                        Exercise = rs.GetInt32(5) != 1,
+                        StartDateTime = new DateTime(),
+                        Title = rs.GetString(1),
+                    };
+                    alertSummaryList.Add(currentSummary);                    
+                }
+                if (status < worstStatus)
+                {
+                    currentSummary.Status = status.ToString();
+                }
+                prevProjectpk = projectPk;
+            }
+
+            rs.Close();
+            return alertSummaryList;
         }
 
         /// <summary>
