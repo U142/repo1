@@ -106,7 +106,9 @@ namespace com.ums.pas.integration
                 {
                     //System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"];
                     connectionUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"]);
-                    ULog.write("Connecting to ActiveMqUri={0}", connectionUri);
+                    String logStr = String.Format("Connecting to ActiveMqUri={0}", connectionUri);
+                    ULog.write(logStr);
+                    Console.WriteLine(logStr);
                 }
                 catch (Exception e)
                 {
@@ -164,19 +166,23 @@ namespace com.ums.pas.integration
                                     Account account = payload.Account;
                                     if (payload.AlertId.Id <= 0)
                                     {
-                                        ULog.error("No projectpk specified for\n\n MessageId {1}", objectMessage.NMSMessageId);
+                                        logMsg = String.Format("No projectpk specified for\n\n MessageId {0}", objectMessage.NMSMessageId);
+                                        ULog.error(logMsg);
                                     }
                                     else if (account == null)
                                     {
-                                        ULog.error("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        logMsg = String.Format("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        ULog.error(logMsg);
                                     }
                                     else if (payload.AlertTargets == null || payload.AlertTargets.Count == 0)
                                     {
-                                        ULog.error("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        logMsg = String.Format("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        ULog.error(logMsg);
                                     }
                                     else if (payload.ChannelConfigurations == null || payload.AlertTargets.Count == 0)
                                     {
-                                        ULog.error("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        logMsg = String.Format("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        ULog.error(logMsg);
                                     }
                                     else
                                     {
@@ -198,9 +204,9 @@ namespace com.ums.pas.integration
                                         {
                                             summary += "Unable to append channel configurations to summary";
                                         }
-
-                                        ULog.write("Received message from account Company/Department {0}/{1}/{2}\n\n ProjectPk {3}\n\n MessageId {4}\n\n{5}",
+                                        logMsg = String.Format("Received message from account Company/Department {0}/{1}\n\n ProjectPk {2}\n\n MessageId {3}\n\n{4}",
                                             payload.Account.CompanyId, payload.Account.DepartmentId, payload.AlertId.Id, objectMessage.NMSMessageId, summary);
+                                        ULog.write(logMsg);
 
                                         try
                                         {
@@ -209,7 +215,6 @@ namespace com.ums.pas.integration
                                             {
                                                 new DataHandlerImpl().HandleAlert(payload);
                                             }
-                                            message.Acknowledge();
                                         }
                                         catch (Exception e)
                                         {
@@ -219,6 +224,10 @@ namespace com.ums.pas.integration
                                             //increment tries here, finally ack the message to make it go away.
                                         }
                                     }
+                                    logMsg = String.Format("Message acknowledged");
+                                    Console.WriteLine(logMsg);
+                                    ULog.write(logMsg);
+                                    message.Acknowledge();
 
                                 }
                                 else
