@@ -54,11 +54,32 @@ namespace com.ums.pas.integration.AddressLookup
         /// <summary>
         /// Longitude, if available
         /// </summary>
-        public double Lon { get; set; }
+        private double _lon;
+
+        public double Lon
+        {
+            get { return _lon; }
+            set { _lon = value; }
+        }
+
 
         /// <summary>
         /// Latitude, if available
         /// </summary>
-        public double Lat { get; set; }
+        private double _lat;
+
+        public double Lat
+        {
+            get { return _lat; }
+            set { _lat = value; }
+        }
+
+
+        /// <summary>
+        /// true if company
+        /// </summary>
+        public bool Company { get; set; }
+
+
     }
 }

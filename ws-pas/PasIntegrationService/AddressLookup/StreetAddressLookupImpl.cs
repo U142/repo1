@@ -103,8 +103,9 @@ namespace com.ums.pas.integration.AddressLookup
                                 Endpoints = new List<Endpoint>(),
                                 Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),
                                 Lat = rs.IsDBNull(rs.GetOrdinal("LON")) ? 0 : rs.GetDouble(rs.GetOrdinal("LON")),
+                                Company = (rs.GetInt16(rs.GetOrdinal("BEDRIFT")) == 1),
                             };
-                            if (rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                             {
                                 r.Endpoints.Add(new Phone()
                                 {
@@ -112,7 +113,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     Address = rs["MOBIL"].ToString(),
                                 });
                             }
-                            if (rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs["TELEFON"].ToString().Length > 0)
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs["TELEFON"].ToString().Length > 0)
                             {
                                 r.Endpoints.Add(new Phone()
                                 {
