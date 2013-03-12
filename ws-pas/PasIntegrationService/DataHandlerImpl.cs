@@ -134,7 +134,6 @@ namespace com.ums.pas.integration
                 BBPROJECT project = new BBPROJECT();
                 project.sz_projectpk = Payload.AlertId.Id.ToString();
                 Database.linkRefnoToProject(ref project, Refno, 0, 0);
-
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
