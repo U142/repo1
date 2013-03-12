@@ -90,6 +90,7 @@ namespace com.ums.pas.integration
                                     {
                                         alertObject.Phone,
                                     },
+                        Name = alertObject.Name,
                             
                             
                     });                         
@@ -168,7 +169,7 @@ namespace com.ums.pas.integration
             }
             using (new TimeProfiler(Payload.AlertId.Id, "Write Metadata to MDVHIST_ADDRESS_SOURCE", timeProfileCollector))
             {
-
+                WriteMetaData(Payload.AlertId, recipientDataList);
             }
 
             Database.close();
@@ -297,7 +298,6 @@ namespace com.ums.pas.integration
         /// </summary>
         private void WriteToMdvhist(List<RecipientData> recipientData)
         {
-            //TODO
             foreach (RecipientData data in recipientData)
             {
                 foreach(RecipientData.RefnoItem alertLink in data.AlertLink)
@@ -312,8 +312,8 @@ namespace com.ums.pas.integration
                                                 0,
                                                 0,
                                                 data.Name,
-                                                data.Lon,
-                                                data.Lat,
+                                                data.Lon.ToString(UCommon.UGlobalizationInfo),
+                                                data.Lat.ToString(UCommon.UGlobalizationInfo),
                                                 "",
                                                 "",
                                                 0
@@ -327,9 +327,48 @@ namespace com.ums.pas.integration
         /// <summary>
         /// Write meta data to database to be able to lookup why a recipient was called (e.g. living on a streetaddress)
         /// </summary>
-        private void WriteMetaData()
+        private void WriteMetaData(AlertId AlertId, List<RecipientData> recipientData)
         {
             //TODO
+            foreach (RecipientData recipient in recipientData)
+            {
+                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}')";
+                foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
+                {
+                    int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0;
+                    String municipalid = "0", letter = "", oppgang = "", data = "";
+                    if (recipient.AlertTarget is StreetAddress)
+                    {
+                        StreetAddress streetAddress = (StreetAddress) recipient.AlertTarget;
+                        municipalid = streetAddress.MunicipalCode;
+                        streetid = streetAddress.StreetNo;
+                        houseno = streetAddress.HouseNo;
+                        letter = streetAddress.Letter;
+                    }
+
+                    String Sql = String.Format(SqlBase,
+                                                AlertId.Id,
+                                                alertLink.Refno,
+                                                alertLink.Item,
+                                                recipient.Company ? "1" : "0",
+                                                recipient.Name,
+                                                0,
+                                                municipalid,
+                                                streetid,
+                                                houseno,
+                                                letter,
+                                                oppgang,
+                                                gnr,
+                                                bnr,
+                                                fnr,
+                                                snr,
+                                                unr,
+                                                postnr,
+                                                data);
+
+                    Database.ExecNonQuery(Sql);
+                }
+            }
         }
 
         private void InsertBbActionprofileSend(long Refno, int ProfilePk)
