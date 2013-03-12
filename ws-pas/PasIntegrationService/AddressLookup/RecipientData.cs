@@ -51,5 +51,14 @@ namespace com.ums.pas.integration.AddressLookup
         /// </summary>
         public List<Endpoint> Endpoints { get; set; }
 
+        /// <summary>
+        /// Longitude, if available
+        /// </summary>
+        public double Lon { get; set; }
+
+        /// <summary>
+        /// Latitude, if available
+        /// </summary>
+        public double Lat { get; set; }
     }
 }

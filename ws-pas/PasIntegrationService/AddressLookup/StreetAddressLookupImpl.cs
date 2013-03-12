@@ -101,6 +101,8 @@ namespace com.ums.pas.integration.AddressLookup
                                                                 ""),
                                 Name = rs.GetString(rs.GetOrdinal("NAVN")),
                                 Endpoints = new List<Endpoint>(),
+                                Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),
+                                Lat = rs.IsDBNull(rs.GetOrdinal("LON")) ? 0 : rs.GetDouble(rs.GetOrdinal("LON")),
                             };
                             if (rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                             {
@@ -118,6 +120,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     Address = rs["TELEFON"].ToString(),
                                 });
                             }
+                            
                             recipients.Add(r);
                         }
                     }

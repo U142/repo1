@@ -1220,7 +1220,6 @@ namespace com.ums.pas.integration
     {
         public int Comppk { get; set; }
         public int Deptpk { get; set; }
-        public long Userpk { get; set; }
         public int DeptPri { get; set; }
         public int PrimarySmsServer { get; set; }
         public int SecondarySmsServer { get; set; }

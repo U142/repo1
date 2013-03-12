@@ -165,7 +165,7 @@ namespace com.ums.ws.integration
                         accountDetails.Comppk = logonInfo.l_comppk;
                         accountDetails.Deptpk = logonInfo.l_deptpk;
                         accountDetails.DeptPri = logonInfo.l_deptpri;
-                        accountDetails.Userpk = logonInfo.l_userpk;
+                        //accountDetails.Userpk = logonInfo.l_userpk;
                         accountDetails.PrimarySmsServer = logonInfo.l_priserver;
                         accountDetails.SecondarySmsServer = logonInfo.l_altservers;
                         accountDetails.StdCc = logonInfo.sz_stdcc;
