@@ -138,6 +138,30 @@ namespace com.ums.UmsDbLib
             return toReturn;
         }
 
+        /// <summary>
+        /// Get time profiles for creating an alert.
+        /// </summary>
+        /// <param name="ProjectPk"></param>
+        /// <returns></returns>
+        public List<TimeProfile> GetTimeProfiles(long ProjectPk)
+        {
+            List<TimeProfile> toRet = new List<TimeProfile>();
+            String Sql = String.Format("SELECT sz_taskname, l_millisec, l_started_utc FROM MDVTIMEPROFILER WHERE l_projectpk={0} ORDER BY l_started_utc", ProjectPk);
+            OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE);
+            while (rs.Read())
+            {
+                toRet.Add(new TimeProfile()
+                {
+                    Id = ProjectPk,
+                    TimerName = rs.GetString(0),
+                    ElapsedMsec = rs.GetInt64(1),
+                    StartedUtc = rs.GetInt64(2),
+                });
+            }
+            rs.Close();
+            return toRet;
+        }
+
         public List<KeyValuePair<int, String>> GetAvailableTtsLanguages(int DeptPk)
         {
             List<KeyValuePair<int, String>> retList = new List<KeyValuePair<int, string>>();

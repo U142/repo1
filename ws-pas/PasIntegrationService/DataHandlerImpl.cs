@@ -134,7 +134,7 @@ namespace com.ums.pas.integration
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
-                    using (new TimeProfiler(Payload.AlertId.Id, "Voice config database inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "Voice database/file inserts", timeProfileCollector))
                     {
                         //prepare voice alert
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
@@ -154,7 +154,7 @@ namespace com.ums.pas.integration
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    using (new TimeProfiler(Payload.AlertId.Id, "SMS config database inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "SMS database inserts", timeProfileCollector))
                     {
                         InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));

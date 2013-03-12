@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using com.ums.pas.integration;
 using System.Xml.Serialization;
+using com.ums.UmsCommon;
 
 namespace com.ums.ws.integration
 {
@@ -271,6 +272,18 @@ namespace com.ums.ws.integration
         public List<TtsLanguage> GetTextToSpeechLanguages(Account Account)
         {
             return new Integration().GetTextToSpeechLanguages(Account);
+        }
+
+        /// <summary>
+        /// Get time profile for creating alert, this may be used in debugging to find bottlenecks
+        /// in time consumption.
+        /// </summary>
+        /// <param name="AlertId"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get time profile for creating alert</b><br>This may be used in debugging to find bottlenecks in time consumption.")]
+        public List<TimeProfile> GetTimeProfile(AlertId AlertId)
+        {
+            return new Integration().GetTimeProfile(AlertId);
         }
     }
 #endregion Templates
