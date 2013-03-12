@@ -10,11 +10,13 @@ using System.Configuration;
 using Apache.NMS.ActiveMQ;
 using System.Xml.Serialization;
 using System.IO;
+using log4net;
 
 namespace com.ums.pas.integration
 {
     class IntegrationMq 
     {
+        private static ILog log = LogManager.GetLogger(typeof(IntegrationMq));
         Atomic<Boolean> _keepRunning = new Atomic<bool>();
         private Dictionary<string, AsyncMessageHelper> responseBuffer;
 
@@ -108,11 +110,12 @@ namespace com.ums.pas.integration
                     connectionUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"]);
                     String logStr = String.Format("Connecting to ActiveMqUri={0}", connectionUri);
                     ULog.write(logStr);
-                    Console.WriteLine(logStr);
+                    log.Info(logStr);
                 }
                 catch (Exception e)
                 {
                     ULog.error(e.ToString());
+                    log.Error(e.ToString());
                     Thread.Sleep(5000);
                     continue;
                 }
@@ -133,10 +136,10 @@ namespace com.ums.pas.integration
                     String mqDestination = System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"];
                         //PasIntegrationService.Default.ActiveMqDestination;
                     IDestination destination = SessionUtil.GetDestination(mqSession, mqDestination);
-                    Console.WriteLine("Using destination = {0}", destination);
+                    log.InfoFormat("Using destination = {0}", destination);
                     String connString = ConfigurationManager.ConnectionStrings["backbone"].ConnectionString;
                     String dbConn = String.Format("Using database {0}", connString.Remove(connString.LastIndexOf("PWD") + 4));
-                    Console.WriteLine(dbConn);
+                    log.Info(dbConn);
 
                     using (IMessageConsumer mqConsumer = mqSession.CreateConsumer(destination))
                     {
@@ -156,7 +159,7 @@ namespace com.ums.pas.integration
                                 if (objectMessage.Body is AlertMqPayload)
                                 {
                                     String logMsg = String.Format("Received new ActiveMq message");
-                                    Console.WriteLine(logMsg);
+                                    log.Info(logMsg);
                                     ULog.write(logMsg);
                                     AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
                                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(AlertMqPayload));
@@ -220,12 +223,12 @@ namespace com.ums.pas.integration
                                         {
                                             String errorText = String.Format("Failed to generate alert\n\n" + e.ToString());
                                             ULog.error(errorText);
-                                            Console.WriteLine(errorText);
+                                            log.Info(errorText);
                                             //increment tries here, finally ack the message to make it go away.
                                         }
                                     }
                                     logMsg = String.Format("Message acknowledged");
-                                    Console.WriteLine(logMsg);
+                                    log.Info(logMsg);
                                     ULog.write(logMsg);
                                     message.Acknowledge();
 
@@ -233,7 +236,7 @@ namespace com.ums.pas.integration
                                 else
                                 {
                                     String errorText = String.Format("Received message of incompatible type {0} with MessageId {1}", message, message.NMSMessageId);
-                                    Console.WriteLine(errorText);
+                                    log.Error(errorText);
                                     ULog.error(errorText);
                                     message.Acknowledge();
                                 }

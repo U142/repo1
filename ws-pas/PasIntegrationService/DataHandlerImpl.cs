@@ -8,6 +8,7 @@ using com.ums.UmsParm;
 using System.Data.Odbc;
 using System.IO;
 using com.ums.pas.integration.AddressLookup;
+using log4net;
 
 
 namespace com.ums.pas.integration
@@ -16,6 +17,7 @@ namespace com.ums.pas.integration
 
     public class DataHandlerImpl : IDataHandler
     {
+        private static ILog log = LogManager.GetLogger(typeof(DataHandlerImpl));
 
         private PASUmsDb Database;
 
@@ -64,6 +66,7 @@ namespace com.ums.pas.integration
             else
             {
                 ULog.write("Duplicate number found");
+                log.Warn("Duplicate number found");
                 ++Duplicates;
             }
             return false;
@@ -195,7 +198,7 @@ namespace com.ums.pas.integration
                 {
                     String errorText = String.Format("Unable to create TTS on Refno={0}\n{1}", Refno, e);
                     ULog.error(errorText);
-                    Console.WriteLine(errorText);
+                    log.Error(errorText);
                     throw e;
                 }
             }
@@ -286,7 +289,7 @@ namespace com.ums.pas.integration
                 {
                     String errorText = String.Format("Unable to write backbone address file for refno {0}\n{1}", Refno, e);
                     ULog.error(errorText);
-                    Console.WriteLine(errorText);
+                    log.Error(errorText);
                     throw e;
                 }
             }

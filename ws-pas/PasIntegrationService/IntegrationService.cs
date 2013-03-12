@@ -7,11 +7,14 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using com.ums.UmsCommon;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Config;
 
 namespace com.ums.pas.integration
 {
     static class IntegrationService
     {
+        private static ILog log = LogManager.GetLogger(typeof(IntegrationService));
         [DllImport("kernel32.dll",
             EntryPoint = "GetStdHandle",
             SetLastError = true,
@@ -44,7 +47,10 @@ namespace com.ums.pas.integration
             else
             {
                 AllocConsole();
-                Console.WriteLine("Starting in UserInteractive Mode");
+                XmlConfigurator.Configure();
+                //BasicConfigurator.Configure();
+                
+                log.Info("Starting in UserInteractive Mode");
                 Integration integration = new Integration();
                 Thread thread = new Thread(() => integration.StartActiveMq()); //new ThreadStart(integration.StartActiveMq));
                 thread.Start();
@@ -56,7 +62,7 @@ namespace com.ums.pas.integration
                         break;
                     }
                 }
-                Console.WriteLine("Stopping service, Waiting for thread to finish...");
+                log.Info("Stopping service, Waiting for thread to finish...");
                 integration.Stop();
                 thread.Join();
 
