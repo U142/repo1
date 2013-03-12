@@ -39,7 +39,7 @@ namespace com.ums.pas.integration.TimeProfileDb
                                             Profile.Id,
                                             Profile.TimerName,
                                             Profile.ElapsedMsec,
-                                            Profile.Started);
+                                            Profile.StartedUtc);
             UmsDbLib.UmsDb db = new UmsDbLib.UmsDb();
             db.ExecNonQuery(Sql);
             db.close();

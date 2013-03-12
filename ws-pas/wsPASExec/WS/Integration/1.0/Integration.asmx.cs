@@ -257,6 +257,18 @@ namespace com.ums.ws.integration
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Get time profile for creating alert, this may be used in debugging to find bottlenecks
+        /// in time consumption.
+        /// </summary>
+        /// <param name="AlertId"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get time profile for creating alert</b><br>This may be used in debugging to find bottlenecks in time consumption.")]
+        public List<TimeProfile> GetTimeProfile(AlertId AlertId)
+        {
+            UmsDb db = new UmsDb();
+            return db.GetTimeProfiles(AlertId.Id);
+        }
 
 
 
