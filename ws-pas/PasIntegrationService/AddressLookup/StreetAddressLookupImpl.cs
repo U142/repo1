@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Odbc;
+using log4net;
 
 namespace com.ums.pas.integration.AddressLookup
 {
@@ -14,6 +15,7 @@ namespace com.ums.pas.integration.AddressLookup
     /// </summary>
     class StreetAddressLookupImpl : IStreetAddressLookupFacade
     {
+        private static ILog log = LogManager.GetLogger(typeof(StreetAddressLookupImpl));
         private String _connectionString;
 
         public String ConnectionString
@@ -54,7 +56,7 @@ namespace com.ums.pas.integration.AddressLookup
                 Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5))";
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
-                Console.WriteLine("Create temp table took {0:0} ms", duration.TotalMilliseconds);
+                log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
                 Command.CommandText = "INSERT INTO #SAMATCH(KOMMUNENR, GATEKODE, HUSNR, OPPGANG) VALUES(?,?,?,?)";
@@ -78,11 +80,11 @@ namespace com.ums.pas.integration.AddressLookup
                     }
                     else
                     {
-                        Console.WriteLine("Failed to get kommunenr from {0}", sa);
+                        log.InfoFormat("Failed to get kommunenr from {0}", sa);
                     }
                 }
                 duration = DateTime.Now - start;
-                Console.WriteLine("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
+                log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
                 Command.CommandText = "SELECT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GATEKODE=SA.GATEKODE AND FR.HUSNR=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
@@ -127,13 +129,13 @@ namespace com.ums.pas.integration.AddressLookup
                     }
                 }
                 duration = DateTime.Now - start;
-                Console.WriteLine("Select took {0:0} ms", duration.TotalMilliseconds);
+                log.InfoFormat("Select took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
                 Command.CommandText = "DROP TABLE #SAMATCH";
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
-                Console.WriteLine("Drop table took {0:0} ms", duration.TotalMilliseconds);
+                log.InfoFormat("Drop table took {0:0} ms", duration.TotalMilliseconds);
 
                 Connection.Close();
             }
