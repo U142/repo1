@@ -193,7 +193,7 @@ namespace com.ums.pas.integration
                                         //payload.alertTargets.ForEach(val => summary += Helpers.ToStringExtension(val) + "\n");
                                         //typeof(AlertTarget).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(AlertTarget))).ToList().ForEach(val => payload.alertTargets.OfType<val>().Count());
                                         summary += "AdHoc AlertObject = " + payload.AlertTargets.OfType<AlertObject>().Count() + "\n";
-                                        summary += "AdHoc Recipient = " + payload.AlertTargets.OfType<Recipient>().Count() + "\n";
+                                        //summary += "AdHoc Recipient = " + payload.AlertTargets.OfType<Recipient>().Count() + "\n";
                                         summary += "StoredAddress = " + payload.AlertTargets.OfType<StoredAddress>().Count() + "\n";
                                         summary += "StoredList = " + payload.AlertTargets.OfType<StoredList>().Count() + "\n";
                                         summary += "PropertyAddress = " + payload.AlertTargets.OfType<PropertyAddress>().Count() + "\n";

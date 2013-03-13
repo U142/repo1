@@ -20,7 +20,8 @@ namespace com.ums.ws.integration
     public class Simplified : System.Web.Services.WebService
     {
         [XmlInclude(typeof(Phone))]
-        [XmlInclude(typeof(Recipient))]
+
+        //[XmlInclude(typeof(Recipient))]
 
         /// <summary>
         /// Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).

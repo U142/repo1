@@ -551,7 +551,7 @@ namespace com.ums.pas.integration
 
     }
 
-    /// <summary>
+/*    /// <summary>
     /// This AlertTarget is a person with x endpoints to be reached
     /// </summary>
     [Serializable]
@@ -566,7 +566,7 @@ namespace com.ums.pas.integration
             set { _endPoints = value; }
         }
 
-    }
+    }*/
 
     /// <summary>
     /// Specify an ivrCode to the stored list for alerting.
