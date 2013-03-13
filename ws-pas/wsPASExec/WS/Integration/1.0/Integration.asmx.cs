@@ -262,17 +262,17 @@ namespace com.ums.ws.integration
                 CompanyId = "UMS",
                 DepartmentId = "DEVELOPMENT",
                 Password = "ums123",
-            }, 0, 50);
+            }, 3, 3);
         }
 
         /// <summary>
-        /// Get array of previously sent alerts
+        /// Get array of previously sent alerts. Newest first.
         /// </summary>
         /// <param name="Account"></param>
-        /// <param name="StartIndex"></param>
+        /// <param name="StartIndex">0 index</param>
         /// <param name="PageSize"></param>
         /// <returns></returns>
-        [WebMethod(Description = @"<b>Get array of previously sent alerts.</b>")]
+        [WebMethod(Description = @"<b>Get array of previously sent alerts. Newest first. 0-index Start</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
             List<AlertSummary> alertSummaryList = new List<AlertSummary>();
@@ -294,8 +294,11 @@ namespace com.ums.ws.integration
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
                         + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
                         + "WHERE BP.l_deptpk={0} "
-                        + "ORDER BY BP.l_projectpk, XR.l_refno", logonInfo.l_deptpk);
+                        + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
+
+            int startAt = -1;//set to -2 as it's zero index
+
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
             int worstStatus = 8;
@@ -303,6 +306,7 @@ namespace com.ums.ws.integration
             int VoiceItems = 0;
             int SmsProc = 0;
             int VoiceProc = 0;
+            int endAt = -1;
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
@@ -339,6 +343,18 @@ namespace com.ums.ws.integration
 
                 if (!prevProjectpk.Equals(projectPk))
                 {
+                    if (++startAt <= StartIndex)
+                    {
+                        prevProjectpk = projectPk;
+                        continue;
+                    }
+
+                    
+                    if (++endAt >= PageSize)
+                    {
+                        break;
+                    }
+
                     worstStatus = 8;
                     currentSummary = new AlertSummary()
                     {
@@ -349,10 +365,10 @@ namespace com.ums.ws.integration
                     };
                     alertSummaryList.Add(currentSummary);                    
                 }
-                if (status < worstStatus)
+                if (currentSummary != null && status < worstStatus)
                 {
-                    currentSummary.Status = status.ToString();
-                    currentSummary.DeliveryStatus = GetOverallStatusFromStatuscode(status);
+                    currentSummary.ProgressStatus = GetOverallStatusFromStatuscode(status);
+                    currentSummary.Status = currentSummary.ProgressStatus.ToString();
                     worstStatus = status;
                 }
 

@@ -829,12 +829,12 @@ namespace com.ums.pas.integration
             set { _title = value; }
         }
 
-        private AlertOverallStatus _deliveryStatus;
+        private AlertOverallStatus _progressStatus;
 
-        public AlertOverallStatus DeliveryStatus
+        public AlertOverallStatus ProgressStatus
         {
-            get { return _deliveryStatus; }
-            set { _deliveryStatus = value; }
+            get { return _progressStatus; }
+            set { _progressStatus = value; }
         }
         
 
