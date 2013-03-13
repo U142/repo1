@@ -288,10 +288,11 @@ namespace com.ums.ws.integration
                         + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
                         + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
                         + "isnull(MDV.l_refno, 0) IsProcessing "
-                        + "FROM BBPROJECT BP, BBPROJECT_X_REFNO XR LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
+                        + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
+                        + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
                         + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
-                        + "WHERE BP.l_deptpk={0} AND BP.l_projectpk=XR.l_projectpk "
+                        + "WHERE BP.l_deptpk={0} "
                         + "ORDER BY BP.l_projectpk, XR.l_refno", logonInfo.l_deptpk);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
             long prevProjectpk = -1;
@@ -316,6 +317,10 @@ namespace com.ums.ws.integration
                 int schedDate = rs.GetInt32(3);
                 int schedTime = rs.GetInt32(4);
                 bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
+                if (!isProcessing)
+                {
+                    status = 1;
+                }
 
                 String schedStr = String.Format("{0:D8}{1:D4}", schedDate > 0 ? schedDate : createDate, schedDate > 0 ? schedTime : createTime);
                 DateTime scheduled = new DateTime();
@@ -333,6 +338,7 @@ namespace com.ums.ws.integration
 
                 if (!prevProjectpk.Equals(projectPk))
                 {
+                    worstStatus = 8;
                     currentSummary = new AlertSummary()
                     {
                         AlertId = new AlertId(rs.GetInt64(0)),
