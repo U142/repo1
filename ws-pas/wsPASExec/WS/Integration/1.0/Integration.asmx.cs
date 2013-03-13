@@ -282,22 +282,62 @@ namespace com.ums.ws.integration
             logonInfo.sz_password = Account.Password;
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            String Sql = String.Format("SELECT BP.l_projectpk, isnull(BP.sz_name,''), isnull(MDV.l_sendingstatus,1), isnull(MDV.l_scheddate,0), isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1) FROM BBPROJECT BP, BBPROJECT_X_REFNO XR, MDVSENDINGINFO MDV WHERE BP.l_deptpk={0} AND BP.l_projectpk=XR.l_projectpk AND XR.l_refno=MDV.l_refno ORDER BY BP.l_projectpk, XR.l_refno", logonInfo.l_deptpk);
+            String Sql = String.Format("SELECT "
+                        + "BP.l_projectpk, isnull(BP.sz_name,''), isnull(MDV.l_sendingstatus,1), isnull(MDV.l_scheddate,0), "
+                        + "isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1), isnull(SQ.l_status, 1), isnull(MDV.l_type,1), "
+                        + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
+                        + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
+                        + "isnull(MDV.l_refno, 0) IsProcessing "
+                        + "FROM BBPROJECT BP, BBPROJECT_X_REFNO XR LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
+                        + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
+                        + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
+                        + "WHERE BP.l_deptpk={0} AND BP.l_projectpk=XR.l_projectpk "
+                        + "ORDER BY BP.l_projectpk, XR.l_refno", logonInfo.l_deptpk);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
-            int worstStatus = 7;
+            int worstStatus = 8;
+            int SmsItems = 0;
+            int VoiceItems = 0;
+            int SmsProc = 0;
+            int VoiceProc = 0;
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
-                int status = rs.GetInt16(2);
+                SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
+                int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
+                SmsProc += rs.GetInt32(8);
+                SmsItems += rs.GetInt32(9);
+                VoiceProc += rs.GetInt32(10);
+                VoiceItems += rs.GetInt32(11);
+
+                int createDate = rs.GetInt32(12);
+                int createTime = rs.GetInt32(13);
+                int schedDate = rs.GetInt32(3);
+                int schedTime = rs.GetInt32(4);
+                bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
+
+                String schedStr = String.Format("{0:D8}{1:D4}", schedDate > 0 ? schedDate : createDate, schedDate > 0 ? schedTime : createTime);
+                DateTime scheduled = new DateTime();
+                if (isProcessing)
+                {
+                    try
+                    {
+                        scheduled = DateTime.ParseExact(schedStr, "yyyyMMddHHmm", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        scheduled = DateTime.ParseExact(String.Format("{0:D8}{1:D4}", createDate, createTime), "yyyyMMddHHmm", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+
                 if (!prevProjectpk.Equals(projectPk))
                 {
                     currentSummary = new AlertSummary()
                     {
                         AlertId = new AlertId(rs.GetInt64(0)),
-                        Exercise = rs.GetInt32(5) != 1,
-                        StartDateTime = new DateTime(),
+                        Exercise = rs.GetByte(5) != 1,
+                        StartDateTime = scheduled,
                         Title = rs.GetString(1),
                     };
                     alertSummaryList.Add(currentSummary);                    
@@ -305,7 +345,10 @@ namespace com.ums.ws.integration
                 if (status < worstStatus)
                 {
                     currentSummary.Status = status.ToString();
+                    currentSummary.DeliveryStatus = GetOverallStatusFromStatuscode(status);
+                    worstStatus = status;
                 }
+
                 prevProjectpk = projectPk;
             }
 
@@ -314,15 +357,47 @@ namespace com.ums.ws.integration
         }
 
         /// <summary>
+        /// Convert status code to a more user friendly version
+        /// </summary>
+        /// <param name="statusCode"></param>
+        /// <returns></returns>
+        private AlertOverallStatus GetOverallStatusFromStatuscode(int alertStatusCode)
+        {
+            switch (alertStatusCode)
+            {
+                case 1:
+                    return AlertOverallStatus.NOT_PROCESSED;
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    return AlertOverallStatus.SCHEDULED;
+                case 6:
+                    return AlertOverallStatus.IN_PROGRESS;
+                case 7:
+                    return AlertOverallStatus.FINISHED;
+            }
+            return AlertOverallStatus.FAILED;
+        }
+
+        /// <summary>
         /// Get time profile for creating alert, this may be used in debugging to find bottlenecks
         /// in time consumption.
+        /// Throws exception if logon fails.
         /// </summary>
+        /// <param name="Account"></param>
         /// <param name="AlertId"></param>
-        /// <returns></returns>
+        /// <returns>A list of TimeProfiles attached to the specified AlertID</returns>
         [WebMethod(Description = @"<b>Get time profile for creating alert</b><br>This may be used in debugging to find bottlenecks in time consumption.")]
-        public List<TimeProfile> GetTimeProfile(AlertId AlertId)
+        public List<TimeProfile> GetTimeProfile(Account Account, AlertId AlertId)
         {
             UmsDb db = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            db.CheckDepartmentLogonLiteral(ref logonInfo);
+
             return db.GetTimeProfiles(AlertId.Id);
         }
 

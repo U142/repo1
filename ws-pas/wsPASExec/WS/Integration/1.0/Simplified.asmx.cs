@@ -137,7 +137,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get array of previously sent alerts.</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetAlerts(Account, StartIndex, PageSize);
         }
 
         /// <summary>
@@ -277,13 +277,15 @@ namespace com.ums.ws.integration
         /// <summary>
         /// Get time profile for creating alert, this may be used in debugging to find bottlenecks
         /// in time consumption.
+        /// Throws exception if logon fails.
         /// </summary>
+        /// <param name="Account"></param>
         /// <param name="AlertId"></param>
-        /// <returns></returns>
+        /// <returns>A list of TimeProfiles attached to the specified AlertID</returns>
         [WebMethod(Description = @"<b>Get time profile for creating alert</b><br>This may be used in debugging to find bottlenecks in time consumption.")]
-        public List<TimeProfile> GetTimeProfile(AlertId AlertId)
+        public List<TimeProfile> GetTimeProfile(Account Account, AlertId AlertId)
         {
-            return new Integration().GetTimeProfile(AlertId);
+            return new Integration().GetTimeProfile(Account, AlertId);
         }
     }
 #endregion Templates
