@@ -5,8 +5,8 @@ using System.Text;
 
 namespace com.ums.pas.integration
 {
-    interface IChannelItemStorage
+    /*interface IChannelItemStorage
     {
         void AddRecipients(List<Recipient> RecipientList);
-    }
+    }*/
 }
