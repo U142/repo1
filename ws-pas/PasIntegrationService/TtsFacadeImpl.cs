@@ -12,7 +12,7 @@ namespace com.ums.pas.integration
     {
         #region ITtsFacade Members
 
-        public byte[] ConvertTtsRaw(string Text, int LangPk)
+        public AudioContent ConvertTtsRaw(string Text, int LangPk)
         {
             UmsDb umsDb = new UmsDb();
 
@@ -27,7 +27,12 @@ namespace com.ums.pas.integration
             if (response.n_responsecode == 0)
             {
                 byte[] rawBytes = File.ReadAllBytes(System.Configuration.ConfigurationManager.AppSettings["TtsPath"] + @"\" + response.sz_server_filename);
-                return rawBytes;
+                return new AudioContent()
+                {
+                    RawVersion = rawBytes,
+                    WavVersion = response.wav,
+                };
+                //return rawBytes;
             }
             throw new Exception(response.sz_responsetext);
         }

@@ -188,9 +188,12 @@ namespace com.ums.pas.integration
                     ITtsFacade ttsFacade = new TtsFacadeImpl();
                     foreach (String Message in Messages)
                     {
-                        byte[] bytes = ttsFacade.ConvertTtsRaw(Message, LangPk);
-                        String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, ++counter);
-                        File.WriteAllBytes(publishFile, bytes);
+                        AudioContent audioContent = ttsFacade.ConvertTtsRaw(Message, LangPk);
+                        ++counter;
+                        String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "raw");
+                        File.WriteAllBytes(publishFile, audioContent.RawVersion);
+                        String publishWave = System.Configuration.ConfigurationManager.AppSettings["BBMessages"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
+                        File.WriteAllBytes(publishWave, audioContent.WavVersion);
                     }
                 }
                 catch (Exception e)
@@ -203,9 +206,9 @@ namespace com.ums.pas.integration
             }
         }
 
-        private String GetVoiceFilenameFor(long Refno, int FileNo)
+        private String GetVoiceFilenameFor(long Refno, int FileNo, String extension)
         {
-            return String.Format(@"v{0}_{1}.raw", Refno, FileNo);
+            return String.Format(@"v{0}_{1}.{2}", Refno, FileNo, extension);
         }
 
 
@@ -237,7 +240,7 @@ namespace com.ums.pas.integration
                     //foreach
                     int counter = 0;
                     //file exists
-                    tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter)));
+                    tw.WriteLine(String.Format("/FILE={0}", GetVoiceFilenameFor(Refno, ++counter, "raw")));
 
                     int itemCount = 0;
                     foreach (RecipientData recipientData in recipientDataList)

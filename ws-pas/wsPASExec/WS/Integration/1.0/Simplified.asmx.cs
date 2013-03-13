@@ -129,13 +129,13 @@ namespace com.ums.ws.integration
         }
 
         /// <summary>
-        /// Get array of previously sent alerts.
+        /// Get array of previously sent alerts.  Newest first.
         /// </summary>
         /// <param name="Account">The account</param>
         /// <param name="StartIndex">Start at</param>
         /// <param name="PageSize">Number of rows</param>
         /// <returns></returns>
-        [WebMethod(Description = @"<b>Get array of previously sent alerts.</b>")]
+        [WebMethod(Description = @"<b>Get array of previously sent alerts. Newest first. 0-index Start</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
             return new Integration().GetAlerts(Account, StartIndex, PageSize);

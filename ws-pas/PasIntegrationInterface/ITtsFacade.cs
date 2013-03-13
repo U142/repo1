@@ -5,6 +5,12 @@ using System.Text;
 
 namespace com.ums.pas.integration
 {
+    public class AudioContent
+    {
+        public byte [] RawVersion { get; set; }
+        public byte [] WavVersion { get; set; }
+    }
+
     /// <summary>
     /// Facade interface for handling conversion of TTS.
     /// For simplicity, conversions here will return byte arrays.
@@ -17,8 +23,8 @@ namespace com.ums.pas.integration
         /// </summary>
         /// <param name="Text"></param>
         /// <param name="LangPk"></param>
-        /// <returns>File content</returns>
-        byte [] ConvertTtsRaw(String Text, int LangPk);
+        /// <returns>File content for wav and raw</returns>
+        AudioContent ConvertTtsRaw(String Text, int LangPk);
 
         /// <summary>
         /// Convert TTS and return wav audiofile
