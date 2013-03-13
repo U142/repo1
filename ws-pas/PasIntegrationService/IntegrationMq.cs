@@ -155,93 +155,104 @@ namespace com.ums.pas.integration
                             }
                             else if(message is IObjectMessage)
                             {
-                                IObjectMessage objectMessage = (IObjectMessage)message;                                
-                                if (objectMessage.Body is AlertMqPayload)
+                                String logMsg;
+                                try
                                 {
-                                    String logMsg = String.Format("Received new ActiveMq message");
-                                    log.Info(logMsg);
-                                    ULog.write(logMsg);
-                                    AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
-                                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(AlertMqPayload));
+                                    IObjectMessage objectMessage = (IObjectMessage)message;                                
+                                    if (objectMessage.Body is AlertMqPayload)
+                                    {
+                                        AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
+                                        logMsg = String.Format("Received new ActiveMq message with AlertId={0} and ActiveMq Id={1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        log.Info(logMsg);
+                                        ULog.write(logMsg);
+                                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(AlertMqPayload));
 
-                                    xmlSerializer.Serialize(new FileStream(String.Format("{0}\\projectpk_{1}.xml", System.Configuration.ConfigurationManager.AppSettings["TempPath"], payload.AlertId.Id), FileMode.Create), payload);
+                                        xmlSerializer.Serialize(new FileStream(String.Format("{0}\\projectpk_{1}.xml", System.Configuration.ConfigurationManager.AppSettings["TempPath"], payload.AlertId.Id), FileMode.Create), payload);
 
-                                    Account account = payload.Account;
-                                    if (payload.AlertId.Id <= 0)
-                                    {
-                                        logMsg = String.Format("No projectpk specified for\n\n MessageId {0}", objectMessage.NMSMessageId);
-                                        ULog.error(logMsg);
-                                    }
-                                    else if (account == null)
-                                    {
-                                        logMsg = String.Format("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
-                                        ULog.error(logMsg);
-                                    }
-                                    else if (payload.AlertTargets == null || payload.AlertTargets.Count == 0)
-                                    {
-                                        logMsg = String.Format("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
-                                        ULog.error(logMsg);
-                                    }
-                                    else if (payload.ChannelConfigurations == null || payload.AlertTargets.Count == 0)
-                                    {
-                                        logMsg = String.Format("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
-                                        ULog.error(logMsg);
+                                        Account account = payload.Account;
+                                        if (payload.AlertId.Id <= 0)
+                                        {
+                                            logMsg = String.Format("No projectpk specified for\n\n MessageId {0}", objectMessage.NMSMessageId);
+                                            ULog.error(logMsg);
+                                        }
+                                        else if (account == null)
+                                        {
+                                            logMsg = String.Format("No account specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                            ULog.error(logMsg);
+                                        }
+                                        else if (payload.AlertTargets == null || payload.AlertTargets.Count == 0)
+                                        {
+                                            logMsg = String.Format("No alertTargets specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                            ULog.error(logMsg);
+                                        }
+                                        else if (payload.ChannelConfigurations == null || payload.AlertTargets.Count == 0)
+                                        {
+                                            logMsg = String.Format("No channelConfigurations specified for\n\n ProjectPk {0}\n\n MessageId {1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                            ULog.error(logMsg);
+                                        }
+                                        else
+                                        {
+                                            String summary = "SUMMARY\n\n";
+                                            //payload.alertTargets.ForEach(val => summary += Helpers.ToStringExtension(val) + "\n");
+                                            //typeof(AlertTarget).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(AlertTarget))).ToList().ForEach(val => payload.alertTargets.OfType<val>().Count());
+                                            summary += "AdHoc AlertObject = " + payload.AlertTargets.OfType<AlertObject>().Count() + "\n";
+                                            //summary += "AdHoc Recipient = " + payload.AlertTargets.OfType<Recipient>().Count() + "\n";
+                                            summary += "StoredAddress = " + payload.AlertTargets.OfType<StoredAddress>().Count() + "\n";
+                                            summary += "StoredList = " + payload.AlertTargets.OfType<StoredList>().Count() + "\n";
+                                            summary += "PropertyAddress = " + payload.AlertTargets.OfType<PropertyAddress>().Count() + "\n";
+                                            summary += "StreetAddress = " + payload.AlertTargets.OfType<StreetAddress>().Count() + "\n";
+                                            summary += "OwnerAddress = " + payload.AlertTargets.OfType<OwnerAddress>().Count() + "\n\n";
+                                            try
+                                            {
+                                                payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + StringHelpers.ToStringExtension(val) + "\n");
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                summary += "Unable to append channel configurations to summary";
+                                            }
+                                            logMsg = String.Format("Received message from account Company/Department {0}/{1}\n\n ProjectPk {2}\n\n MessageId {3}\n\n{4}",
+                                                payload.Account.CompanyId, payload.Account.DepartmentId, payload.AlertId.Id, objectMessage.NMSMessageId, summary);
+                                            ULog.write(logMsg);
+
+                                            try
+                                            {
+                                                ITimeProfilerCollector collector = new TimeProfilerCollector();
+                                                using (new TimeProfiler(payload.AlertId.Id, "Handle entire alert", collector))
+                                                {
+                                                    new DataHandlerImpl().HandleAlert(payload);
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                String errorText = String.Format("Failed to generate alert\n\n" + e.ToString());
+                                                ULog.error(errorText);
+                                                log.Info(errorText);
+                                                //increment tries here, finally ack the message to make it go away.
+                                            }
+                                        }
                                     }
                                     else
                                     {
-                                        String summary = "SUMMARY\n\n";
-                                        //payload.alertTargets.ForEach(val => summary += Helpers.ToStringExtension(val) + "\n");
-                                        //typeof(AlertTarget).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(AlertTarget))).ToList().ForEach(val => payload.alertTargets.OfType<val>().Count());
-                                        summary += "AdHoc AlertObject = " + payload.AlertTargets.OfType<AlertObject>().Count() + "\n";
-                                        //summary += "AdHoc Recipient = " + payload.AlertTargets.OfType<Recipient>().Count() + "\n";
-                                        summary += "StoredAddress = " + payload.AlertTargets.OfType<StoredAddress>().Count() + "\n";
-                                        summary += "StoredList = " + payload.AlertTargets.OfType<StoredList>().Count() + "\n";
-                                        summary += "PropertyAddress = " + payload.AlertTargets.OfType<PropertyAddress>().Count() + "\n";
-                                        summary += "StreetAddress = " + payload.AlertTargets.OfType<StreetAddress>().Count() + "\n";
-                                        summary += "OwnerAddress = " + payload.AlertTargets.OfType<OwnerAddress>().Count() + "\n\n";
-                                        try
-                                        {
-                                            payload.ChannelConfigurations.ForEach(val => summary += "CONFIGURATION\n" + StringHelpers.ToStringExtension(val) + "\n");
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            summary += "Unable to append channel configurations to summary";
-                                        }
-                                        logMsg = String.Format("Received message from account Company/Department {0}/{1}\n\n ProjectPk {2}\n\n MessageId {3}\n\n{4}",
-                                            payload.Account.CompanyId, payload.Account.DepartmentId, payload.AlertId.Id, objectMessage.NMSMessageId, summary);
-                                        ULog.write(logMsg);
-
-                                        try
-                                        {
-                                            ITimeProfilerCollector collector = new TimeProfilerCollector();
-                                            using (new TimeProfiler(payload.AlertId.Id, "Handle entire alert", collector))
-                                            {
-                                                new DataHandlerImpl().HandleAlert(payload);
-                                            }
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            String errorText = String.Format("Failed to generate alert\n\n" + e.ToString());
-                                            ULog.error(errorText);
-                                            log.Info(errorText);
-                                            //increment tries here, finally ack the message to make it go away.
-                                        }
+                                        String errorText = String.Format("Received message of incompatible type {0} with MessageId {1}, acknowledge...", message, message.NMSMessageId);
+                                        log.Error(errorText);
+                                        ULog.error(errorText);
+                                        message.Acknowledge();
                                     }
-                                    logMsg = String.Format("Message acknowledged");
-                                    log.Info(logMsg);
-                                    ULog.write(logMsg);
-                                    message.Acknowledge();
 
                                 }
-                                else
+                                catch(Exception e)
                                 {
-                                    String errorText = String.Format("Received message of incompatible type {0} with MessageId {1}", message, message.NMSMessageId);
-                                    log.Error(errorText);
-                                    ULog.error(errorText);
-                                    message.Acknowledge();
+                                    logMsg = string.Format("Fatal error: {0}", e.ToString());
+                                    log.Error(logMsg);
+                                    ULog.error(logMsg);
                                 }
-
+                                message.Acknowledge();
+                                logMsg = String.Format("Message acknowledged");
+                                log.Info(logMsg);
+                                ULog.write(logMsg);
                             }
+
+                            
                         }
                         mqConnection.Close();
                     }
