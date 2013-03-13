@@ -42,6 +42,10 @@ namespace com.ums.pas.integration
         ONLY_HEAD_OF_HOUSEHOLD = 1 << 30,
 
     }
+
+    /// <summary>
+    /// Specifies to which channel to send
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public enum SendChannel
@@ -51,6 +55,33 @@ namespace com.ums.pas.integration
         EMAIL = 3,
         LBA = 4,
         TAS = 5,
+    }
+
+    /// <summary>
+    /// Delivery status of each item in an alert
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public enum ItemDeliveryStatus
+    {
+        NOT_PROCESSED = -1,
+        DELIVERED = 0,
+        IN_PROGRESS = 1,
+        FAILED = 2,
+    }
+
+    /// <summary>
+    /// Overall status for an alert.
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public enum AlertOverallStatus
+    {
+        NOT_PROCESSED = -1,
+        IN_PROGRESS = 1,
+        FINISHED = 0,
+        FAILED = 2,
+        SCHEDULED = 3,
     }
 
     /// <summary>
@@ -797,6 +828,16 @@ namespace com.ums.pas.integration
             get { return _title; }
             set { _title = value; }
         }
+
+        private AlertOverallStatus _deliveryStatus;
+
+        public AlertOverallStatus DeliveryStatus
+        {
+            get { return _deliveryStatus; }
+            set { _deliveryStatus = value; }
+        }
+        
+
         private String _status;
 
         public String Status
