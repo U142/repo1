@@ -313,7 +313,7 @@ namespace com.ums.pas.integration
 
         public String Letter
         {
-            get { return _letter; }
+            get { return _letter == null ? "" : _letter; }
             set { _letter = value; }
         }
 
