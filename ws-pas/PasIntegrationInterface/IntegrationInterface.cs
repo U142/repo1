@@ -212,13 +212,15 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertObject : AlertTarget
     {
-        private Phone _phone;
 
-	    public Phone Phone
-	    {
-		    get { return _phone;}
-		    set { _phone = value;}
-	    }
+        private List<Endpoint> _endpoints;
+
+        public List<Endpoint> Endpoints
+        {
+            get { return _endpoints; }
+            set { _endpoints = value; }
+        }
+
 
         private String _name;
 
@@ -245,13 +247,18 @@ namespace com.ums.pas.integration
         {
             this.Name = Name;
             this.ExternalId = ExternalId;
-            this.Phone = Phone;
+            Endpoints.Add(Phone);
+            //this.Phone = Phone;
         }
         public AlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms)
         {
-            this.Phone = new Phone();
-            this.Phone.Address = PhoneNumber;
-            this.Phone.CanReceiveSms = CanReceiveSms;
+            this.Name = Name;
+            this.ExternalId = ExternalId;
+            Endpoints.Add(new Phone()
+            {
+                Address = PhoneNumber,
+                CanReceiveSms = CanReceiveSms,
+            });
         }
     }
 
