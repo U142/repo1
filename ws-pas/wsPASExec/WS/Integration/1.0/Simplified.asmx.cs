@@ -60,6 +60,16 @@ namespace com.ums.ws.integration
             alertConfiguration.SendToAllChannels = true;
             alertConfiguration.SimulationMode = Exercise;
             alertConfiguration.StartImmediately = StartImmediately;
+
+            if (Repeats <= 0 || Repeats >= 50)
+            {
+                return AlertResponseFactory.Failed(-20, "Number of repeats should be between 0 and 50, {0} was used", Repeats);
+            }
+            if (Frequency <= 0 || Frequency >= 7 * 24 * 60)
+            {
+                return AlertResponseFactory.Failed(-21, "Frequency should be between 1 minute and one week, {0}m was used", Frequency);
+            }
+
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
             //TODO - Get default voice origin number.
