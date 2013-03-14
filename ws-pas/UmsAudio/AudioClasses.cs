@@ -201,7 +201,7 @@ namespace com.ums.UmsCommon.Audio
                 w.WriteLine("£" + dbparams.sz_modename);
                 w.WriteLine("%" + dbparams.sz_manufacturer);
                 w.Close();
-                file_lang.MoveOperation(new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_langfile));
+                file_lang.MoveOperation(new UFile(PathTTS, sz_langfile));
                 //File.Copy(UCommon.UPATHS.sz_path_audiofiles + sz_langfile, UCommon.UPATHS.sz_path_ttsserver + sz_langfile);
 
                 /*CONVERT TTS*/
