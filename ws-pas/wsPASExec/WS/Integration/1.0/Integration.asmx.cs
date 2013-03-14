@@ -117,6 +117,7 @@ namespace com.ums.ws.integration
         }
 
 
+
         /// <summary>
         /// Sends a test alert to a specified phone number.
         /// Uses the StartAlert function to send an alert based on the input.
@@ -305,16 +306,7 @@ namespace com.ums.ws.integration
             throw new NotImplementedException();
         }
 
-        [WebMethod]
-        public List<AlertSummary> TestGetAlerts()
-        {
-            return GetAlerts(new Account()
-            {
-                CompanyId = "UMS",
-                DepartmentId = "DEVELOPMENT",
-                Password = "ums123",
-            }, 3, 3);
-        }
+
 
         /// <summary>
         /// Get array of previously sent alerts. Newest first.
@@ -474,6 +466,7 @@ namespace com.ums.ws.integration
 
             return db.GetTimeProfiles(AlertId.Id);
         }
+
 
 
 

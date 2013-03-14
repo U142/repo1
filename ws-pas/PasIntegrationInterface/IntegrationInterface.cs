@@ -89,6 +89,7 @@ namespace com.ums.pas.integration
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
+    [XmlInclude(typeof(Phone))]
     public abstract class Endpoint
     {
         private String _address;
@@ -213,7 +214,7 @@ namespace com.ums.pas.integration
     public class AlertObject : AlertTarget
     {
 
-        private List<Endpoint> _endpoints;
+        private List<Endpoint> _endpoints = new List<Endpoint>();
 
         public List<Endpoint> Endpoints
         {
