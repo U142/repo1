@@ -89,10 +89,11 @@ namespace com.ums.pas.integration
                     recipientDataList.Add(new RecipientData()
                     {
                         AlertTarget = alertObject,
-                        Endpoints = new List<Endpoint>()
+                        /*Endpoints = new List<Endpoint>()
                                     {
                                         alertObject.Phone,
-                                    },
+                                    },*/
+                        Endpoints = alertObject.Endpoints,
                         Name = alertObject.Name,
                             
                             

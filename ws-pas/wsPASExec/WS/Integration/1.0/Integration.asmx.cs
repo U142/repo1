@@ -117,6 +117,57 @@ namespace com.ums.ws.integration
         }
 
 
+        /// <summary>
+        /// Sends a test alert to a specified phone number.
+        /// Uses the StartAlert function to send an alert based on the input.
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="Message">The message content</param>
+        /// <param name="PhoneNumber">The phone number for testing</param>
+        /// <param name="SendTo">Send via specified channels</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Sends a test alert to a specified phone number.</b>")]
+        public AlertResponse StartTestAlert(Account Account, String SmsMessage, String VoiceMessage, Endpoint Endpoint, SendChannel SendTo)
+        {
+            //for now, only accept phones
+            if(!(Endpoint is Phone))
+            {
+                return AlertResponseFactory.Failed(-30, "Test alert endpoint must be a phone");
+            }
+
+            Phone phone = (Phone) Endpoint;
+
+            //if testing for sms, check that the number is capable of receiving sms
+            if (SendTo.Equals(SendChannel.SMS) && !phone.CanReceiveSms)
+            {
+                return AlertResponseFactory.Failed(-31, "Test alert phone must be capable of receiving SMS");
+            }
+
+            AlertConfiguration alertConfiguration = new AlertConfiguration()
+            {
+                AlertName = String.Format("Test message to {0} via channel {1}", Endpoint.Address, SendTo.ToString()),
+                Scheduled = new DateTime(),
+                SendToAllChannels = false,
+                SimulationMode = true,
+                StartImmediately = true,
+            };
+            List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
+            switch (SendTo)
+            {
+                case SendChannel.SMS:
+                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default", SmsMessage, false));
+                    break;
+                case SendChannel.VOICE:
+                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "23500801", VoiceMessage));
+                    break;
+            }
+            List<AlertTarget> alertTargets = new List<AlertTarget>()
+            {
+                new AlertObject("Send Test", "", phone.Address, phone.CanReceiveSms),
+            };
+            return StartAlert(Account, alertConfiguration, channelConfigurations, alertTargets);
+        }
+
         [WebMethod]
         public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets)
         {
