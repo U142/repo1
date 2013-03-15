@@ -83,7 +83,7 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
+                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
                 //TODO add filter for fnr and unr
                 using (OdbcDataReader rs = Command.ExecuteReader())
                 {
