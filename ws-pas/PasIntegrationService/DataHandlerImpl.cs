@@ -100,14 +100,15 @@ namespace com.ums.pas.integration
                     });                         
                 }
             }
-            foreach (StoredList storedList in Payload.AlertTargets.OfType<StoredList>())
+            ///Functionality for stored lists and addresses are not in scope of first version.
+            /*foreach (StoredList storedList in Payload.AlertTargets.OfType<StoredList>())
             {
 
             }
             foreach (StoredAddress storedAddress in Payload.AlertTargets.OfType<StoredAddress>())
             {
 
-            }
+            }*/
             using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
@@ -116,11 +117,15 @@ namespace com.ums.pas.integration
                                                             Payload.AlertTargets.OfType<StreetAddress>().ToList());
                 recipientDataList.AddRange(streetAddressLookup);
             }
-
-            foreach (PropertyAddress propertyAddress in Payload.AlertTargets.OfType<PropertyAddress>())
+            using (new TimeProfiler(Payload.AlertId.Id, "PropertyAddress", timeProfileCollector))
             {
-
+                IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+                IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                FolkeregDatabaseConnectionString,
+                                                                                Payload.AlertTargets.OfType<PropertyAddress>().ToList());
+                recipientDataList.AddRange(propertyLookup);
             }
+
             foreach (OwnerAddress ownerAddress in Payload.AlertTargets.OfType<OwnerAddress>())
             {
 
