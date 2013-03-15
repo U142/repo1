@@ -172,6 +172,21 @@ namespace com.ums.pas.integration
             get { return _attributes; }
             set { _attributes = value; }
         }
+
+        /// <summary>
+        /// All alert types must be discriminated into a numeric value
+        /// If type is not added here, default return is -1.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>integer discriminator</returns>
+        public static int DiscriminatorValue(AlertTarget type)
+        {
+            if (type is AlertObject) return 1;
+            else if (type is StreetAddress) return 2;
+            else if (type is PropertyAddress) return 3;
+            else if (type is OwnerAddress) return 4;
+            return -1;
+        }
     }
 
 

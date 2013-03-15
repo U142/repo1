@@ -342,9 +342,46 @@ namespace com.ums.pas.integration
         {
             foreach (RecipientData recipient in recipientData)
             {
-                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}', '{18}')";
-                StringBuilder customAttributes = new StringBuilder();
+                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}', '{18}', '{19}')";
+
+                //The recipient wasn't linked to any targets, add the recipient here with reference to project only, not refno/item.
+                if (recipient.AlertLink.Count == 0)
+                {
+                }
+                
+                int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0;
+                String municipalid = "0", letter = "", oppgang = "", data = "", externalId = "";
+                if (recipient.AlertTarget is StreetAddress)
+                {
+                    StreetAddress streetAddress = (StreetAddress) recipient.AlertTarget;
+                    municipalid = streetAddress.MunicipalCode;
+                    streetid = streetAddress.StreetNo;
+                    houseno = streetAddress.HouseNo;
+                    letter = streetAddress.Letter;
+                }
+                else if (recipient.AlertTarget is PropertyAddress)
+                {
+                    PropertyAddress propertyAddress = (PropertyAddress)recipient.AlertTarget;
+                    municipalid = propertyAddress.MunicipalCode;
+                    gnr = propertyAddress.Gnr;
+                    bnr = propertyAddress.Bnr;
+                    fnr = propertyAddress.Fnr;
+                    unr = propertyAddress.Unr;
+
+                }
+                else if (recipient.AlertTarget is OwnerAddress)
+                {
+                    // TODO: insert alert target data
+                }
+                else if (recipient.AlertTarget is AlertObject)
+                {
+                    // TODO: insert alert target data
+                    externalId = ((AlertObject)recipient.AlertTarget).ExternalId;
+                }
+
+
                 // build attribute string, pipe-separated key=value pairs
+                StringBuilder customAttributes = new StringBuilder();
                 foreach (DataItem attribute in recipient.AlertTarget.Attributes)
                 {
                     customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
@@ -352,20 +389,10 @@ namespace com.ums.pas.integration
                     customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
                     customAttributes.Append("|");
                 }
+
+                
                 foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
                 {
-                    int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0;
-                    String municipalid = "0", letter = "", oppgang = "", data = "";
-                    if (recipient.AlertTarget is StreetAddress)
-                    {
-                        StreetAddress streetAddress = (StreetAddress) recipient.AlertTarget;
-                        municipalid = streetAddress.MunicipalCode;
-                        streetid = streetAddress.StreetNo;
-                        houseno = streetAddress.HouseNo;
-                        letter = streetAddress.Letter;
-                    }
-
-
 
                     String Sql = String.Format(SqlBase,
                                                 AlertId.Id,
@@ -373,7 +400,7 @@ namespace com.ums.pas.integration
                                                 alertLink.Item,
                                                 recipient.Company ? "1" : "0",
                                                 recipient.Name,
-                                                0,
+                                                AlertTarget.DiscriminatorValue(recipient.AlertTarget),
                                                 municipalid,
                                                 streetid,
                                                 houseno,
@@ -386,10 +413,12 @@ namespace com.ums.pas.integration
                                                 unr,
                                                 postnr,
                                                 data,
-                                                customAttributes.ToString());
+                                                customAttributes.ToString(),
+                                                externalId);
 
                     Database.ExecNonQuery(Sql);
                 }
+            
             }
         }
 
