@@ -38,7 +38,8 @@ namespace com.ums.ws.integration
         /// <param name="AlertTargets">AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject</param>
         /// <returns></returns>
         [WebMethod(Description = "<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject"
-                                    + "<b><i>Note that AlertTarget.Attributes are not implemented yet due to unknown performance impact.</i></b>")]
+                                    + "<b><i>Note that functionality for AlertTarget.Attributes is not implemented yet due to unknown performance impact.</i></b>"
+                                    + "<b>For alerting only to a certain channel, set value to the wanted channels.</b>")]
         [XmlInclude(typeof(StreetAddress))]
         [XmlInclude(typeof(PropertyAddress))]
         [XmlInclude(typeof(OwnerAddress))]
@@ -72,22 +73,29 @@ namespace com.ums.ws.integration
 
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
-            //TODO - Get default voice origin number.
-            channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
-                                                                                        Frequency,
-                                                                                        2200,
-                                                                                        60 * 10,
-                                                                                        7,
-                                                                                        true,
-                                                                                        -1,
-                                                                                        true,
-                                                                                        "23500801",
-                                                                                        VoiceMessage));
-            // TODO: Get default SMS oadc
-            // TODO: Default oadc for powel is to use municipal name, hence use the company name. 
-            channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
-                                                                                        SmsMessage,
-                                                                                        false));
+            if (VoiceMessage != null && VoiceMessage.Length > 0)
+            {
+                //TODO - Get default voice origin number.
+                channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
+                                                                                            Frequency,
+                                                                                            2200,
+                                                                                            60 * 10,
+                                                                                            7,
+                                                                                            true,
+                                                                                            -1,
+                                                                                            true,
+                                                                                            "23500801",
+                                                                                            VoiceMessage));
+            }
+
+            if (SmsMessage != null && SmsMessage.Length > 0)
+            {
+                // TODO: Get default SMS oadc
+                // TODO: Default oadc for powel is to use municipal name, hence use the company name. 
+                channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
+                                                                                            SmsMessage,
+                                                                                            false));
+            }
 
 
             return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets);
@@ -160,7 +168,7 @@ namespace com.ums.ws.integration
         /// <param name="AlertId">The alert id</param>
         /// <returns></returns>
         [WebMethod(Description = @"<b>Get status of a previously sent alert.</b>")]
-        public List<LogSummary> GetAlertLog(Account Account, AlertId AlertId)
+        public LogSummary GetAlertLog(Account Account, AlertId AlertId)
         {
             throw new NotImplementedException();
         }

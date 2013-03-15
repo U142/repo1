@@ -138,10 +138,6 @@ namespace com.ums.ws.integration
                 return AlertResponseFactory.Failed(-30, "Test alert endpoint must be a phone");
             }
 
-            if (Message.Length <= 0)
-            {
-                return AlertResponseFactory.Failed(-31, "No message content specified");
-            }
 
             Phone phone = (Phone) Endpoint;
 
@@ -243,6 +239,10 @@ namespace com.ums.ws.integration
 
                         foreach (VoiceConfiguration voiceConfig in ChannelConfigurations.OfType<VoiceConfiguration>())
                         {
+                            if (voiceConfig.BaseMessageContent.Length <= 0)
+                            {
+                                return AlertResponseFactory.Failed(-40, "No message content specified for the voice alert");
+                            }
                             if (voiceConfig.UseDefaultVoiceProfile)
                             {
                                 int tmpProfile = umsDb.GetDefaultVoiceProfile(accountDetails.Deptpk);
@@ -265,7 +265,17 @@ namespace com.ums.ws.integration
                                 return AlertResponseFactory.Failed(-5, "There are {0} dynamic audio-files in voice profile {1}, to send there can only be one.", dynVoice, voiceConfig.VoiceProfilePk);
                             }
                         }
-                        
+                        foreach (SmsConfiguration smsConfig in ChannelConfigurations.OfType<SmsConfiguration>())
+                        {
+                            if (smsConfig.BaseMessageContent.Length <= 0)
+                            {
+                                return AlertResponseFactory.Failed(-41, "No message content specified for the sms alert");
+                            }
+                            if (smsConfig.OriginAddress.Length <= 0)
+                            {
+                                return AlertResponseFactory.Failed(-42, "No originating address specified for the sms alert");
+                            }
+                        }
 
                         //Create and retrieve a project
                         UPROJECT_REQUEST req = new UPROJECT_REQUEST();
