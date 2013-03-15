@@ -264,6 +264,11 @@ namespace com.ums.ws.integration
                             {
                                 return AlertResponseFactory.Failed(-5, "There are {0} dynamic audio-files in voice profile {1}, to send there can only be one.", dynVoice, voiceConfig.VoiceProfilePk);
                             }
+                            //check if we need to extract default originating number for voice
+                            if (!voiceConfig.UseHiddenOriginAddress && (voiceConfig.OriginAddress == null || voiceConfig.OriginAddress.Length == 0))
+                            {
+                                voiceConfig.OriginAddress = umsDb.GetDefaultOriginatingNumber(accountDetails.Deptpk);
+                            }
                         }
                         foreach (SmsConfiguration smsConfig in ChannelConfigurations.OfType<SmsConfiguration>())
                         {
@@ -273,7 +278,7 @@ namespace com.ums.ws.integration
                             }
                             if (smsConfig.BaseMessageContent.Length >= 765)
                             {
-                                return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long");
+                                return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long, max is 765 characters");
                             }
                             if (smsConfig.OriginAddress.Length <= 0)
                             {
