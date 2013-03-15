@@ -1606,6 +1606,28 @@ namespace com.ums.UmsCommon
         public UCancelSending response;
     }
 
+
+    /// <summary>
+    /// Interface for adding time profiles to a collection
+    /// </summary>
+    public interface ITimeProfilerCollector
+    {
+        void AddProfile(TimeProfile Profile);
+        List<TimeProfile> GetProfileList();
+        void OnTimerDispose(TimeProfile Profile);
+    }
+
+
+    /// <summary>
+    /// Callback interface when doing timing.
+    /// Use this for being able to route string to log framework (ILog).
+    /// </summary>
+    public interface ITimeProfilerCallback
+    {
+        void StartCallback(String text);
+        void StopCallback(String text);
+    }
+
     /// <summary>
     /// Use this to make an easy timer profiling.
     /// <br></br>
@@ -1627,13 +1649,19 @@ namespace com.ums.UmsCommon
         public ITimeProfilerCollector ProfilerCollector { get; private set; }
         public long Id { get; set; }
         public TimeProfile TimeProfile { get; private set; }
+        public ITimeProfilerCallback Callback { get; set; }
 
-        public TimeProfiler(long Id, String TimerName, ITimeProfilerCollector Collector)
+        public TimeProfiler(long Id, String TimerName, ITimeProfilerCollector Collector, ITimeProfilerCallback Callback)
         {
+            this.Callback = Callback;
             this.Id = Id;
             this.TimerName = TimerName;
             this.ProfilerCollector = Collector;
-            Console.WriteLine("Starting timer for Id={0}, {1}", Id, TimerName);
+            if (Callback != null)
+            {
+                Callback.StartCallback(String.Format("Starting timer for Id={0}, {1}", Id, TimerName));
+            }
+
             TimeProfile = new TimeProfile()
             {
                 Id = Id,
@@ -1653,8 +1681,10 @@ namespace com.ums.UmsCommon
             Timer.Stop();
             TimeProfile.ElapsedMsec = Timer.ElapsedMilliseconds;
             ProfilerCollector.OnTimerDispose(TimeProfile);
-            
-            Console.WriteLine("Stopping timer for {0} - used {1}", TimerName, Timer.Elapsed);
+            if (Callback != null)
+            {
+                Callback.StopCallback(String.Format("Stopping timer for {0} - used {1}", TimerName, Timer.Elapsed));
+            }
         }
 
         #endregion
@@ -1674,45 +1704,8 @@ namespace com.ums.UmsCommon
 
     }
 
-    /// <summary>
-    /// Interface for adding time profiles to a collection
-    /// </summary>
-    public interface ITimeProfilerCollector
-    {
-        void AddProfile(TimeProfile Profile);
-        List<TimeProfile> GetProfileList();
-        void OnTimerDispose(TimeProfile Profile);
-    }
-
-    /// <summary>
-    /// Default implementation for storing multiple timer profiles.
-    /// </summary>
-    public class TimeProfilerCollector : ITimeProfilerCollector
-    {
-        public TimeProfilerCollector()
-        {
-            timeProfileList = new List<TimeProfile>();
-        }
-        public List<TimeProfile> timeProfileList { get; private set; }
-
-        #region ITimeProfilerCollector Members
-
-        public void AddProfile(TimeProfile Profile)
-        {
-            timeProfileList.Add(Profile);
-        }
-
-        public List<TimeProfile> GetProfileList()
-        {
-            return timeProfileList;
-        }
-
-        public void OnTimerDispose(TimeProfile Profile)
-        {
-
-        }
-
-        #endregion
-    }
 
 }
+
+
+
