@@ -150,7 +150,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Abort alerting</b>")]
         public DefaultResponse StopAlert(Account Account, AlertId AlertId)
         {
-            throw new NotImplementedException();
+            return new Integration().StopAlert(Account, AlertId);
         }
 
         /// <summary>
