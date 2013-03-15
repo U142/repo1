@@ -180,10 +180,10 @@
             <id>orange_qa</id>
             <properties>
                 <jnlp_title>UMS Population Alert System</jnlp_title>
-                <jnlp_codebase_url>http://192.168.5.21/PAS/pasqa/</jnlp_codebase_url>
-                <jnlp_s>http://192.168.5.21/PAS/</jnlp_s>
-                <jnlp_w>http://192.168.5.21/PAS/ws_pas_qa/WS/</jnlp_w>
-                <jnlp_v>http://192.168.5.21/gas/</jnlp_v>
+                <jnlp_codebase_url>https://secure.ums.no/PAS/pasqa/</jnlp_codebase_url>
+                <jnlp_s>https://secure.ums.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums.no/PAS/ws_pas_qa/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums.no/gas/</jnlp_v>
             </properties>
             <build>
                 <pluginManagement>
@@ -209,10 +209,10 @@
             <id>orange_prod</id>
             <properties>
                 <jnlp_title>UMS Population Alert System</jnlp_title>
-                <jnlp_codebase_url>http://192.168.5.21/PAS/pasprod/</jnlp_codebase_url>
-                <jnlp_s>http://192.168.5.21/PAS/</jnlp_s>
-                <jnlp_w>http://192.168.5.21/PAS/ws_pas/WS/</jnlp_w>
-                <jnlp_v>http://192.168.5.21/gas/</jnlp_v>
+                <jnlp_codebase_url>https://secure.ums.no/PAS/pasprod/</jnlp_codebase_url>
+                <jnlp_s>https://secure.ums.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums.no/PAS/ws_pas/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums.no/gas/</jnlp_v>
             </properties>
             <build>
                 <pluginManagement>
