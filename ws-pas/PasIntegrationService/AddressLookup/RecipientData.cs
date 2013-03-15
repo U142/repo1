@@ -30,6 +30,13 @@ namespace com.ums.pas.integration.AddressLookup
             };
         }
 
+        public String AddressLine {
+            get
+            {
+                return String.Format("{0}|{1}|{2}|{3}", Name, Address, Postno, PostPlace);
+            }
+        }
+
         /// <summary>
         /// how the recipient was found
         /// </summary>
@@ -79,6 +86,12 @@ namespace com.ums.pas.integration.AddressLookup
         /// true if company
         /// </summary>
         public bool Company { get; set; }
+
+        public String Address { get; set; }
+
+        public int Postno { get; set; }
+
+        public String PostPlace { get; set; }
 
 
     }

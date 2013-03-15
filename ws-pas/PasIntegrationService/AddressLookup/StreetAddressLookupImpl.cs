@@ -109,6 +109,10 @@ namespace com.ums.pas.integration.AddressLookup
                                 Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),
                                 Lat = rs.IsDBNull(rs.GetOrdinal("LON")) ? 0 : rs.GetDouble(rs.GetOrdinal("LON")),
                                 Company = (rs.GetInt16(rs.GetOrdinal("BEDRIFT")) == 1),
+                                Address = rs.GetString(rs.GetOrdinal("ADRESSE")),
+                                Postno = Int32.Parse(rs.GetString(rs.GetOrdinal("POSTNR"))),
+                                PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
+
                             };
                             if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                             {
