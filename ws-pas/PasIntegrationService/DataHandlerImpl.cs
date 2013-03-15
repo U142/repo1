@@ -96,6 +96,9 @@ namespace com.ums.pas.integration
                                     },*/
                         Endpoints = alertObject.Endpoints,
                         Name = alertObject.Name,
+                        Address = "",
+                        Postno = 0,
+                        PostPlace = "",
                     });                         
                 }
             }
@@ -321,7 +324,7 @@ namespace com.ums.pas.integration
                                                 -1,
                                                 0,
                                                 0,
-                                                data.Name,
+                                                data.AddressLine,
                                                 data.Lon.ToString(UCommon.UGlobalizationInfo),
                                                 data.Lat.ToString(UCommon.UGlobalizationInfo),
                                                 "",
@@ -524,6 +527,7 @@ namespace com.ums.pas.integration
 
         private void InsertSmsQref(long Refno, AccountDetails Account, AlertConfiguration alertConfig, SmsConfiguration smsConfig)
         {
+            int group = 3;
             String Sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
                     "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
                     "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
@@ -548,7 +552,7 @@ namespace com.ums.pas.integration
                             0,//expected items //17
                             smsConfig.BaseMessageContent.Replace("'", "''"), //18
                             13, //19
-                            1, //20
+                            group, //20
                             "|", //21
                             0, //22
                             0, //23
@@ -569,6 +573,8 @@ namespace com.ums.pas.integration
                                         ChannelConfiguration ChannelConfig, 
                                         AlertConfiguration AlertConfig)
         {
+            int noFax = 1;
+            int group = 3;
             String Sql = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
                       "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
                       "l_removedup, l_type, f_dynacall, l_addresstypes, l_userpk, l_maxchannels) " +
@@ -587,8 +593,8 @@ namespace com.ums.pas.integration
                 1,
                 Account.Comppk,
                 Account.Deptpk,
-                1,
-                1,
+                noFax,
+                group,
                 1,
                 1, //voice
                 AlertConfig.SimulationMode ? 2 : 1,
