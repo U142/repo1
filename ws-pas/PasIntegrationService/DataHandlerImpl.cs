@@ -340,7 +340,6 @@ namespace com.ums.pas.integration
         /// </summary>
         private void WriteMetaData(AlertId AlertId, List<RecipientData> recipientData)
         {
-            //TODO
             foreach (RecipientData recipient in recipientData)
             {
                 String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}')";
@@ -356,6 +355,7 @@ namespace com.ums.pas.integration
                         houseno = streetAddress.HouseNo;
                         letter = streetAddress.Letter;
                     }
+
 
                     String Sql = String.Format(SqlBase,
                                                 AlertId.Id,

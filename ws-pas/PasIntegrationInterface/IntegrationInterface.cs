@@ -680,6 +680,22 @@ namespace com.ums.pas.integration
 
     public class ChannelConfigurationFactory
     {
+        /// <summary>
+        /// Create a configuration for voice.
+        /// If originAddress is empty and not useHiddenOriginAddress, the
+        /// system should select a default number based on department settings.
+        /// </summary>
+        /// <param name="repeats"></param>
+        /// <param name="frequencyMinutes"></param>
+        /// <param name="pauseAtTime"></param>
+        /// <param name="pauseDurationMinutes"></param>
+        /// <param name="validDays"></param>
+        /// <param name="useDefaultVoiceProfile"></param>
+        /// <param name="voiceProfilePk"></param>
+        /// <param name="useHiddenOriginAddress"></param>
+        /// <param name="originAddress"></param>
+        /// <param name="messageContent"></param>
+        /// <returns></returns>
         public static VoiceConfiguration newVoiceConfiguration(int repeats, int frequencyMinutes, int pauseAtTime,
                                         int pauseDurationMinutes, int validDays, bool useDefaultVoiceProfile,
                                         int voiceProfilePk, bool useHiddenOriginAddress,
@@ -708,6 +724,9 @@ namespace com.ums.pas.integration
         }
     }
 
+    /// <summary>
+    /// Class for storing properties related to a voice alert
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class VoiceConfiguration : ChannelConfiguration

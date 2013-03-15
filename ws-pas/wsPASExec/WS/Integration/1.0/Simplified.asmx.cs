@@ -70,6 +70,12 @@ namespace com.ums.ws.integration
             {
                 return AlertResponseFactory.Failed(-21, "Frequency should be between 1 minute and one week, {0}m was used", Frequency);
             }
+            if (account.CompanyId == null || account.CompanyId.Length == 0 ||
+                account.DepartmentId == null || account.DepartmentId.Length == 0 ||
+                account.Password == null || account.Password.Length == 0)
+            {
+                return AlertResponseFactory.Failed(-100, "Account information was not complete");
+            }
 
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
@@ -84,15 +90,14 @@ namespace com.ums.ws.integration
                                                                                             true,
                                                                                             -1,
                                                                                             true,
-                                                                                            "23500801",
+                                                                                            "",
                                                                                             VoiceMessage));
             }
 
             if (SmsMessage != null && SmsMessage.Length > 0)
             {
-                // TODO: Get default SMS oadc
-                // TODO: Default oadc for powel is to use municipal name, hence use the company name. 
-                channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
+                //default oadc is now set to companyid, with first char toupper and the rest tolower (SANDNES becomes Sandnes)
+                channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration(account.CompanyId.Substring(0,1).ToUpper() + account.CompanyId.Substring(1).ToLower(),
                                                                                             SmsMessage,
                                                                                             false));
             }
