@@ -87,7 +87,7 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GATEKODE=SA.GATEKODE AND FR.HUSNR=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                Command.CommandText = "SELECT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 using (OdbcDataReader rs = Command.ExecuteReader())
                 {
                     while (rs.Read())
