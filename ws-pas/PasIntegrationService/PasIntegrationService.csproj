@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>42</ApplicationRevision>
+    <ApplicationRevision>43</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -93,7 +93,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressLookup\IPropertyAddressLookupFacade.cs" />
     <Compile Include="AddressLookup\IStreetAddressLookupFacade.cs" />
+    <Compile Include="AddressLookup\PropertyAddressLookupImpl.cs" />
     <Compile Include="AddressLookup\RecipientData.cs" />
     <Compile Include="AddressLookup\StreetAddressLookupImpl.cs" />
     <Compile Include="DataHandlerImpl.cs" />
