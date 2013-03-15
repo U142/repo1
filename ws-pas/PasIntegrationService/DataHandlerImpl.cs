@@ -356,6 +356,24 @@ namespace com.ums.pas.integration
                         houseno = streetAddress.HouseNo;
                         letter = streetAddress.Letter;
                     }
+                    else if (recipient.AlertTarget is PropertyAddress)
+                    {
+                        PropertyAddress propertyAddress = (PropertyAddress)recipient.AlertTarget;
+                        municipalid = propertyAddress.MunicipalCode;
+                        gnr = propertyAddress.Gnr;
+                        bnr = propertyAddress.Bnr;
+                        fnr = propertyAddress.Fnr;
+                        unr = propertyAddress.Unr;
+
+                    }
+                    else if (recipient.AlertTarget is OwnerAddress)
+                    {
+                        // TODO: insert alert target data
+                    }
+                    else if (recipient.AlertTarget is AlertObject)
+                    {
+                        // TODO: insert alert target data
+                    }
 
                     String Sql = String.Format(SqlBase,
                                                 AlertId.Id,

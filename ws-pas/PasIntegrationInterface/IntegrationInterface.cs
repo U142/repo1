@@ -367,17 +367,17 @@ namespace com.ums.pas.integration
         {
         }
         public PropertyAddress(PropertyAddress p)
-            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Snr)
+            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Unr)
         {
             this.Attributes = p.Attributes;
         }
-        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int snr)
+        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr)
         {
             this.MunicipalCode = municipalCode;
             this.Gnr = gnr;
             this.Bnr = bnr;
             this.Fnr = fnr;
-            this.Snr = snr;
+            this.Unr = unr;
         }
         private String _municipalCode;
 
@@ -408,12 +408,12 @@ namespace com.ums.pas.integration
             get { return _fnr; }
             set { _fnr = value; }
         }
-        private int _snr;
+        private int _unr;
 
-        public int Snr
+        public int Unr
         {
-            get { return _snr; }
-            set { _snr = value; }
+            get { return _unr; }
+            set { _unr = value; }
         }
 
     }

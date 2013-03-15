@@ -83,7 +83,8 @@ namespace com.ums.ws.integration
                                                                                         true,
                                                                                         "23500801",
                                                                                         VoiceMessage));
-            //TODO - Get default SMS oadc
+            // TODO: Get default SMS oadc
+            // TODO: Default oadc for powel is to use municipal name, hence use the company name. 
             channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default",
                                                                                         SmsMessage,
                                                                                         false));
@@ -116,15 +117,14 @@ namespace com.ums.ws.integration
         /// Sends a test alert to a specified phone number.
         /// </summary>
         /// <param name="Account">The account</param>
-        /// <param name="SmsMessage">The message content for sms</param>
-        /// <param name="VoiceMessage">The message content for voice</param>
+        /// <param name="Message">The message content for the specified SendChannel</param>
         /// <param name="PhoneNumber">The phone number for testing</param>
         /// <param name="SendTo">Send via specified channels</param>
         /// <returns></returns>
         [WebMethod(Description=@"<b>Sends a test alert to a specified phone number.</b>")]
-        public AlertResponse StartTestAlert(Account Account, String SmsMessage, String VoiceMessage, Endpoint PhoneNumber, SendChannel SendTo)
+        public AlertResponse StartTestAlert(Account Account, String Message, Endpoint PhoneNumber, SendChannel SendTo)
         {
-            return new Integration().StartTestAlert(Account, SmsMessage, VoiceMessage, PhoneNumber, SendTo);
+            return new Integration().StartTestAlert(Account, Message, PhoneNumber, SendTo);
         }
 
 

@@ -128,8 +128,10 @@ namespace com.ums.ws.integration
         /// <param name="SendTo">Send via specified channels</param>
         /// <returns></returns>
         [WebMethod(Description = @"<b>Sends a test alert to a specified phone number.</b>")]
-        public AlertResponse StartTestAlert(Account Account, String SmsMessage, String VoiceMessage, Endpoint Endpoint, SendChannel SendTo)
+        public AlertResponse StartTestAlert(Account Account, String Message, Endpoint Endpoint, SendChannel SendTo)
         {
+            // TODO: Find a mechanism to avoid linking test-messages to the project, this for avoiding visibility.
+
             //for now, only accept phones
             if(!(Endpoint is Phone))
             {
@@ -156,10 +158,10 @@ namespace com.ums.ws.integration
             switch (SendTo)
             {
                 case SendChannel.SMS:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default", SmsMessage, false));
+                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default", Message, false));
                     break;
                 case SendChannel.VOICE:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "23500801", VoiceMessage));
+                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "23500801", Message));
                     break;
             }
             List<AlertTarget> alertTargets = new List<AlertTarget>()
