@@ -38,7 +38,7 @@ namespace com.ums.ws.integration
         /// <param name="AlertTargets">AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject</param>
         /// <returns></returns>
         [WebMethod(Description = "<b>Alert based on street addresses and/or property addresses and/or list of alert objects (name/number).</b><br>AlertTargets may consist of overridden classes as StreetAddress, PropertyAddress, OwnerAddress and AlertObject"
-                                    + "<b><i>Note that functionality for AlertTarget.Attributes is not implemented yet due to unknown performance impact.</i></b>"
+                                    + "<b><i>Attributes are stored in a flat manner to optimize speed, pipe and equal sign (| =) are reserved characters.</i></b>"
                                     + "<b>For alerting only to a certain channel, set value to the wanted channels.</b>")]
         [XmlInclude(typeof(StreetAddress))]
         [XmlInclude(typeof(PropertyAddress))]

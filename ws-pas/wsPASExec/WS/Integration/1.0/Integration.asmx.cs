@@ -282,7 +282,7 @@ namespace com.ums.ws.integration
                             }
                             if (smsConfig.OriginAddress.Length <= 0)
                             {
-                                return AlertResponseFactory.Failed(-42, "No originating address specified for the sms alert");
+                                return AlertResponseFactory.Failed(-43, "No originating address specified for the sms alert");
                             }
                         }
 
