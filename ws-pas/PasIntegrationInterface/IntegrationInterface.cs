@@ -805,12 +805,33 @@ namespace com.ums.pas.integration
 
     }
 
+    /// <summary>
+    /// Configuration properties for Sms
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class SmsConfiguration : ChannelConfiguration
     {
-        public bool FlashSms = false;
-        public String OriginAddress;
+        private bool _flashSms;
+
+        public bool FlashSms
+        {
+            get { return _flashSms; }
+            set { _flashSms = value; }
+        }
+        private String _originAddress;
+
+        /// <summary>
+        /// Default max length of originator address is 11.
+        /// The string will be cropped
+        /// </summary>
+        public String OriginAddress
+        {
+            get {
+                return _originAddress != null ? _originAddress.Substring(0, Math.Min(11, _originAddress.Length)) : "";
+            }
+            set { _originAddress = value; }
+        }
     }
 
     [Serializable]

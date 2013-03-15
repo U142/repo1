@@ -271,6 +271,10 @@ namespace com.ums.ws.integration
                             {
                                 return AlertResponseFactory.Failed(-41, "No message content specified for the sms alert");
                             }
+                            if (smsConfig.BaseMessageContent.Length >= 765)
+                            {
+                                return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long");
+                            }
                             if (smsConfig.OriginAddress.Length <= 0)
                             {
                                 return AlertResponseFactory.Failed(-42, "No originating address specified for the sms alert");
