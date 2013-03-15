@@ -329,10 +329,39 @@ namespace com.ums.ws.integration
         [WebMethod]
         public DefaultResponse StopAlert(Account Account, AlertId AlertId)
         {
-            throw new NotImplementedException();
+            DefaultResponse response = new DefaultResponse();
+
+            response.Code = 0;
+            response.Message = "";
+
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+            
+            // Get all refnos corresponding to the alertid (projectpk)
+            String Sql = String.Format("SELECT l_refno FROM BBPROJECT_X_REFNO WHERE l_projectpk={0}", AlertId.Id);
+            using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                while (rs.Read())
+                {
+                    // Cancel each refno
+                    String cancelSql = String.Format("INSERT INTO BBCANCEL(l_renfo, l_item) VALUES({0}, -1)", rs.GetInt32(0));
+
+                    if (!umsDb.ExecNonQuery(cancelSql))
+                    {
+                        // TODO: Set proper status code (-1 is probably in use)
+                        response.Code = -1;
+                        response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                    }
+                }
+            }
+
+            return response;
         }
-
-
+        
 
         /// <summary>
         /// Get array of previously sent alerts. Newest first.
