@@ -169,7 +169,9 @@ namespace com.ums.pas.integration
 
         public List<DataItem> Attributes
         {
-            get { return _attributes; }
+            get { 
+                return _attributes != null ? _attributes : new List<DataItem>(); 
+            }
             set { _attributes = value; }
         }
 
