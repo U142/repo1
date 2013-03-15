@@ -61,6 +61,7 @@ namespace com.ums.pas.integration.AddressLookup
                 Command.Parameters.Add("unr", OdbcType.Int);
                 Command.Prepare();
 
+
                 foreach (PropertyAddress sa in propertyAddresses)
                 {
                     int Knr;
@@ -84,7 +85,9 @@ namespace com.ums.pas.integration.AddressLookup
 
                 start = DateTime.Now;
                 Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
-                //TODO add filter for fnr and unr
+                //TODO: add filter for fnr and unr
+                int mobilePhones = 0;
+                int fixedPhones = 0;
                 using (OdbcDataReader rs = Command.ExecuteReader())
                 {
                     while (rs.Read())
@@ -111,6 +114,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     CanReceiveSms = true,
                                     Address = rs["MOBIL"].ToString(),
                                 });
+                                ++mobilePhones;
                             }
                             if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs["TELEFON"].ToString().Length > 0)
                             {
@@ -119,12 +123,16 @@ namespace com.ums.pas.integration.AddressLookup
                                     CanReceiveSms = false,
                                     Address = rs["TELEFON"].ToString(),
                                 });
+                                ++fixedPhones;
                             }
                             
                             recipients.Add(r);
                         }
                     }
                 }
+
+                log.InfoFormat("Found {0} recipients living on {1} PropertyAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, propertyAddresses.Count, mobilePhones, fixedPhones);
+
                 duration = DateTime.Now - start;
                 log.InfoFormat("Select took {0:0} ms", duration.TotalMilliseconds);
 

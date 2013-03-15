@@ -96,8 +96,6 @@ namespace com.ums.pas.integration
                                     },*/
                         Endpoints = alertObject.Endpoints,
                         Name = alertObject.Name,
-                            
-                            
                     });                         
                 }
             }
