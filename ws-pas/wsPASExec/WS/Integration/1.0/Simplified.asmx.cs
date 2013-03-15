@@ -135,9 +135,9 @@ namespace com.ums.ws.integration
         /// <param name="SendTo">Send via specified channels</param>
         /// <returns></returns>
         [WebMethod(Description=@"<b>Sends a test alert to a specified phone number.</b>")]
-        public AlertResponse StartTestAlert(Account Account, String Message, Endpoint PhoneNumber, SendChannel SendTo)
+        public AlertResponse StartTestAlert(Account Account, String Message, Endpoint Endpoint, SendChannel SendTo)
         {
-            return new Integration().StartTestAlert(Account, Message, PhoneNumber, SendTo);
+            return new Integration().StartTestAlert(Account, Message, Endpoint, SendTo);
         }
 
 

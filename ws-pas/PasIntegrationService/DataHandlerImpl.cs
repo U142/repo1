@@ -342,7 +342,7 @@ namespace com.ums.pas.integration
         {
             foreach (RecipientData recipient in recipientData)
             {
-                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}', '{18}', '{19}')";
+                //String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', '{16}', '{17}')";
 
                 //The recipient wasn't linked to any targets, add the recipient here with reference to project only, not refno/item.
                 if (recipient.AlertLink.Count == 0)
@@ -390,32 +390,41 @@ namespace com.ums.pas.integration
                     customAttributes.Append("|");
                 }
 
-                
+                String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', '{16}', '{17}'",
+                                            AlertId.Id,
+                                            recipient.Company ? "1" : "0",
+                                            recipient.Name,
+                                            AlertTarget.DiscriminatorValue(recipient.AlertTarget),
+                                            municipalid,
+                                            streetid,
+                                            houseno,
+                                            letter,
+                                            oppgang,
+                                            gnr,
+                                            bnr,
+                                            fnr,
+                                            snr,
+                                            unr,
+                                            postnr,
+                                            data,
+                                            customAttributes.ToString(),
+                                            externalId);
+
+                long alertSourcePk = -1;
+                using (OdbcDataReader rs = Database.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+                {
+                    if (rs.Read())
+                    {
+                        alertSourcePk = rs.GetInt64(0);
+                    }
+                }
+                //insert alert links
                 foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
                 {
-
-                    String Sql = String.Format(SqlBase,
-                                                AlertId.Id,
-                                                alertLink.Refno,
-                                                alertLink.Item,
-                                                recipient.Company ? "1" : "0",
-                                                recipient.Name,
-                                                AlertTarget.DiscriminatorValue(recipient.AlertTarget),
-                                                municipalid,
-                                                streetid,
-                                                houseno,
-                                                letter,
-                                                oppgang,
-                                                gnr,
-                                                bnr,
-                                                fnr,
-                                                snr,
-                                                unr,
-                                                postnr,
-                                                data,
-                                                customAttributes.ToString(),
-                                                externalId);
-
+                    Sql = String.Format("INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES({0},{1},{2})",
+                                            alertSourcePk,
+                                            alertLink.Refno,
+                                            alertLink.Item);
                     Database.ExecNonQuery(Sql);
                 }
             
