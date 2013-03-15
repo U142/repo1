@@ -138,6 +138,11 @@ namespace com.ums.ws.integration
                 return AlertResponseFactory.Failed(-30, "Test alert endpoint must be a phone");
             }
 
+            if (Message.Length <= 0)
+            {
+                return AlertResponseFactory.Failed(-31, "No message content specified");
+            }
+
             Phone phone = (Phone) Endpoint;
 
             //if testing for sms, check that the number is capable of receiving sms
