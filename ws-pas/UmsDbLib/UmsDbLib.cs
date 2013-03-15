@@ -199,6 +199,25 @@ namespace com.ums.UmsDbLib
         }
 
         /// <summary>
+        /// Get default number for department.
+        /// </summary>
+        /// <param name="DeptPk"></param>
+        /// <returns></returns>
+        public String GetDefaultOriginatingNumber(int DeptPk)
+        {
+            String defaultNumber = String.Empty;
+            String Sql = String.Format("SELECT isnull(sz_defaultnumber,'') FROM BBDEPARTMENT WHERE l_deptpk={0}", DeptPk);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    defaultNumber = rs.GetString(0);
+                }
+            }
+            return defaultNumber;
+        }
+
+        /// <summary>
         /// Get default voice profile.
         /// Per now, default is the one with the lowest profilepk.
         /// It also checks for shared profiles, but prioritizes owned.
