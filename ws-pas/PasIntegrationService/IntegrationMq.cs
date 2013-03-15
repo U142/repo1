@@ -11,6 +11,7 @@ using Apache.NMS.ActiveMQ;
 using System.Xml.Serialization;
 using System.IO;
 using log4net;
+using com.ums.pas.integration.TimeProfileDb;
 
 namespace com.ums.pas.integration
 {
@@ -216,8 +217,8 @@ namespace com.ums.pas.integration
 
                                             try
                                             {
-                                                ITimeProfilerCollector collector = new TimeProfilerCollector();
-                                                using (new TimeProfiler(payload.AlertId.Id, "Handle entire alert", collector))
+                                                ITimeProfilerCollector collector = new TimeProfilerCollectorImpl();
+                                                using (new TimeProfiler(payload.AlertId.Id, "Handle entire alert", collector, new TimeProfilerCallbackImpl()))
                                                 {
                                                     new DataHandlerImpl().HandleAlert(payload);
                                                 }

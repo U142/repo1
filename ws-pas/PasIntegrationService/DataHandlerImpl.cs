@@ -9,6 +9,7 @@ using System.Data.Odbc;
 using System.IO;
 using com.ums.pas.integration.AddressLookup;
 using log4net;
+using com.ums.pas.integration.TimeProfileDb;
 
 
 namespace com.ums.pas.integration
@@ -84,7 +85,7 @@ namespace com.ums.pas.integration
 
             foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
             {
-                using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector))
+                using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
                     recipientDataList.Add(new RecipientData()
                     {
@@ -109,7 +110,7 @@ namespace com.ums.pas.integration
             {
 
             }*/
-            using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector))
+            using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                 IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
@@ -117,7 +118,7 @@ namespace com.ums.pas.integration
                                                             Payload.AlertTargets.OfType<StreetAddress>().ToList());
                 recipientDataList.AddRange(streetAddressLookup);
             }
-            using (new TimeProfiler(Payload.AlertId.Id, "PropertyAddress", timeProfileCollector))
+            using (new TimeProfiler(Payload.AlertId.Id, "PropertyAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
                 IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
@@ -143,7 +144,7 @@ namespace com.ums.pas.integration
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
-                    using (new TimeProfiler(Payload.AlertId.Id, "Voice database/file inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "Voice database/file inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
                         //prepare voice alert
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
@@ -163,7 +164,7 @@ namespace com.ums.pas.integration
                     //prepare sms alert
                     //SMSQREF
                     //SMSQ
-                    using (new TimeProfiler(Payload.AlertId.Id, "SMS database inserts", timeProfileCollector))
+                    using (new TimeProfiler(Payload.AlertId.Id, "SMS database inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
                         InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
@@ -171,11 +172,11 @@ namespace com.ums.pas.integration
                     }
                 }
             }
-            using (new TimeProfiler(Payload.AlertId.Id, "Write to MDVHIST", timeProfileCollector))
+            using (new TimeProfiler(Payload.AlertId.Id, "Write to MDVHIST", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 WriteToMdvhist(recipientDataList);
             }
-            using (new TimeProfiler(Payload.AlertId.Id, "Write Metadata to MDVHIST_ADDRESS_SOURCE", timeProfileCollector))
+            using (new TimeProfiler(Payload.AlertId.Id, "Write Metadata to MDVHIST_ADDRESS_SOURCE", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 WriteMetaData(Payload.AlertId, recipientDataList);
             }
@@ -186,7 +187,7 @@ namespace com.ums.pas.integration
 
         private void CreateTtsBackboneAudioFiles(AlertId AlertId, long Refno, List<String> Messages, int LangPk)
         {
-            using (new TimeProfiler(AlertId.Id, "Text to Speech", timeProfileCollector))
+            using (new TimeProfiler(AlertId.Id, "Text to Speech", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 try
                 {
@@ -224,7 +225,7 @@ namespace com.ums.pas.integration
         /// <param name="Refno"></param>
         private void WriteVoiceBackboneFile(AlertId AlertId, AlertConfiguration AlertConfiguration, Account Account, AccountDetails AccountDetails, long Refno)
         {
-            using (new TimeProfiler(AlertId.Id, "Write address file to backbone", timeProfileCollector))
+            using (new TimeProfiler(AlertId.Id, "Write address file to backbone", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 try
                 {
