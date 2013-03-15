@@ -342,7 +342,16 @@ namespace com.ums.pas.integration
         {
             foreach (RecipientData recipient in recipientData)
             {
-                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}')";
+                String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12}, {13}, {14}, {15}, {16}, '{17}', '{18}')";
+                StringBuilder customAttributes = new StringBuilder();
+                // build attribute string, pipe-separated key=value pairs
+                foreach (DataItem attribute in recipient.AlertTarget.Attributes)
+                {
+                    customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
+                    customAttributes.Append("=");
+                    customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
+                    customAttributes.Append("|");
+                }
                 foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
                 {
                     int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0;
@@ -355,6 +364,7 @@ namespace com.ums.pas.integration
                         houseno = streetAddress.HouseNo;
                         letter = streetAddress.Letter;
                     }
+
 
 
                     String Sql = String.Format(SqlBase,
@@ -375,7 +385,8 @@ namespace com.ums.pas.integration
                                                 snr,
                                                 unr,
                                                 postnr,
-                                                data);
+                                                data,
+                                                customAttributes.ToString());
 
                     Database.ExecNonQuery(Sql);
                 }
