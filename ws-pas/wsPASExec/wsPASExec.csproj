@@ -332,6 +332,7 @@
     </Content>
     <Content Include="Web.Gas-se_QA.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
