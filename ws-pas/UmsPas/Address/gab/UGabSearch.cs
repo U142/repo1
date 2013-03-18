@@ -195,7 +195,7 @@ namespace com.ums.PAS.Address.gab
             string authorizationHeader = ""; // For http authentication
 
             if(m_params.sz_country.Equals("SE")) {
-                sz_server = "http://testmaps.metria.se/geokodning/Geocode";
+                sz_server = "http://maps.metria.se/geokodning/Geocode";
                 sz_params = "address=" + m_params.sz_address + " " + m_params.sz_no + ", " +
                                     m_params.sz_postno + " " + m_params.sz_postarea +
                                     ", Sverige&scheme=adress_WGS84";
