@@ -368,6 +368,19 @@ namespace com.ums.ws.integration
             return response;
         }
 
+
+        [WebMethod]
+        public LogSummary TestGetAlertLog()
+        {
+            return GetAlertLog(new Account()
+            {
+                CompanyId = "UMS",
+                DepartmentId = "DEVELOPMENT",
+                Password = "ums123",
+            },
+            new AlertId(208));
+        }
+
         /// <summary>
         /// Get status of a previously sent alert.
         /// </summary>
