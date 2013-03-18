@@ -340,19 +340,27 @@ namespace com.ums.ws.integration
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
             // Get all refnos corresponding to the alertid (projectpk)
-            String Sql = String.Format("SELECT l_refno FROM BBPROJECT_X_REFNO WHERE l_projectpk={0}", AlertId.Id);
+            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk={1} WHERE PR.l_projectpk={0}", AlertId.Id, logonInfo.l_deptpk);
             using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
             {
-                while (rs.Read())
+                if (!rs.HasRows)
                 {
-                    // Cancel each refno
-                    String cancelSql = String.Format("INSERT INTO BBCANCEL(l_renfo, l_item) VALUES({0}, -1)", rs.GetInt32(0));
-
-                    if (!umsDb.ExecNonQuery(cancelSql))
+                    response.Code = -1;
+                    response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
+                }
+                else
+                {
+                    while (rs.Read())
                     {
-                        // TODO: Set proper status code (-1 is probably in use)
-                        response.Code = -1;
-                        response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                        // Cancel each refno
+                        String cancelSql = String.Format("INSERT INTO BBCANCEL(l_renfo, l_item) VALUES({0}, -1)", rs.GetInt32(0));
+
+                        if (!umsDb.ExecNonQuery(cancelSql))
+                        {
+                            // TODO: Set proper status code (-1 is probably in use)
+                            response.Code = -1;
+                            response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                        }
                     }
                 }
             }
