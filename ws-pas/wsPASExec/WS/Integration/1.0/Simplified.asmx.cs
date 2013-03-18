@@ -62,9 +62,9 @@ namespace com.ums.ws.integration
             alertConfiguration.SimulationMode = Exercise;
             alertConfiguration.StartImmediately = StartImmediately;
 
-            if (Repeats <= 0 || Repeats >= 50)
+            if (Repeats < 0 || Repeats >= 50)
             {
-                return AlertResponseFactory.Failed(-20, "Number of repeats should be between 0 and 50, {0} was used", Repeats);
+                return AlertResponseFactory.Failed(-20, "Number of repeats should be [0..50], {0} was used", Repeats);
             }
             if (Frequency <= 0 || Frequency >= 7 * 24 * 60)
             {
@@ -175,7 +175,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get status of a previously sent alert.</b>")]
         public LogSummary GetAlertLog(Account Account, AlertId AlertId)
         {
-            throw new NotImplementedException();
+            new Integration().GetAlertLog(Account, AlertId);
         }
 
         /// <summary>

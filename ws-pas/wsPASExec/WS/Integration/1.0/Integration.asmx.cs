@@ -361,7 +361,108 @@ namespace com.ums.ws.integration
 
             return response;
         }
-        
+
+        /// <summary>
+        /// Get status of a previously sent alert.
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="AlertId">The alert id</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get status of a previously sent alert.</b>")]
+        public LogSummary GetAlertLog(Account Account, AlertId AlertId)
+        {
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            String Sql = String.Format("SELECT "
+            + "BP.l_projectpk, isnull(BP.sz_name,''), isnull(MDV.l_sendingstatus,1), isnull(MDV.l_scheddate,0), "
+            + "isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1), isnull(SQ.l_status, 1), isnull(MDV.l_type,1), "
+            + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
+            + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
+            + "isnull(MDV.l_refno, 0) IsProcessing "
+            + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
+            + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
+            + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
+            + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
+            + "WHERE BP.l_deptpk={0} AND BP.l_projectpk={1}"
+            , 
+            logonInfo.l_deptpk, AlertId.Id);
+            using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                int startAt = -1;//set to -2 as it's zero index
+
+                long prevProjectpk = -1;
+                AlertSummary currentSummary = null;
+                int worstStatus = 8;
+                int SmsItems = 0;
+                int VoiceItems = 0;
+                int SmsProc = 0;
+                int VoiceProc = 0;
+                int endAt = -1;
+                while (rs.Read())
+                {
+                    long projectPk = rs.GetInt64(0);
+                    SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
+                    int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
+                    SmsProc += rs.GetInt32(8);
+                    SmsItems += rs.GetInt32(9);
+                    VoiceProc += rs.GetInt32(10);
+                    VoiceItems += rs.GetInt32(11);
+
+                    int createDate = rs.GetInt32(12);
+                    int createTime = rs.GetInt32(13);
+                    int schedDate = rs.GetInt32(3);
+                    int schedTime = rs.GetInt32(4);
+                    bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
+                    if (!isProcessing)
+                    {
+                        status = 1;
+                    }
+
+                    String schedStr = String.Format("{0:D8}{1:D4}", schedDate > 0 ? schedDate : createDate, schedDate > 0 ? schedTime : createTime);
+                    DateTime scheduled = new DateTime();
+                    if (isProcessing)
+                    {
+                        try
+                        {
+                            scheduled = DateTime.ParseExact(schedStr, "yyyyMMddHHmm", System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        catch (Exception)
+                        {
+                            scheduled = DateTime.ParseExact(String.Format("{0:D8}{1:D4}", createDate, createTime), "yyyyMMddHHmm", System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                    }
+
+                    if (!prevProjectpk.Equals(projectPk))
+                    {
+                        worstStatus = 8;
+                        currentSummary = new AlertSummary()
+                        {
+                            AlertId = new AlertId(rs.GetInt64(0)),
+                            Exercise = rs.GetByte(5) != 1,
+                            StartDateTime = scheduled,
+                            Title = rs.GetString(1),
+                        };
+                    }
+                    if (currentSummary != null && status < worstStatus)
+                    {
+                        currentSummary.ProgressStatus = GetOverallStatusFromStatuscode(status, scheduled);
+                        currentSummary.Status = currentSummary.ProgressStatus.ToString();
+                        worstStatus = status;
+                    }
+
+                    prevProjectpk = projectPk;
+                }
+            }
+
+            return currentSummary;
+
+        }
+
 
         /// <summary>
         /// Get array of previously sent alerts. Newest first.
@@ -465,7 +566,7 @@ namespace com.ums.ws.integration
                 }
                 if (currentSummary != null && status < worstStatus)
                 {
-                    currentSummary.ProgressStatus = GetOverallStatusFromStatuscode(status);
+                    currentSummary.ProgressStatus = GetOverallStatusFromStatuscode(status, scheduled);
                     currentSummary.Status = currentSummary.ProgressStatus.ToString();
                     worstStatus = status;
                 }
@@ -482,7 +583,7 @@ namespace com.ums.ws.integration
         /// </summary>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        private AlertOverallStatus GetOverallStatusFromStatuscode(int alertStatusCode)
+        private AlertOverallStatus GetOverallStatusFromStatuscode(int alertStatusCode, DateTime scheduled)
         {
             switch (alertStatusCode)
             {
@@ -492,7 +593,9 @@ namespace com.ums.ws.integration
                 case 3:
                 case 4:
                 case 5:
-                    return AlertOverallStatus.SCHEDULED;
+                    if(scheduled > DateTime.Now)
+                        return AlertOverallStatus.SCHEDULED;
+                    return AlertOverallStatus.IN_PROGRESS;
                 case 6:
                     return AlertOverallStatus.IN_PROGRESS;
                 case 7:
