@@ -559,6 +559,14 @@ namespace com.ums.pas.integration
             set { _eierId = value; }
         }
 
+        private int _dateOfBirth;
+
+        public int DateOfBirth
+        {
+            get { return _dateOfBirth; }
+            set { _dateOfBirth = value; }
+        }
+
 
         public NorwayEierStatusKode EierStatusKode
         {
