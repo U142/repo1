@@ -42,7 +42,11 @@ namespace com.ums.pas.integration.AddressLookup
         #region Impl_TempTbl
         public List<RecipientData> GetMatchingStreetAddressesUsingTempTbl(List<StreetAddress> streetAddresses)
         {
-            //List<string> numbers = new List<string>();
+            if (streetAddresses.Count == 0)
+            {
+                log.Info("No street addresses listed");
+                return new List<RecipientData>();
+            }
             List<RecipientData> recipients = new List<RecipientData>();
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
@@ -53,7 +57,7 @@ namespace com.ums.pas.integration.AddressLookup
                 Connection.Open();
 
                 start = DateTime.Now;
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5))";
+                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5) COLLATE Latin1_General_100_CI_AI)";
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
@@ -87,7 +91,7 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 int mobilePhones = 0;
                 int fixedPhones = 0;
 
@@ -139,6 +143,7 @@ namespace com.ums.pas.integration.AddressLookup
                 }
 
                 log.InfoFormat("Found {0} recipients living on {1} StreetAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, streetAddresses.Count, mobilePhones, fixedPhones);
+
 
                 duration = DateTime.Now - start;
                 log.InfoFormat("Select took {0:0} ms", duration.TotalMilliseconds);
