@@ -91,7 +91,21 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                Command.CommandText = "SELECT DISTINCT "
+                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
+                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
+                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
+                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                    + ",ISNULL(FR.NAVN,'') NAVN "
+                                    + ",ISNULL(FR.LAT,0) LAT "
+                                    + ",ISNULL(FR.LON,0) LON "
+                                    + ",ISNULL(FR.BEDRIFT,0) BEDRIFT "
+                                    + ",ISNULL(FR.ADRESSE,'') ADRESSE "
+                                    + ",ISNULL(FR.POSTNR,0) POSTNR "
+                                    + ",ISNULL(FR.POSTSTED,'') POSTSTED "
+                                    + ",ISNULL(FR.MOBIL,'') MOBIL "
+                                    + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                    + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 int mobilePhones = 0;
                 int fixedPhones = 0;
 
@@ -114,7 +128,7 @@ namespace com.ums.pas.integration.AddressLookup
                                 Lat = rs.IsDBNull(rs.GetOrdinal("LON")) ? 0 : rs.GetDouble(rs.GetOrdinal("LON")),
                                 Company = (rs.GetInt16(rs.GetOrdinal("BEDRIFT")) == 1),
                                 Address = rs.GetString(rs.GetOrdinal("ADRESSE")),
-                                Postno = Int32.Parse(rs.GetString(rs.GetOrdinal("POSTNR"))),
+                                Postno = rs.GetInt32(rs.GetOrdinal("POSTNR")),
                                 PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
 
                             };
