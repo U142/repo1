@@ -130,13 +130,23 @@ namespace com.ums.pas.integration
                 recipientDataList.AddRange(propertyLookup);
             }
 
-            using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            try
             {
-                IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
-                IEnumerable<RecipientData> ownerLookup = ownerLookupInterface.GetMatchingOwnerAddresses(
-                                                                                    NorwayDatabaseConnectionString,
-                                                                                    Payload.AlertTargets.OfType<OwnerAddress>().ToList());
-                recipientDataList.AddRange(ownerLookup);
+                //TODO - remove this try catch and implement other way of verifying owner address support.
+                //if full text search is not activated on right database/view, this will crash.
+                using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
+                    IEnumerable<RecipientData> ownerLookup = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                        FolkeregDatabaseConnectionString,
+                                                                                        Payload.AlertTargets.OfType<OwnerAddress>().ToList());
+                    recipientDataList.AddRange(ownerLookup);
+                }
+            }
+            catch (Exception e)
+            {
+                log.ErrorFormat("Error looking up owner address with error {0}", e.Message);
+                ULog.error("Error looking up owner address with error {0}", e.ToString());
             }
 
 
@@ -358,7 +368,7 @@ namespace com.ums.pas.integration
                 {
                 }
                 
-                int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0;
+                int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0, birthdate = 0;
                 String municipalid = "0", letter = "", oppgang = "", data = "", externalId = "";
                 if (recipient.AlertTarget is StreetAddress)
                 {
@@ -381,7 +391,17 @@ namespace com.ums.pas.integration
                 else if (recipient.AlertTarget is OwnerAddress)
                 {
                     // TODO: insert alert target data
-
+                    OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
+                    birthdate = ownerAddress.DateOfBirth;
+                    postnr = ownerAddress.Postnr;
+                    data = 
+                                ownerAddress.Adresselinje1 
+                        + "|" + ownerAddress.Adresselinje2 
+                        + "|" + ownerAddress.Adresselinje3 
+                        + "|" + ownerAddress.EierIdKode.ToString() 
+                        + "|" + ownerAddress.EierKategoriKode.ToString() 
+                        + "|" + ownerAddress.EierStatusKode.ToString();
+                    externalId = ownerAddress.EierId.ToString();
                 }
                 else if (recipient.AlertTarget is AlertObject)
                 {
@@ -400,7 +420,7 @@ namespace com.ums.pas.integration
                     customAttributes.Append("|");
                 }
 
-                String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', '{16}', '{17}'",
+                String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', '{18}'",
                                             AlertId.Id,
                                             recipient.Company ? "1" : "0",
                                             recipient.Name,
@@ -417,6 +437,7 @@ namespace com.ums.pas.integration
                                             unr,
                                             postnr,
                                             data,
+                                            birthdate,
                                             customAttributes.ToString(),
                                             externalId);
 

@@ -35,6 +35,11 @@ namespace com.ums.pas.integration.AddressLookup
         #region Impl_TempTbl
         public List<RecipientData> GetMatchingPropertyAddressesUsingTempTbl(List<PropertyAddress> propertyAddresses)
         {
+            if (propertyAddresses.Count == 0)
+            {
+                log.Info("No property addresses listed");
+                return new List<RecipientData>();
+            }
             List<RecipientData> recipients = new List<RecipientData>();
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
@@ -83,7 +88,7 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_KONSUM FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
+                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
                 //TODO: add filter for fnr and unr
                 int mobilePhones = 0;
                 int fixedPhones = 0;
