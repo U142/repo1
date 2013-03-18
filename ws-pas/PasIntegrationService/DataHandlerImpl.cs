@@ -77,8 +77,10 @@ namespace com.ums.pas.integration
         public void HandleAlert(AlertMqPayload Payload)
         {
             //PasIntegrationService.Default.DatabaseConnection
-            String FolkeregDatabaseConnectionString = String.Format("DSN=vb_adr_{0}_reg; UID=sa; PWD=diginform", Payload.AccountDetails.StdCc);
-            String NorwayDatabaseConnectionString = String.Format("DSN=vb_adr_{0}; UID=sa; PWD=diginform", Payload.AccountDetails.StdCc);
+            String folkeregConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_folkereg"].ConnectionString;
+            String regularConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_regular"].ConnectionString;
+            String FolkeregDatabaseConnectionString = String.Format(folkeregConfig, Payload.AccountDetails.StdCc);
+            String NorwayDatabaseConnectionString = String.Format(regularConfig, Payload.AccountDetails.StdCc);
 
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
@@ -128,10 +130,15 @@ namespace com.ums.pas.integration
                 recipientDataList.AddRange(propertyLookup);
             }
 
-            foreach (OwnerAddress ownerAddress in Payload.AlertTargets.OfType<OwnerAddress>())
+            using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
-
+                IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
+                IEnumerable<RecipientData> ownerLookup = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                    NorwayDatabaseConnectionString,
+                                                                                    Payload.AlertTargets.OfType<OwnerAddress>().ToList());
+                recipientDataList.AddRange(ownerLookup);
             }
+
 
             //now we have all data
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
@@ -374,6 +381,7 @@ namespace com.ums.pas.integration
                 else if (recipient.AlertTarget is OwnerAddress)
                 {
                     // TODO: insert alert target data
+
                 }
                 else if (recipient.AlertTarget is AlertObject)
                 {
