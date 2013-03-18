@@ -35,7 +35,6 @@ namespace com.ums.pas.integration.AddressLookup
         #region Impl_TempTbl
         public List<RecipientData> GetMatchingPropertyAddressesUsingTempTbl(List<PropertyAddress> propertyAddresses)
         {
-            //List<string> numbers = new List<string>();
             List<RecipientData> recipients = new List<RecipientData>();
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
