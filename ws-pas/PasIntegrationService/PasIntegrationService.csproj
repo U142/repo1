@@ -118,7 +118,9 @@
     <Compile Include="TtsFacadeImpl.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PasIntegrationService_TemporaryKey.pfx" />
   </ItemGroup>
   <!--<ItemGroup Condition=" '$(Configuration)' == 'Debug' ">

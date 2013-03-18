@@ -370,7 +370,7 @@ namespace com.ums.ws.integration
 
 
         [WebMethod]
-        public LogSummary TestGetAlertLog()
+        public LogSummary TestGetAlertLog(long Projectpk)
         {
             return GetAlertLog(new Account()
             {
@@ -378,7 +378,7 @@ namespace com.ums.ws.integration
                 DepartmentId = "DEVELOPMENT",
                 Password = "ums123",
             },
-            new AlertId(208));
+            new AlertId(Projectpk));
         }
 
         /// <summary>
@@ -412,35 +412,72 @@ namespace com.ums.ws.integration
             logonInfo.l_deptpk, AlertId.Id);
             using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
             {
-                int startAt = -1;//set to -2 as it's zero index
-
                 long prevProjectpk = -1;
-                LogSummary currentSummary = null;
+                LogSummary currentSummary = new LogSummary();
                 int worstStatus = 8;
-                int SmsItems = 0;
-                int VoiceItems = 0;
-                int SmsProc = 0;
                 int VoiceProc = 0;
-                int endAt = -1;
                 while (rs.Read())
                 {
                     long projectPk = rs.GetInt64(0);
+                    if (!prevProjectpk.Equals(projectPk))
+                    {
+                        worstStatus = 8;
+                        currentSummary = new LogSummary()
+                        {
+                            AlertId = new AlertId(rs.GetInt64(0)),
+                            Exercise = rs.GetByte(5) != 1,
+                            Title = rs.GetString(1),
+                        };
+                    }
+
+
                     SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
                     int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
-                    SmsProc += rs.GetInt32(8);
-                    SmsItems += rs.GetInt32(9);
-                    VoiceProc += rs.GetInt32(10);
-                    VoiceItems += rs.GetInt32(11);
+                    
 
                     int createDate = rs.GetInt32(12);
                     int createTime = rs.GetInt32(13);
                     int schedDate = rs.GetInt32(3);
                     int schedTime = rs.GetInt32(4);
-                    bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
+                    int refno = rs.GetInt32(14);
+                    bool isProcessing = refno > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
                     if (!isProcessing)
                     {
                         status = 1;
                     }
+
+                    UmsDb dbCount = new UmsDb();
+                    if (type.Equals(SendChannel.SMS))
+                    {
+                        currentSummary.SmsSent += rs.GetInt32(8);
+                        currentSummary.SmsTotal += rs.GetInt32(9);
+                        IDictionary<int, int> smsDeliveryStatus = dbCount.GetNumberOfSmsBasedOnDst(refno);
+                        if (smsDeliveryStatus.ContainsKey(0))
+                        {
+                            currentSummary.SmsReceived = smsDeliveryStatus[0];
+                        }
+                    }
+                    else if (type.Equals(SendChannel.VOICE))
+                    {
+                        VoiceProc += rs.GetInt32(10);
+                        currentSummary.VoiceTotal += rs.GetInt32(11);
+                        IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno, "3002", "169,177");
+                        if (voiceDeliveryStatus.ContainsKey(0))
+                        {
+                            currentSummary.VoiceAnswered = voiceDeliveryStatus[0];
+                        }
+                        if (voiceDeliveryStatus.ContainsKey(2))
+                        {
+                            currentSummary.VoiceUnanswered = voiceDeliveryStatus[2];
+                        }
+                        if (voiceDeliveryStatus.ContainsKey(3))
+                        {
+                            currentSummary.VoiceConfirmed = voiceDeliveryStatus[3];
+                        }
+                    }
+                    dbCount.close();
+
+
 
                     String schedStr = String.Format("{0:D8}{1:D4}", schedDate > 0 ? schedDate : createDate, schedDate > 0 ? schedTime : createTime);
                     DateTime scheduled = new DateTime();
@@ -455,18 +492,7 @@ namespace com.ums.ws.integration
                             scheduled = DateTime.ParseExact(String.Format("{0:D8}{1:D4}", createDate, createTime), "yyyyMMddHHmm", System.Globalization.CultureInfo.InvariantCulture);
                         }
                     }
-
-                    if (!prevProjectpk.Equals(projectPk))
-                    {
-                        worstStatus = 8;
-                        currentSummary = new LogSummary()
-                        {
-                            AlertId = new AlertId(rs.GetInt64(0)),
-                            Exercise = rs.GetByte(5) != 1,
-                            StartDateTime = scheduled,
-                            Title = rs.GetString(1),
-                        };
-                    }
+                    currentSummary.StartDateTime = scheduled;
                     if (currentSummary != null && status < worstStatus)
                     {
                         currentSummary.ProgressStatus = GetOverallStatusFromStatuscode(status, scheduled);

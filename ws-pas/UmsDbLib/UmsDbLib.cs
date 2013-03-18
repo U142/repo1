@@ -118,6 +118,58 @@ namespace com.ums.UmsDbLib
             return listOfNumbers;
         }
 
+        /// <summary>
+        /// Select delivery status on sms on a specified refno
+        /// Deliverystatus:
+        /// 0 = delivered
+        /// 1 = in proc
+        /// 2 = failed
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <returns></returns>
+        public IDictionary<int, int> GetNumberOfSmsBasedOnDst(int Refno)
+        {
+            Dictionary<int, int> ret = new Dictionary<int, int>();
+            String Sql = String.Format("SELECT isnull(l_dst,-1), isnull(count(*),0) FROM SMSHIST WHERE l_refno={0} GROUP BY l_dst", Refno);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                while (rs.Read())
+                {
+                    ret.Add(rs.GetInt32(0), rs.GetInt32(1));
+                }
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Select delivery status on voice on a specified refno
+        /// Deliverystatus
+        /// 0 = delivered ok (item in bbhist)
+        /// 1 = in proc
+        /// 2 = failed
+        /// 3 = delivered ok and confirmed status code (item in bbhist with confirmedStatusCode
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <param name="ConfirmedStatusCode"></param>
+        /// <returns></returns>
+        public IDictionary<int, int> GetNumberOfVoiceBasedOnDst(int Refno, String ConfirmedStatusCodes, String NoAnswerCodes)
+        {
+            Dictionary<int, int> ret = new Dictionary<int, int>();
+            String Sql = String.Format("SELECT l_dst=0, count(*) FROM BBHIST WHERE l_refno={0} AND l_status NOT IN ({1},{2}) "
+                                        + "UNION "
+                                        + "SELECT l_dst=3, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({1}) "
+                                        + "UNION "
+                                        + "SELECT l_dst=2, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({2}) ",
+                                        Refno, ConfirmedStatusCodes, NoAnswerCodes);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                while (rs.Read())
+                {
+                    ret.Add(rs.GetInt32(0), rs.GetInt32(1));
+                }
+            }
+            return ret;
+        }
 
         /// <summary>
         /// Get default langpk for TTS per department.
