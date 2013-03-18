@@ -155,11 +155,13 @@ namespace com.ums.UmsDbLib
         public IDictionary<int, int> GetNumberOfVoiceBasedOnDst(int Refno, String ConfirmedStatusCodes, String NoAnswerCodes)
         {
             Dictionary<int, int> ret = new Dictionary<int, int>();
-            String Sql = String.Format("SELECT l_dst=0, count(*) FROM BBHIST WHERE l_refno={0} AND l_status NOT IN ({1},{2}) "
+            String Sql = String.Format(
+                                        "SELECT l_dst=0, count(*) FROM BBHIST WHERE l_refno={0} AND l_status NOT IN {1} AND l_status>=3000 "
                                         + "UNION "
                                         + "SELECT l_dst=3, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({1}) "
                                         + "UNION "
                                         + "SELECT l_dst=2, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({2}) ",
+                                        
                                         Refno, ConfirmedStatusCodes, NoAnswerCodes);
             using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
             {

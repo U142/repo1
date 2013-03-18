@@ -29,7 +29,7 @@ namespace com.ums.pas.integration.AddressLookup
                 Connection.Open();
                 //Command.CommandText = string.Format("SELECT TELEFON FROM ADR_KONSUMENT_201320105 WHERE POSTNR=? and HUSNR=?");// and CONTAINS(NAVN, ?)");
                 //Command.CommandText = string.Format("SELECT TELEFON FROM ADR_KONSUM WHERE HUSNR=? and CONTAINS(NAVN, ?)");
-                Command.CommandText = string.Format("SELECT * FROM ADR_KONSUM WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
+                Command.CommandText = string.Format("SELECT * FROM ADR_KONSUM_SEARCH WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
                 Command.Parameters.Add("postnr", OdbcType.Int);
                 Command.Parameters.Add("husnr", OdbcType.Int);
                 Command.Parameters.Add("search", OdbcType.VarChar);
