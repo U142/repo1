@@ -175,7 +175,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get status of a previously sent alert.</b>")]
         public LogSummary GetAlertLog(Account Account, AlertId AlertId)
         {
-            new Integration().GetAlertLog(Account, AlertId);
+            return new Integration().GetAlertLog(Account, AlertId);
         }
 
         /// <summary>

@@ -396,7 +396,7 @@ namespace com.ums.ws.integration
                 int startAt = -1;//set to -2 as it's zero index
 
                 long prevProjectpk = -1;
-                AlertSummary currentSummary = null;
+                LogSummary currentSummary = null;
                 int worstStatus = 8;
                 int SmsItems = 0;
                 int VoiceItems = 0;
@@ -440,7 +440,7 @@ namespace com.ums.ws.integration
                     if (!prevProjectpk.Equals(projectPk))
                     {
                         worstStatus = 8;
-                        currentSummary = new AlertSummary()
+                        currentSummary = new LogSummary()
                         {
                             AlertId = new AlertId(rs.GetInt64(0)),
                             Exercise = rs.GetByte(5) != 1,
@@ -457,9 +457,9 @@ namespace com.ums.ws.integration
 
                     prevProjectpk = projectPk;
                 }
+                return currentSummary;
             }
-
-            return currentSummary;
+            throw new Exception("Alert Log not found for the specified AlertId");
 
         }
 
