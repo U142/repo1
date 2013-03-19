@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Net;
 using System.Xml;
@@ -197,8 +198,8 @@ namespace com.ums.PAS.Address.gab
             if(m_params.sz_country.Equals("SE")) {
                 sz_server = "http://maps.metria.se/geokodning/Geocode";
                 sz_params = "address=" + m_params.sz_address + " " + m_params.sz_no + ", " +
-                                    m_params.sz_postno + " " + m_params.sz_postarea +
-                                    ", Sverige&scheme=adress_WGS84";
+                                    m_params.sz_postno + " " + m_params.sz_postarea + " " +
+                                    m_params.sz_region + ", Sverige&scheme=adress_WGS84";
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("umsas:Zyl00pon"));
 
             } else {
@@ -394,11 +395,20 @@ namespace com.ums.PAS.Address.gab
             {
                 node = (XmlNode)en.Current;
                 String[] address = node.Attributes["address"].Value.Split(',');
+                address = removeLeadingTrailingSpaces(address);
                 item = new UGabResult();
                 item.match = float.Parse(node.Attributes["rank"].Value, UCommon.UGlobalizationInfo);
                 item.name = address[0];
                 item.postno = address.Length > 2 ? tryParsePostNo(address[(address.Length - 2)])[0] : ""; // 2nd to last
-                item.region = address.Length > 2 ? tryParsePostNo(address[(address.Length - 2)])[1] : address.Length > 1 ? address[0] : "";
+                try
+                {
+                    item.region = address.Length > 2 ? tryParsePostNo(address[(address.Length - 2)])[1] : address.Length > 1 ? address[0] : "";
+                }
+                catch (Exception e)
+                {
+                    item.region = address[(address.Length - 2)];
+                }
+
                 item.lon = float.Parse(node.Attributes["x"].Value, UCommon.UGlobalizationInfo);
                 item.lat = float.Parse(node.Attributes["y"].Value, UCommon.UGlobalizationInfo);
                 item.type = GABTYPE.Street;
@@ -410,10 +420,12 @@ namespace com.ums.PAS.Address.gab
             return list;
 
         }
-        
+
         private String[] tryParsePostNo(String postNoRegion)
         {
             String[] address = postNoRegion.Split(' ');
+            address = removeLeadingTrailingSpaces(address);
+
             if (address.Length > 1)
             {
                 int postno;
@@ -426,6 +438,15 @@ namespace com.ums.PAS.Address.gab
                 {
                     address[0] = "";
                 }
+            }
+            return address;
+        }
+
+        private String[] removeLeadingTrailingSpaces(String[] address)
+        {
+            for (int i = 0; i < address.Length; i++)
+            {
+                address[i] = address[i].Trim();
             }
             return address;
         }

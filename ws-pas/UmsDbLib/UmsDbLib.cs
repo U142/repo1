@@ -1055,6 +1055,22 @@ namespace com.ums.UmsDbLib
             return n_ret;
         }
 
+        /// <summary>
+        /// Create a new command, ensure to dispose it
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public OdbcCommand CreateCommand(String s)
+        {
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            OdbcCommand cmd = conn.CreateCommand();
+            cmd.CommandTimeout = timeout;
+            cmd.CommandText = s;
+            return cmd;
+           
+        }
+
         public OdbcCommand CreateCommand(String s, int OPENMODE)
         {
             if (!m_b_dbconn)
