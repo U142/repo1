@@ -504,6 +504,8 @@ namespace com.ums.ws.integration
                         worstStatus = status;
                     }
 
+                    currentSummary.Errors = GetErrors(projectPk);
+
                     prevProjectpk = projectPk;
                 }
                 return currentSummary;
@@ -675,7 +677,65 @@ namespace com.ums.ws.integration
         }
 
 
+        private List<LogLine> GetErrors(long alertPk)
+        {
+            List<LogLine> errorList = new List<LogLine>();
 
+            UmsDb db = new UmsDb();
 
+            string sql = String.Format(@"select
+	                                        'VOICE' type,
+	                                        BH.sz_number,
+	                                        BH.l_status,
+	                                        SC.sz_status sz_text
+                                        from 
+	                                        BBPROJECT_X_REFNO BP
+	                                        INNER JOIN MDVSENDINGINFO MI ON
+		                                        MI.l_refno=BP.l_refno and
+		                                        MI.l_type=1
+	                                        INNER JOIN BBHIST BH ON
+		                                        BH.l_refno=MI.l_refno
+	                                        INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
+		                                        BH.l_status=SC.l_status
+		                                        and SC.l_type=4
+                                        where
+	                                        BP.l_projectpk = {0}
+                                        union select
+	                                        'SMS' type,
+	                                        SH.sz_number,
+	                                        SH.l_status,
+	                                        SC.sz_text sz_text
+                                        from 
+	                                        BBPROJECT_X_REFNO BP
+	                                        INNER JOIN MDVSENDINGINFO MI ON
+		                                        MI.l_refno=BP.l_refno and
+		                                        MI.l_type=2
+	                                        INNER JOIN SMSHIST SH ON
+		                                        SH.l_refno=MI.l_refno and
+		                                        SH.l_dst=2
+	                                        INNER JOIN SMSSTATUSCODES SC ON
+		                                        SC.l_status=SH.l_status
+                                        where
+	                                        BP.l_projectpk = {0}", alertPk);
+
+            using (OdbcDataReader rs = db.ExecReader(sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                while (rs.Read())
+                {
+                    bool canReceiveSms = false;
+                    if (rs.GetString(rs.GetOrdinal("type")) == "SMS")
+                        canReceiveSms = true;
+
+                    LogLine line = new LogLine();
+                    line.EndPoint = new Phone() { Address = rs.GetString(rs.GetOrdinal("sz_number")), CanReceiveSms = canReceiveSms };
+                    line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
+                    line.StatusText = rs.GetString(rs.GetOrdinal("sz_text"));
+
+                    errorList.Add(line);
+                }
+            }
+
+            return errorList;
+        }
     }
 }
