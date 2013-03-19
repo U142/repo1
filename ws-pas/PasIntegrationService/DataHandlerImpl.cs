@@ -358,16 +358,16 @@ namespace com.ums.pas.integration
             {
                 cmd.Parameters.Add("l_refno", OdbcType.Int);
                 cmd.Parameters.Add("l_item", OdbcType.Int);
-                cmd.Parameters.Add("sz_fields", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_fields", OdbcType.VarChar, 1000);
                 cmd.Parameters.Add("l_adrpk2", OdbcType.Int);
                 cmd.Parameters.Add("l_adrpk", OdbcType.Numeric);
                 cmd.Parameters.Add("l_xcoord", OdbcType.Int);
                 cmd.Parameters.Add("l_ycoord", OdbcType.Int);
-                cmd.Parameters.Add("sz_adrinfo", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_adrinfo", OdbcType.VarChar, 255);
                 cmd.Parameters.Add("l_lon", OdbcType.Double);
                 cmd.Parameters.Add("l_lat", OdbcType.Double);
-                cmd.Parameters.Add("sz_pin1", OdbcType.VarChar);
-                cmd.Parameters.Add("sz_pin2", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_pin1", OdbcType.VarChar, 10);
+                cmd.Parameters.Add("sz_pin2", OdbcType.VarChar, 10);
                 cmd.Parameters.Add("l_prioritized", OdbcType.TinyInt);
 
                 foreach (RecipientData data in recipientData)
@@ -404,23 +404,23 @@ namespace com.ums.pas.integration
             {
                 cmd.Parameters.Add("projectpk", OdbcType.Numeric);
                 cmd.Parameters.Add("company", OdbcType.Int);
-                cmd.Parameters.Add("Name", OdbcType.VarChar);
+                cmd.Parameters.Add("Name", OdbcType.VarChar, 50);
                 cmd.Parameters.Add("alertTarget", OdbcType.Int);
                 cmd.Parameters.Add("municipalId", OdbcType.Int);
                 cmd.Parameters.Add("streetId", OdbcType.Int);
                 cmd.Parameters.Add("houseNo", OdbcType.Int);
-                cmd.Parameters.Add("houseLetter", OdbcType.VarChar);
-                cmd.Parameters.Add("oppgang", OdbcType.VarChar);
+                cmd.Parameters.Add("houseLetter", OdbcType.VarChar, 5);
+                cmd.Parameters.Add("oppgang", OdbcType.VarChar, 5);
                 cmd.Parameters.Add("gnr", OdbcType.Int);
                 cmd.Parameters.Add("bnr", OdbcType.Int);
                 cmd.Parameters.Add("fnr", OdbcType.Int);
                 cmd.Parameters.Add("snr", OdbcType.Int);
                 cmd.Parameters.Add("unr", OdbcType.Int);
                 cmd.Parameters.Add("postnr", OdbcType.Int);
-                cmd.Parameters.Add("data", OdbcType.VarChar);
+                cmd.Parameters.Add("data", OdbcType.VarChar, 1000);
                 cmd.Parameters.Add("birthdate", OdbcType.Int);
-                cmd.Parameters.Add("attr", OdbcType.VarChar);
-                cmd.Parameters.Add("extid", OdbcType.VarChar);
+                cmd.Parameters.Add("attr", OdbcType.VarChar, 8000);
+                cmd.Parameters.Add("extid", OdbcType.VarChar, 50);
 
                 foreach (RecipientData recipient in recipientData)
                 {
@@ -559,7 +559,7 @@ namespace com.ums.pas.integration
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
                 cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("sz_number", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_number", OdbcType.VarChar, 20);
                 cmd.Parameters["l_refno"].Value = Refno;
                 cmd.Parameters["sz_number"].Value = Number;
                 cmd.ExecuteNonQuery();
@@ -627,8 +627,8 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("l_tries", OdbcType.Int);
                 cmd.Parameters.Add("l_chanid", OdbcType.Int);
                 cmd.Parameters.Add("l_schedtime", OdbcType.Numeric);
-                cmd.Parameters.Add("sz_referenceid", OdbcType.VarChar);
-                cmd.Parameters.Add("sz_number", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_referenceid", OdbcType.VarChar, 20);
+                cmd.Parameters.Add("sz_number", OdbcType.VarChar, 22);
                 cmd.Parameters.Add("l_adrpk", OdbcType.Numeric);
                 cmd.Parameters.Add("l_concatproc", OdbcType.TinyInt);
 
@@ -698,16 +698,16 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("l_schedtime", OdbcType.Numeric);
                 cmd.Parameters.Add("l_priserver", OdbcType.Int);
                 cmd.Parameters.Add("l_altservers", OdbcType.Int);
-                cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar);
-                cmd.Parameters.Add("sz_oadc", OdbcType.VarChar);
-                cmd.Parameters.Add("sz_descriptor", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar, 20);
+                cmd.Parameters.Add("sz_oadc", OdbcType.VarChar, 22);
+                cmd.Parameters.Add("sz_descriptor", OdbcType.VarChar, 100);
                 cmd.Parameters.Add("f_simulation", OdbcType.Int);
                 cmd.Parameters.Add("l_parentrefno", OdbcType.Int);
                 cmd.Parameters.Add("l_expecteditems", OdbcType.Int);
-                cmd.Parameters.Add("sz_text", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_text", OdbcType.VarChar, 765);
                 cmd.Parameters.Add("l_fromapplication", OdbcType.Int);
                 cmd.Parameters.Add("l_group", OdbcType.Int);
-                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10);
                 cmd.Parameters.Add("l_lastantsep", OdbcType.Int);
                 cmd.Parameters.Add("l_addresspos", OdbcType.Int);
                 cmd.Parameters.Add("l_createdate", OdbcType.Int);
@@ -715,7 +715,7 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("l_userpk", OdbcType.Numeric);
                 cmd.Parameters.Add("l_nofax", OdbcType.Int);
                 cmd.Parameters.Add("l_removedup", OdbcType.Int);
-                cmd.Parameters.Add("sz_stdcc", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_stdcc", OdbcType.VarChar, 6);
                 cmd.Parameters.Add("l_addresstypes", OdbcType.Int);
                 cmd.Parameters.Add("f_dynacall", OdbcType.Int);
 
