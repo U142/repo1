@@ -432,9 +432,12 @@ namespace com.ums.pas.integration
                     externalId = ((AlertObject)recipient.AlertTarget).ExternalId;
                 }
 
-
+                if (municipalid == null || municipalid.Length == 0)
+                {
+                    municipalid = "0";
+                }
                 // build attribute string, pipe-separated key=value pairs
-                StringBuilder customAttributes = new StringBuilder();
+                StringBuilder customAttributes = new StringBuilder("");
                 foreach (DataItem attribute in recipient.AlertTarget.Attributes)
                 {
                     customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
@@ -443,7 +446,7 @@ namespace com.ums.pas.integration
                     customAttributes.Append("|");
                 }
 
-                String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', '{18}'",
+                /*String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', {18}",
                                             AlertId.Id,
                                             recipient.Company ? "1" : "0",
                                             recipient.Name,
@@ -462,24 +465,74 @@ namespace com.ums.pas.integration
                                             data.Replace("'", "''"),
                                             birthdate,
                                             customAttributes.ToString().Replace("'", "''"),
-                                            externalId.Replace("'", "''"));
+                                            externalId != null ? String.Format("'{0}'", externalId.Replace("'", "''")) : "NULL");*/
+                String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
                 long alertSourcePk = -1;
-                using (OdbcDataReader rs = Database.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+                using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
                 {
-                    if (rs.Read())
+                    cmd.Parameters.Add("projectpk", OdbcType.Numeric);
+                    cmd.Parameters.Add("company", OdbcType.Int);
+                    cmd.Parameters.Add("Name", OdbcType.VarChar);
+                    cmd.Parameters.Add("alertTarget", OdbcType.Int);
+                    cmd.Parameters.Add("municipalId", OdbcType.Int);
+                    cmd.Parameters.Add("streetId", OdbcType.Int);
+                    cmd.Parameters.Add("houseNo", OdbcType.Int);
+                    cmd.Parameters.Add("houseLetter", OdbcType.VarChar);
+                    cmd.Parameters.Add("oppgang", OdbcType.VarChar);
+                    cmd.Parameters.Add("gnr", OdbcType.Int);
+                    cmd.Parameters.Add("bnr", OdbcType.Int);
+                    cmd.Parameters.Add("fnr", OdbcType.Int);
+                    cmd.Parameters.Add("snr", OdbcType.Int);
+                    cmd.Parameters.Add("unr", OdbcType.Int);
+                    cmd.Parameters.Add("postnr", OdbcType.Int);
+                    cmd.Parameters.Add("data", OdbcType.VarChar);
+                    cmd.Parameters.Add("birthdate", OdbcType.Int);
+                    cmd.Parameters.Add("attr", OdbcType.VarChar);
+                    cmd.Parameters.Add("extid", OdbcType.VarChar);
+
+                    cmd.Parameters["projectpk"].Value = AlertId.Id;
+                    cmd.Parameters["company"].Value = recipient.Company ? 1 : 0;
+                    cmd.Parameters["Name"].Value = recipient.Name;
+                    cmd.Parameters["alertTarget"].Value = AlertTarget.DiscriminatorValue(recipient.AlertTarget);
+                    cmd.Parameters["municipalId"].Value = Int32.Parse(municipalid);
+                    cmd.Parameters["streetId"].Value = streetid;
+                    cmd.Parameters["houseNo"].Value = houseno;
+                    cmd.Parameters["houseLetter"].Value = letter;
+                    cmd.Parameters["oppgang"].Value = oppgang;
+                    cmd.Parameters["gnr"].Value = gnr;
+                    cmd.Parameters["bnr"].Value = bnr;
+                    cmd.Parameters["fnr"].Value = fnr;
+                    cmd.Parameters["snr"].Value = snr;
+                    cmd.Parameters["unr"].Value = unr;
+                    cmd.Parameters["postnr"].Value = postnr;
+                    cmd.Parameters["data"].Value = data;
+                    cmd.Parameters["birthdate"].Value = birthdate;
+                    cmd.Parameters["attr"].Value = customAttributes.ToString();
+                    cmd.Parameters["extid"].Value = externalId == null ? (object)DBNull.Value : externalId;
+                    using (OdbcDataReader rs = cmd.ExecuteReader())
                     {
-                        alertSourcePk = rs.GetInt64(0);
+                        if (rs.Read())
+                        {
+                            alertSourcePk = rs.GetInt64(0);
+                        }
                     }
                 }
+
                 //insert alert links
                 foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
                 {
-                    Sql = String.Format("INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES({0},{1},{2})",
-                                            alertSourcePk,
-                                            alertLink.Refno,
-                                            alertLink.Item);
-                    Database.ExecNonQuery(Sql);
+                    Sql = "INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES(?,?,?)";
+                    using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
+                    {
+                        cmd.Parameters.Add("alertSourcePk", OdbcType.Numeric);
+                        cmd.Parameters.Add("refno", OdbcType.Int);
+                        cmd.Parameters.Add("item", OdbcType.Int);
+                        cmd.Parameters["alertSourcePk"].Value = alertSourcePk;
+                        cmd.Parameters["refno"].Value = alertLink.Refno;
+                        cmd.Parameters["item"].Value = alertLink.Item;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             
             }

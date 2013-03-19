@@ -81,7 +81,7 @@ namespace com.ums.pas.integration.AddressLookup
                     }
                     else
                     {
-                        log.InfoFormat("Failed to get kommunenr from {0}", sa);
+                        log.WarnFormat("Failed to get kommunenr from {0}", sa);
                     }
                 }
                 duration = DateTime.Now - start;
@@ -102,9 +102,13 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.POSTSTED,'') POSTSTED "
                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                    + ",ISNULL(FR.GNR,0) GNR "
+                                    + ",ISNULL(FR.BNR,0) BNR "
+                                    + ",ISNULL(FR.FNR,0) FNR "
+                                    + ",ISNULL(FR.UNR,0) UNR "
                                     + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
-                                    + "AND FR.GNR=SA.GNR "
-                                    + "AND FR.BNR=SA.BNR "
+                                    + "AND ISNULL(FR.GNR,0)=SA.GNR "
+                                    + "AND ISNULL(FR.BNR,0)=SA.BNR "
                                     + "AND ISNULL(FR.FNR,0)=SA.FNR "
                                     + "AND ISNULL(FR.UNR,0)=SA.UNR ";
 
@@ -112,7 +116,7 @@ namespace com.ums.pas.integration.AddressLookup
                 int mobilePhones = 0;
                 int fixedPhones = 0;
                 using (OdbcDataReader rs = Command.ExecuteReader())
-                {
+                { 
                     while (rs.Read())
                     {
                         if (!rs.IsDBNull(0))
@@ -122,8 +126,8 @@ namespace com.ums.pas.integration.AddressLookup
                                 AlertTarget = new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(),
                                                                     rs.GetInt32(rs.GetOrdinal("GNR")),
                                                                     rs.GetInt32(rs.GetOrdinal("BNR")),
-                                                                    0,
-                                                                    0),
+                                                                    rs.GetInt32(rs.GetOrdinal("FNR")),
+                                                                    rs.GetInt32(rs.GetOrdinal("UNR"))),
                                 Name = rs.GetString(rs.GetOrdinal("NAVN")),
                                 Endpoints = new List<Endpoint>(),
                                 Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),

@@ -84,7 +84,7 @@ namespace com.ums.pas.integration.AddressLookup
                     }
                     else
                     {
-                        log.InfoFormat("Failed to get kommunenr from {0}", sa);
+                        log.WarnFormat("Failed to get kommunenr from {0}", sa);
                     }
                 }
                 duration = DateTime.Now - start;
