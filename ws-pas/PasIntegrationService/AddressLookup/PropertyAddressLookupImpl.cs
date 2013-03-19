@@ -74,8 +74,8 @@ namespace com.ums.pas.integration.AddressLookup
                         Command.Parameters["knr"].Value = sa.MunicipalCode;
                         Command.Parameters["gnr"].Value = sa.Gnr;
                         Command.Parameters["bnr"].Value = sa.Bnr;
-                        Command.Parameters["fnr"].Value = 0;
-                        Command.Parameters["unr"].Value = 0;
+                        Command.Parameters["fnr"].Value = sa.Fnr;
+                        Command.Parameters["unr"].Value = sa.Unr;
 
                         Command.ExecuteNonQuery();
                     }
@@ -88,7 +88,26 @@ namespace com.ums.pas.integration.AddressLookup
                 log.InfoFormat("Insert to temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "SELECT DISTINCT * FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND FR.GNR=SA.GNR AND FR.BNR=SA.BNR"; 
+                Command.CommandText = "SELECT DISTINCT "
+                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
+                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
+                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
+                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                    + ",ISNULL(FR.NAVN,'') NAVN "
+                                    + ",ISNULL(FR.LAT,0) LAT "
+                                    + ",ISNULL(FR.LON,0) LON "
+                                    + ",ISNULL(FR.BEDRIFT,0) BEDRIFT "
+                                    + ",ISNULL(FR.ADRESSE,'') ADRESSE "
+                                    + ",ISNULL(FR.POSTNR,0) POSTNR "
+                                    + ",ISNULL(FR.POSTSTED,'') POSTSTED "
+                                    + ",ISNULL(FR.MOBIL,'') MOBIL "
+                                    + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                    + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
+                                    + "AND FR.GNR=SA.GNR "
+                                    + "AND FR.BNR=SA.BNR "
+                                    + "AND ISNULL(FR.FNR,0)=SA.FNR "
+                                    + "AND ISNULL(FR.UNR,0)=SA.UNR ";
+
                 //TODO: add filter for fnr and unr
                 int mobilePhones = 0;
                 int fixedPhones = 0;
