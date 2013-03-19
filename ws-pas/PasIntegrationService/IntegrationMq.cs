@@ -163,7 +163,7 @@ namespace com.ums.pas.integration
                                     if (objectMessage.Body is AlertMqPayload)
                                     {
                                         AlertMqPayload payload = (AlertMqPayload)objectMessage.Body;
-                                        logMsg = String.Format("Received new ActiveMq message with AlertId={0} and ActiveMq Id={1}", payload.AlertId.Id, objectMessage.NMSMessageId);
+                                        logMsg = String.Format("Received new ActiveMq message with AlertId={0} and ActiveMq Id={1} FROM [{2}/{3}]", payload.AlertId.Id, objectMessage.NMSMessageId, payload.Account.CompanyId, payload.Account.DepartmentId);
                                         log.Info(logMsg);
                                         ULog.write(logMsg);
                                         XmlSerializer xmlSerializer = new XmlSerializer(typeof(AlertMqPayload));
@@ -227,7 +227,7 @@ namespace com.ums.pas.integration
                                             {
                                                 String errorText = String.Format("Failed to generate alert\n\n" + e.ToString());
                                                 ULog.error(errorText);
-                                                log.Info(errorText);
+                                                log.Error(errorText);
                                                 //increment tries here, finally ack the message to make it go away.
                                             }
                                         }
