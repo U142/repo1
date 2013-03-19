@@ -136,11 +136,34 @@ namespace com.ums.pas.integration
                 //if full text search is not activated on right database/view, this will crash.
                 using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
+                    log.InfoFormat("First owner run");
                     IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
-                    IEnumerable<RecipientData> ownerLookup = ownerLookupInterface.GetMatchingOwnerAddresses(
+                    IEnumerable<RecipientData> ownerLookup1 = ownerLookupInterface.GetMatchingOwnerAddresses(
                                                                                         FolkeregDatabaseConnectionString,
                                                                                         Payload.AlertTargets.OfType<OwnerAddress>().ToList());
-                    recipientDataList.AddRange(ownerLookup);
+                    recipientDataList.AddRange(ownerLookup1);
+
+                    if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+                    {
+                        log.InfoFormat("Second owner run, {0} properties not found in first", ownerLookupInterface.GetNoMatchList().Count());
+                        IEnumerable<RecipientData> ownerLookup2 = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                            NorwayDatabaseConnectionString,
+                                                                                            ownerLookupInterface.GetNoMatchList().ToList());
+                        recipientDataList.AddRange(ownerLookup2);
+                        if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+                        {
+                            log.InfoFormat("Still {0} properties without owner, register empty recipient data for log purposes", ownerLookupInterface.GetNoMatchList().Count());
+                            foreach (OwnerAddress ownerAddress in ownerLookupInterface.GetNoMatchList())
+                            {
+                                recipientDataList.Add(new RecipientData()
+                                {
+                                    AlertTarget = ownerAddress,
+                                    Name = "<No inhabitants found>",
+                                });
+                            }
+                        }
+                    }
+
                 }
             }
             catch (Exception e)
