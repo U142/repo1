@@ -283,9 +283,9 @@ namespace com.ums.ws.integration
                             {
                                 return AlertResponseFactory.Failed(-41, "No message content specified for the sms alert");
                             }
-                            if (smsConfig.BaseMessageContent.Length > 765)
+                            if (smsConfig.BaseMessageContent.Length > 760)
                             {
-                                return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long, max is 765 characters");
+                                return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long, max is 760 characters");
                             }
                             if (smsConfig.OriginAddress.Length <= 0)
                             {
