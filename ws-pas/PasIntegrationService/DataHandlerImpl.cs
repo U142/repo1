@@ -539,10 +539,8 @@ namespace com.ums.pas.integration
             String Sql = "INSERT INTO BBACTIONPROFILESEND(l_refno, l_actionprofilepk) VALUES(?, ?)";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("l_actionprofilepk", OdbcType.Int);
-                cmd.Parameters["l_refno"].Value = Refno;
-                cmd.Parameters["l_actionprofilepk"].Value = ProfilePk;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("l_actionprofilepk", OdbcType.Int).Value = ProfilePk;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -558,10 +556,8 @@ namespace com.ums.pas.integration
             String Sql = "INSERT INTO BBSENDNUM(l_refno, sz_number) VALUES(?, ?)";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("sz_number", OdbcType.VarChar, 20);
-                cmd.Parameters["l_refno"].Value = Refno;
-                cmd.Parameters["sz_number"].Value = Number;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("sz_number", OdbcType.VarChar, 20).Value = Number;;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -576,10 +572,8 @@ namespace com.ums.pas.integration
             String Sql = "INSERT INTO BBVALID(l_valid, l_refno) VALUES(?, ?)";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_valid", OdbcType.Int);
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters["l_valid"].Value = ValidDays;
-                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters.Add("l_valid", OdbcType.Int).Value = ValidDays;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -595,21 +589,13 @@ namespace com.ums.pas.integration
                                         + "VALUES(?, ?, ?, ?, ?, ?, ?)";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("l_retries", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_interval", OdbcType.SmallInt);
-                cmd.Parameters.Add("l_canceltime", OdbcType.SmallInt);
-                cmd.Parameters.Add("l_canceldate", OdbcType.Int);
-                cmd.Parameters.Add("l_pausetime", OdbcType.SmallInt);
-                cmd.Parameters.Add("l_pauseinterval", OdbcType.Int);
-
-                cmd.Parameters["l_refno"].Value = Refno;
-                cmd.Parameters["l_retries"].Value = VoiceConfig.Repeats;
-                cmd.Parameters["l_interval"].Value = VoiceConfig.FrequencyMinutes;
-                cmd.Parameters["l_canceltime"].Value = -1;
-                cmd.Parameters["l_canceldate"].Value = -1;
-                cmd.Parameters["l_pausetime"].Value = VoiceConfig.PauseAtTime;
-                cmd.Parameters["l_pauseinterval"].Value = VoiceConfig.PauseDurationMinutes;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("l_retries", OdbcType.TinyInt).Value = VoiceConfig.Repeats;
+                cmd.Parameters.Add("l_interval", OdbcType.SmallInt).Value = VoiceConfig.FrequencyMinutes;
+                cmd.Parameters.Add("l_canceltime", OdbcType.SmallInt).Value = -1;
+                cmd.Parameters.Add("l_canceldate", OdbcType.Int).Value = -1;
+                cmd.Parameters.Add("l_pausetime", OdbcType.SmallInt).Value = VoiceConfig.PauseAtTime;
+                cmd.Parameters.Add("l_pauseinterval", OdbcType.Int).Value = VoiceConfig.PauseDurationMinutes;
 
                 cmd.ExecuteNonQuery();
             }
@@ -666,13 +652,9 @@ namespace com.ums.pas.integration
 
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_items", OdbcType.Int);
-                cmd.Parameters.Add("l_status", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-
-                cmd.Parameters["l_items"].Value = Items == 0 ? 0 : Items;
-                cmd.Parameters["l_status"].Value = Items == 0 ? 7 : 4;
-                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters.Add("l_items", OdbcType.Int).Value = Items == 0 ? 0 : Items;
+                cmd.Parameters.Add("l_status", OdbcType.TinyInt).Value = Items == 0 ? 7 : 4;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
 
                 cmd.ExecuteNonQuery();
             }
@@ -686,71 +668,38 @@ namespace com.ums.pas.integration
             String Sql = "sp_sms_ins_smsqref_bcp_v2 ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("l_projectpk", OdbcType.Numeric);
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("l_comppk", OdbcType.Int);
-                cmd.Parameters.Add("l_deptpk", OdbcType.Int);
-                cmd.Parameters.Add("l_otoa", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_msgclass", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_pri", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_localsched", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_validitytime", OdbcType.Int);
-                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric);
-                cmd.Parameters.Add("l_priserver", OdbcType.Int);
-                cmd.Parameters.Add("l_altservers", OdbcType.Int);
-                cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar, 20);
-                cmd.Parameters.Add("sz_oadc", OdbcType.VarChar, 22);
-                cmd.Parameters.Add("sz_descriptor", OdbcType.VarChar, 100);
-                cmd.Parameters.Add("f_simulation", OdbcType.Int);
-                cmd.Parameters.Add("l_parentrefno", OdbcType.Int);
-                cmd.Parameters.Add("l_expecteditems", OdbcType.Int);
-                cmd.Parameters.Add("sz_text", OdbcType.VarChar, 765);
-                cmd.Parameters.Add("l_fromapplication", OdbcType.Int);
-                cmd.Parameters.Add("l_group", OdbcType.Int);
-                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10);
-                cmd.Parameters.Add("l_lastantsep", OdbcType.Int);
-                cmd.Parameters.Add("l_addresspos", OdbcType.Int);
-                cmd.Parameters.Add("l_createdate", OdbcType.Int);
-                cmd.Parameters.Add("l_createtime", OdbcType.Int);
-                cmd.Parameters.Add("l_userpk", OdbcType.Numeric);
-                cmd.Parameters.Add("l_nofax", OdbcType.Int);
-                cmd.Parameters.Add("l_removedup", OdbcType.Int);
-                cmd.Parameters.Add("sz_stdcc", OdbcType.VarChar, 6);
-                cmd.Parameters.Add("l_addresstypes", OdbcType.Int);
-                cmd.Parameters.Add("f_dynacall", OdbcType.Int);
-
-                cmd.Parameters["l_projectpk"].Value = 0;
-                cmd.Parameters["l_refno"].Value = Refno;
-                cmd.Parameters["l_comppk"].Value = Account.Comppk;
-                cmd.Parameters["l_deptpk"].Value = Account.Deptpk;
-                cmd.Parameters["l_otoa"].Value = 1;
-                cmd.Parameters["l_msgclass"].Value = 1;
-                cmd.Parameters["l_pri"].Value = Account.DeptPri;
-                cmd.Parameters["l_localsched"].Value = 1;
-                cmd.Parameters["l_validitytime"].Value = 0;
-                cmd.Parameters["l_schedtime"].Value = alertConfig.StartImmediately ? 0 : Int64.Parse(alertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
-                cmd.Parameters["l_priserver"].Value = Account.PrimarySmsServer;
-                cmd.Parameters["l_altservers"].Value = Account.SecondarySmsServer;
-                cmd.Parameters["sz_tarifclass"].Value = "";
-                cmd.Parameters["sz_oadc"].Value = smsConfig.OriginAddress;
-                cmd.Parameters["sz_descriptor"].Value = alertConfig.AlertName;
-                cmd.Parameters["f_simulation"].Value = (alertConfig.SimulationMode ? 1 : 0);
-                cmd.Parameters["l_parentrefno"].Value = 0;
-                cmd.Parameters["l_expecteditems"].Value = 0;
-                cmd.Parameters["sz_text"].Value = smsConfig.BaseMessageContent;
-                cmd.Parameters["l_fromapplication"].Value = 13;
-                cmd.Parameters["l_group"].Value = group;
-                cmd.Parameters["sz_sepused"].Value = "|";
-                cmd.Parameters["l_lastantsep"].Value = 0;
-                cmd.Parameters["l_addresspos"].Value = 0;
-                cmd.Parameters["l_createdate"].Value = Int32.Parse(UCommon.UGetDateNow());
-                cmd.Parameters["l_createtime"].Value = Int32.Parse(UCommon.UGetTimeNow());
-                cmd.Parameters["l_userpk"].Value = -1; 
-                cmd.Parameters["l_nofax"].Value = 1;
-                cmd.Parameters["l_removedup"].Value = 1;
-                cmd.Parameters["sz_stdcc"].Value = Account.StdCc;
-                cmd.Parameters["l_addresstypes"].Value = (long)(AdrTypes.SMS_PRIVATE | AdrTypes.SMS_COMPANY);
-                cmd.Parameters["f_dynacall"].Value = alertConfig.SimulationMode ? 2 : 1;
+                cmd.Parameters.Add("l_projectpk", OdbcType.Numeric).Value = 0;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("l_comppk", OdbcType.Int).Value = Account.Comppk;
+                cmd.Parameters.Add("l_deptpk", OdbcType.Int).Value = Account.Deptpk;
+                cmd.Parameters.Add("l_otoa", OdbcType.TinyInt).Value = 1;
+                cmd.Parameters.Add("l_msgclass", OdbcType.TinyInt).Value = 1;
+                cmd.Parameters.Add("l_pri", OdbcType.TinyInt).Value = Account.DeptPri;
+                cmd.Parameters.Add("l_localsched", OdbcType.TinyInt).Value = 1;
+                cmd.Parameters.Add("l_validitytime", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric).Value = alertConfig.StartImmediately ? 0 : Int64.Parse(alertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                cmd.Parameters.Add("l_priserver", OdbcType.Int).Value = Account.PrimarySmsServer;
+                cmd.Parameters.Add("l_altservers", OdbcType.Int).Value = Account.SecondarySmsServer;
+                cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar, 20).Value = "";
+                cmd.Parameters.Add("sz_oadc", OdbcType.VarChar, 22).Value = smsConfig.OriginAddress;
+                cmd.Parameters.Add("sz_descriptor", OdbcType.VarChar, 100).Value = alertConfig.AlertName;
+                cmd.Parameters.Add("f_simulation", OdbcType.Int).Value = (alertConfig.SimulationMode ? 1 : 0);
+                cmd.Parameters.Add("l_parentrefno", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_expecteditems", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("sz_text", OdbcType.VarChar, 765).Value = smsConfig.BaseMessageContent;
+                cmd.Parameters.Add("l_fromapplication", OdbcType.Int).Value = 13;;
+                cmd.Parameters.Add("l_group", OdbcType.Int).Value = group;
+                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10).Value = "|";
+                cmd.Parameters.Add("l_lastantsep", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_addresspos", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_createdate", OdbcType.Int).Value = Int32.Parse(UCommon.UGetDateNow());
+                cmd.Parameters.Add("l_createtime", OdbcType.Int).Value = Int32.Parse(UCommon.UGetTimeNow());
+                cmd.Parameters.Add("l_userpk", OdbcType.Numeric).Value = -1; 
+                cmd.Parameters.Add("l_nofax", OdbcType.Int).Value = 1;
+                cmd.Parameters.Add("l_removedup", OdbcType.Int).Value = 1;
+                cmd.Parameters.Add("sz_stdcc", OdbcType.VarChar, 6).Value = Account.StdCc;
+                cmd.Parameters.Add("l_addresstypes", OdbcType.Int).Value = (long)(AdrTypes.SMS_PRIVATE | AdrTypes.SMS_COMPANY);
+                cmd.Parameters.Add("f_dynacall", OdbcType.Int).Value = alertConfig.SimulationMode ? 2 : 1;
 
                 cmd.ExecuteNonQuery();
             }
@@ -770,80 +719,31 @@ namespace com.ums.pas.integration
                       "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                cmd.Parameters.Add("sz_fields", OdbcType.VarChar, 500);
-                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10);
-                cmd.Parameters.Add("l_addresspos", OdbcType.Int);
-                cmd.Parameters.Add("l_lastantsep", OdbcType.Int);
-                cmd.Parameters.Add("l_refno", OdbcType.Int);
-                cmd.Parameters.Add("l_createdate", OdbcType.Int);
-                cmd.Parameters.Add("l_createtime", OdbcType.SmallInt);
-                cmd.Parameters.Add("l_scheddate", OdbcType.Int);
-                cmd.Parameters.Add("l_schedtime", OdbcType.Int);
-                cmd.Parameters.Add("sz_sendingname", OdbcType.VarChar, 255);
-                cmd.Parameters.Add("l_sendingstatus", OdbcType.Int);
-                cmd.Parameters.Add("l_companypk", OdbcType.Int);
-                cmd.Parameters.Add("l_deptpk", OdbcType.Int);
-                cmd.Parameters.Add("l_nofax", OdbcType.Int);
-                cmd.Parameters.Add("l_group", OdbcType.Int);
-                cmd.Parameters.Add("l_removedup", OdbcType.Int);
-                cmd.Parameters.Add("l_type", OdbcType.Int);
-                cmd.Parameters.Add("f_dynacall", OdbcType.TinyInt);
-                cmd.Parameters.Add("l_addresstypes", OdbcType.Int);
-                cmd.Parameters.Add("l_userpk", OdbcType.Numeric);
-                cmd.Parameters.Add("l_maxchannels", OdbcType.Int);
-
-                cmd.Parameters["sz_fields"].Value = "";
-                cmd.Parameters["sz_sepused"].Value = "|";
-                cmd.Parameters["l_addresspos"].Value = 0;
-                cmd.Parameters["l_lastantsep"].Value = 0;
-                cmd.Parameters["l_refno"].Value = Refno;
-                cmd.Parameters["l_createdate"].Value = Int32.Parse(UCommon.UGetDateNow());
-                cmd.Parameters["l_createtime"].Value = Int32.Parse(UCommon.UGetTimeNow());
-                cmd.Parameters["l_scheddate"].Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("yyyyMMdd"));
-                cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("HHmm"));
-                cmd.Parameters["sz_sendingname"].Value = AlertConfig.AlertName;
-                cmd.Parameters["l_sendingstatus"].Value = 1;
-                cmd.Parameters["l_companypk"].Value = Account.Comppk;
-                cmd.Parameters["l_deptpk"].Value = Account.Deptpk;
-                cmd.Parameters["l_nofax"].Value = noFax;
-                cmd.Parameters["l_group"].Value = group;
-                cmd.Parameters["l_removedup"].Value = 1;
-                cmd.Parameters["l_type"].Value = 1; //voice
-                cmd.Parameters["f_dynacall"].Value = AlertConfig.SimulationMode ? 2 : 1;
-                cmd.Parameters["l_addresstypes"].Value = (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED);
-                cmd.Parameters["l_userpk"].Value = -1;
-                cmd.Parameters["l_maxchannels"].Value = Account.MaxVoiceChannels;
+                cmd.Parameters.Add("sz_fields", OdbcType.VarChar, 500).Value = "";
+                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10).Value = "|";
+                cmd.Parameters.Add("l_addresspos", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_lastantsep", OdbcType.Int).Value = 0;
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("l_createdate", OdbcType.Int).Value = Int32.Parse(UCommon.UGetDateNow());
+                cmd.Parameters.Add("l_createtime", OdbcType.SmallInt).Value = Int32.Parse(UCommon.UGetTimeNow());
+                cmd.Parameters.Add("l_scheddate", OdbcType.Int).Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("yyyyMMdd"));
+                cmd.Parameters.Add("l_schedtime", OdbcType.Int).Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("HHmm"));
+                cmd.Parameters.Add("sz_sendingname", OdbcType.VarChar, 255).Value = AlertConfig.AlertName;
+                cmd.Parameters.Add("l_sendingstatus", OdbcType.Int).Value = 1;
+                cmd.Parameters.Add("l_companypk", OdbcType.Int).Value = Account.Comppk;
+                cmd.Parameters.Add("l_deptpk", OdbcType.Int).Value = Account.Deptpk;
+                cmd.Parameters.Add("l_nofax", OdbcType.Int).Value = noFax;
+                cmd.Parameters.Add("l_group", OdbcType.Int).Value = group;
+                cmd.Parameters.Add("l_removedup", OdbcType.Int).Value = 1;
+                cmd.Parameters.Add("l_type", OdbcType.Int).Value = 1; //voice
+                cmd.Parameters.Add("f_dynacall", OdbcType.TinyInt).Value = AlertConfig.SimulationMode ? 2 : 1;
+                cmd.Parameters.Add("l_addresstypes", OdbcType.Int).Value = (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED);
+                cmd.Parameters.Add("l_userpk", OdbcType.Numeric).Value = -1;
+                cmd.Parameters.Add("l_maxchannels", OdbcType.Int).Value = Account.MaxVoiceChannels;
 
                 cmd.ExecuteNonQuery();
 
             }
-            /*String Sql = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
-                      "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
-                      "l_removedup, l_type, f_dynacall, l_addresstypes, l_userpk, l_maxchannels) " +
-                      "VALUES('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, '{9}', {10}, {11}, {12}, {13}, " +
-                      "{14}, {15}, {16}, {17}, {18}, {19}, {20})",
-                "",
-                "|",
-                0,
-                0,
-                Refno,
-                UCommon.UGetDateNow(),
-                UCommon.UGetTimeNow(),
-                AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMdd"),
-                AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("HHmm"),
-                AlertConfig.AlertName.Replace("'", "''"),
-                1,
-                Account.Comppk,
-                Account.Deptpk,
-                noFax,
-                group,
-                1,
-                1, //voice
-                AlertConfig.SimulationMode ? 2 : 1,
-                (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED),
-                -1, //Account.Userpk,
-                360);
-            Database.ExecNonQuery(Sql);*/
         }
 
 
