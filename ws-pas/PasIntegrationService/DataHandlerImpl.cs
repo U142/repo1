@@ -85,17 +85,14 @@ namespace com.ums.pas.integration
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
-            foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
+            List<AlertObject> alertObjectList = Payload.AlertTargets.OfType<AlertObject>().ToList();
+            foreach (AlertObject alertObject in alertObjectList)
             {
-                using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector, new TimeProfilerCallbackImpl()))
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
                     recipientDataList.Add(new RecipientData()
                     {
                         AlertTarget = alertObject,
-                        /*Endpoints = new List<Endpoint>()
-                                    {
-                                        alertObject.Phone,
-                                    },*/
                         Endpoints = alertObject.Endpoints,
                         Name = alertObject.Name,
                         Address = "",
@@ -113,20 +110,22 @@ namespace com.ums.pas.integration
             {
 
             }*/
-            using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                 IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                             FolkeregDatabaseConnectionString,
-                                                            Payload.AlertTargets.OfType<StreetAddress>().ToList());
+                                                            streetAddressList);
                 recipientDataList.AddRange(streetAddressLookup);
             }
-            using (new TimeProfiler(Payload.AlertId.Id, "PropertyAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
                 IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
                                                                                 FolkeregDatabaseConnectionString,
-                                                                                Payload.AlertTargets.OfType<PropertyAddress>().ToList());
+                                                                                propertyAddressList);
                 recipientDataList.AddRange(propertyLookup);
             }
 
@@ -134,7 +133,8 @@ namespace com.ums.pas.integration
             {
                 //TODO - remove this try catch and implement other way of verifying owner address support.
                 //if full text search is not activated on right database/view, this will crash.
-                using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+                List<OwnerAddress> ownerAddressList = Payload.AlertTargets.OfType<OwnerAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("OwnerAddress {0} records", ownerAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
                     log.InfoFormat("First owner run");
                     IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
@@ -364,7 +364,7 @@ namespace com.ums.pas.integration
                                                 -1,
                                                 0,
                                                 0,
-                                                data.AddressLine,
+                                                data.AddressLine.Replace("'", "''"),
                                                 data.Lon.ToString(UCommon.UGlobalizationInfo),
                                                 data.Lat.ToString(UCommon.UGlobalizationInfo),
                                                 "",
@@ -418,9 +418,9 @@ namespace com.ums.pas.integration
                     birthdate = ownerAddress.DateOfBirth;
                     postnr = ownerAddress.Postnr;
                     data = 
-                                ownerAddress.Adresselinje1 
-                        + "|" + ownerAddress.Adresselinje2 
-                        + "|" + ownerAddress.Adresselinje3 
+                                ownerAddress.Adresselinje1
+                        + "|" + ownerAddress.Adresselinje2
+                        + "|" + ownerAddress.Adresselinje3
                         + "|" + ownerAddress.EierIdKode.ToString() 
                         + "|" + ownerAddress.EierKategoriKode.ToString() 
                         + "|" + ownerAddress.EierStatusKode.ToString();
@@ -451,7 +451,7 @@ namespace com.ums.pas.integration
                                             municipalid,
                                             streetid,
                                             houseno,
-                                            letter,
+                                            letter.Replace("'", "''"),
                                             oppgang,
                                             gnr,
                                             bnr,
@@ -459,10 +459,10 @@ namespace com.ums.pas.integration
                                             snr,
                                             unr,
                                             postnr,
-                                            data,
+                                            data.Replace("'", "''"),
                                             birthdate,
-                                            customAttributes.ToString(),
-                                            externalId);
+                                            customAttributes.ToString().Replace("'", "''"),
+                                            externalId.Replace("'", "''"));
 
                 long alertSourcePk = -1;
                 using (OdbcDataReader rs = Database.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
