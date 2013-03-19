@@ -12,32 +12,82 @@ namespace com.ums.pas.integration.AddressLookup
     {
         private static ILog log = LogManager.GetLogger(typeof(OwnerLookupImpl));
 
+        public List<OwnerAddress> NoMatchList { get; private set; }
+
         #region IOwnerLookupFacade Members
 
-        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(string connectionString, List<OwnerAddress> ownerAddresses)
+
+        public IEnumerable<OwnerAddress> GetNoMatchList()
         {
+            if (NoMatchList != null)
+            {
+                return NoMatchList;
+            }
+            throw new Exception("GetMatchingOwnerAddresses not yet executed");
+        }
+
+
+        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses)
+        {
+            NoMatchList = new List<OwnerAddress>();
             if (ownerAddresses.Count == 0)
             {
                 log.Info("No owner addresses listed");
                 return new List<RecipientData>();
             }
             List<RecipientData> recipients = new List<RecipientData>();
-            using (OdbcConnection Connection = new OdbcConnection(connectionString))
-            using (OdbcCommand Command = Connection.CreateCommand())
+            using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
+            using (OdbcCommand CommandWithHouseNo = Connection.CreateCommand())
+            using (OdbcCommand CommandNoHouse = Connection.CreateCommand())
             {
 
                 Connection.Open();
                 //Command.CommandText = string.Format("SELECT TELEFON FROM ADR_KONSUMENT_201320105 WHERE POSTNR=? and HUSNR=?");// and CONTAINS(NAVN, ?)");
                 //Command.CommandText = string.Format("SELECT TELEFON FROM ADR_KONSUM WHERE HUSNR=? and CONTAINS(NAVN, ?)");
-                Command.CommandText = string.Format("SELECT * FROM ADR_KONSUM_SEARCH WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
-                Command.Parameters.Add("postnr", OdbcType.Int);
-                Command.Parameters.Add("husnr", OdbcType.Int);
-                Command.Parameters.Add("search", OdbcType.VarChar);
+                CommandWithHouseNo.CommandText = string.Format("SELECT "
+                                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
+                                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
+                                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
+                                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                                    + ",ISNULL(FR.NAVN,'') NAVN "
+                                                    + ",ISNULL(FR.LAT,0) LAT "
+                                                    + ",ISNULL(FR.LON,0) LON "
+                                                    + ",ISNULL(FR.BEDRIFT,0) BEDRIFT "
+                                                    + ",ISNULL(FR.ADRESSE,'') ADRESSE "
+                                                    + ",ISNULL(FR.POSTNR,0) POSTNR "
+                                                    + ",ISNULL(FR.POSTSTED,'') POSTSTED "
+                                                    + ",ISNULL(FR.MOBIL,'') MOBIL "
+                                                    + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                                    + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
+                CommandWithHouseNo.Parameters.Add("postnr", OdbcType.Int);
+                CommandWithHouseNo.Parameters.Add("husnr", OdbcType.Int);
+                CommandWithHouseNo.Parameters.Add("search", OdbcType.VarChar);
+
+                CommandNoHouse.CommandText = string.Format("SELECT "
+                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
+                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
+                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
+                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                    + ",ISNULL(FR.NAVN,'') NAVN "
+                                    + ",ISNULL(FR.LAT,0) LAT "
+                                    + ",ISNULL(FR.LON,0) LON "
+                                    + ",ISNULL(FR.BEDRIFT,0) BEDRIFT "
+                                    + ",ISNULL(FR.ADRESSE,'') ADRESSE "
+                                    + ",ISNULL(FR.POSTNR,0) POSTNR "
+                                    + ",ISNULL(FR.POSTSTED,'') POSTSTED "
+                                    + ",ISNULL(FR.MOBIL,'') MOBIL "
+                                    + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                    + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and CONTAINS(NAVN, ?)");
+
+                CommandNoHouse.Parameters.Add("postnr", OdbcType.Int);
+                CommandNoHouse.Parameters.Add("search", OdbcType.VarChar);
 
                 DateTime start;
 
                 double prepare = 0;
                 double sql = 0;
+                int mobilePhones = 0;
+                int fixedPhones = 0;
 
                 foreach (OwnerAddress owner in ownerAddresses)
                 {
@@ -48,15 +98,22 @@ namespace com.ums.pas.integration.AddressLookup
                         int? husnr = null;
                         husnr = GetHouseNr(owner.Adresselinje1 + owner.Adresselinje2);
 
+                        //Set current command depending on husnr having a value or not
+                        OdbcCommand Command = (husnr.HasValue ? CommandWithHouseNo : CommandNoHouse);
+
                         if (owner.Postnr > 0)
                             Command.Parameters["postnr"].Value = owner.Postnr;
                         else
                             Command.Parameters["postnr"].Value = DBNull.Value;
 
-                        if (husnr.HasValue)
+                        /*if (husnr.HasValue)
                             Command.Parameters["husnr"].Value = husnr;
                         else
-                            Command.Parameters["husnr"].Value = DBNull.Value;
+                            Command.Parameters["husnr"].Value = DBNull.Value;*/
+                        if (husnr.HasValue)
+                        {
+                            Command.Parameters["husnr"].Value = husnr;
+                        }
 
                         Command.Parameters["search"].Value = names[0] + " and " + names[1];
                         prepare += (DateTime.Now - start).TotalMilliseconds;
@@ -66,8 +123,6 @@ namespace com.ums.pas.integration.AddressLookup
                             start = DateTime.Now;
                             using (OdbcDataReader rs = Command.ExecuteReader())
                             {
-                                int mobilePhones = 0;
-                                int fixedPhones = 0;
                                 int personsFound = 0;
                                 while (rs.Read())
                                 {
@@ -114,15 +169,16 @@ namespace com.ums.pas.integration.AddressLookup
                                 }
                                 if (personsFound == 0)
                                 {
-                                    recipients.Add(new RecipientData()
+                                    /*recipients.Add(new RecipientData()
                                     {
                                         AlertTarget = owner,
                                         Name = "No inhabitants found",
-                                    });
+                                    });*/
+                                    NoMatchList.Add(owner);
                                 }
                             }
                             double dill = (DateTime.Now - start).TotalMilliseconds;
-                            log.InfoFormat("Executing (postnr={1}, husnr={2}, search={3}) {0:0}ms", dill, Command.Parameters["postnr"].Value, Command.Parameters["husnr"].Value, Command.Parameters["search"].Value);
+                            log.DebugFormat("Executing (postnr={1}, husnr={2}, search={3}) {0:0}ms", dill, Command.Parameters["postnr"].Value, husnr.HasValue ? Command.Parameters["husnr"].Value : "<omit>", Command.Parameters["search"].Value);
                             //Console.WriteLine("Executing (postnr={1}, husnr={2}) {0:0}ms", dill, Command.Parameters["postnr"].Value, Command.Parameters["husnr"].Value);
                             //Console.WriteLine("Executing (husnr={1}, search={2}) {0:0}ms", dill, Command.Parameters["husnr"].Value, Command.Parameters["search"].Value);
                             sql += dill;
@@ -134,18 +190,22 @@ namespace com.ums.pas.integration.AddressLookup
                     }
                     else
                     {
-                        Console.WriteLine("Failed to look up '{0}'", owner.Navn);
+                        NoMatchList.Add(owner);
+                        log.InfoFormat("Failed to look up owner '{0}' due to single name", owner.Navn);
                     }
                 }
+                log.InfoFormat("Found {0} recipients living on {1} PropertyAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
 
                 Connection.Close();
 
-                Console.WriteLine("Preparation: {0:0} ms\texecution: {1:0} ms", prepare, sql);
+                log.InfoFormat("Preparation: {0:0} ms\texecution: {1:0} ms", prepare, sql);
             }
 
             return recipients;
 
         }
+
+
 
         #endregion
 
@@ -157,5 +217,8 @@ namespace com.ums.pas.integration.AddressLookup
             else
                 return null;
         }
+
+
+
     }
 }

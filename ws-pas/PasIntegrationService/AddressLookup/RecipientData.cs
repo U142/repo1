@@ -53,10 +53,19 @@ namespace com.ums.pas.integration.AddressLookup
         /// </summary>
         public String Name { get; set; }
 
+
+        private List<Endpoint> _endpoints;
+
         /// <summary>
         /// The endpoints that was found.
         /// </summary>
-        public List<Endpoint> Endpoints { get; set; }
+        public List<Endpoint> Endpoints
+        {
+            get { return _endpoints != null ? _endpoints : new List<Endpoint>(); }
+            set { _endpoints = value; }
+        }
+        
+
 
         /// <summary>
         /// Longitude, if available

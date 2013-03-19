@@ -62,13 +62,13 @@ namespace com.ums.ws.integration
             alertConfiguration.SimulationMode = Exercise;
             alertConfiguration.StartImmediately = StartImmediately;
 
-            if (Repeats < 0 || Repeats >= 50)
+            if (Repeats < 0 || Repeats > 50)
             {
                 return AlertResponseFactory.Failed(-20, "Number of repeats should be [0..50], {0} was used", Repeats);
             }
-            if (Frequency <= 0 || Frequency >= 7 * 24 * 60)
+            if (Frequency < 0 || Frequency >= 7 * 24 * 60)
             {
-                return AlertResponseFactory.Failed(-21, "Frequency should be between 1 minute and one week, {0}m was used", Frequency);
+                return AlertResponseFactory.Failed(-21, "Frequency should be between 0 minute and one week, {0}m was used", Frequency);
             }
             if (account.CompanyId == null || account.CompanyId.Length == 0 ||
                 account.DepartmentId == null || account.DepartmentId.Length == 0 ||

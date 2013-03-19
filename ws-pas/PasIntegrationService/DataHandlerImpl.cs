@@ -85,17 +85,14 @@ namespace com.ums.pas.integration
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
-            foreach (AlertObject alertObject in Payload.AlertTargets.OfType<AlertObject>())
+            List<AlertObject> alertObjectList = Payload.AlertTargets.OfType<AlertObject>().ToList();
+            foreach (AlertObject alertObject in alertObjectList)
             {
-                using (new TimeProfiler(Payload.AlertId.Id, "AlertObject", timeProfileCollector, new TimeProfilerCallbackImpl()))
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
                     recipientDataList.Add(new RecipientData()
                     {
                         AlertTarget = alertObject,
-                        /*Endpoints = new List<Endpoint>()
-                                    {
-                                        alertObject.Phone,
-                                    },*/
                         Endpoints = alertObject.Endpoints,
                         Name = alertObject.Name,
                         Address = "",
@@ -113,20 +110,22 @@ namespace com.ums.pas.integration
             {
 
             }*/
-            using (new TimeProfiler(Payload.AlertId.Id, "StreetId", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                 IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                             FolkeregDatabaseConnectionString,
-                                                            Payload.AlertTargets.OfType<StreetAddress>().ToList());
+                                                            streetAddressList);
                 recipientDataList.AddRange(streetAddressLookup);
             }
-            using (new TimeProfiler(Payload.AlertId.Id, "PropertyAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
                 IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
                 IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
                                                                                 FolkeregDatabaseConnectionString,
-                                                                                Payload.AlertTargets.OfType<PropertyAddress>().ToList());
+                                                                                propertyAddressList);
                 recipientDataList.AddRange(propertyLookup);
             }
 
@@ -134,13 +133,37 @@ namespace com.ums.pas.integration
             {
                 //TODO - remove this try catch and implement other way of verifying owner address support.
                 //if full text search is not activated on right database/view, this will crash.
-                using (new TimeProfiler(Payload.AlertId.Id, "OwnerAddress", timeProfileCollector, new TimeProfilerCallbackImpl()))
+                List<OwnerAddress> ownerAddressList = Payload.AlertTargets.OfType<OwnerAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("OwnerAddress {0} records", ownerAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
                 {
+                    log.InfoFormat("First owner run");
                     IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
-                    IEnumerable<RecipientData> ownerLookup = ownerLookupInterface.GetMatchingOwnerAddresses(
+                    IEnumerable<RecipientData> ownerLookup1 = ownerLookupInterface.GetMatchingOwnerAddresses(
                                                                                         FolkeregDatabaseConnectionString,
                                                                                         Payload.AlertTargets.OfType<OwnerAddress>().ToList());
-                    recipientDataList.AddRange(ownerLookup);
+                    recipientDataList.AddRange(ownerLookup1);
+
+                    if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+                    {
+                        log.InfoFormat("Second owner run, {0} properties not found in first", ownerLookupInterface.GetNoMatchList().Count());
+                        IEnumerable<RecipientData> ownerLookup2 = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                            NorwayDatabaseConnectionString,
+                                                                                            ownerLookupInterface.GetNoMatchList().ToList());
+                        recipientDataList.AddRange(ownerLookup2);
+                        if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+                        {
+                            log.InfoFormat("Still {0} properties without owner, register empty recipient data for log purposes", ownerLookupInterface.GetNoMatchList().Count());
+                            foreach (OwnerAddress ownerAddress in ownerLookupInterface.GetNoMatchList())
+                            {
+                                recipientDataList.Add(new RecipientData()
+                                {
+                                    AlertTarget = ownerAddress,
+                                    Name = "<No inhabitants found>",
+                                });
+                            }
+                        }
+                    }
+
                 }
             }
             catch (Exception e)
@@ -341,7 +364,7 @@ namespace com.ums.pas.integration
                                                 -1,
                                                 0,
                                                 0,
-                                                data.AddressLine,
+                                                data.AddressLine.Replace("'", "''"),
                                                 data.Lon.ToString(UCommon.UGlobalizationInfo),
                                                 data.Lat.ToString(UCommon.UGlobalizationInfo),
                                                 "",
@@ -395,9 +418,9 @@ namespace com.ums.pas.integration
                     birthdate = ownerAddress.DateOfBirth;
                     postnr = ownerAddress.Postnr;
                     data = 
-                                ownerAddress.Adresselinje1 
-                        + "|" + ownerAddress.Adresselinje2 
-                        + "|" + ownerAddress.Adresselinje3 
+                                ownerAddress.Adresselinje1
+                        + "|" + ownerAddress.Adresselinje2
+                        + "|" + ownerAddress.Adresselinje3
                         + "|" + ownerAddress.EierIdKode.ToString() 
                         + "|" + ownerAddress.EierKategoriKode.ToString() 
                         + "|" + ownerAddress.EierStatusKode.ToString();
@@ -409,9 +432,12 @@ namespace com.ums.pas.integration
                     externalId = ((AlertObject)recipient.AlertTarget).ExternalId;
                 }
 
-
+                if (municipalid == null || municipalid.Length == 0)
+                {
+                    municipalid = "0";
+                }
                 // build attribute string, pipe-separated key=value pairs
-                StringBuilder customAttributes = new StringBuilder();
+                StringBuilder customAttributes = new StringBuilder("");
                 foreach (DataItem attribute in recipient.AlertTarget.Attributes)
                 {
                     customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
@@ -420,7 +446,7 @@ namespace com.ums.pas.integration
                     customAttributes.Append("|");
                 }
 
-                String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', '{18}'",
+                /*String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', {18}",
                                             AlertId.Id,
                                             recipient.Company ? "1" : "0",
                                             recipient.Name,
@@ -428,7 +454,7 @@ namespace com.ums.pas.integration
                                             municipalid,
                                             streetid,
                                             houseno,
-                                            letter,
+                                            letter.Replace("'", "''"),
                                             oppgang,
                                             gnr,
                                             bnr,
@@ -436,27 +462,77 @@ namespace com.ums.pas.integration
                                             snr,
                                             unr,
                                             postnr,
-                                            data,
+                                            data.Replace("'", "''"),
                                             birthdate,
-                                            customAttributes.ToString(),
-                                            externalId);
+                                            customAttributes.ToString().Replace("'", "''"),
+                                            externalId != null ? String.Format("'{0}'", externalId.Replace("'", "''")) : "NULL");*/
+                String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
                 long alertSourcePk = -1;
-                using (OdbcDataReader rs = Database.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+                using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
                 {
-                    if (rs.Read())
+                    cmd.Parameters.Add("projectpk", OdbcType.Numeric);
+                    cmd.Parameters.Add("company", OdbcType.Int);
+                    cmd.Parameters.Add("Name", OdbcType.VarChar);
+                    cmd.Parameters.Add("alertTarget", OdbcType.Int);
+                    cmd.Parameters.Add("municipalId", OdbcType.Int);
+                    cmd.Parameters.Add("streetId", OdbcType.Int);
+                    cmd.Parameters.Add("houseNo", OdbcType.Int);
+                    cmd.Parameters.Add("houseLetter", OdbcType.VarChar);
+                    cmd.Parameters.Add("oppgang", OdbcType.VarChar);
+                    cmd.Parameters.Add("gnr", OdbcType.Int);
+                    cmd.Parameters.Add("bnr", OdbcType.Int);
+                    cmd.Parameters.Add("fnr", OdbcType.Int);
+                    cmd.Parameters.Add("snr", OdbcType.Int);
+                    cmd.Parameters.Add("unr", OdbcType.Int);
+                    cmd.Parameters.Add("postnr", OdbcType.Int);
+                    cmd.Parameters.Add("data", OdbcType.VarChar);
+                    cmd.Parameters.Add("birthdate", OdbcType.Int);
+                    cmd.Parameters.Add("attr", OdbcType.VarChar);
+                    cmd.Parameters.Add("extid", OdbcType.VarChar);
+
+                    cmd.Parameters["projectpk"].Value = AlertId.Id;
+                    cmd.Parameters["company"].Value = recipient.Company ? 1 : 0;
+                    cmd.Parameters["Name"].Value = recipient.Name;
+                    cmd.Parameters["alertTarget"].Value = AlertTarget.DiscriminatorValue(recipient.AlertTarget);
+                    cmd.Parameters["municipalId"].Value = Int32.Parse(municipalid);
+                    cmd.Parameters["streetId"].Value = streetid;
+                    cmd.Parameters["houseNo"].Value = houseno;
+                    cmd.Parameters["houseLetter"].Value = letter;
+                    cmd.Parameters["oppgang"].Value = oppgang;
+                    cmd.Parameters["gnr"].Value = gnr;
+                    cmd.Parameters["bnr"].Value = bnr;
+                    cmd.Parameters["fnr"].Value = fnr;
+                    cmd.Parameters["snr"].Value = snr;
+                    cmd.Parameters["unr"].Value = unr;
+                    cmd.Parameters["postnr"].Value = postnr;
+                    cmd.Parameters["data"].Value = data;
+                    cmd.Parameters["birthdate"].Value = birthdate;
+                    cmd.Parameters["attr"].Value = customAttributes.ToString();
+                    cmd.Parameters["extid"].Value = externalId == null ? (object)DBNull.Value : externalId;
+                    using (OdbcDataReader rs = cmd.ExecuteReader())
                     {
-                        alertSourcePk = rs.GetInt64(0);
+                        if (rs.Read())
+                        {
+                            alertSourcePk = rs.GetInt64(0);
+                        }
                     }
                 }
+
                 //insert alert links
                 foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
                 {
-                    Sql = String.Format("INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES({0},{1},{2})",
-                                            alertSourcePk,
-                                            alertLink.Refno,
-                                            alertLink.Item);
-                    Database.ExecNonQuery(Sql);
+                    Sql = "INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES(?,?,?)";
+                    using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
+                    {
+                        cmd.Parameters.Add("alertSourcePk", OdbcType.Numeric);
+                        cmd.Parameters.Add("refno", OdbcType.Int);
+                        cmd.Parameters.Add("item", OdbcType.Int);
+                        cmd.Parameters["alertSourcePk"].Value = alertSourcePk;
+                        cmd.Parameters["refno"].Value = alertLink.Refno;
+                        cmd.Parameters["item"].Value = alertLink.Item;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             
             }
