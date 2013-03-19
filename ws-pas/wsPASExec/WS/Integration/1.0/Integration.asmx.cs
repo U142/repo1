@@ -463,7 +463,7 @@ namespace com.ums.ws.integration
                     {
                         VoiceProc += rs.GetInt32(10);
                         currentSummary.VoiceTotal += rs.GetInt32(11);
-                        IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno, "3002", "169,177");
+                        IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno, "3007,3008,3009", "169,177");
                         if (voiceDeliveryStatus.ContainsKey(0))
                         {
                             currentSummary.VoiceAnswered = voiceDeliveryStatus[0];

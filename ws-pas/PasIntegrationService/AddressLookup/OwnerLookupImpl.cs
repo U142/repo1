@@ -38,6 +38,8 @@ namespace com.ums.pas.integration.AddressLookup
 
                 double prepare = 0;
                 double sql = 0;
+                int mobilePhones = 0;
+                int fixedPhones = 0;
 
                 foreach (OwnerAddress owner in ownerAddresses)
                 {
@@ -66,8 +68,6 @@ namespace com.ums.pas.integration.AddressLookup
                             start = DateTime.Now;
                             using (OdbcDataReader rs = Command.ExecuteReader())
                             {
-                                int mobilePhones = 0;
-                                int fixedPhones = 0;
                                 int personsFound = 0;
                                 while (rs.Read())
                                 {
@@ -137,10 +137,11 @@ namespace com.ums.pas.integration.AddressLookup
                         Console.WriteLine("Failed to look up '{0}'", owner.Navn);
                     }
                 }
+                log.InfoFormat("Found {0} recipients living on {1} PropertyAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
 
                 Connection.Close();
 
-                Console.WriteLine("Preparation: {0:0} ms\texecution: {1:0} ms", prepare, sql);
+                log.InfoFormat("Preparation: {0:0} ms\texecution: {1:0} ms", prepare, sql);
             }
 
             return recipients;
