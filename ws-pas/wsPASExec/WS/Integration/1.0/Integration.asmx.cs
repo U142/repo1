@@ -470,9 +470,7 @@ namespace com.ums.ws.integration
                     {
                         VoiceProc += rs.GetInt32(10);
                         currentSummary.VoiceTotal += rs.GetInt32(11);
-                        String VoiceConfirmedCodes = System.Configuration.ConfigurationManager.AppSettings["VoiceConfirmedCodes"];
-                        String VoiceUnansweredCodes = System.Configuration.ConfigurationManager.AppSettings["VoiceUnansweredCodes"];
-                        IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno, VoiceConfirmedCodes, VoiceUnansweredCodes);
+                        IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno);
                         if (voiceDeliveryStatus.ContainsKey(0))
                         {
                             currentSummary.VoiceAnswered = voiceDeliveryStatus[0];
@@ -683,7 +681,6 @@ namespace com.ums.ws.integration
             return db.GetTimeProfiles(AlertId.Id);
         }
 
-
         private List<LogLine> GetErrors(long alertPk)
         {
             List<LogLine> errorList = new List<LogLine>();
@@ -706,7 +703,7 @@ namespace com.ums.ws.integration
 		                                        BH.l_status=SC.l_status
 		                                        and SC.l_type=4
                                         where
-	                                        BP.l_projectpk = {0}
+	                                        BP.l_projectpk=?
                                         union select
 	                                        'SMS' type,
 	                                        SH.sz_number,
@@ -723,22 +720,28 @@ namespace com.ums.ws.integration
 	                                        INNER JOIN SMSSTATUSCODES SC ON
 		                                        SC.l_status=SH.l_status
                                         where
-	                                        BP.l_projectpk = {0}", alertPk);
+	                                        BP.l_projectpk=?");
 
-            using (OdbcDataReader rs = db.ExecReader(sql, UmsDb.UREADER_AUTOCLOSE))
+            using (OdbcCommand cmd = db.CreateCommand(sql))
             {
-                while (rs.Read())
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = alertPk;
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = alertPk;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    bool canReceiveSms = false;
-                    if (rs.GetString(rs.GetOrdinal("type")) == "SMS")
-                        canReceiveSms = true;
+                    while (rs.Read())
+                    {
+                        bool canReceiveSms = false;
+                        if (rs.GetString(rs.GetOrdinal("type")) == "SMS")
+                            canReceiveSms = true;
 
-                    LogLine line = new LogLine();
-                    line.EndPoint = new Phone() { Address = rs.GetString(rs.GetOrdinal("sz_number")), CanReceiveSms = canReceiveSms };
-                    line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
-                    line.StatusText = rs.GetString(rs.GetOrdinal("sz_text"));
+                        LogLine line = new LogLine();
+                        line.EndPoint = new Phone() { Address = rs.GetString(rs.GetOrdinal("sz_number")), CanReceiveSms = canReceiveSms };
+                        line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
+                        line.StatusText = rs.GetString(rs.GetOrdinal("sz_text"));
 
-                    errorList.Add(line);
+                        errorList.Add(line);
+                    }
                 }
             }
 
