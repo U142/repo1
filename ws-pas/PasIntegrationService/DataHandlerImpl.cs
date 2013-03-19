@@ -191,9 +191,9 @@ namespace com.ums.pas.integration
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                         InsertResched(Refno, voiceConfig);
                         InsertBbValid(Refno, voiceConfig.ValidDays);
-                        InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
+                        InsertBbActionprofileSend((int) Refno, voiceConfig.VoiceProfilePk);
                         //if forced hidden number or no numbers assigned
-                        InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                        InsertBbSendnum((int) Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
                     }
                     CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
 
@@ -351,28 +351,45 @@ namespace com.ums.pas.integration
         /// </summary>
         private void WriteToMdvhist(List<RecipientData> recipientData)
         {
-            foreach (RecipientData data in recipientData)
-            {
-                foreach(RecipientData.RefnoItem alertLink in data.AlertLink)
-                {
-                    String Sql = String.Format("INSERT INTO MDVHIST(l_refno, l_item, sz_fields, l_adrpk2, l_adrpk, l_xcoord, l_ycoord, sz_adrinfo, l_lon, l_lat, sz_pin1, sz_pin2, l_prioritized) "+
-                                                "VALUES({0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', {8}, {9}, '{10}', '{11}', {12})",
-                                                alertLink.Refno,
-                                                alertLink.Item,
-                                                "",
-                                                -1,
-                                                -1,
-                                                0,
-                                                0,
-                                                data.AddressLine.Replace("'", "''"),
-                                                data.Lon.ToString(UCommon.UGlobalizationInfo),
-                                                data.Lat.ToString(UCommon.UGlobalizationInfo),
-                                                "",
-                                                "",
-                                                0
-                                                );
-                    Database.ExecNonQuery(Sql);
+            string Sql = "INSERT INTO MDVHIST(l_refno, l_item, sz_fields, l_adrpk2, l_adrpk, l_xcoord, l_ycoord, sz_adrinfo, l_lon, l_lat, sz_pin1, sz_pin2, l_prioritized) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_item", OdbcType.Int);
+                cmd.Parameters.Add("sz_fields", OdbcType.VarChar);
+                cmd.Parameters.Add("l_adrpk2", OdbcType.Int);
+                cmd.Parameters.Add("l_adrpk", OdbcType.Numeric);
+                cmd.Parameters.Add("l_xcoord", OdbcType.Int);
+                cmd.Parameters.Add("l_ycoord", OdbcType.Int);
+                cmd.Parameters.Add("sz_adrinfo", OdbcType.VarChar);
+                cmd.Parameters.Add("l_lon", OdbcType.Double);
+                cmd.Parameters.Add("l_lat", OdbcType.Double);
+                cmd.Parameters.Add("sz_pin1", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_pin2", OdbcType.VarChar);
+                cmd.Parameters.Add("l_prioritized", OdbcType.TinyInt);
+
+                foreach (RecipientData data in recipientData)
+                {
+                    foreach(RecipientData.RefnoItem alertLink in data.AlertLink)
+                    {
+                            cmd.Parameters["l_refno"].Value = alertLink.Refno;
+                            cmd.Parameters["l_item"].Value = alertLink.Item;
+                            cmd.Parameters["sz_fields"].Value = "";
+                            cmd.Parameters["l_adrpk2"].Value = -1;
+                            cmd.Parameters["l_adrpk"].Value = -1;
+                            cmd.Parameters["l_xcoord"].Value = 0;
+                            cmd.Parameters["l_ycoord"].Value = 0;
+                            cmd.Parameters["sz_adrinfo"].Value = data.AddressLine;
+                            cmd.Parameters["l_lon"].Value = data.Lon;
+                            cmd.Parameters["l_lat"].Value = data.Lat;
+                            cmd.Parameters["sz_pin1"].Value = "";
+                            cmd.Parameters["sz_pin2"].Value = "";
+                            cmd.Parameters["l_prioritized"].Value = 0;
+                        
+                            cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -382,114 +399,93 @@ namespace com.ums.pas.integration
         /// </summary>
         private void WriteMetaData(AlertId AlertId, List<RecipientData> recipientData)
         {
-            foreach (RecipientData recipient in recipientData)
+            String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                //String SqlBase = "INSERT INTO MDVHIST_ADDRESS_SOURCE VALUES({0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', '{16}', '{17}')";
+                cmd.Parameters.Add("projectpk", OdbcType.Numeric);
+                cmd.Parameters.Add("company", OdbcType.Int);
+                cmd.Parameters.Add("Name", OdbcType.VarChar);
+                cmd.Parameters.Add("alertTarget", OdbcType.Int);
+                cmd.Parameters.Add("municipalId", OdbcType.Int);
+                cmd.Parameters.Add("streetId", OdbcType.Int);
+                cmd.Parameters.Add("houseNo", OdbcType.Int);
+                cmd.Parameters.Add("houseLetter", OdbcType.VarChar);
+                cmd.Parameters.Add("oppgang", OdbcType.VarChar);
+                cmd.Parameters.Add("gnr", OdbcType.Int);
+                cmd.Parameters.Add("bnr", OdbcType.Int);
+                cmd.Parameters.Add("fnr", OdbcType.Int);
+                cmd.Parameters.Add("snr", OdbcType.Int);
+                cmd.Parameters.Add("unr", OdbcType.Int);
+                cmd.Parameters.Add("postnr", OdbcType.Int);
+                cmd.Parameters.Add("data", OdbcType.VarChar);
+                cmd.Parameters.Add("birthdate", OdbcType.Int);
+                cmd.Parameters.Add("attr", OdbcType.VarChar);
+                cmd.Parameters.Add("extid", OdbcType.VarChar);
 
-                //The recipient wasn't linked to any targets, add the recipient here with reference to project only, not refno/item.
-                if (recipient.AlertLink.Count == 0)
+                foreach (RecipientData recipient in recipientData)
                 {
-                }
-                
-                int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0 , snr = 0, unr = 0, postnr = 0, birthdate = 0;
-                String municipalid = "0", letter = "", oppgang = "", data = "", externalId = "";
-                if (recipient.AlertTarget is StreetAddress)
-                {
-                    StreetAddress streetAddress = (StreetAddress) recipient.AlertTarget;
-                    municipalid = streetAddress.MunicipalCode;
-                    streetid = streetAddress.StreetNo;
-                    houseno = streetAddress.HouseNo;
-                    letter = streetAddress.Letter;
-                }
-                else if (recipient.AlertTarget is PropertyAddress)
-                {
-                    PropertyAddress propertyAddress = (PropertyAddress)recipient.AlertTarget;
-                    municipalid = propertyAddress.MunicipalCode;
-                    gnr = propertyAddress.Gnr;
-                    bnr = propertyAddress.Bnr;
-                    fnr = propertyAddress.Fnr;
-                    unr = propertyAddress.Unr;
+                    //The recipient wasn't linked to any targets, add the recipient here with reference to project only, not refno/item.
+                    if (recipient.AlertLink.Count == 0)
+                    {
+                    }
 
-                }
-                else if (recipient.AlertTarget is OwnerAddress)
-                {
-                    // TODO: insert alert target data
-                    OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
-                    birthdate = ownerAddress.DateOfBirth;
-                    postnr = ownerAddress.Postnr;
-                    data = 
-                                ownerAddress.Adresselinje1
-                        + "|" + ownerAddress.Adresselinje2
-                        + "|" + ownerAddress.Adresselinje3
-                        + "|" + ownerAddress.EierIdKode.ToString() 
-                        + "|" + ownerAddress.EierKategoriKode.ToString() 
-                        + "|" + ownerAddress.EierStatusKode.ToString();
-                    externalId = ownerAddress.EierId.ToString();
-                }
-                else if (recipient.AlertTarget is AlertObject)
-                {
-                    // TODO: insert alert target data
-                    externalId = ((AlertObject)recipient.AlertTarget).ExternalId;
-                }
+                    int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0, snr = 0, unr = 0, postnr = 0, birthdate = 0;
+                    String municipalid = "0", letter = "", oppgang = "", data = "", externalId = "";
+                    if (recipient.AlertTarget is StreetAddress)
+                    {
+                        StreetAddress streetAddress = (StreetAddress)recipient.AlertTarget;
+                        municipalid = streetAddress.MunicipalCode;
+                        streetid = streetAddress.StreetNo;
+                        houseno = streetAddress.HouseNo;
+                        letter = streetAddress.Letter;
+                    }
+                    else if (recipient.AlertTarget is PropertyAddress)
+                    {
+                        PropertyAddress propertyAddress = (PropertyAddress)recipient.AlertTarget;
+                        municipalid = propertyAddress.MunicipalCode;
+                        gnr = propertyAddress.Gnr;
+                        bnr = propertyAddress.Bnr;
+                        fnr = propertyAddress.Fnr;
+                        unr = propertyAddress.Unr;
 
-                if (municipalid == null || municipalid.Length == 0)
-                {
-                    municipalid = "0";
-                }
-                // build attribute string, pipe-separated key=value pairs
-                StringBuilder customAttributes = new StringBuilder("");
-                foreach (DataItem attribute in recipient.AlertTarget.Attributes)
-                {
-                    customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
-                    customAttributes.Append("=");
-                    customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
-                    customAttributes.Append("|");
-                }
+                    }
+                    else if (recipient.AlertTarget is OwnerAddress)
+                    {
+                        // TODO: insert alert target data
+                        OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
+                        birthdate = ownerAddress.DateOfBirth;
+                        postnr = ownerAddress.Postnr;
+                        data =
+                                    ownerAddress.Adresselinje1
+                            + "|" + ownerAddress.Adresselinje2
+                            + "|" + ownerAddress.Adresselinje3
+                            + "|" + ownerAddress.EierIdKode.ToString()
+                            + "|" + ownerAddress.EierKategoriKode.ToString()
+                            + "|" + ownerAddress.EierStatusKode.ToString();
+                        externalId = ownerAddress.EierId.ToString();
+                    }
+                    else if (recipient.AlertTarget is AlertObject)
+                    {
+                        // TODO: insert alert target data
+                        externalId = ((AlertObject)recipient.AlertTarget).ExternalId;
+                    }
 
-                /*String Sql = String.Format("sp_ins_mdvAddressSource {0}, {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}', {9}, {10}, {11}, {12}, {13}, {14}, '{15}', {16}, '{17}', {18}",
-                                            AlertId.Id,
-                                            recipient.Company ? "1" : "0",
-                                            recipient.Name,
-                                            AlertTarget.DiscriminatorValue(recipient.AlertTarget),
-                                            municipalid,
-                                            streetid,
-                                            houseno,
-                                            letter.Replace("'", "''"),
-                                            oppgang,
-                                            gnr,
-                                            bnr,
-                                            fnr,
-                                            snr,
-                                            unr,
-                                            postnr,
-                                            data.Replace("'", "''"),
-                                            birthdate,
-                                            customAttributes.ToString().Replace("'", "''"),
-                                            externalId != null ? String.Format("'{0}'", externalId.Replace("'", "''")) : "NULL");*/
-                String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                    if (municipalid == null || municipalid.Length == 0)
+                    {
+                        municipalid = "0";
+                    }
+                    // build attribute string, pipe-separated key=value pairs
+                    StringBuilder customAttributes = new StringBuilder("");
+                    foreach (DataItem attribute in recipient.AlertTarget.Attributes)
+                    {
+                        customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
+                        customAttributes.Append("=");
+                        customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
+                        customAttributes.Append("|");
+                    }
 
-                long alertSourcePk = -1;
-                using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
-                {
-                    cmd.Parameters.Add("projectpk", OdbcType.Numeric);
-                    cmd.Parameters.Add("company", OdbcType.Int);
-                    cmd.Parameters.Add("Name", OdbcType.VarChar);
-                    cmd.Parameters.Add("alertTarget", OdbcType.Int);
-                    cmd.Parameters.Add("municipalId", OdbcType.Int);
-                    cmd.Parameters.Add("streetId", OdbcType.Int);
-                    cmd.Parameters.Add("houseNo", OdbcType.Int);
-                    cmd.Parameters.Add("houseLetter", OdbcType.VarChar);
-                    cmd.Parameters.Add("oppgang", OdbcType.VarChar);
-                    cmd.Parameters.Add("gnr", OdbcType.Int);
-                    cmd.Parameters.Add("bnr", OdbcType.Int);
-                    cmd.Parameters.Add("fnr", OdbcType.Int);
-                    cmd.Parameters.Add("snr", OdbcType.Int);
-                    cmd.Parameters.Add("unr", OdbcType.Int);
-                    cmd.Parameters.Add("postnr", OdbcType.Int);
-                    cmd.Parameters.Add("data", OdbcType.VarChar);
-                    cmd.Parameters.Add("birthdate", OdbcType.Int);
-                    cmd.Parameters.Add("attr", OdbcType.VarChar);
-                    cmd.Parameters.Add("extid", OdbcType.VarChar);
+
+                    long alertSourcePk = -1;
 
                     cmd.Parameters["projectpk"].Value = AlertId.Id;
                     cmd.Parameters["company"].Value = recipient.Company ? 1 : 0;
@@ -517,32 +513,38 @@ namespace com.ums.pas.integration
                             alertSourcePk = rs.GetInt64(0);
                         }
                     }
-                }
 
-                //insert alert links
-                foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
-                {
+                    //insert alert links
                     Sql = "INSERT INTO MDVHIST_ADDRESS_SOURCE_ALERTS VALUES(?,?,?)";
-                    using (OdbcCommand cmd = Database.CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
+                    using (OdbcCommand cmdLink = Database.CreateCommand(Sql))
                     {
-                        cmd.Parameters.Add("alertSourcePk", OdbcType.Numeric);
-                        cmd.Parameters.Add("refno", OdbcType.Int);
-                        cmd.Parameters.Add("item", OdbcType.Int);
-                        cmd.Parameters["alertSourcePk"].Value = alertSourcePk;
-                        cmd.Parameters["refno"].Value = alertLink.Refno;
-                        cmd.Parameters["item"].Value = alertLink.Item;
-                        cmd.ExecuteNonQuery();
+                        cmdLink.Parameters.Add("alertSourcePk", OdbcType.Numeric);
+                        cmdLink.Parameters.Add("refno", OdbcType.Int);
+                        cmdLink.Parameters.Add("item", OdbcType.Int);
+
+                        foreach (RecipientData.RefnoItem alertLink in recipient.AlertLink)
+                        {
+                            cmdLink.Parameters["alertSourcePk"].Value = alertSourcePk;
+                            cmdLink.Parameters["refno"].Value = alertLink.Refno;
+                            cmdLink.Parameters["item"].Value = alertLink.Item;
+                            cmdLink.ExecuteNonQuery();
+                        }
                     }
                 }
-            
             }
         }
 
-        private void InsertBbActionprofileSend(long Refno, int ProfilePk)
+        private void InsertBbActionprofileSend(int Refno, int ProfilePk)
         {
-            String Sql = String.Format("INSERT INTO BBACTIONPROFILESEND(l_refno, l_actionprofilepk) VALUES({0}, {1})",
-                                        Refno, ProfilePk);
-            Database.ExecNonQuery(Sql);
+            String Sql = "INSERT INTO BBACTIONPROFILESEND(l_refno, l_actionprofilepk) VALUES(?, ?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_actionprofilepk", OdbcType.Int);
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters["l_actionprofilepk"].Value = ProfilePk;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -551,10 +553,17 @@ namespace com.ums.pas.integration
         /// </summary>
         /// <param name="Refno"></param>
         /// <param name="number"></param>
-        private void InsertBbSendnum(long Refno, String Number)
+        private void InsertBbSendnum(int Refno, String Number)
         {
-            String Sql = String.Format("INSERT INTO BBSENDNUM(l_refno, sz_number) VALUES({0}, '{1}')", Refno, Number);
-            Database.ExecNonQuery(Sql);
+            String Sql = "INSERT INTO BBSENDNUM(l_refno, sz_number) VALUES(?, ?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("sz_number", OdbcType.VarChar);
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters["sz_number"].Value = Number;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -564,8 +573,15 @@ namespace com.ums.pas.integration
         /// <param name="ValidDays"></param>
         private void InsertBbValid(long Refno, int ValidDays)
         {
-            String Sql = String.Format("INSERT INTO BBVALID(l_valid, l_refno) VALUES({0}, {1})", ValidDays, Refno);
-            Database.ExecNonQuery(Sql);
+            String Sql = "INSERT INTO BBVALID(l_valid, l_refno) VALUES(?, ?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_valid", OdbcType.Int);
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters["l_valid"].Value = ValidDays;
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -575,41 +591,70 @@ namespace com.ums.pas.integration
         /// <param name="VoiceConfig"></param>
         private void InsertResched(long Refno, VoiceConfiguration VoiceConfig)
         {
-            String Sql = String.Format("INSERT INTO BBDYNARESCHED(l_refno, l_retries, l_interval, l_canceltime, l_canceldate, l_pausetime, l_pauseinterval) " +
-                                        "VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6})",
-                                        Refno,
-                                        VoiceConfig.Repeats,
-                                        VoiceConfig.FrequencyMinutes,
-                                        -1,
-                                        -1,
-                                        VoiceConfig.PauseAtTime,
-                                        VoiceConfig.PauseDurationMinutes);
-            Database.ExecNonQuery(Sql);
+            String Sql = "INSERT INTO BBDYNARESCHED(l_refno, l_retries, l_interval, l_canceltime, l_canceldate, l_pausetime, l_pauseinterval) "
+                                        + "VALUES(?, ?, ?, ?, ?, ?, ?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_retries", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_interval", OdbcType.SmallInt);
+                cmd.Parameters.Add("l_canceltime", OdbcType.SmallInt);
+                cmd.Parameters.Add("l_canceldate", OdbcType.Int);
+                cmd.Parameters.Add("l_pausetime", OdbcType.SmallInt);
+                cmd.Parameters.Add("l_pauseinterval", OdbcType.Int);
+
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters["l_retries"].Value = VoiceConfig.Repeats;
+                cmd.Parameters["l_interval"].Value = VoiceConfig.FrequencyMinutes;
+                cmd.Parameters["l_canceltime"].Value = -1;
+                cmd.Parameters["l_canceldate"].Value = -1;
+                cmd.Parameters["l_pausetime"].Value = VoiceConfig.PauseAtTime;
+                cmd.Parameters["l_pauseinterval"].Value = VoiceConfig.PauseDurationMinutes;
+
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private void InsertSmsQ(long Refno, AccountDetails Account, AlertConfiguration AlertConfig)
         {
             int itemNumber = 0;
-            foreach (RecipientData recipientData in recipientDataList)
+            String Sql = "INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_referenceid,sz_number,l_adrpk,l_concatproc) VALUES(?,?,?,?,?,?,?,?,?,?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                foreach (Endpoint endPoint in recipientData.Endpoints)
-                {
-                    if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms && endPoint.Address.Length > 0)
-                    {
-                        String Sql = String.Format("INSERT INTO SMSQ(l_refno,l_item,l_server,l_tries,l_chanid,l_schedtime,sz_number,l_adrpk) VALUES({0}, {1}, {2}, {3}, {4}, {5}, '{6}', {7})",
-                                                                    Refno,
-                                                                    ++itemNumber,
-                                                                    Account.PrimarySmsServer,
-                                                                    0,
-                                                                    0,
-                                                                    AlertConfig.StartImmediately ? "0" : AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"),
-                                                                    endPoint.Address,
-                                                                    -1);
-                        Database.ExecNonQuery(Sql);
-                        recipientData.AlertLink.Add(RecipientData.newRefnoItem(Refno, itemNumber));
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_item", OdbcType.Int);
+                cmd.Parameters.Add("l_server", OdbcType.Int);
+                cmd.Parameters.Add("l_tries", OdbcType.Int);
+                cmd.Parameters.Add("l_chanid", OdbcType.Int);
+                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric);
+                cmd.Parameters.Add("sz_referenceid", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_number", OdbcType.VarChar);
+                cmd.Parameters.Add("l_adrpk", OdbcType.Numeric);
+                cmd.Parameters.Add("l_concatproc", OdbcType.TinyInt);
 
+                foreach (RecipientData recipientData in recipientDataList)
+                {
+                    foreach (Endpoint endPoint in recipientData.Endpoints)
+                    {
+                        if (endPoint is Phone && ((Phone)endPoint).CanReceiveSms && endPoint.Address.Length > 0)
+                        {
+                            cmd.Parameters["l_refno"].Value = Refno;
+                            cmd.Parameters["l_item"].Value = ++itemNumber;
+                            cmd.Parameters["l_server"].Value = Account.PrimarySmsServer;
+                            cmd.Parameters["l_tries"].Value = 0;
+                            cmd.Parameters["l_chanid"].Value = 0;
+                            cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                            cmd.Parameters["sz_referenceid"].Value = DBNull.Value;
+                            cmd.Parameters["sz_number"].Value = endPoint.Address;
+                            cmd.Parameters["l_adrpk"].Value = -1;
+                            cmd.Parameters["l_concatproc"].Value = DBNull.Value;
+
+                            cmd.ExecuteNonQuery();
+                            recipientData.AlertLink.Add(RecipientData.newRefnoItem(Refno, itemNumber));
+                        }
                     }
                 }
+
             }
 
         }
@@ -617,59 +662,98 @@ namespace com.ums.pas.integration
 
         private void UpdateSmsQref(long Refno, int Items)
         {
-            String Sql = String.Empty;
-            if (Items == 0)
+            String Sql = "UPDATE SMSQREF SET l_items=?, l_status=? WHERE l_refno=?";
+
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
-                Sql = String.Format("UPDATE SMSQREF SET l_items=0, l_status=7 WHERE l_refno={0}", Refno);
+                cmd.Parameters.Add("l_items", OdbcType.Int);
+                cmd.Parameters.Add("l_status", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+
+                cmd.Parameters["l_items"].Value = Items == 0 ? 0 : Items;
+                cmd.Parameters["l_status"].Value = Items == 0 ? 7 : 4;
+                cmd.Parameters["l_refno"].Value = Refno;
+
+                cmd.ExecuteNonQuery();
             }
-            else
-            {
-                Sql = String.Format("UPDATE SMSQREF SET l_items={0}, l_status=4 WHERE l_refno={1}", Items, Refno);
-            }
-            Database.ExecNonQuery(Sql);
         }
 
 
         private void InsertSmsQref(long Refno, AccountDetails Account, AlertConfiguration alertConfig, SmsConfiguration smsConfig)
         {
             int group = 3;
-            String Sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
-                    "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
-                    "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
-                    "{26}, {27}, {28}, '{29}', {30}, {31}",
-                            0, //0 projectpk
-                            Refno, //1
-                            Account.Comppk,
-                            Account.Deptpk,
-                            1, //4
-                            1, //5
-                            Account.DeptPri, //6
-                            1, //7
-                            0, //8
-                            alertConfig.StartImmediately ? "0" : alertConfig.Scheduled.ToString("yyyyMMddHHmmss"), //9
-                            Account.PrimarySmsServer, //10
-                            Account.SecondarySmsServer, //11
-                            "", //12
-                            smsConfig.OriginAddress.Replace("'", "''"), //13
-                            alertConfig.AlertName.Replace("'", "''"), //14
-                            (alertConfig.SimulationMode ? 1 : 0), //15
-                            0,//parent refno //16
-                            0,//expected items //17
-                            smsConfig.BaseMessageContent.Replace("'", "''"), //18
-                            13, //19
-                            group, //20
-                            "|", //21
-                            0, //22
-                            0, //23
-                            UCommon.UGetDateNow(), //24
-                            UCommon.UGetTimeNow(), //25
-                            -1,//Account.Userpk, //26
-                            1, //27
-                            1, //28
-                            Account.StdCc.Replace("'", "''"), //29
-                            (long)(AdrTypes.SMS_PRIVATE | AdrTypes.SMS_COMPANY), //30
-                            alertConfig.SimulationMode ? 2 : 1); //31
-            Database.ExecNonQuery(Sql);
+
+            String Sql = "sp_sms_ins_smsqref_bcp_v2 ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_projectpk", OdbcType.Numeric);
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_comppk", OdbcType.Int);
+                cmd.Parameters.Add("l_deptpk", OdbcType.Int);
+                cmd.Parameters.Add("l_otoa", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_msgclass", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_pri", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_localsched", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_validitytime", OdbcType.Int);
+                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric);
+                cmd.Parameters.Add("l_priserver", OdbcType.Int);
+                cmd.Parameters.Add("l_altservers", OdbcType.Int);
+                cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_oadc", OdbcType.VarChar);
+                cmd.Parameters.Add("sz_descriptor", OdbcType.VarChar);
+                cmd.Parameters.Add("f_simulation", OdbcType.Int);
+                cmd.Parameters.Add("l_parentrefno", OdbcType.Int);
+                cmd.Parameters.Add("l_expecteditems", OdbcType.Int);
+                cmd.Parameters.Add("sz_text", OdbcType.VarChar);
+                cmd.Parameters.Add("l_fromapplication", OdbcType.Int);
+                cmd.Parameters.Add("l_group", OdbcType.Int);
+                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar);
+                cmd.Parameters.Add("l_lastantsep", OdbcType.Int);
+                cmd.Parameters.Add("l_addresspos", OdbcType.Int);
+                cmd.Parameters.Add("l_createdate", OdbcType.Int);
+                cmd.Parameters.Add("l_createtime", OdbcType.Int);
+                cmd.Parameters.Add("l_userpk", OdbcType.Numeric);
+                cmd.Parameters.Add("l_nofax", OdbcType.Int);
+                cmd.Parameters.Add("l_removedup", OdbcType.Int);
+                cmd.Parameters.Add("sz_stdcc", OdbcType.VarChar);
+                cmd.Parameters.Add("l_addresstypes", OdbcType.Int);
+                cmd.Parameters.Add("f_dynacall", OdbcType.Int);
+
+                cmd.Parameters["l_projectpk"].Value = 0;
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters["l_comppk"].Value = Account.Comppk;
+                cmd.Parameters["l_deptpk"].Value = Account.Deptpk;
+                cmd.Parameters["l_otoa"].Value = 1;
+                cmd.Parameters["l_msgclass"].Value = 1;
+                cmd.Parameters["l_pri"].Value = Account.DeptPri;
+                cmd.Parameters["l_localsched"].Value = 1;
+                cmd.Parameters["l_validitytime"].Value = 0;
+                cmd.Parameters["l_schedtime"].Value = alertConfig.StartImmediately ? 0 : Int64.Parse(alertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                cmd.Parameters["l_priserver"].Value = Account.PrimarySmsServer;
+                cmd.Parameters["l_altservers"].Value = Account.SecondarySmsServer;
+                cmd.Parameters["sz_tarifclass"].Value = "";
+                cmd.Parameters["sz_oadc"].Value = smsConfig.OriginAddress;
+                cmd.Parameters["sz_descriptor"].Value = alertConfig.AlertName;
+                cmd.Parameters["f_simulation"].Value = (alertConfig.SimulationMode ? 1 : 0);
+                cmd.Parameters["l_parentrefno"].Value = 0;
+                cmd.Parameters["l_expecteditems"].Value = 0;
+                cmd.Parameters["sz_text"].Value = smsConfig.BaseMessageContent;
+                cmd.Parameters["l_fromapplication"].Value = 13;
+                cmd.Parameters["l_group"].Value = group;
+                cmd.Parameters["sz_sepused"].Value = "|";
+                cmd.Parameters["l_lastantsep"].Value = 0;
+                cmd.Parameters["l_addresspos"].Value = 0;
+                cmd.Parameters["l_createdate"].Value = Int32.Parse(UCommon.UGetDateNow());
+                cmd.Parameters["l_createtime"].Value = Int32.Parse(UCommon.UGetTimeNow());
+                cmd.Parameters["l_userpk"].Value = -1; 
+                cmd.Parameters["l_nofax"].Value = 1;
+                cmd.Parameters["l_removedup"].Value = 1;
+                cmd.Parameters["sz_stdcc"].Value = Account.StdCc;
+                cmd.Parameters["l_addresstypes"].Value = (long)(AdrTypes.SMS_PRIVATE | AdrTypes.SMS_COMPANY);
+                cmd.Parameters["f_dynacall"].Value = alertConfig.SimulationMode ? 2 : 1;
+
+                cmd.ExecuteNonQuery();
+            }
         }
 
 
@@ -680,7 +764,60 @@ namespace com.ums.pas.integration
         {
             int noFax = 1;
             int group = 3;
-            String Sql = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
+            String Sql = "INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
+                      "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
+                      "l_removedup, l_type, f_dynacall, l_addresstypes, l_userpk, l_maxchannels) " +
+                      "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("sz_fields", OdbcType.VarChar, 500);
+                cmd.Parameters.Add("sz_sepused", OdbcType.VarChar, 10);
+                cmd.Parameters.Add("l_addresspos", OdbcType.Int);
+                cmd.Parameters.Add("l_lastantsep", OdbcType.Int);
+                cmd.Parameters.Add("l_refno", OdbcType.Int);
+                cmd.Parameters.Add("l_createdate", OdbcType.Int);
+                cmd.Parameters.Add("l_createtime", OdbcType.SmallInt);
+                cmd.Parameters.Add("l_scheddate", OdbcType.Int);
+                cmd.Parameters.Add("l_schedtime", OdbcType.Int);
+                cmd.Parameters.Add("sz_sendingname", OdbcType.VarChar, 255);
+                cmd.Parameters.Add("l_sendingstatus", OdbcType.Int);
+                cmd.Parameters.Add("l_companypk", OdbcType.Int);
+                cmd.Parameters.Add("l_deptpk", OdbcType.Int);
+                cmd.Parameters.Add("l_nofax", OdbcType.Int);
+                cmd.Parameters.Add("l_group", OdbcType.Int);
+                cmd.Parameters.Add("l_removedup", OdbcType.Int);
+                cmd.Parameters.Add("l_type", OdbcType.Int);
+                cmd.Parameters.Add("f_dynacall", OdbcType.TinyInt);
+                cmd.Parameters.Add("l_addresstypes", OdbcType.Int);
+                cmd.Parameters.Add("l_userpk", OdbcType.Numeric);
+                cmd.Parameters.Add("l_maxchannels", OdbcType.Int);
+
+                cmd.Parameters["sz_fields"].Value = "";
+                cmd.Parameters["sz_sepused"].Value = "|";
+                cmd.Parameters["l_addresspos"].Value = 0;
+                cmd.Parameters["l_lastantsep"].Value = 0;
+                cmd.Parameters["l_refno"].Value = Refno;
+                cmd.Parameters["l_createdate"].Value = Int32.Parse(UCommon.UGetDateNow());
+                cmd.Parameters["l_createtime"].Value = Int32.Parse(UCommon.UGetTimeNow());
+                cmd.Parameters["l_scheddate"].Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("yyyyMMdd"));
+                cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("HHmm"));
+                cmd.Parameters["sz_sendingname"].Value = AlertConfig.AlertName;
+                cmd.Parameters["l_sendingstatus"].Value = 1;
+                cmd.Parameters["l_companypk"].Value = Account.Comppk;
+                cmd.Parameters["l_deptpk"].Value = Account.Deptpk;
+                cmd.Parameters["l_nofax"].Value = noFax;
+                cmd.Parameters["l_group"].Value = group;
+                cmd.Parameters["l_removedup"].Value = 1;
+                cmd.Parameters["l_type"].Value = 1; //voice
+                cmd.Parameters["f_dynacall"].Value = AlertConfig.SimulationMode ? 2 : 1;
+                cmd.Parameters["l_addresstypes"].Value = (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED);
+                cmd.Parameters["l_userpk"].Value = -1;
+                cmd.Parameters["l_maxchannels"].Value = Account.MaxVoiceChannels;
+
+                cmd.ExecuteNonQuery();
+
+            }
+            /*String Sql = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
                       "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
                       "l_removedup, l_type, f_dynacall, l_addresstypes, l_userpk, l_maxchannels) " +
                       "VALUES('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, '{9}', {10}, {11}, {12}, {13}, " +
@@ -706,7 +843,7 @@ namespace com.ums.pas.integration
                 (long)(AdrTypes.MOBILE_PRIVATE_AND_FIXED | AdrTypes.MOBILE_COMPANY_AND_FIXED),
                 -1, //Account.Userpk,
                 360);
-            Database.ExecNonQuery(Sql);
+            Database.ExecNonQuery(Sql);*/
         }
 
 
