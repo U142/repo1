@@ -137,6 +137,13 @@ namespace com.ums.ws.integration
             {
                 return AlertResponseFactory.Failed(-30, "Test alert endpoint must be a phone");
             }
+            switch (SendTo)
+            {
+                case SendChannel.EMAIL:
+                case SendChannel.LBA:
+                case SendChannel.TAS:
+                    return AlertResponseFactory.Failed(-404, "Selected channel not implemented {0}", SendTo.ToString());
+            }
 
 
             Phone phone = (Phone) Endpoint;
@@ -276,7 +283,7 @@ namespace com.ums.ws.integration
                             {
                                 return AlertResponseFactory.Failed(-41, "No message content specified for the sms alert");
                             }
-                            if (smsConfig.BaseMessageContent.Length >= 765)
+                            if (smsConfig.BaseMessageContent.Length > 765)
                             {
                                 return AlertResponseFactory.Failed(-42, "Message content of the SMS message was too long, max is 765 characters");
                             }
