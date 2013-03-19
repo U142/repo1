@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Net;
 using System.Xml;
@@ -197,8 +198,8 @@ namespace com.ums.PAS.Address.gab
             if(m_params.sz_country.Equals("SE")) {
                 sz_server = "http://maps.metria.se/geokodning/Geocode";
                 sz_params = "address=" + m_params.sz_address + " " + m_params.sz_no + ", " +
-                                    m_params.sz_postno + " " + m_params.sz_postarea +
-                                    ", Sverige&scheme=adress_WGS84";
+                                    m_params.sz_postno + " " + m_params.sz_postarea + " " +
+                                    m_params.sz_region + ", Sverige&scheme=adress_WGS84";
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("umsas:Zyl00pon"));
 
             } else {
@@ -410,7 +411,7 @@ namespace com.ums.PAS.Address.gab
             return list;
 
         }
-        
+
         private String[] tryParsePostNo(String postNoRegion)
         {
             String[] address = postNoRegion.Split(' ');
