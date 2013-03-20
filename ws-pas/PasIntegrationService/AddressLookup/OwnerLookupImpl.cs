@@ -194,7 +194,7 @@ namespace com.ums.pas.integration.AddressLookup
                         log.InfoFormat("Failed to look up owner '{0}' due to single name", owner.Navn);
                     }
                 }
-                log.InfoFormat("Found {0} recipients living on {1} PropertyAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
+                log.InfoFormat("Found {0} owners based on {1} OwnerAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
 
                 Connection.Close();
 

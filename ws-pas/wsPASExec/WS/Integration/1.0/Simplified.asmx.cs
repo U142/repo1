@@ -6,6 +6,8 @@ using System.Web.Services;
 using com.ums.pas.integration;
 using System.Xml.Serialization;
 using com.ums.UmsCommon;
+using com.ums.UmsDbLib;
+using System.Data.Odbc;
 
 namespace com.ums.ws.integration
 {
@@ -125,7 +127,19 @@ namespace com.ums.ws.integration
         {
             //TODO -
             //First we need to verify that the account owns the original alert
+            UmsDb umsDb = new UmsDb();
             bool exercise = true;
+            using (OdbcCommand cmd = umsDb.CreateCommand("SELECT isnull(f_dynacall, 1) FROM MDVSENDINGINFO WHERE l_refno in (SELECT l_refno from BBPROJECT_X_REFNO WHERE l_projectpk=?)"))
+            {
+                cmd.Parameters.Add("l_projectpk", OdbcType.Numeric).Value = AlertId.Id;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    if (rs.Read())
+                    {
+                        exercise = rs.GetInt32(0) == 2 ? true : false;
+                    }
+                }
+            }
 
             //TODO -
             //Then we need to check if we're following up an exercise or live alert.
