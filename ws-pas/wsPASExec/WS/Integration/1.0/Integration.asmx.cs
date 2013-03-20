@@ -519,7 +519,6 @@ namespace com.ums.ws.integration
 
         }
 
-
         /// <summary>
         /// Get array of previously sent alerts. Newest first.
         /// </summary>
@@ -704,7 +703,7 @@ namespace com.ums.ws.integration
 		                                        and SC.l_type=4
                                         where
 	                                        BP.l_projectpk=?
-                                        union select
+                                        union all select
 	                                        'SMS' type,
 	                                        SH.sz_number,
 	                                        SH.l_status,
