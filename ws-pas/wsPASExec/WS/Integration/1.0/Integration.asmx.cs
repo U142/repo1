@@ -411,7 +411,7 @@ namespace com.ums.ws.integration
         /// <param name="Account">The account</param>
         /// <param name="AlertId">The alert id</param>
         /// <param name="StatusCodeFilter">Status code for filtering</param>
-        /// <param name="StartIndex">Start at</param>
+        /// <param name="StartIndex">Start at (0 based index)</param>
         /// <param name="PageSize">Number of rows</param>
         /// <returns></returns>
         [WebMethod(Description = @"<b>Get object log for a previously sent alert.</b>")]
@@ -424,6 +424,7 @@ namespace com.ums.ws.integration
             logonInfo.sz_deptid = Account.DepartmentId;
             logonInfo.sz_password = Account.Password;
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+            int count = 0;
 
             if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
                 throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
@@ -499,8 +500,7 @@ from
 		HIST.l_status=SC.l_status
         {1}
 where
-	BP.l_projectpk = ?
-", sql_filter_voice, sql_filter_sms);
+	BP.l_projectpk = ?", sql_filter_voice, sql_filter_sms);
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {
@@ -520,8 +520,11 @@ where
 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    while (rs.Read())
+                    while (rs.Read() && (PageSize == 0 || count++ <= PageSize) )
                     {
+                        if (StartIndex-- > 0)
+                            continue;
+
                         int type = rs.GetInt32(rs.GetOrdinal("l_type"));
 
                         LogLineDetailed line = new LogLineDetailed();
