@@ -93,6 +93,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressLookup\FollowupLookupImpl.cs" />
+    <Compile Include="AddressLookup\IFollowupLookupFacade.cs" />
     <Compile Include="AddressLookup\IPropertyAddressLookupFacade.cs" />
     <Compile Include="AddressLookup\IOwnerLookupFacade.cs" />
     <Compile Include="AddressLookup\IStreetAddressLookupFacade.cs" />
