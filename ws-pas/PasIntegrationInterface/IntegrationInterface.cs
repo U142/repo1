@@ -1099,7 +1099,6 @@ namespace com.ums.pas.integration
     public class LogLineDetailed
     {
         private String _name;
-
         public String Name
         {
             get { return _name; }
@@ -1107,7 +1106,6 @@ namespace com.ums.pas.integration
         }
 
         private Endpoint _endpoint;
-
         public Endpoint Endpoint
         {
             get { return _endpoint; }
@@ -1115,34 +1113,52 @@ namespace com.ums.pas.integration
         }
 
         private DateTime _dateTime;
-
         public DateTime DateTime
         {
             get { return _dateTime; }
             set { _dateTime = value; }
         }
 
-        private int _status;
-
-        public int Status
+        private int _statusText;
+        public int StatusCode
+        {
+            get { return _statusText; }
+            set { _statusText = value; }
+        }
+        private string _status;
+        public string Status
         {
             get { return _status; }
             set { _status = value; }
         }
-        private String _externalId;
 
+        private int _reasonCode;
+        public int ReasonCode
+        {
+            get { return _reasonCode; }
+            set { _reasonCode = value; }
+        }
+
+        private string _reason;
+        public string Reason
+        {
+            get { return _reason; }
+            set { _reason = value; }
+        }
+
+        // externalid is redundant as it is only used for alertobject (will be included in the alertobject) and owner address (where it will be in the eierid field)
+        /*private String _externalId;
         public String ExternalId
         {
             get { return _externalId; }
             set { _externalId = value; }
-        }
+        }*/
 
-        private AlertObject _alertObject;
-
-        public AlertObject AlertObject
+        private AlertTarget _alertTarget;
+        public AlertTarget AlertTarget
         {
-            get { return _alertObject; }
-            set { _alertObject = value; }
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
         }
 
                 

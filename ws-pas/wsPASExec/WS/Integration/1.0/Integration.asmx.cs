@@ -404,6 +404,265 @@ namespace com.ums.ws.integration
             return GetAlerts(account, StartAt, PageSize);
         }
 
+
+        /// <summary>
+        /// Get object log for a previously sent alert.
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="AlertId">The alert id</param>
+        /// <param name="StatusCodeFilter">Status code for filtering</param>
+        /// <param name="StartIndex">Start at</param>
+        /// <param name="PageSize">Number of rows</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get object log for a previously sent alert.</b>")]
+        public List<LogLineDetailed> GetAlertObjectLog(Account Account, AlertId AlertId, int StatusCodeFilter, int StartIndex, int PageSize)
+        {
+            List<LogLineDetailed> objectLog = new List<LogLineDetailed>();
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
+                throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
+
+            String sql_filter_voice = "";
+            String sql_filter_sms = "";
+            if (StatusCodeFilter != 0)
+            {
+                sql_filter_voice = "AND SC.l_type=?";
+                sql_filter_sms = "AND HIST.l_dst=?";
+            }
+
+            String sql = String.Format(@"select
+	BP.l_projectpk, 
+	XP.l_refno,
+	ALERTS.l_item,
+	ADRSOURCE.*,
+	MDVHIST.*,
+	l_type=1,
+	HIST.sz_number,
+	HIST.l_status,
+	convert(numeric(18,0), HIST.l_date) * 1000000 + convert(numeric(18,0), HIST.l_time) * 100 l_timestamp,
+	SC.sz_status,
+	SC.l_type l_dst,
+	SC.sz_type_text
+from
+	BBPROJECT BP
+	INNER JOIN BBPROJECT_X_REFNO XP ON
+		BP.l_projectpk=XP.l_projectpk
+	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
+		XP.l_refno=ALERTS.l_refno
+	INNER JOIN BBHIST HIST ON 
+		ALERTS.l_refno=HIST.l_refno 
+		AND ALERTS.l_item=HIST.l_item
+	INNER JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno 
+		AND ALERTS.l_item=MDVHIST.l_item
+	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
+		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
+	INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
+		HIST.l_status=SC.l_status
+        {0}
+where
+	BP.l_projectpk = ?
+union
+select
+	BP.l_projectpk, 
+	XP.l_refno,
+	ALERTS.l_item,
+	ADRSOURCE.*,
+	MDVHIST.*,
+	l_type=2,
+	HIST.sz_number,
+	HIST.l_status,
+	isnull(HIST.l_dscts, HIST.l_scts) l_timestamp,
+	SC.sz_text sz_status,
+	HIST.l_dst,
+	null sz_type_text
+from
+	BBPROJECT BP
+	INNER JOIN BBPROJECT_X_REFNO XP ON
+		BP.l_projectpk=XP.l_projectpk
+	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
+		XP.l_refno=ALERTS.l_refno
+	INNER JOIN SMSHIST HIST ON 
+		ALERTS.l_refno=HIST.l_refno 
+		AND ALERTS.l_item=HIST.l_item
+	INNER JOIN MDVHIST ON 
+		ALERTS.l_refno=MDVHIST.l_refno 
+		AND ALERTS.l_item=MDVHIST.l_item
+	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
+		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
+	INNER JOIN SMSSTATUSCODES SC ON
+		HIST.l_status=SC.l_status
+        {1}
+where
+	BP.l_projectpk = ?
+", sql_filter_voice, sql_filter_sms);
+
+            using (OdbcCommand cmd = umsDb.CreateCommand(sql))
+            {
+                // add parameters
+                if (StatusCodeFilter > 0)
+                {
+                    cmd.Parameters.Add("voicefilter", OdbcType.Int).Value = StatusCodeFilter;
+                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
+                    cmd.Parameters.Add("smsfilter", OdbcType.Int).Value = ConvertStatusTypeToSmsDst(StatusCodeFilter);
+                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
+                }
+                else
+                {
+                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
+                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
+                }
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                    {
+                        int type = rs.GetInt32(rs.GetOrdinal("l_type"));
+
+                        LogLineDetailed line = new LogLineDetailed();
+
+                        DateTime timestamp;
+                        if (DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp))
+                            line.DateTime = timestamp;
+
+                        Phone phone = new Phone();
+                        phone.Address = rs.GetString(rs.GetOrdinal("sz_number"));
+
+                        switch (type)
+                        {
+                            case 1: // voice
+                                line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_dst"));
+                                break;
+                            case 2: // sms
+                                phone.CanReceiveSms = true;
+
+                                switch (rs.GetInt32(rs.GetOrdinal("l_dst")))
+                                {
+                                    case 0: // delivered
+                                        line.StatusCode = 2;
+                                        break;
+                                    case 2: // error
+                                        line.StatusCode = 4;
+                                        break;
+                                    case -1:// undelivered
+                                    case 1: // only used by some providers, but should still show as undelivered
+                                        line.StatusCode = 3;
+                                        break;
+                                }
+                                break;
+                        }
+
+                        line.Endpoint = phone;
+
+                        switch (line.StatusCode)
+                        {
+                            case 1:
+                                line.Status = "Confirmed";
+                                break;
+                            case 2:
+                                line.Status = "Delivered";
+                                break;
+                            case 3:
+                                line.Status = "Undelivered";
+                                break;
+                            case 4:
+                                line.Status = "Error";
+                                break;
+                        }
+
+                        line.Name = rs.GetString(rs.GetOrdinal("name"));
+                        line.ReasonCode = rs.GetInt32(rs.GetOrdinal("l_status"));
+                        line.Reason = rs.GetString(rs.GetOrdinal("sz_status"));
+                        //line.ExternalId = rs.GetString(rs.GetOrdinal("externalid"));
+
+                        // Alert Targets
+                        switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
+                        {
+                            case 1: // AlertObject
+                                AlertObject alertObject = new AlertObject();
+                                alertObject.ExternalId = rs.GetString(rs.GetOrdinal("externalid"));
+
+                                // redundant, but copy of parent anyway
+                                alertObject.Name = line.Name;
+                                alertObject.Endpoints.Add(line.Endpoint);
+
+                                line.AlertTarget = alertObject;
+                                break;
+                            case 2: // StreetAddress
+                                StreetAddress streetAddress = new StreetAddress();
+                                streetAddress.HouseNo = rs.GetInt32(rs.GetOrdinal("houseno"));
+                                streetAddress.Letter = rs.GetString(rs.GetOrdinal("letter"));
+                                streetAddress.MunicipalCode = rs.GetInt32(rs.GetOrdinal("municipalid")).ToString();
+                                streetAddress.Oppgang = rs.GetString(rs.GetOrdinal("oppgang"));
+                                streetAddress.StreetNo = rs.GetInt32(rs.GetOrdinal("streetid"));
+
+                                line.AlertTarget = streetAddress;
+                                break;
+                            case 3: // PropertyAddress
+                                PropertyAddress propertyAddress = new PropertyAddress();
+                                propertyAddress.Bnr = rs.GetInt32(rs.GetOrdinal("bnr"));
+                                propertyAddress.Fnr = rs.GetInt32(rs.GetOrdinal("fnr"));
+                                propertyAddress.Gnr = rs.GetInt32(rs.GetOrdinal("gnr"));
+                                propertyAddress.MunicipalCode = rs.GetInt32(rs.GetOrdinal("municipalid")).ToString();
+                                propertyAddress.Unr = rs.GetInt32(rs.GetOrdinal("unr"));
+
+                                line.AlertTarget = propertyAddress;
+                                break;
+                            case 4: // OwnerAddress
+                                OwnerAddress ownerAddress = new OwnerAddress();
+
+                                String[] ownerProperties = rs.GetString(rs.GetOrdinal("data")).Split('|');
+                                if (ownerProperties.Count() == 6)
+                                {
+                                    ownerAddress.Adresselinje1 = ownerProperties[0];
+                                    ownerAddress.Adresselinje2 = ownerProperties[1];
+                                    ownerAddress.Adresselinje3 = ownerProperties[2];
+                                    int eierId;
+                                    if (int.TryParse(rs.GetString(rs.GetOrdinal("externalid")), out eierId))
+                                        ownerAddress.EierId = eierId;
+                                    ownerAddress.EierIdKode = (NorwayEierIdKode)Enum.Parse(typeof(NorwayEierIdKode), ownerProperties[3], true);
+                                    ownerAddress.EierKategoriKode = (NorwayEierKategoriKode)Enum.Parse(typeof(NorwayEierKategoriKode), ownerProperties[4], true);
+                                    ownerAddress.EierStatusKode = (NorwayEierStatusKode)Enum.Parse(typeof(NorwayEierStatusKode), ownerProperties[5], true);
+                                }
+                                else
+                                {
+                                    ownerAddress.EierIdKode = NorwayEierIdKode.ANNEN_PERSON;
+                                    ownerAddress.EierKategoriKode = NorwayEierKategoriKode.IKKE_DEFINERT;
+                                    ownerAddress.EierStatusKode = NorwayEierStatusKode.IKKE_DEFINERT;
+                                }
+                                ownerAddress.DateOfBirth = rs.GetInt32(rs.GetOrdinal("birthdate"));
+                                ownerAddress.Navn = rs.GetString(rs.GetOrdinal("name"));
+                                ownerAddress.Postnr = rs.GetInt32(rs.GetOrdinal("postno"));
+
+                                line.AlertTarget = ownerAddress;
+                                break;
+                        }
+
+                        // Get attributes, listed as key=value and seperated with | ex: "Morten=Tester|Gate=Steinstemveien 20|"
+                        List<DataItem> targetAttributes = new List<DataItem>();
+                        String[] attributes = rs.GetString(rs.GetOrdinal("attributes")).Split(new String[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string attribute in attributes)
+                        {
+                            String[] attributePair = attribute.Split('=');
+                            if(attributePair.Count() == 2)
+                                targetAttributes.Add(new DataItem(attributePair[0], attributePair[1]));
+                        }
+                        if (targetAttributes.Count > 0)
+                            line.AlertTarget.Attributes = targetAttributes;
+
+                        objectLog.Add(line);
+                    }
+                }
+            }
+
+            return objectLog;
+        }
+
         /// <summary>
         /// Get status of a previously sent alert.
         /// </summary>
@@ -554,7 +813,6 @@ namespace com.ums.ws.integration
                 }
             }
             throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
-
         }
 
         /// <summary>
@@ -702,6 +960,27 @@ namespace com.ums.ws.integration
                     return AlertOverallStatus.FINISHED;
             }
             return AlertOverallStatus.FAILED;
+        }
+
+        /// <summary>
+        /// Converts status type (1, 2, 3, 4 / confirmed, delivered, undelivered, error) to sms dst (dbnull, 0, -1, 2 / NA, delivered, awayting status, error)
+        /// </summary>
+        /// <param name="statusType"></param>
+        /// <returns></returns>
+        private object ConvertStatusTypeToSmsDst(int statusType)
+        {
+            switch (statusType)
+            {
+                case 2:
+                    return 0;
+                case 3:
+                    return -1;
+                case 4:
+                    return 2;
+                case 1:
+                default:
+                    return DBNull.Value;
+            }
         }
 
         /// <summary>
