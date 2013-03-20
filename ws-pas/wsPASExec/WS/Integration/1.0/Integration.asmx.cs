@@ -383,9 +383,15 @@ namespace com.ums.ws.integration
         {
             return GetAlertLog(new Account()
             {
-                CompanyId = "UMS",
+                /*CompanyId = "UMS",
                 DepartmentId = "DEVELOPMENT",
-                Password = "ums123",
+                Password = "ums123",*/
+                /*CompanyId = "POWEL",
+                DepartmentId = "DEV",
+                Password = "dev123",*/
+                CompanyId = "POWEL",
+                DepartmentId = "TEST",
+                Password = "raThU9Ha",
             },
             new AlertId(Projectpk));
         }
@@ -513,7 +519,10 @@ namespace com.ums.ws.integration
 
                     prevProjectpk = projectPk;
                 }
-                return currentSummary;
+                if (prevProjectpk > 0)
+                {
+                    return currentSummary;
+                }
             }
             throw new Exception("Alert Log not found for the specified AlertId");
 
