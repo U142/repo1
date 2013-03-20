@@ -392,6 +392,18 @@ namespace com.ums.ws.integration
             new AlertId(Projectpk));
         }
 
+        [WebMethod]
+        public List<AlertSummary> testGetAlerts(int StartAt, int PageSize)
+        {
+            Account account = new Account()
+            {
+                CompanyId = "UMS",
+                DepartmentId = "DEVELOPMENT",
+                Password = "ums123",
+            };
+            return GetAlerts(account, StartAt, PageSize);
+        }
+
         /// <summary>
         /// Get status of a previously sent alert.
         /// </summary>
@@ -556,6 +568,10 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get array of previously sent alerts. Newest first. 0-index Start</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
+            if (StartIndex < 0)
+            {
+                throw new Exception("Error, StartIndex should be >=0");
+            }
             List<AlertSummary> alertSummaryList = new List<AlertSummary>();
             UmsDb umsDb = new UmsDb();
             ULOGONINFO logonInfo = new ULOGONINFO();
@@ -578,7 +594,7 @@ namespace com.ums.ws.integration
                         + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
 
-            int startAt = -1;//set to -2 as it's zero index
+            //int startAt = -1;//set to -1 as it's zero index
 
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
@@ -588,6 +604,8 @@ namespace com.ums.ws.integration
             int SmsProc = 0;
             int VoiceProc = 0;
             int endAt = -1;
+            int distinctProjectCount = 0;
+
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
@@ -624,7 +642,8 @@ namespace com.ums.ws.integration
 
                 if (!prevProjectpk.Equals(projectPk))
                 {
-                    if (++startAt <= StartIndex)
+                    ++distinctProjectCount;
+                    if (distinctProjectCount < StartIndex + 1)
                     {
                         prevProjectpk = projectPk;
                         continue;
