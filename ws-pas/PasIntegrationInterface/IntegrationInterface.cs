@@ -222,10 +222,39 @@ namespace com.ums.pas.integration
         {
             return new AlertObject(Name, ExternalId, PhoneNumber, CanReceiveSms);
         }
+        public static FollowupAlertObject newFollowupAlertObject(AlertId AlertId)
+        {
+            return new FollowupAlertObject()
+            {
+                AlertId = AlertId,
+                Attributes = new List<DataItem>()
+                {
+                    new DataItem("FollowUpAlert", AlertId.Id.ToString()),
+                },
+            };
+        }
+    }
+
+    /// <summary>
+    /// Target for re-alerting a previously alerted group of targets.
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class FollowupAlertObject : AlertTarget
+    {
+        private AlertId _alertId;
+
+        public AlertId AlertId
+        {
+            get { return _alertId; }
+            set { _alertId = value; }
+        }
 
     }
 
-
+    /// <summary>
+    /// Target for alerting specific persons.
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertObject : AlertTarget
@@ -1002,7 +1031,23 @@ namespace com.ums.pas.integration
             set { _errors = value; }
         }
 
-        
+        private String _voiceMessage;
+
+        public String VoiceMessage
+        {
+            get { return _voiceMessage; }
+            set { _voiceMessage = value; }
+        }
+
+        private String _smsMessage;
+
+        public String SmsMessage
+        {
+            get { return _smsMessage; }
+            set { _smsMessage = value; }
+        }
+
+        public byte [] VoiceAudio { get; set; }
     }
 
 

@@ -120,10 +120,32 @@ namespace com.ums.ws.integration
         /// <param name="Frequency">Frequency in minutes between repeats</param>
         /// <returns>An alert response</returns>
         [WebMethod(Description=@"<b>Send new alert to same receivers as a previous sent alert.</b><br>Message content may differ in SMS and Text-to-speech, may specify both indipendently.<br>")]
-        public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, Boolean StartImmediately, DateTime StartDateTime,
+        public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, AlertId AlertId, Boolean StartImmediately, DateTime StartDateTime,
             Int32 Repeats, Int32 Frequency)
         {
-            throw new NotImplementedException();
+            //TODO -
+            //First we need to verify that the account owns the original alert
+            bool exercise = true;
+
+            //TODO -
+            //Then we need to check if we're following up an exercise or live alert.
+
+
+            //Create a target for followup
+            List<AlertTarget> alertTargets = new List<AlertTarget>()
+            {
+                AlertTargetFactory.newFollowupAlertObject(AlertId),
+            };
+            return StartAlert(Account,
+                            Title,
+                            SmsMessage,
+                            VoiceMessage,
+                            StartImmediately,
+                            StartDateTime,
+                            Repeats,
+                            Frequency,
+                            exercise,
+                            alertTargets);
         }
 
         /// <summary>
