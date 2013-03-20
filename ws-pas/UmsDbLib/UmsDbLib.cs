@@ -263,6 +263,25 @@ WHERE BH.l_refno=?";
             return bValidate;
         }
 
+        public bool ValidateOwnerOfProject(long projectPk, int deptPk)
+        {
+            bool bValidate = false;
+
+            String Sql = String.Format("SELECT l_projectpk FROM BBPROJECT WHERE l_projectpk=? and l_deptpk=?");
+            using (OdbcCommand cmd = CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = projectPk;
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = deptPk;
+
+                var result = cmd.ExecuteScalar();
+                if (result != null)
+                    if (long.Parse(result.ToString()) == projectPk)
+                        bValidate = true;
+            }
+
+            return bValidate;
+        }
+
         /// <summary>
         /// Get default number for department.
         /// </summary>
