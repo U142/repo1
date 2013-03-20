@@ -86,9 +86,9 @@ namespace com.ums.pas.integration
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
             List<AlertObject> alertObjectList = Payload.AlertTargets.OfType<AlertObject>().ToList();
-            foreach (AlertObject alertObject in alertObjectList)
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
-                using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                foreach (AlertObject alertObject in alertObjectList)
                 {
                     recipientDataList.Add(new RecipientData()
                     {
@@ -101,6 +101,20 @@ namespace com.ums.pas.integration
                     });                         
                 }
             }
+
+            List<FollowupAlertObject> followupAlertObjectList = Payload.AlertTargets.OfType<FollowupAlertObject>().ToList();
+            using (new TimeProfiler(Payload.AlertId.Id, String.Format("FollowupAlertObject {0} records", followupAlertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+            {
+                foreach (FollowupAlertObject followUp in followupAlertObjectList)
+                {
+                    IFollowupLookupFacade followupLookupInterface = new FollowupLookupImpl();
+                    IEnumerable<RecipientData> followupAddressLookup = followupLookupInterface.GetRecipientsFromEarlierAlerts(
+                                                                                                                        System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString,
+                                                                                                                        followupAlertObjectList);
+                    recipientDataList.AddRange(followupAddressLookup);              
+                }
+            }
+        
             ///Functionality for stored lists and addresses are not in scope of first version.
             /*foreach (StoredList storedList in Payload.AlertTargets.OfType<StoredList>())
             {
@@ -176,7 +190,7 @@ namespace com.ums.pas.integration
             //now we have all data
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
-                long Refno = Database.newRefno();
+                int Refno = (int) Database.newRefno();
 
                 //connect refno to AlertId (project)
                 BBPROJECT project = new BBPROJECT();
@@ -191,9 +205,9 @@ namespace com.ums.pas.integration
                         InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                         InsertResched(Refno, voiceConfig);
                         InsertBbValid(Refno, voiceConfig.ValidDays);
-                        InsertBbActionprofileSend((int) Refno, voiceConfig.VoiceProfilePk);
+                        InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
                         //if forced hidden number or no numbers assigned
-                        InsertBbSendnum((int) Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
+                        InsertBbSendnum(Refno, voiceConfig.UseHiddenOriginAddress || Payload.AccountDetails.AvailableVoiceNumbers.Count == 0 ? "" : Payload.AccountDetails.AvailableVoiceNumbers.First());
                     }
                     CreateTtsBackboneAudioFiles(Payload.AlertId, Refno, new List<String> { voiceConfig.BaseMessageContent }, Payload.AccountDetails.DefaultTtsLang);
 
@@ -226,7 +240,7 @@ namespace com.ums.pas.integration
 
         }
 
-        private void CreateTtsBackboneAudioFiles(AlertId AlertId, long Refno, List<String> Messages, int LangPk)
+        private void CreateTtsBackboneAudioFiles(AlertId AlertId, int Refno, List<String> Messages, int LangPk)
         {
             using (new TimeProfiler(AlertId.Id, "Text to Speech", timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
@@ -242,6 +256,7 @@ namespace com.ums.pas.integration
                         File.WriteAllBytes(publishFile, audioContent.RawVersion);
                         String publishWave = System.Configuration.ConfigurationManager.AppSettings["BBMessages"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
                         File.WriteAllBytes(publishWave, audioContent.WavVersion);
+                        Database.InsertTtsRef(Refno, counter, Message);
                     }
                 }
                 catch (Exception e)

@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using Apache.NMS.ActiveMQ;
 using com.ums.UmsCommon.Audio;
 using System.Data.Odbc;
+using System.IO;
 
 namespace com.ums.ws.integration
 {
@@ -327,11 +328,6 @@ namespace com.ums.ws.integration
 
         }
 
-        [WebMethod]
-        public AlertResponse StartFollowUpAlert(Account Account, AlertConfiguration AlertConfiguration, String Message)
-        {
-            throw new NotImplementedException();
-        }
 
         [WebMethod]
         public DefaultResponse StopAlert(Account Account, AlertId AlertId)
@@ -386,8 +382,26 @@ namespace com.ums.ws.integration
                 CompanyId = "UMS",
                 DepartmentId = "DEVELOPMENT",
                 Password = "ums123",
+                /*CompanyId = "POWEL",
+                DepartmentId = "DEV",
+                Password = "dev123",*/
+                /*CompanyId = "POWEL",
+                DepartmentId = "TEST",
+                Password = "raThU9Ha",*/
             },
             new AlertId(Projectpk));
+        }
+
+        [WebMethod]
+        public List<AlertSummary> testGetAlerts(int StartAt, int PageSize)
+        {
+            Account account = new Account()
+            {
+                CompanyId = "UMS",
+                DepartmentId = "DEVELOPMENT",
+                Password = "ums123",
+            };
+            return GetAlerts(account, StartAt, PageSize);
         }
 
         /// <summary>
@@ -411,11 +425,13 @@ namespace com.ums.ws.integration
             + "isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1), isnull(SQ.l_status, 1), isnull(MDV.l_type,1), "
             + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
             + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
-            + "isnull(MDV.l_refno, 0) IsProcessing "
+            + "isnull(MDV.l_refno, 0) IsProcessing, isnull(TTS.l_fileno,0) TtsFileno, isnull(TTS.sz_content,'') TtsContent, "
+            + "isnull(SQ.sz_text, '') SmsContent "
             + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
             + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
             + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
             + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
+            + "LEFT OUTER JOIN BBQREF_TTSREF TTS ON MDV.l_refno=TTS.l_refno "
             + "WHERE BP.l_deptpk={0} AND BP.l_projectpk={1}"
             , 
             logonInfo.l_deptpk, AlertId.Id);
@@ -449,6 +465,10 @@ namespace com.ums.ws.integration
                     int schedDate = rs.GetInt32(3);
                     int schedTime = rs.GetInt32(4);
                     int refno = rs.GetInt32(14);
+                    int ttsFileno = rs.GetInt32(15);
+                    String ttsContent = rs.GetString(16);
+                    String smsContent = rs.GetString(17);
+
                     bool isProcessing = refno > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
                     if (!isProcessing)
                     {
@@ -465,6 +485,7 @@ namespace com.ums.ws.integration
                         {
                             currentSummary.SmsReceived = smsDeliveryStatus[0];
                         }
+                        currentSummary.SmsMessage = smsContent;
                     }
                     else if (type.Equals(SendChannel.VOICE))
                     {
@@ -483,6 +504,19 @@ namespace com.ums.ws.integration
                         {
                             currentSummary.VoiceConfirmed = voiceDeliveryStatus[3];
                         }
+
+                        currentSummary.VoiceMessage = ttsContent;
+
+                        String wavFile = String.Format("{0}\\v{1}_{2}.wav", UCommon.UPATHS.sz_path_audiofiles, refno, ttsFileno);
+                        try
+                        {
+                            currentSummary.VoiceAudio = File.ReadAllBytes(wavFile);
+                        }
+                        catch (Exception)
+                        {
+                            ULog.warning("Could not find audio file {0}", wavFile);
+                        }
+
                     }
                     dbCount.close();
 
@@ -509,13 +543,17 @@ namespace com.ums.ws.integration
                         worstStatus = status;
                     }
 
+
                     currentSummary.Errors = GetErrors(projectPk);
 
                     prevProjectpk = projectPk;
                 }
-                return currentSummary;
+                if (prevProjectpk > 0)
+                {
+                    return currentSummary;
+                }
             }
-            throw new Exception("Alert Log not found for the specified AlertId");
+            throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
 
         }
 
@@ -529,6 +567,10 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get array of previously sent alerts. Newest first. 0-index Start</b>")]
         public List<AlertSummary> GetAlerts(Account Account, int StartIndex, int PageSize)
         {
+            if (StartIndex < 0)
+            {
+                throw new Exception("Error, StartIndex should be >=0");
+            }
             List<AlertSummary> alertSummaryList = new List<AlertSummary>();
             UmsDb umsDb = new UmsDb();
             ULOGONINFO logonInfo = new ULOGONINFO();
@@ -551,7 +593,7 @@ namespace com.ums.ws.integration
                         + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
 
-            int startAt = -1;//set to -2 as it's zero index
+            //int startAt = -1;//set to -1 as it's zero index
 
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
@@ -561,6 +603,8 @@ namespace com.ums.ws.integration
             int SmsProc = 0;
             int VoiceProc = 0;
             int endAt = -1;
+            int distinctProjectCount = 0;
+
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
@@ -597,7 +641,8 @@ namespace com.ums.ws.integration
 
                 if (!prevProjectpk.Equals(projectPk))
                 {
-                    if (++startAt <= StartIndex)
+                    ++distinctProjectCount;
+                    if (distinctProjectCount < StartIndex + 1)
                     {
                         prevProjectpk = projectPk;
                         continue;
