@@ -358,7 +358,7 @@ namespace com.ums.ws.integration
                     while (rs.Read())
                     {
                         // Cancel each refno
-                        String cancelSql = String.Format("INSERT INTO BBCANCEL(l_renfo, l_item) VALUES({0}, -1)", rs.GetInt32(0));
+                        String cancelSql = String.Format("INSERT INTO BBCANCEL(l_refno, l_item) VALUES({0}, -1)", rs.GetInt32(0));
 
                         if (!umsDb.ExecNonQuery(cancelSql))
                         {
