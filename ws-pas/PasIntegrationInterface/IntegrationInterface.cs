@@ -161,6 +161,7 @@ namespace com.ums.pas.integration
     [XmlInclude(typeof(StreetAddress))]
     [XmlInclude(typeof(PropertyAddress))]
     [XmlInclude(typeof(OwnerAddress))]
+    [XmlInclude(typeof(FollowupAlertObject))]
     public abstract class AlertTarget
     {
 
@@ -187,6 +188,7 @@ namespace com.ums.pas.integration
             else if (type is StreetAddress) return 2;
             else if (type is PropertyAddress) return 3;
             else if (type is OwnerAddress) return 4;
+            else if (type is FollowupAlertObject) return 5;
             return -1;
         }
     }
@@ -206,9 +208,9 @@ namespace com.ums.pas.integration
         {
             return new PropertyAddress(p);
         }
-        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int snr)
+        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr)
         {
-            return new PropertyAddress(municipalCode, gnr, bnr, fnr, snr);
+            return new PropertyAddress(municipalCode, gnr, bnr, fnr, unr);
         }
         public static StoredAddress newStoredAddress(StoredAddress s)
         {
@@ -231,6 +233,34 @@ namespace com.ums.pas.integration
                 {
                     new DataItem("FollowUpAlert", AlertId.Id.ToString()),
                 },
+            };
+        }
+        public static OwnerAddress newOwnerAddress(String addressLine1,
+                                    String addressLine2,
+                                    String addressLine3,
+                                    List<DataItem> attributes,
+                                    int dateOfBirth,
+                                    int ownerId,
+                                    NorwayEierIdKode ownerIdCode,
+                                    NorwayEierKategoriKode ownerCategoryCode,
+                                    NorwayEierStatusKode ownerStatusCode,
+                                    String name,
+                                    int postNo)
+        {
+            return new OwnerAddress()
+                                    
+            {
+                Adresselinje1 = addressLine1,
+                Adresselinje2 = addressLine2,
+                Adresselinje3 = addressLine3,
+                Attributes = attributes,
+                DateOfBirth = dateOfBirth,
+                EierId = ownerId,
+                EierIdKode = ownerIdCode,
+                EierKategoriKode = ownerCategoryCode,
+                EierStatusKode = ownerStatusCode,
+                Navn = name,
+                Postnr = postNo,
             };
         }
     }

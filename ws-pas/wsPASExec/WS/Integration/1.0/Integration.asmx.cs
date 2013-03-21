@@ -385,8 +385,10 @@ namespace com.ums.ws.integration
         }
 
 
+
+
         [WebMethod]
-        public LogSummary TestGetAlertLog(long Projectpk)
+        public LogSummary testGetAlertLog(long Projectpk)
         {
             return GetAlertLog(new Account()
             {
