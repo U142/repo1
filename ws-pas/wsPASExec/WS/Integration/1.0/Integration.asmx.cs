@@ -338,6 +338,7 @@ namespace com.ums.ws.integration
             response.Message = "";
 
             UmsDb umsDb = new UmsDb();
+            UmsDb cancelDb = new UmsDb();
             ULOGONINFO logonInfo = new ULOGONINFO();
             logonInfo.sz_compid = Account.CompanyId;
             logonInfo.sz_deptid = Account.DepartmentId;
@@ -345,26 +346,36 @@ namespace com.ums.ws.integration
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
             // Get all refnos corresponding to the alertid (projectpk)
-            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk={1} WHERE PR.l_projectpk={0}", AlertId.Id, logonInfo.l_deptpk);
-            using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
-            {
-                if (!rs.HasRows)
-                {
-                    response.Code = -1;
-                    response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
-                }
-                else
-                {
-                    while (rs.Read())
-                    {
-                        // Cancel each refno
-                        String cancelSql = String.Format("INSERT INTO BBCANCEL(l_refno, l_item) VALUES({0}, -1)", rs.GetInt32(0));
+            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
 
-                        if (!umsDb.ExecNonQuery(cancelSql))
+            using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("dept", OdbcType.Int).Value = logonInfo.l_deptpk;
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = AlertId.Id;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    if (!rs.HasRows)
+                    {
+                        response.Code = -1;
+                        response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
+                    }
+                    else
+                    {
+                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand("INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)"))
                         {
-                            // TODO: Set proper status code (-1 is probably in use)
-                            response.Code = -1;
-                            response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                            cancelCmd.Parameters.Add("refno", OdbcType.Int);
+                            while (rs.Read())
+                            {
+                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(0);
+
+                                if (cancelCmd.ExecuteNonQuery() != 1)
+                                {
+                                    // TODO: Set proper status code (-1 is probably in use)
+                                    response.Code = -1;
+                                    response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                                }
+                            }
                         }
                     }
                 }
@@ -431,95 +442,14 @@ namespace com.ums.ws.integration
             if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
                 throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
 
-            String sql_filter_voice = "";
-            String sql_filter_sms = "";
-            if (StatusCodeFilter != 0)
-            {
-                sql_filter_voice = "AND SC.l_type=?";
-                sql_filter_sms = "AND HIST.l_dst=?";
-            }
-
-            String sql = String.Format(@"select
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=1,
-	HIST.sz_number,
-	HIST.l_status,
-	convert(numeric(18,0), HIST.l_date) * 1000000 + convert(numeric(18,0), HIST.l_time) * 100 l_timestamp,
-	SC.sz_status,
-	SC.l_type l_dst,
-	SC.sz_type_text
-from
-	BBPROJECT BP
-	INNER JOIN BBPROJECT_X_REFNO XP ON
-		BP.l_projectpk=XP.l_projectpk
-	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
-		XP.l_refno=ALERTS.l_refno
-	INNER JOIN BBHIST HIST ON 
-		ALERTS.l_refno=HIST.l_refno 
-		AND ALERTS.l_item=HIST.l_item
-	INNER JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno 
-		AND ALERTS.l_item=MDVHIST.l_item
-	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
-		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
-		HIST.l_status=SC.l_status
-        {0}
-where
-	BP.l_projectpk = ?
-union
-select
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=2,
-	HIST.sz_number,
-	HIST.l_status,
-	isnull(HIST.l_dscts, HIST.l_scts) l_timestamp,
-	SC.sz_text sz_status,
-	HIST.l_dst,
-	null sz_type_text
-from
-	BBPROJECT BP
-	INNER JOIN BBPROJECT_X_REFNO XP ON
-		BP.l_projectpk=XP.l_projectpk
-	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
-		XP.l_refno=ALERTS.l_refno
-	INNER JOIN SMSHIST HIST ON 
-		ALERTS.l_refno=HIST.l_refno 
-		AND ALERTS.l_item=HIST.l_item
-	INNER JOIN MDVHIST ON 
-		ALERTS.l_refno=MDVHIST.l_refno 
-		AND ALERTS.l_item=MDVHIST.l_item
-	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
-		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	INNER JOIN SMSSTATUSCODES SC ON
-		HIST.l_status=SC.l_status
-        {1}
-where
-	BP.l_projectpk = ?", sql_filter_voice, sql_filter_sms);
+            string sql = "sp_getProjectStatus ?, ?";
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {
                 // add parameters
-                if (StatusCodeFilter > 0)
-                {
-                    cmd.Parameters.Add("voicefilter", OdbcType.Int).Value = StatusCodeFilter;
-                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
-                    cmd.Parameters.Add("smsfilter", OdbcType.Int).Value = ConvertStatusTypeToSmsDst(StatusCodeFilter);
-                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
-                }
-                else
-                {
-                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
-                    cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
-                }
-
+                cmd.Parameters.Add("projectpkt", OdbcType.BigInt).Value = AlertId.Id;
+                cmd.Parameters.Add("statuscodefilter", OdbcType.Int).Value = StatusCodeFilter;
+                
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
                     while (rs.Read() && (PageSize == 0 || count++ <= PageSize) )
@@ -1014,45 +944,10 @@ where
             List<LogLine> errorList = new List<LogLine>();
 
             UmsDb db = new UmsDb();
-
-            string sql = String.Format(@"select
-	                                        'VOICE' type,
-	                                        BH.sz_number,
-	                                        BH.l_status,
-	                                        SC.sz_status sz_text
-                                        from 
-	                                        BBPROJECT_X_REFNO BP
-	                                        INNER JOIN MDVSENDINGINFO MI ON
-		                                        MI.l_refno=BP.l_refno and
-		                                        MI.l_type=1
-	                                        INNER JOIN BBHIST BH ON
-		                                        BH.l_refno=MI.l_refno
-	                                        INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
-		                                        BH.l_status=SC.l_status
-		                                        and SC.l_type=4
-                                        where
-	                                        BP.l_projectpk=?
-                                        union all select
-	                                        'SMS' type,
-	                                        SH.sz_number,
-	                                        SH.l_status,
-	                                        SC.sz_text sz_text
-                                        from 
-	                                        BBPROJECT_X_REFNO BP
-	                                        INNER JOIN MDVSENDINGINFO MI ON
-		                                        MI.l_refno=BP.l_refno and
-		                                        MI.l_type=2
-	                                        INNER JOIN SMSHIST SH ON
-		                                        SH.l_refno=MI.l_refno and
-		                                        SH.l_dst=2
-	                                        INNER JOIN SMSSTATUSCODES SC ON
-		                                        SC.l_status=SH.l_status
-                                        where
-	                                        BP.l_projectpk=?");
-
+        
+            string sql = "sp_getProjectStatus ?, 4";
             using (OdbcCommand cmd = db.CreateCommand(sql))
             {
-                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = alertPk;
                 cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = alertPk;
 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
@@ -1060,13 +955,13 @@ where
                     while (rs.Read())
                     {
                         bool canReceiveSms = false;
-                        if (rs.GetString(rs.GetOrdinal("type")) == "SMS")
+                        if (rs.GetInt32(rs.GetOrdinal("l_type")) == 2)
                             canReceiveSms = true;
 
                         LogLine line = new LogLine();
                         line.EndPoint = new Phone() { Address = rs.GetString(rs.GetOrdinal("sz_number")), CanReceiveSms = canReceiveSms };
                         line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
-                        line.StatusText = rs.GetString(rs.GetOrdinal("sz_text"));
+                        line.StatusText = rs.GetString(rs.GetOrdinal("sz_status"));
 
                         errorList.Add(line);
                     }
