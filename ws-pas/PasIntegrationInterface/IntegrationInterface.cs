@@ -1305,6 +1305,20 @@ namespace com.ums.pas.integration
 
     }
 
+    /// <summary>
+    /// Log line specific for phone endpoint and it's status.
+    /// It does not specify who owns the Endpoint (Recipient)
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogLinePhone : Phone
+    {
+        public DateTime DateTime { get; set; }
+        public int StatusCode { get; set; }
+        public String Status { get; set; }
+        public int ReasonCode { get; set; }
+        public string Reason { get; set; }
+    }
     #endregion Log
 
 
