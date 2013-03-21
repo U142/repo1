@@ -692,7 +692,7 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("l_pri", OdbcType.TinyInt).Value = Account.DeptPri;
                 cmd.Parameters.Add("l_localsched", OdbcType.TinyInt).Value = 1;
                 cmd.Parameters.Add("l_validitytime", OdbcType.Int).Value = 0;
-                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric).Value = alertConfig.StartImmediately ? 0 : Int64.Parse(alertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                cmd.Parameters.Add("l_schedtime", OdbcType.Numeric).Value = alertConfig.StartImmediately ? Int64.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")) : Int64.Parse(alertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
                 cmd.Parameters.Add("l_priserver", OdbcType.Int).Value = Account.PrimarySmsServer;
                 cmd.Parameters.Add("l_altservers", OdbcType.Int).Value = Account.SecondarySmsServer;
                 cmd.Parameters.Add("sz_tarifclass", OdbcType.VarChar, 20).Value = "";
@@ -741,8 +741,8 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
                 cmd.Parameters.Add("l_createdate", OdbcType.Int).Value = Int32.Parse(UCommon.UGetDateNow());
                 cmd.Parameters.Add("l_createtime", OdbcType.SmallInt).Value = Int32.Parse(UCommon.UGetTimeNow());
-                cmd.Parameters.Add("l_scheddate", OdbcType.Int).Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("yyyyMMdd"));
-                cmd.Parameters.Add("l_schedtime", OdbcType.Int).Value = AlertConfig.StartImmediately ? 0 : Int32.Parse(AlertConfig.Scheduled.ToString("HHmm"));
+                cmd.Parameters.Add("l_scheddate", OdbcType.Int).Value = AlertConfig.StartImmediately ? Int64.Parse(DateTime.Now.ToString("yyyyMMdd")) : Int32.Parse(AlertConfig.Scheduled.ToString("yyyyMMdd"));
+                cmd.Parameters.Add("l_schedtime", OdbcType.Int).Value = AlertConfig.StartImmediately ? Int64.Parse(DateTime.Now.ToString("HHmm")) : Int32.Parse(AlertConfig.Scheduled.ToString("HHmm"));
                 cmd.Parameters.Add("sz_sendingname", OdbcType.VarChar, 255).Value = AlertConfig.AlertName;
                 cmd.Parameters.Add("l_sendingstatus", OdbcType.Int).Value = 1;
                 cmd.Parameters.Add("l_companypk", OdbcType.Int).Value = Account.Comppk;
