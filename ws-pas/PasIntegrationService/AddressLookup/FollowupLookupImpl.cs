@@ -35,7 +35,11 @@ namespace com.ums.pas.integration.AddressLookup
                 Command.Parameters.Add("l_projectpk", OdbcType.Numeric);
                 foreach(FollowupAlertObject followUp in FollowupAlerts)
                 {
-                    Command.CommandText = "tmpFollowUpAlert ?";
+                    int mobilePhones = 0;
+                    int fixedPhones = 0;
+
+                    log.InfoFormat("Retrieving recipients from Alert {0}", followUp.AlertId.Id);
+                    Command.CommandText = "sp_getProjectStatus ?";
                     Command.Parameters["l_projectpk"].Value = followUp.AlertId.Id;
 
                     using (OdbcDataReader rs = Command.ExecuteReader())
@@ -90,10 +94,13 @@ namespace com.ums.pas.integration.AddressLookup
                                         CanReceiveSms = rs.GetInt32(rs.GetOrdinal("l_type")) == 2,
                                     },
                                 },
-
+                                
                             });
+                            mobilePhones += rs.GetInt32(rs.GetOrdinal("l_type")) == 2 ? 1 : 0;
+                            fixedPhones += rs.GetInt32(rs.GetOrdinal("l_type")) == 1 ? 1 : 0;
                         }
                     }
+                    log.InfoFormat("Found {0} recipients based on Alert {1}, owning {2} mobile and {3} fixed phones", recipients.Count, followUp.AlertId.Id, mobilePhones, fixedPhones);
                 }
             }
 
