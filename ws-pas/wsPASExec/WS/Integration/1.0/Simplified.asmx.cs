@@ -120,31 +120,12 @@ namespace com.ums.ws.integration
         /// <param name="StartDateTime">Depends on StartImmediately=false</param>
         /// <param name="Repeats">Number of repeats (only voice)</param>
         /// <param name="Frequency">Frequency in minutes between repeats</param>
+        /// <param name="Exercise">Is configurable so it will be possible to simulate a resend of a live alert</param>
         /// <returns>An alert response</returns>
         [WebMethod(Description=@"<b>Send new alert to same receivers as a previous sent alert.</b><br>Message content may differ in SMS and Text-to-speech, may specify both indipendently.<br>")]
         public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, AlertId AlertId, Boolean StartImmediately, DateTime StartDateTime,
-            Int32 Repeats, Int32 Frequency)
+            Int32 Repeats, Int32 Frequency, Boolean Exercise)
         {
-            //TODO -
-            //First we need to verify that the account owns the original alert
-            UmsDb umsDb = new UmsDb();
-            bool exercise = true;
-            using (OdbcCommand cmd = umsDb.CreateCommand("SELECT isnull(f_dynacall, 1) FROM MDVSENDINGINFO WHERE l_refno in (SELECT l_refno from BBPROJECT_X_REFNO WHERE l_projectpk=?)"))
-            {
-                cmd.Parameters.Add("l_projectpk", OdbcType.Numeric).Value = AlertId.Id;
-                using (OdbcDataReader rs = cmd.ExecuteReader())
-                {
-                    if (rs.Read())
-                    {
-                        exercise = rs.GetInt32(0) == 2 ? true : false;
-                    }
-                }
-            }
-
-            //TODO -
-            //Then we need to check if we're following up an exercise or live alert.
-
-
             //Create a target for followup
             List<AlertTarget> alertTargets = new List<AlertTarget>()
             {
@@ -158,7 +139,7 @@ namespace com.ums.ws.integration
                             StartDateTime,
                             Repeats,
                             Frequency,
-                            exercise,
+                            Exercise,
                             alertTargets);
         }
 
