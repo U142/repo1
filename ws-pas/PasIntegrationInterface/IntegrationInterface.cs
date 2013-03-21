@@ -1053,9 +1053,9 @@ namespace com.ums.pas.integration
             get { return _smsTotal; }
             set { _smsTotal = value; }
         }
-        private List<LogLine> _errors;
+        private List<LogLinePhone> _errors;
 
-        public List<LogLine> Errors
+        public List<LogLinePhone> Errors
         {
             get { return _errors; }
             set { _errors = value; }
@@ -1135,7 +1135,16 @@ namespace com.ums.pas.integration
             set { _name = value; }
         }
 
-        private Endpoint _endpoint;
+        public List<LogLinePhone> LogLines { get; set; }
+
+        private AlertTarget _alertTarget;
+        public AlertTarget AlertTarget
+        {
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
+        }
+
+        /*private Endpoint _endpoint;
         public Endpoint Endpoint
         {
             get { return _endpoint; }
@@ -1174,7 +1183,7 @@ namespace com.ums.pas.integration
         {
             get { return _reason; }
             set { _reason = value; }
-        }
+        }*/
 
         // externalid is redundant as it is only used for alertobject (will be included in the alertobject) and owner address (where it will be in the eierid field)
         /*private String _externalId;
@@ -1183,15 +1192,6 @@ namespace com.ums.pas.integration
             get { return _externalId; }
             set { _externalId = value; }
         }*/
-
-        private AlertTarget _alertTarget;
-        public AlertTarget AlertTarget
-        {
-            get { return _alertTarget; }
-            set { _alertTarget = value; }
-        }
-
-                
     }
 
     /// <summary>
@@ -1313,6 +1313,58 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class LogLinePhone : Phone
     {
+        public LogLinePhone() { }
+        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime) 
+        {
+            Address = address;
+            
+            DateTime = dateTime;
+
+            switch (type)
+            {
+                case 1: // voice
+                    StatusCode = statusCode;
+                    CanReceiveSms = false;
+                    break;
+                case 2: // sms
+                    CanReceiveSms = true;
+
+                    switch (statusCode)
+                    {
+                        case 0: // delivered
+                            StatusCode = 2;
+                            break;
+                        case 2: // error
+                            StatusCode = 4;
+                            break;
+                        case -1:// undelivered
+                        case 1: // only used by some providers, but should still show as undelivered
+                            StatusCode = 3;
+                            break;
+                    }
+                    break;
+            }
+
+            switch (StatusCode)
+            {
+                case 1:
+                    Status = "Confirmed";
+                    break;
+                case 2:
+                    Status = "Delivered";
+                    break;
+                case 3:
+                    Status = "Undelivered";
+                    break;
+                case 4:
+                    Status = "Error";
+                    break;
+            }
+
+            ReasonCode = reasonCode;
+            Reason = reason;
+        }
+
         public DateTime DateTime { get; set; }
         public int StatusCode { get; set; }
         public String Status { get; set; }

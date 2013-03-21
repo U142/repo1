@@ -437,7 +437,6 @@ namespace com.ums.ws.integration
             logonInfo.sz_deptid = Account.DepartmentId;
             logonInfo.sz_password = Account.Password;
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
-            int count = 0;
 
             if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
                 throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
@@ -452,79 +451,44 @@ namespace com.ums.ws.integration
                 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    while (rs.Read() && (PageSize == 0 || count++ <= PageSize) )
+                    string previousName = null;
+                    LogLineDetailed line = null;
+                    AlertObject alertObject = null;
+
+                    while (rs.Read() && (PageSize == 0 || objectLog.Count <= PageSize + StartIndex) )
                     {
-                        if (StartIndex-- > 0)
-                            continue;
+                        string currentName = rs.GetString(rs.GetOrdinal("name"));
 
-                        int type = rs.GetInt32(rs.GetOrdinal("l_type"));
-
-                        LogLineDetailed line = new LogLineDetailed();
+                        if (line == null || previousName != currentName)
+                        {
+                            line = new LogLineDetailed();
+                            line.LogLines = new List<LogLinePhone>();
+                            alertObject = null; // reset alertoject
+                            line.Name = rs.GetString(rs.GetOrdinal("name"));
+                        }
 
                         DateTime timestamp;
-                        if (DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp))
-                            line.DateTime = timestamp;
+                        DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        Phone phone = new Phone();
-                        phone.Address = rs.GetString(rs.GetOrdinal("sz_number"));
-
-                        switch (type)
-                        {
-                            case 1: // voice
-                                line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_dst"));
-                                break;
-                            case 2: // sms
-                                phone.CanReceiveSms = true;
-
-                                switch (rs.GetInt32(rs.GetOrdinal("l_dst")))
-                                {
-                                    case 0: // delivered
-                                        line.StatusCode = 2;
-                                        break;
-                                    case 2: // error
-                                        line.StatusCode = 4;
-                                        break;
-                                    case -1:// undelivered
-                                    case 1: // only used by some providers, but should still show as undelivered
-                                        line.StatusCode = 3;
-                                        break;
-                                }
-                                break;
-                        }
-
-                        line.Endpoint = phone;
-
-                        switch (line.StatusCode)
-                        {
-                            case 1:
-                                line.Status = "Confirmed";
-                                break;
-                            case 2:
-                                line.Status = "Delivered";
-                                break;
-                            case 3:
-                                line.Status = "Undelivered";
-                                break;
-                            case 4:
-                                line.Status = "Error";
-                                break;
-                        }
-
-                        line.Name = rs.GetString(rs.GetOrdinal("name"));
-                        line.ReasonCode = rs.GetInt32(rs.GetOrdinal("l_status"));
-                        line.Reason = rs.GetString(rs.GetOrdinal("sz_status"));
-                        //line.ExternalId = rs.GetString(rs.GetOrdinal("externalid"));
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
                         {
                             case 1: // AlertObject
-                                AlertObject alertObject = new AlertObject();
-                                alertObject.ExternalId = rs.GetString(rs.GetOrdinal("externalid"));
+                                if (alertObject == null)
+                                {
+                                    alertObject = new AlertObject();
+                                    alertObject.ExternalId = rs.GetString(rs.GetOrdinal("externalid"));
 
-                                // redundant, but copy of parent anyway
-                                alertObject.Name = line.Name;
-                                alertObject.Endpoints.Add(line.Endpoint);
+                                    alertObject.Name = line.Name;
+                                }
+
+                                Phone phone = new Phone();
+                                phone.Address = phoneLine.Address;
+                                phone.CanReceiveSms = phone.CanReceiveSms;
+
+                                alertObject.Endpoints.Add(phone);
 
                                 line.AlertTarget = alertObject;
                                 break;
@@ -578,6 +542,8 @@ namespace com.ums.ws.integration
                                 break;
                         }
 
+                        line.LogLines.Add(phoneLine);
+
                         // Get attributes, listed as key=value and seperated with | ex: "Morten=Tester|Gate=Steinstemveien 20|"
                         List<DataItem> targetAttributes = new List<DataItem>();
                         String[] attributes = rs.GetString(rs.GetOrdinal("attributes")).Split(new String[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -590,10 +556,21 @@ namespace com.ums.ws.integration
                         if (targetAttributes.Count > 0)
                             line.AlertTarget.Attributes = targetAttributes;
 
-                        objectLog.Add(line);
+                        if(previousName != currentName)
+                            objectLog.Add(line);
+
+                        previousName = currentName;
                     }
                 }
             }
+
+            if (StartIndex > 0) // remove beginning of list if startindex is not 0
+                if (StartIndex < objectLog.Count)
+                    objectLog.RemoveRange(0, StartIndex);
+                else
+                    objectLog.RemoveRange(0, objectLog.Count); // silly, but prevents exception
+            if (PageSize > 0 && objectLog.Count > PageSize) // remove last object (has to insert one extra to make sure all LogLines are added
+                objectLog.RemoveAt(objectLog.Count-1);
 
             return objectLog;
         }
@@ -939,9 +916,9 @@ namespace com.ums.ws.integration
             return db.GetTimeProfiles(AlertId.Id);
         }
 
-        private List<LogLine> GetErrors(long alertPk)
+        private List<LogLinePhone> GetErrors(long alertPk)
         {
-            List<LogLine> errorList = new List<LogLine>();
+            List<LogLinePhone> errorList = new List<LogLinePhone>();
 
             UmsDb db = new UmsDb();
         
@@ -954,16 +931,22 @@ namespace com.ums.ws.integration
                 {
                     while (rs.Read())
                     {
-                        bool canReceiveSms = false;
+                        DateTime timestamp;
+                        DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
+
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+/*                        bool canReceiveSms = false;
                         if (rs.GetInt32(rs.GetOrdinal("l_type")) == 2)
                             canReceiveSms = true;
 
-                        LogLine line = new LogLine();
-                        line.EndPoint = new Phone() { Address = rs.GetString(rs.GetOrdinal("sz_number")), CanReceiveSms = canReceiveSms };
+                        LogLinePhone line = new LogLinePhone();
+                        line.Address = rs.GetString(rs.GetOrdinal("sz_number"));
+                        line.CanReceiveSms = canReceiveSms;
                         line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
-                        line.StatusText = rs.GetString(rs.GetOrdinal("sz_status"));
+                        line.Status = rs.GetString(rs.GetOrdinal("sz_status"));
 
-                        errorList.Add(line);
+                        errorList.Add(line);*/
+                        errorList.Add(phoneLine);
                     }
                 }
             }
