@@ -338,6 +338,7 @@ namespace com.ums.ws.integration
             response.Message = "";
 
             UmsDb umsDb = new UmsDb();
+            UmsDb cancelDb = new UmsDb();
             ULOGONINFO logonInfo = new ULOGONINFO();
             logonInfo.sz_compid = Account.CompanyId;
             logonInfo.sz_deptid = Account.DepartmentId;
@@ -345,26 +346,36 @@ namespace com.ums.ws.integration
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
             // Get all refnos corresponding to the alertid (projectpk)
-            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk={1} WHERE PR.l_projectpk={0}", AlertId.Id, logonInfo.l_deptpk);
-            using (OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
-            {
-                if (!rs.HasRows)
-                {
-                    response.Code = -1;
-                    response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
-                }
-                else
-                {
-                    while (rs.Read())
-                    {
-                        // Cancel each refno
-                        String cancelSql = String.Format("INSERT INTO BBCANCEL(l_refno, l_item) VALUES({0}, -1)", rs.GetInt32(0));
+            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
 
-                        if (!umsDb.ExecNonQuery(cancelSql))
+            using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("dept", OdbcType.Int).Value = logonInfo.l_deptpk;
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = AlertId.Id;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    if (!rs.HasRows)
+                    {
+                        response.Code = -1;
+                        response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
+                    }
+                    else
+                    {
+                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand("INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)"))
                         {
-                            // TODO: Set proper status code (-1 is probably in use)
-                            response.Code = -1;
-                            response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                            cancelCmd.Parameters.Add("refno", OdbcType.Int);
+                            while (rs.Read())
+                            {
+                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(0);
+
+                                if (cancelCmd.ExecuteNonQuery() != 1)
+                                {
+                                    // TODO: Set proper status code (-1 is probably in use)
+                                    response.Code = -1;
+                                    response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                                }
+                            }
                         }
                     }
                 }
@@ -438,69 +449,69 @@ namespace com.ums.ws.integration
             }
 
             String sql = String.Format(@"select
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=1,
-	HIST.sz_number,
-	HIST.l_status,
-	convert(numeric(18,0), HIST.l_date) * 1000000 + convert(numeric(18,0), HIST.l_time) * 100 l_timestamp,
-	SC.sz_status,
-	SC.l_type l_dst,
-	SC.sz_type_text
-from
-	BBPROJECT BP
-	INNER JOIN BBPROJECT_X_REFNO XP ON
-		BP.l_projectpk=XP.l_projectpk
-	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
-		XP.l_refno=ALERTS.l_refno
-	INNER JOIN BBHIST HIST ON 
-		ALERTS.l_refno=HIST.l_refno 
-		AND ALERTS.l_item=HIST.l_item
-	INNER JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno 
-		AND ALERTS.l_item=MDVHIST.l_item
-	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
-		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
-		HIST.l_status=SC.l_status
-        {0}
-where
-	BP.l_projectpk = ?
-union
-select
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=2,
-	HIST.sz_number,
-	HIST.l_status,
-	isnull(HIST.l_dscts, HIST.l_scts) l_timestamp,
-	SC.sz_text sz_status,
-	HIST.l_dst,
-	null sz_type_text
-from
-	BBPROJECT BP
-	INNER JOIN BBPROJECT_X_REFNO XP ON
-		BP.l_projectpk=XP.l_projectpk
-	INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
-		XP.l_refno=ALERTS.l_refno
-	INNER JOIN SMSHIST HIST ON 
-		ALERTS.l_refno=HIST.l_refno 
-		AND ALERTS.l_item=HIST.l_item
-	INNER JOIN MDVHIST ON 
-		ALERTS.l_refno=MDVHIST.l_refno 
-		AND ALERTS.l_item=MDVHIST.l_item
-	INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
-		ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	INNER JOIN SMSSTATUSCODES SC ON
-		HIST.l_status=SC.l_status
-        {1}
-where
-	BP.l_projectpk = ?", sql_filter_voice, sql_filter_sms);
+	                                        BP.l_projectpk, 
+	                                        XP.l_refno,
+	                                        ALERTS.l_item,
+	                                        ADRSOURCE.*,
+	                                        MDVHIST.*,
+	                                        l_type=1,
+	                                        HIST.sz_number,
+	                                        HIST.l_status,
+	                                        convert(numeric(18,0), HIST.l_date) * 1000000 + convert(numeric(18,0), HIST.l_time) * 100 l_timestamp,
+	                                        SC.sz_status,
+	                                        SC.l_type l_dst,
+	                                        SC.sz_type_text
+                                        from
+	                                        BBPROJECT BP
+	                                        INNER JOIN BBPROJECT_X_REFNO XP ON
+		                                        BP.l_projectpk=XP.l_projectpk
+	                                        INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
+		                                        XP.l_refno=ALERTS.l_refno
+	                                        INNER JOIN BBHIST HIST ON 
+		                                        ALERTS.l_refno=HIST.l_refno 
+		                                        AND ALERTS.l_item=HIST.l_item
+	                                        INNER JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno 
+		                                        AND ALERTS.l_item=MDVHIST.l_item
+	                                        INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
+		                                        ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
+	                                        INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON
+		                                        HIST.l_status=SC.l_status
+                                                {0}
+                                        where
+	                                        BP.l_projectpk = ?
+                                        union
+                                        select
+	                                        BP.l_projectpk, 
+	                                        XP.l_refno,
+	                                        ALERTS.l_item,
+	                                        ADRSOURCE.*,
+	                                        MDVHIST.*,
+	                                        l_type=2,
+	                                        HIST.sz_number,
+	                                        HIST.l_status,
+	                                        isnull(HIST.l_dscts, HIST.l_scts) l_timestamp,
+	                                        SC.sz_text sz_status,
+	                                        HIST.l_dst,
+	                                        null sz_type_text
+                                        from
+	                                        BBPROJECT BP
+	                                        INNER JOIN BBPROJECT_X_REFNO XP ON
+		                                        BP.l_projectpk=XP.l_projectpk
+	                                        INNER JOIN MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS ON
+		                                        XP.l_refno=ALERTS.l_refno
+	                                        INNER JOIN SMSHIST HIST ON 
+		                                        ALERTS.l_refno=HIST.l_refno 
+		                                        AND ALERTS.l_item=HIST.l_item
+	                                        INNER JOIN MDVHIST ON 
+		                                        ALERTS.l_refno=MDVHIST.l_refno 
+		                                        AND ALERTS.l_item=MDVHIST.l_item
+	                                        INNER JOIN MDVHIST_ADDRESS_SOURCE ADRSOURCE ON
+		                                        ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
+	                                        INNER JOIN SMSSTATUSCODES SC ON
+		                                        HIST.l_status=SC.l_status
+                                                {1}
+                                        where
+	                                        BP.l_projectpk = ?", sql_filter_voice, sql_filter_sms);
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {
