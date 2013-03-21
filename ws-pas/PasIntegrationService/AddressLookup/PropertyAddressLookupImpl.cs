@@ -106,6 +106,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.BNR,0) BNR "
                                     + ",ISNULL(FR.FNR,0) FNR "
                                     + ",ISNULL(FR.UNR,0) UNR "
+                                    + ",ISNULL(FR.KON_DMID,0) KON_DMID "
                                     + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
                                     + "AND ISNULL(FR.GNR,0)=SA.GNR "
                                     + "AND ISNULL(FR.BNR,0)=SA.BNR "
@@ -136,6 +137,7 @@ namespace com.ums.pas.integration.AddressLookup
                                 Address = rs.GetString(rs.GetOrdinal("ADRESSE")),
                                 Postno = rs.GetInt32(rs.GetOrdinal("POSTNR")),
                                 PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
+                                KonDmid = rs.GetInt32(rs.GetOrdinal("KON_DMID")),
 
                             };
                             if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)

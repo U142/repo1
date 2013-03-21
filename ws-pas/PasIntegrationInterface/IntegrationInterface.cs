@@ -161,6 +161,7 @@ namespace com.ums.pas.integration
     [XmlInclude(typeof(StreetAddress))]
     [XmlInclude(typeof(PropertyAddress))]
     [XmlInclude(typeof(OwnerAddress))]
+    [XmlInclude(typeof(FollowupAlertObject))]
     public abstract class AlertTarget
     {
 
@@ -187,6 +188,7 @@ namespace com.ums.pas.integration
             else if (type is StreetAddress) return 2;
             else if (type is PropertyAddress) return 3;
             else if (type is OwnerAddress) return 4;
+            else if (type is FollowupAlertObject) return 5;
             return -1;
         }
     }

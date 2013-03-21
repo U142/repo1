@@ -392,7 +392,7 @@ namespace com.ums.pas.integration
                             cmd.Parameters["l_refno"].Value = alertLink.Refno;
                             cmd.Parameters["l_item"].Value = alertLink.Item;
                             cmd.Parameters["sz_fields"].Value = "";
-                            cmd.Parameters["l_adrpk2"].Value = -1;
+                            cmd.Parameters["l_adrpk2"].Value = data.KonDmid;
                             cmd.Parameters["l_adrpk"].Value = -1;
                             cmd.Parameters["l_xcoord"].Value = 0;
                             cmd.Parameters["l_ycoord"].Value = 0;

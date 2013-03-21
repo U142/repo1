@@ -32,83 +32,84 @@ namespace com.ums.pas.integration.AddressLookup
             using (OdbcCommand Command = Connection.CreateCommand())
             {
                 Connection.Open();
-
+                Command.Parameters.Add("l_projectpk", OdbcType.Numeric);
                 foreach(FollowupAlertObject followUp in FollowupAlerts)
                 {
-                    Command.CommandText = "";
-                    Command.Parameters.Add("l_projectpk", OdbcType.Numeric).Value = followUp.AlertId.Id;
+                    Command.CommandText = "tmpFollowUpAlert ?";
+                    Command.Parameters["l_projectpk"].Value = followUp.AlertId.Id;
 
-                    recipients.Add(new RecipientData()
+                    using (OdbcDataReader rs = Command.ExecuteReader())
                     {
-                        Address = "",
-                        AlertTarget = null,
-                        Company = false,
-                        Endpoints = null,
-                        Lat = 0,
-                        Lon = 0,
-                        Name = "",
-                        Postno = 1234,
-                        PostPlace = "",
-                    });
+                        String [] address = rs.GetString(rs.GetOrdinal("sz_adrinfo")).Split('|');
+                        int postNo = 0;
+                        bool validPostno = address.Length >= 3 && Int32.TryParse(address[2], out postNo);
+
+                        recipients.Add(new RecipientData()
+                        {
+                            Name = address.Length >= 1 ? address[0] : "",
+                            Address = address.Length >= 2 ? address[1] : "",
+                            Postno = address.Length >= 3 && validPostno ? postNo : 0,
+                            PostPlace = address.Length >= 4 ? address[3] : "",
+                            Company = rs.GetInt16(rs.GetOrdinal("iscompany")) == 1,
+                            Lat = rs.GetDouble(rs.GetOrdinal("l_lat")),
+                            Lon = rs.GetDouble(rs.GetOrdinal("l_lon")),
+
+                            AlertTarget = null,
+
+                            Endpoints = new List<Endpoint>()
+                            {
+                                new Phone()
+                                {
+                                    Address = rs.GetString(rs.GetOrdinal("sz_number")),
+                                    CanReceiveSms = rs.GetInt16(rs.GetOrdinal("l_type")) == 2,
+                                },
+                            },
+
+                        });
+                    }
                 }
             }
 
             return recipients;
 
-            /*
-select 
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=1,
-	BBHIST.sz_number
-
-from
-
-	BBPROJECT BP, 
-	BBPROJECT_X_REFNO XP,
-	MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS 
-	JOIN BBHIST ON ALERTS.l_refno=BBHIST.l_refno AND ALERTS.l_item=BBHIST.l_item
-	JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno AND ALERTS.l_item=MDVHIST.l_item,
-	MDVHIST_ADDRESS_SOURCE ADRSOURCE
-
-where
-	BP.l_projectpk=XP.l_projectpk
-	and XP.l_refno=ALERTS.l_refno
-	and ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	and BP.l_projectpk = 433
-
-union
-
-select 
-	BP.l_projectpk, 
-	XP.l_refno,
-	ALERTS.l_item,
-	ADRSOURCE.*,
-	MDVHIST.*,
-	l_type=2,
-	SMSHIST.sz_number
-
-from
-
-	BBPROJECT BP, 
-	BBPROJECT_X_REFNO XP,
-	MDVHIST_ADDRESS_SOURCE_ALERTS ALERTS 
-	JOIN SMSHIST ON ALERTS.l_refno=SMSHIST.l_refno AND ALERTS.l_item=SMSHIST.l_item
-	JOIN MDVHIST ON ALERTS.l_refno=MDVHIST.l_refno AND ALERTS.l_item=MDVHIST.l_item,
-	MDVHIST_ADDRESS_SOURCE ADRSOURCE
-
-where
-	BP.l_projectpk=XP.l_projectpk
-	and XP.l_refno=ALERTS.l_refno
-	and ALERTS.l_alertsourcepk=ADRSOURCE.l_alertsourcepk
-	and BP.l_projectpk = 433             
-             */
-
         }
 
+        private AlertTarget reconstructAlertTarget(int alertTarget, 
+                                                int company,
+                                                String name,
+            int municipalId,
+            int streetId,
+            int houseNo,
+            String letter,
+            String oppgang,
+            int gnr,
+            int bnr,
+            int fnr,
+            int snr,
+            int unr,
+            int postno,
+            String data,
+            int birthdate,
+            String attributes,
+            String extId)                  
+        {
+            switch (alertTarget)
+            {
+                case 5: //resolves to FollowUpAlertObject - should not be used nor reconstrucable
+                case 1: //AlertObject
+                    break;
+                case 2: //StreetId
+                    break;
+                case 3: //PropertyAddress
+                    break;
+                case 4: //OwnerAddress
+                    break;
+            }
+        }
+
+
         #endregion
+
+
     }
 }

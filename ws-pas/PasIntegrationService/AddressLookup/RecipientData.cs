@@ -102,6 +102,11 @@ namespace com.ums.pas.integration.AddressLookup
 
         public String PostPlace { get; set; }
 
+        /// <summary>
+        /// hold kondmid
+        /// </summary>
+        public int KonDmid { get; set; }
+
 
     }
 }
