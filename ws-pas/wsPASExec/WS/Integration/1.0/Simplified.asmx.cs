@@ -207,7 +207,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get object log for a previously sent alert.</b>")]
         public List<LogLineDetailed> GetAlertObjectLog(Account Account, AlertId AlertId, int StatusCodeFilter, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetAlertObjectLog(Account, AlertId, StatusCodeFilter, StartIndex, PageSize);
         }
 
         /// <summary>
