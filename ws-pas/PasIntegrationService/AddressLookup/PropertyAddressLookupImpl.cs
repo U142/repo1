@@ -51,18 +51,19 @@ namespace com.ums.pas.integration.AddressLookup
 
                 start = DateTime.Now;
                 //Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5))";
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, UNR int)";
+                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, UNR int, ATTRIBUTES varchar(8000) COLLATE Latin1_General_100_CI_AI)";
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "INSERT INTO #SAMATCH(KOMMUNENR, GNR, BNR, FNR, UNR) VALUES(?,?,?,?,?)";
+                Command.CommandText = "INSERT INTO #SAMATCH(KOMMUNENR, GNR, BNR, FNR, UNR, ATTRIBUTES) VALUES(?,?,?,?,?,?)";
                 Command.Parameters.Add("knr", OdbcType.Int);
                 Command.Parameters.Add("gnr", OdbcType.Int);
                 Command.Parameters.Add("bnr", OdbcType.Int);
                 Command.Parameters.Add("fnr", OdbcType.Int);
                 Command.Parameters.Add("unr", OdbcType.Int);
+                Command.Parameters.Add("attr", OdbcType.VarChar, 8000);
                 Command.Prepare();
 
 
@@ -77,6 +78,7 @@ namespace com.ums.pas.integration.AddressLookup
                         Command.Parameters["fnr"].Value = sa.Fnr;
                         Command.Parameters["unr"].Value = sa.Unr;
 
+                        Command.Parameters["attr"].Value = DataItem.FromList(sa.Attributes);
                         Command.ExecuteNonQuery();
                     }
                     else
@@ -107,6 +109,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.FNR,0) FNR "
                                     + ",ISNULL(FR.UNR,0) UNR "
                                     + ",ISNULL(FR.KON_DMID,0) KON_DMID "
+                                    + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
                                     + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
                                     + "AND ISNULL(FR.GNR,0)=SA.GNR "
                                     + "AND ISNULL(FR.BNR,0)=SA.BNR "
@@ -128,7 +131,8 @@ namespace com.ums.pas.integration.AddressLookup
                                                                     rs.GetInt32(rs.GetOrdinal("GNR")),
                                                                     rs.GetInt32(rs.GetOrdinal("BNR")),
                                                                     rs.GetInt32(rs.GetOrdinal("FNR")),
-                                                                    rs.GetInt32(rs.GetOrdinal("UNR"))),
+                                                                    rs.GetInt32(rs.GetOrdinal("UNR")),
+                                                                    DataItem.FromString(rs.GetString(rs.GetOrdinal("ATTRIBUTES")))),
                                 Name = rs.GetString(rs.GetOrdinal("NAVN")),
                                 Endpoints = new List<Endpoint>(),
                                 Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),

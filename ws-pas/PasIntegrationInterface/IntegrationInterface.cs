@@ -123,6 +123,7 @@ namespace com.ums.pas.integration
     {
         public string Key;
         public string Value;
+        
         public DataItem()
         {
         }
@@ -130,6 +131,51 @@ namespace com.ums.pas.integration
         {
             Key = key;
             Value = value;
+        }
+
+        /// <summary>
+        /// Create a list of attributes based on input string.
+        /// </summary>
+        /// <param name="DataItemString">Pipe separated using equals sign</param>
+        /// <returns></returns>
+        public static List<DataItem> FromString(String DataItemString)
+        {
+            List<DataItem> list = new List<DataItem>();
+            DataItemString.Split('|').ToList().ForEach(n => 
+            {
+                if (n.Length > 0 && n.IndexOf("=") > 0)
+                {
+                    if (n.IndexOf("=") > 0 && n.Length > n.IndexOf("="))
+                    {
+                        list.Add(new DataItem()
+                        {
+                            Key = n.Substring(0, n.IndexOf("=")),
+                            Value = n.Substring(n.IndexOf("=") + 1),
+                        });
+                    }
+                }
+            });
+            return list;
+        }
+
+        /// <summary>
+        /// Create a pipe separated string from 
+        /// </summary>
+        /// <param name="List"></param>
+        /// <returns></returns>
+        public static String FromList(List<DataItem> List)
+        {
+            String toReturn = String.Empty;
+            
+            List.ForEach(n =>
+                {
+                    if (n.Key.Length > 0)
+                    {
+                        toReturn += toReturn.Length == 0 ? "" : "|";
+                        toReturn += n.Key + "=" + n.Value;
+                    }
+                });
+            return toReturn;
         }
     }
 
@@ -162,19 +208,18 @@ namespace com.ums.pas.integration
     [XmlInclude(typeof(PropertyAddress))]
     [XmlInclude(typeof(OwnerAddress))]
     [XmlInclude(typeof(FollowupAlertObject))]
+    [XmlInclude(typeof(DataItem))]
     public abstract class AlertTarget
     {
-
-
-        private List<DataItem> _attributes;
+        /*private List<DataItem> _attributes;
 
         public List<DataItem> Attributes
         {
-            get { 
-                return _attributes != null ? _attributes : new List<DataItem>(); 
-            }
+            get { return _attributes != null ? _attributes : new List<DataItem>(); }
             set { _attributes = value; }
-        }
+        }*/
+        public List<DataItem> Attributes = new List<DataItem>();
+
 
         /// <summary>
         /// All alert types must be discriminated into a numeric value
@@ -200,17 +245,17 @@ namespace com.ums.pas.integration
         {
             return new StreetAddress(s);
         }
-        public static StreetAddress newStreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang)
+        public static StreetAddress newStreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang, List<DataItem> attributes)
         {
-            return new StreetAddress(municipalCode, streetNo, houseNo, letter, oppgang);
+            return new StreetAddress(municipalCode, streetNo, houseNo, letter, oppgang, attributes);
         }
         public static PropertyAddress newPropertyAddress(PropertyAddress p)
         {
             return new PropertyAddress(p);
         }
-        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr)
+        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr, List<DataItem> attributes)
         {
-            return new PropertyAddress(municipalCode, gnr, bnr, fnr, unr);
+            return new PropertyAddress(municipalCode, gnr, bnr, fnr, unr, attributes);
         }
         public static StoredAddress newStoredAddress(StoredAddress s)
         {
@@ -220,7 +265,7 @@ namespace com.ums.pas.integration
         {
             return new StoredList();
         }
-        public static AlertObject newAlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms)
+        public static AlertObject newAlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms, List<DataItem> attributes)
         {
             return new AlertObject(Name, ExternalId, PhoneNumber, CanReceiveSms);
         }
@@ -279,7 +324,7 @@ namespace com.ums.pas.integration
             get { return _alertId; }
             set { _alertId = value; }
         }
-
+        
     }
 
     /// <summary>
@@ -348,21 +393,23 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class StreetAddress : AlertTarget
     {
+
         public StreetAddress()
         {
         }
         public StreetAddress(StreetAddress s)
-            : this(s.MunicipalCode, s.StreetNo, s.HouseNo, s.Letter, s.Oppgang)
+            : this(s.MunicipalCode, s.StreetNo, s.HouseNo, s.Letter, s.Oppgang, s.Attributes)
         {
             this.Attributes = s.Attributes;
         }
-        public StreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang)
+        public StreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang, List<DataItem> attributes)
         {
             this.MunicipalCode = municipalCode;
             this.StreetNo = streetNo;
             this.HouseNo = houseNo;
             this.Letter = letter;
             this.Oppgang = oppgang;
+            this.Attributes = attributes;
         }
         private String _municipalCode;
 
@@ -400,7 +447,6 @@ namespace com.ums.pas.integration
             get { return _oppgang; }
             set { _oppgang = value; }
         }
-
 
     }
 
@@ -443,17 +489,18 @@ namespace com.ums.pas.integration
         {
         }
         public PropertyAddress(PropertyAddress p)
-            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Unr)
+            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Unr, p.Attributes)
         {
             this.Attributes = p.Attributes;
         }
-        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr)
+        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr, List<DataItem> attributes)
         {
             this.MunicipalCode = municipalCode;
             this.Gnr = gnr;
             this.Bnr = bnr;
             this.Fnr = fnr;
             this.Unr = unr;
+            this.Attributes = attributes;
         }
         private String _municipalCode;
 
@@ -640,7 +687,6 @@ namespace com.ums.pas.integration
             get { return _eierKategoriKode; }
             set { _eierKategoriKode = value; }
         }
-
     }
 
 /*    /// <summary>
@@ -691,7 +737,6 @@ namespace com.ums.pas.integration
             get { return _addressPk; }
             set { _addressPk = value; }
         }
-
     }
 
 
