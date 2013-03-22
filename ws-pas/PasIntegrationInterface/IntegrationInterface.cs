@@ -285,7 +285,7 @@ namespace com.ums.pas.integration
                                     String addressLine3,
                                     List<DataItem> attributes,
                                     int dateOfBirth,
-                                    int ownerId,
+                                    long ownerId,
                                     NorwayEierIdKode ownerIdCode,
                                     NorwayEierKategoriKode ownerCategoryCode,
                                     NorwayEierStatusKode ownerStatusCode,
@@ -611,7 +611,7 @@ namespace com.ums.pas.integration
         private NorwayEierStatusKode _eierStatusKode;
         private NorwayEierIdKode _eierIdKode;
 
-        private int _eierId;
+        private long _eierId;
         private String _navn;
         private int _postnr;
         private String _adresselinje1;
@@ -659,7 +659,7 @@ namespace com.ums.pas.integration
         }
 
 
-        public int EierId
+        public long EierId
         {
             get { return _eierId; }
             set { _eierId = value; }
