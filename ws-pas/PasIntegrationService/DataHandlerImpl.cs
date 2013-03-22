@@ -494,14 +494,14 @@ namespace com.ums.pas.integration
                         municipalid = "0";
                     }
                     // build attribute string, pipe-separated key=value pairs
-                    StringBuilder customAttributes = new StringBuilder("");
+                    /*StringBuilder customAttributes = new StringBuilder("");
                     foreach (DataItem attribute in recipient.AlertTarget.Attributes)
                     {
                         customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
                         customAttributes.Append("=");
                         customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
                         customAttributes.Append("|");
-                    }
+                    }*/
 
 
                     long alertSourcePk = -1;
@@ -523,7 +523,7 @@ namespace com.ums.pas.integration
                     cmd.Parameters["postnr"].Value = postnr;
                     cmd.Parameters["data"].Value = data;
                     cmd.Parameters["birthdate"].Value = birthdate;
-                    cmd.Parameters["attr"].Value = customAttributes.ToString();
+                    cmd.Parameters["attr"].Value = DataItem.FromList(recipient.AlertTarget.Attributes);
                     cmd.Parameters["extid"].Value = externalId == null ? (object)DBNull.Value : externalId;
                     using (OdbcDataReader rs = cmd.ExecuteReader())
                     {

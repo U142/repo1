@@ -144,7 +144,7 @@ namespace com.ums.pas.integration.AddressLookup
                                             Postno = Int32.Parse(rs.GetString(rs.GetOrdinal("POSTNR"))),
                                             PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
                                             KonDmid = rs.GetInt32(rs.GetOrdinal("KON_DMID")),
-
+                                            
                                         };
                                         if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                                         {

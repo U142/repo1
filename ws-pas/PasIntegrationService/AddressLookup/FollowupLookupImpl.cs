@@ -132,11 +132,11 @@ namespace com.ums.pas.integration.AddressLookup
             {
                 case 5: //resolves to FollowUpAlertObject - should not be used nor reconstrucable
                 case 1: //AlertObject
-                    return AlertTargetFactory.newAlertObject(name, extId, endPoint.Address, endPoint is Phone ? ((Phone)endPoint).CanReceiveSms : false);
+                    return AlertTargetFactory.newAlertObject(name, extId, endPoint.Address, endPoint is Phone ? ((Phone)endPoint).CanReceiveSms : false, DataItem.FromString(attributes));
                 case 2: //StreetId
-                    return AlertTargetFactory.newStreetAddress(municipalId.ToString(), streetId, houseNo, letter, oppgang);
+                    return AlertTargetFactory.newStreetAddress(municipalId.ToString(), streetId, houseNo, letter, oppgang, DataItem.FromString(attributes));
                 case 3: //PropertyAddress
-                    return AlertTargetFactory.newPropertyAddress(municipalId.ToString(), gnr, bnr, fnr, unr);
+                    return AlertTargetFactory.newPropertyAddress(municipalId.ToString(), gnr, bnr, fnr, unr, DataItem.FromString(attributes));
                 case 4: //OwnerAddress
                     OwnerAddress ownerAddress = new OwnerAddress();
 
@@ -162,6 +162,7 @@ namespace com.ums.pas.integration.AddressLookup
                     ownerAddress.DateOfBirth = birthdate;
                     ownerAddress.Navn = name;
                     ownerAddress.Postnr = postno;
+                    ownerAddress.Attributes = DataItem.FromString(attributes);
                     return ownerAddress;
                 default:
                     return new AlertObject()
