@@ -576,6 +576,28 @@ namespace com.ums.ws.integration
         }
 
         /// <summary>
+        /// Search for a specific recipient in any alert, either by person name, org name or phone number
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="SearchText">Search by name or number</param>
+        /// <param name="StartIndex">Start at index</param>
+        /// <param name="PageSize">Number of rows</param>
+        [WebMethod(Description = @"<b>Search for a specific recipient in any alert, either by person name, org name or phone number</b>")]
+        public List<LogObject> GetObjectLog(Account Account, String SearchText, int StartIndex, int PageSize)
+        {
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Get status of a previously sent alert.
         /// </summary>
         /// <param name="Account">The account</param>
@@ -935,17 +957,6 @@ namespace com.ums.ws.integration
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
                         LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
-/*                        bool canReceiveSms = false;
-                        if (rs.GetInt32(rs.GetOrdinal("l_type")) == 2)
-                            canReceiveSms = true;
-
-                        LogLinePhone line = new LogLinePhone();
-                        line.Address = rs.GetString(rs.GetOrdinal("sz_number"));
-                        line.CanReceiveSms = canReceiveSms;
-                        line.StatusCode = rs.GetInt32(rs.GetOrdinal("l_status"));
-                        line.Status = rs.GetString(rs.GetOrdinal("sz_status"));
-
-                        errorList.Add(line);*/
                         errorList.Add(phoneLine);
                     }
                 }
