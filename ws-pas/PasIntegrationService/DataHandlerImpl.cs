@@ -503,7 +503,7 @@ namespace com.ums.pas.integration
                         else if (ownerAddress.DateOfBirth.Length == 8 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "ddMMyyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
                             birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
                         else if (!int.TryParse(ownerAddress.DateOfBirth, out birthdate))
-                            birthdate = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+                            birthdate = 0;
 
                         postnr = ownerAddress.Postnr;
                         data =
