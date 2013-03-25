@@ -117,6 +117,218 @@ namespace com.ums.ws.integration
             return listToReturn;
         }
 
+        /// <summary>
+        /// Save a template
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="MessageTemplate"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Save a template</b>")]
+        public MessageTemplateResponse SaveTemplate(Account Account, MessageTemplate MessageTemplate)
+        {
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            if (MessageTemplate.TemplateId != null && MessageTemplate.TemplateId.Id > 0)
+            {
+                using (OdbcCommand cmd = umsDb.CreateCommand("SELECT l_messagepk FROM BBMESSAGES WHERE l_deptpk=? AND l_messagepk=?"))
+                {
+                    cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                    cmd.Parameters.Add("msgpk", OdbcType.BigInt).Value = MessageTemplate.TemplateId.Id;
+
+                    using (OdbcDataReader rs = cmd.ExecuteReader())
+                    {
+                        if (!rs.Read())
+                            return new MessageTemplateResponse() { Code = -1, Message = "Message ID not found for this department", TemplateId = MessageTemplate.TemplateId };
+                    }
+                }
+
+                // update
+                using (OdbcCommand cmd = umsDb.CreateCommand("UPDATE BBMESSAGES SET sz_name=? WHERE l_deptpk=? AND l_messagepk=?"))
+                {
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("name", OdbcType.VarChar, 50).Value = MessageTemplate.Title;
+                    cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                    cmd.Parameters.Add("msgpk", OdbcType.BigInt).Value = MessageTemplate.TemplateId.Id;
+
+                    String templateContent = String.Format("{0}\\{1}\\{2}.txt", UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk, MessageTemplate.TemplateId.Id);
+
+                    if (cmd.ExecuteNonQuery() > 0)
+                    {
+                        if (File.Exists(templateContent))
+                            File.Delete(templateContent);
+
+                        File.WriteAllText(templateContent, MessageTemplate.MessageText);
+                    }
+                    else
+                        return new MessageTemplateResponse() { Code = -2, Message = "Failed to update message template", TemplateId = MessageTemplate.TemplateId };
+                }
+            }
+            else
+            {
+                // new
+                using (OdbcCommand cmd = umsDb.CreateCommand("sp_get_bbmessagepk"))
+                {
+                    var tmp = cmd.ExecuteScalar(); 
+                    long templateId;
+                    if (!long.TryParse(tmp.ToString(), out templateId))
+                        return new MessageTemplateResponse() { Code = -4, Message = "Failed to get new message id", TemplateId = null };
+
+                    MessageTemplate.TemplateId = new MessageTemplateId() { Id = templateId };
+
+                    cmd.CommandText = "INSERT INTO BBMESSAGES(l_deptpk, l_type, sz_name, sz_description, l_messagepk, l_langpk, sz_filename) VALUES(?, 14, ?, '', ? ,6 , '')";
+                    cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                    cmd.Parameters.Add("name", OdbcType.VarChar, 50).Value = MessageTemplate.Title;
+                    cmd.Parameters.Add("msgpk", OdbcType.BigInt).Value = MessageTemplate.TemplateId.Id;
+
+                    if (cmd.ExecuteNonQuery() > 0)
+                    {
+                        String templateContent = String.Format("{0}\\{1}\\{2}.txt", UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk, MessageTemplate.TemplateId.Id);
+
+                        if (File.Exists(templateContent))
+                            File.Delete(templateContent);
+
+                        File.WriteAllText(templateContent, MessageTemplate.MessageText);
+                    }
+                    else
+                        return new MessageTemplateResponse() { Code = -3, Message = "Failed to save message", TemplateId = MessageTemplate.TemplateId };
+                }
+            }
+
+            return new MessageTemplateResponse() { Code = 0, Message = "", TemplateId = MessageTemplate.TemplateId };
+        }
+
+        /// <summary>
+        /// Delete a Message template
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="TemplateId"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Delete a Message template</b>")]
+        public MessageTemplateResponse DeleteTemplate(Account Account, MessageTemplateId TemplateId)
+        {
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            using (OdbcCommand cmd = umsDb.CreateCommand("SELECT l_messagepk FROM BBMESSAGES WHERE l_deptpk=? AND l_messagepk=?"))
+            {
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                cmd.Parameters.Add("msgpk", OdbcType.BigInt).Value = TemplateId.Id;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    if (!rs.Read())
+                        return new MessageTemplateResponse() { Code = -1, Message = "Message ID not found for this department", TemplateId = TemplateId };
+                }
+
+                cmd.CommandText = "DELETE FROM BBMESSAGES WHERE l_deptpk=? AND l_messagepk=?";
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    String templateContent = String.Format("{0}\\{1}\\{2}.txt", UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk, TemplateId.Id);
+                    if (File.Exists(templateContent))
+                        File.Delete(templateContent);
+                    else
+                        return new MessageTemplateResponse() { Code = -2, Message = "Message content not found", TemplateId = TemplateId };
+                }
+            }
+
+            return new MessageTemplateResponse() { Code = 0, Message = "", TemplateId = TemplateId };
+        }
+
+        /// <summary>
+        /// Get a list of all message templates available for Account
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get a list of all message templates available for Account</b>")]
+        public List<MessageTemplateListItem> GetTemplates(Account Account, short messageType)
+        {
+            List<MessageTemplateListItem> templates = new List<MessageTemplateListItem>();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            string sql = "SELECT l_messagepk, isnull(sz_name, '') sz_name FROM BBMESSAGES WHERE l_deptpk=? AND l_type=?";
+
+            using (OdbcCommand cmd = umsDb.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                cmd.Parameters.Add("messagepk", OdbcType.SmallInt).Value = messageType;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                    {
+                        MessageTemplateListItem template = new MessageTemplateListItem();
+                        template.TemplateId = new MessageTemplateId() { Id = rs.GetInt64(rs.GetOrdinal("l_messagepk")) };
+                        template.Title = rs.GetString(rs.GetOrdinal("sz_name"));
+
+                        templates.Add(template);
+                    }
+                }
+            }
+
+            return templates;
+        }
+
+        /// <summary>
+        /// Get a template from id.
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="TemplateId">Template ID</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get a template from id.</b>")]
+        public MessageTemplate GetTemplate(Account Account, MessageTemplateId TemplateId)
+        {
+            MessageTemplate template = new MessageTemplate();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            string sql = "SELECT l_messagepk, isnull(sz_name, '') sz_name FROM BBMESSAGES where l_deptpk=? AND l_messagepk=?";
+
+            using (OdbcCommand cmd = umsDb.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = logonInfo.l_deptpk;
+                cmd.Parameters.Add("msgpk", OdbcType.BigInt).Value = TemplateId.Id;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    if (rs.Read())
+                    {
+                        template.TemplateId = new MessageTemplateId() { Id = rs.GetInt64(rs.GetOrdinal("l_messagepk")) };
+                        template.Title = rs.GetString(rs.GetOrdinal("sz_name"));
+                        
+                        String templateContent = String.Format("{0}\\{1}\\{2}.txt", UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk, TemplateId.Id);
+                        if(File.Exists(templateContent))
+                            template.MessageText = File.ReadAllText(templateContent);
+                    }
+                    else
+                        throw new Exception("Message ID not found for this department id");
+                }
+            }
+
+            return template;
+        }
 
 
         /// <summary>

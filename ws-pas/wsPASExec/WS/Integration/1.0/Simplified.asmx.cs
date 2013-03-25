@@ -263,7 +263,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Save a template</b>")]
         public MessageTemplateResponse SaveTemplate(Account Account, MessageTemplate MessageTemplate)
         {
-            throw new NotImplementedException();
+            return new Integration().SaveTemplate(Account, MessageTemplate);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Delete a Message template</b>")]
         public MessageTemplateResponse DeleteTemplate(Account Account, MessageTemplateId TemplateId)
         {
-            throw new NotImplementedException();
+            return new Integration().DeleteTemplate(Account, TemplateId);
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get a list of all message templates available for Account</b>")]
         public List<MessageTemplateListItem> GetTemplates(Account Account)
         {
-            throw new NotImplementedException();
+            return new Integration().GetTemplates(Account, 14);
         }
 
         /// <summary>
@@ -296,9 +296,9 @@ namespace com.ums.ws.integration
         /// <param name="TemplateId">Template ID</param>
         /// <returns></returns>
         [WebMethod(Description = @"<b>Get a template from id.</b>")]
-        public List<MessageTemplate> GetTemplate(Account Account, MessageTemplateId TemplateId)
+        public MessageTemplate GetTemplate(Account Account, MessageTemplateId TemplateId)
         {
-            throw new NotImplementedException();
+            return new Integration().GetTemplate(Account, TemplateId);
         }
 
 
