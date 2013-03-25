@@ -476,9 +476,20 @@ namespace com.ums.pas.integration
                     }
                     else if (recipient.AlertTarget is OwnerAddress)
                     {
+                        DateTime DateOfBirth;
+
                         // TODO: insert alert target data
                         OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
-                        birthdate = ownerAddress.DateOfBirth;
+
+                        if (ownerAddress.DateOfBirth.Length == 6 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "ddMMyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
+                            birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
+                        else if (ownerAddress.DateOfBirth.Length == 8 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
+                            birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
+                        else if (ownerAddress.DateOfBirth.Length == 8 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "ddMMyyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
+                            birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
+                        else if (!int.TryParse(ownerAddress.DateOfBirth, out birthdate))
+                            birthdate = 0;
+
                         postnr = ownerAddress.Postnr;
                         data =
                                     ownerAddress.Adresselinje1

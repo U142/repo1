@@ -234,7 +234,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Search for a specific recipient in any alert, either by person name, org name or phone number</b>")]
         public List<LogObject> GetObjectLog(Account Account, String SearchText, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetObjectLog(Account, SearchText, StartIndex, PageSize);
         }
 
         /// <summary>

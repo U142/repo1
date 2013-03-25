@@ -204,6 +204,37 @@ WHERE BH.l_refno=?";
             return toReturn;
         }
 
+        public void GetAlertMessage(long projectPk, out String ttsMessage, out String smsMessage)
+        {
+            ttsMessage = null; smsMessage = null;
+
+
+            string sql = @"select 
+                            TTS.sz_content ttsMessage, 
+                            SQ.sz_text smsMessage
+	                        from BBPROJECT_X_REFNO XR
+	                        INNER JOIN MDVSENDINGINFO SI ON SI.l_refno = XR.l_refno
+	                        LEFT OUTER JOIN BBQREF_TTSREF TTS ON TTS.l_refno = XR.l_refno
+	                        LEFT OUTER JOIN SMSQREF SQ ON SQ.l_refno = XR.l_refno
+	                        where XR.l_projectpk = ?";
+
+            using (OdbcCommand cmd = CreateCommand(sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = projectPk;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                    {
+                        if(!rs.IsDBNull(rs.GetOrdinal("ttsMessage")))
+                            ttsMessage += rs.GetString(rs.GetOrdinal("ttsMessage"));
+                        if(!rs.IsDBNull(rs.GetOrdinal("smsMessage")))
+                            smsMessage += rs.GetString(rs.GetOrdinal("smsMessage"));
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Get time profiles for creating an alert.
         /// </summary>
