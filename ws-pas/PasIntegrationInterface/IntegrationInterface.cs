@@ -99,6 +99,15 @@ namespace com.ums.pas.integration
             get { return _address; }
             set { _address = value; }
         }
+
+        public override bool Equals(object obj)
+        {
+            return Address != null && obj is Endpoint ? Address.Equals(((Endpoint)obj).Address) : false;
+        }
+        public override int GetHashCode()
+        {
+            return Address.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -165,7 +174,7 @@ namespace com.ums.pas.integration
         /// <returns></returns>
         public static String FromList(List<DataItem> List)
         {
-            String toReturn = String.Empty;
+            String toReturn = "";
             
             List.ForEach(n =>
                 {
