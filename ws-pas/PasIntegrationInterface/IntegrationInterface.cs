@@ -99,6 +99,15 @@ namespace com.ums.pas.integration
             get { return _address; }
             set { _address = value; }
         }
+
+        public override bool Equals(object obj)
+        {
+            return Address != null && obj is Endpoint ? Address.Equals(((Endpoint)obj).Address) : false;
+        }
+        public override int GetHashCode()
+        {
+            return Address.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -165,7 +174,7 @@ namespace com.ums.pas.integration
         /// <returns></returns>
         public static String FromList(List<DataItem> List)
         {
-            String toReturn = String.Empty;
+            String toReturn = "";
             
             List.ForEach(n =>
                 {
@@ -285,7 +294,7 @@ namespace com.ums.pas.integration
                                     String addressLine3,
                                     List<DataItem> attributes,
                                     String dateOfBirth,
-                                    int ownerId,
+                                    long ownerId,
                                     NorwayEierIdKode ownerIdCode,
                                     NorwayEierKategoriKode ownerCategoryCode,
                                     NorwayEierStatusKode ownerStatusCode,
@@ -611,7 +620,7 @@ namespace com.ums.pas.integration
         private NorwayEierStatusKode _eierStatusKode;
         private NorwayEierIdKode _eierIdKode;
 
-        private int _eierId;
+        private long _eierId;
         private String _navn;
         private int _postnr;
         private String _adresselinje1;
@@ -659,7 +668,7 @@ namespace com.ums.pas.integration
         }
 
 
-        public int EierId
+        public long EierId
         {
             get { return _eierId; }
             set { _eierId = value; }

@@ -521,8 +521,8 @@ namespace com.ums.ws.integration
                                     ownerAddress.Adresselinje1 = ownerProperties[0];
                                     ownerAddress.Adresselinje2 = ownerProperties[1];
                                     ownerAddress.Adresselinje3 = ownerProperties[2];
-                                    int eierId;
-                                    if (int.TryParse(rs.GetString(rs.GetOrdinal("externalid")), out eierId))
+                                    long eierId;
+                                    if (long.TryParse(rs.GetString(rs.GetOrdinal("externalid")), out eierId))
                                         ownerAddress.EierId = eierId;
                                     ownerAddress.EierIdKode = (NorwayEierIdKode)Enum.Parse(typeof(NorwayEierIdKode), ownerProperties[3], true);
                                     ownerAddress.EierKategoriKode = (NorwayEierKategoriKode)Enum.Parse(typeof(NorwayEierKategoriKode), ownerProperties[4], true);

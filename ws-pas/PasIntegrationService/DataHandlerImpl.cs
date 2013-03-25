@@ -188,6 +188,27 @@ namespace com.ums.pas.integration
 
 
             //now we have all data
+            
+            //remove duplicates
+            //IEnumerable<Endpoint> endpoints;
+            //recipientDataList.ForEach(x => endpoints = x.Endpoints.GroupBy(e => e).Where(e => e.Count() > 1).Select(e => e.Key));
+            //IEnumerable<RecipientData> duplicates = recipientDataList.GroupBy(r => r.Endpoints.GroupBy(e => e).Where(e => e.Count() > 1)).Select(r => r.Key);
+            HashSet<Endpoint> endpointsAdded = new HashSet<Endpoint>();
+
+            recipientDataList.ForEach(x => x.Endpoints.ForEach(e => 
+                {
+                    if (!endpointsAdded.Add(e))
+                    {
+                        log.InfoFormat("Duplicate endpoint detected [{0}], removing from endpoints", e.Address);
+                        x.Endpoints.Remove(e);
+                        if (x.Endpoints.Count == 0)
+                        {
+                            log.InfoFormat("Recipient [{0}] have no more endpoints, removing from list", x.Name);
+                        }
+                    }
+                }));
+            
+
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
                 int Refno = (int) Database.newRefno();
@@ -514,25 +535,25 @@ namespace com.ums.pas.integration
                         customAttributes.Append("|");
                     }*/
 
-
+                    int tmp = 0;
                     long alertSourcePk = -1;
 
                     cmd.Parameters["projectpk"].Value = AlertId.Id;
                     cmd.Parameters["company"].Value = recipient.Company ? 1 : 0;
-                    cmd.Parameters["Name"].Value = recipient.Name;
+                    cmd.Parameters["Name"].Value = recipient.Name != null ? recipient.Name : "";
                     cmd.Parameters["alertTarget"].Value = AlertTarget.DiscriminatorValue(recipient.AlertTarget);
-                    cmd.Parameters["municipalId"].Value = Int32.Parse(municipalid);
+                    cmd.Parameters["municipalId"].Value = Int32.TryParse(municipalid, out tmp) ? Int32.Parse(municipalid) : 0;
                     cmd.Parameters["streetId"].Value = streetid;
                     cmd.Parameters["houseNo"].Value = houseno;
-                    cmd.Parameters["houseLetter"].Value = letter;
-                    cmd.Parameters["oppgang"].Value = oppgang;
+                    cmd.Parameters["houseLetter"].Value = letter != null ? letter : "";
+                    cmd.Parameters["oppgang"].Value = oppgang != null ? oppgang : "";
                     cmd.Parameters["gnr"].Value = gnr;
                     cmd.Parameters["bnr"].Value = bnr;
                     cmd.Parameters["fnr"].Value = fnr;
                     cmd.Parameters["snr"].Value = snr;
                     cmd.Parameters["unr"].Value = unr;
                     cmd.Parameters["postnr"].Value = postnr;
-                    cmd.Parameters["data"].Value = data;
+                    cmd.Parameters["data"].Value = data != null ? data : "";
                     cmd.Parameters["birthdate"].Value = birthdate;
                     cmd.Parameters["attr"].Value = DataItem.FromList(recipient.AlertTarget.Attributes);
                     cmd.Parameters["extid"].Value = externalId == null ? (object)DBNull.Value : externalId;
