@@ -159,7 +159,7 @@ namespace com.ums.pas.integration.AddressLookup
                         ownerAddress.EierKategoriKode = NorwayEierKategoriKode.IKKE_DEFINERT;
                         ownerAddress.EierStatusKode = NorwayEierStatusKode.IKKE_DEFINERT;
                     }
-                    ownerAddress.DateOfBirth = birthdate;
+                    ownerAddress.DateOfBirth = DateOfBirthToString(birthdate);
                     ownerAddress.Navn = name;
                     ownerAddress.Postnr = postno;
                     ownerAddress.Attributes = DataItem.FromString(attributes);
@@ -177,6 +177,19 @@ namespace com.ums.pas.integration.AddressLookup
 
         #endregion
 
+        /// <summary>
+        /// Convert from int (yyyyMMdd) to string (ddMMyy)
+        /// </summary>
+        /// <param name="dateOfBirth"></param>
+        /// <returns></returns>
+        private string DateOfBirthToString(int dateOfBirth)
+        {
+            string tmp = dateOfBirth.ToString();
+            if (tmp.Length == 8)
+                return tmp.Substring(6, 2) + tmp.Substring(4, 2) + tmp.Substring(2, 2);
+            else
+                return DateTime.Now.ToString("ddMMyy");
+        }
 
     }
 }

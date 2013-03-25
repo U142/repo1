@@ -284,7 +284,7 @@ namespace com.ums.pas.integration
                                     String addressLine2,
                                     String addressLine3,
                                     List<DataItem> attributes,
-                                    int dateOfBirth,
+                                    String dateOfBirth,
                                     int ownerId,
                                     NorwayEierIdKode ownerIdCode,
                                     NorwayEierKategoriKode ownerCategoryCode,
@@ -665,9 +665,9 @@ namespace com.ums.pas.integration
             set { _eierId = value; }
         }
 
-        private int _dateOfBirth;
+        private String _dateOfBirth;
 
-        public int DateOfBirth
+        public String DateOfBirth
         {
             get { return _dateOfBirth; }
             set { _dateOfBirth = value; }
@@ -1188,57 +1188,60 @@ namespace com.ums.pas.integration
             get { return _alertTarget; }
             set { _alertTarget = value; }
         }
+    }
 
-        /*private Endpoint _endpoint;
-        public Endpoint Endpoint
+    /// <summary>
+    /// Single object from Log, also containing alert information.
+    /// Used when searching for specific persons and numbers
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogObject : LogLineDetailed
+    {
+        private String _alertTitle;
+
+        public String AlertTitle
         {
-            get { return _endpoint; }
-            set { _endpoint = value; }
+            get { return _alertTitle; }
+            set { _alertTitle = value; }
         }
 
         private DateTime _dateTime;
+
         public DateTime DateTime
         {
             get { return _dateTime; }
             set { _dateTime = value; }
         }
 
-        private int _statusText;
-        public int StatusCode
+        private String ttsMessage;
+
+        public String TtsMessage
         {
-            get { return _statusText; }
-            set { _statusText = value; }
-        }
-        private string _status;
-        public string Status
-        {
-            get { return _status; }
-            set { _status = value; }
+            get { return ttsMessage; }
+            set { ttsMessage = value; }
         }
 
-        private int _reasonCode;
-        public int ReasonCode
+
+        private String smsMessage;
+
+        public String SmsMessage
         {
-            get { return _reasonCode; }
-            set { _reasonCode = value; }
+            get { return smsMessage; }
+            set { smsMessage = value; }
         }
 
-        private string _reason;
-        public string Reason
-        {
-            get { return _reason; }
-            set { _reason = value; }
-        }*/
+        private AlertId alertId;
 
-        // externalid is redundant as it is only used for alertobject (will be included in the alertobject) and owner address (where it will be in the eierid field)
-        /*private String _externalId;
-        public String ExternalId
+        public AlertId AlertId
         {
-            get { return _externalId; }
-            set { _externalId = value; }
-        }*/
+            get { return alertId; }
+            set { alertId = value; }
+        }
+
     }
-
+    
+    /*
     /// <summary>
     /// Single object from Log, also containing alert information.
     /// Used when searching for specific persons and numbers
@@ -1283,6 +1286,30 @@ namespace com.ums.pas.integration
             set { _statusCode = value; }
         }
 
+        private String _status;
+
+        public String Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
+
+        private int _reasonCode;
+
+        public int ReasonCode
+        {
+            get { return _reasonCode; }
+            set { _reasonCode = value; }
+        }
+
+        private String _reason;
+
+        public String Reason
+        {
+            get { return _reason; }
+            set { _reason = value; }
+        }
+
         private AlertId _alertId;
 
         public AlertId AlertId
@@ -1307,16 +1334,16 @@ namespace com.ums.pas.integration
             set { _alertMessage = value; }
         }
 
-        private List<AlertTarget> _alertTargets;
+        private AlertTarget _alertTarget;
 
-        public List<AlertTarget> AlertTargets
+        public AlertTarget AlertTarget
         {
-            get { return _alertTargets; }
-            set { _alertTargets = value; }
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
         }
 
     }
-
+    */
     /// <summary>
     /// Log line specifies an Endpoint and it's status.
     /// It does not specify who owns the Endpoint (Recipient)
