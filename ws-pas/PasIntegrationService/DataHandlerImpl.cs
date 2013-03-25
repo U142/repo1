@@ -10,6 +10,7 @@ using System.IO;
 using com.ums.pas.integration.AddressLookup;
 using log4net;
 using com.ums.pas.integration.TimeProfileDb;
+using com.ums.pas.integration.AddressCleanup;
 
 
 namespace com.ums.pas.integration
@@ -21,6 +22,7 @@ namespace com.ums.pas.integration
         private static ILog log = LogManager.GetLogger(typeof(DataHandlerImpl));
 
         private PASUmsDb Database;
+        private IDuplicateCleaner DuplicateCleaner = new DuplicateCleanerImpl();
 
         #region IDataHandler Members
 
@@ -188,25 +190,8 @@ namespace com.ums.pas.integration
 
 
             //now we have all data
-            
-            //remove duplicates
-            //IEnumerable<Endpoint> endpoints;
-            //recipientDataList.ForEach(x => endpoints = x.Endpoints.GroupBy(e => e).Where(e => e.Count() > 1).Select(e => e.Key));
-            //IEnumerable<RecipientData> duplicates = recipientDataList.GroupBy(r => r.Endpoints.GroupBy(e => e).Where(e => e.Count() > 1)).Select(r => r.Key);
-            HashSet<Endpoint> endpointsAdded = new HashSet<Endpoint>();
-
-            recipientDataList.ForEach(x => x.Endpoints.ForEach(e => 
-                {
-                    if (!endpointsAdded.Add(e))
-                    {
-                        log.InfoFormat("Duplicate endpoint detected [{0}], removing from endpoints", e.Address);
-                        x.Endpoints.Remove(e);
-                        if (x.Endpoints.Count == 0)
-                        {
-                            log.InfoFormat("Recipient [{0}] have no more endpoints, removing from list", x.Name);
-                        }
-                    }
-                }));
+            //do a duplicate cleanup
+            recipientDataList = DuplicateCleaner.DuplicateCleanup(recipientDataList);
             
 
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)

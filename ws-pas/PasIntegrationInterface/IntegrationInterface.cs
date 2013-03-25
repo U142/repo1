@@ -86,6 +86,8 @@ namespace com.ums.pas.integration
 
     /// <summary>
     /// Endpoint is a common class for ways of receive messages.
+    /// 
+    /// By default the equals implements String.Equals check on Address property.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
@@ -124,6 +126,30 @@ namespace com.ums.pas.integration
             get { return _canReceiveSms; }
             set { _canReceiveSms = value; }
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Phone))
+            {
+                return false;
+            }
+            return GetHashCode().Equals(obj.GetHashCode());
+        }
+        public override int GetHashCode()
+        {
+            String tmp = String.Empty;
+            tmp = Address.Replace("+47", "");
+            tmp = tmp.Replace("+", "");
+            if (tmp.StartsWith("0047"))
+                tmp = tmp.Substring(4);
+            else if (tmp.StartsWith("00"))
+                tmp = tmp.Substring(2);
+            if (tmp.Length == 10 && tmp.StartsWith("47"))
+                tmp = tmp.Substring(2);
+
+            return tmp.GetHashCode();
+        }
+
+        
     }
 
     [Serializable]
