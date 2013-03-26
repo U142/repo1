@@ -374,17 +374,17 @@ namespace com.ums.ws.integration
                 AlertName = String.Format("Test message to {0} via channel {1}", Endpoint.Address, SendTo.ToString()),
                 Scheduled = new DateTime(),
                 SendToAllChannels = false,
-                SimulationMode = true,
+                SimulationMode = false,
                 StartImmediately = true,
             };
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
             switch (SendTo)
             {
                 case SendChannel.SMS:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default", Message, false));
+                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration(Account.CompanyId.Substring(0, 1).ToUpper() + Account.CompanyId.Substring(1).ToLower(), Message, false));
                     break;
                 case SendChannel.VOICE:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "23500801", Message));
+                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "", Message));
                     break;
             }
             List<AlertTarget> alertTargets = new List<AlertTarget>()
