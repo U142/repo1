@@ -59,10 +59,11 @@ namespace com.ums.pas.integration
 
         public void HandleAlert(AlertMqPayload Payload)
         {
+            //Payload.AccountDetails.StdCc
             String folkeregConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_folkereg"].ConnectionString;
             String regularConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_regular"].ConnectionString;
-            String FolkeregDatabaseConnectionString = String.Format(folkeregConfig, Payload.AccountDetails.StdCc);
-            String NorwayDatabaseConnectionString = String.Format(regularConfig, Payload.AccountDetails.StdCc);
+            String FolkeregDatabaseConnectionString = folkeregConfig;
+            String NorwayDatabaseConnectionString = regularConfig; 
 
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
