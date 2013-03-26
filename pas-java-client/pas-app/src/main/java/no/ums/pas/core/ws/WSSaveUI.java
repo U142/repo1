@@ -54,16 +54,20 @@ public class WSSaveUI extends WSThread
 					layerlist+=",";
 				layerlist+=settings.getSelectedWmsLayers().get(i);
 			}*/
+
+            //TODO: Make new soring routine, this adds a random layer as checked
+            /*
 			Collections.sort(settings.getWmsLayers(), new Comparator<WmsLayer>() {
 				public int compare(WmsLayer w1, WmsLayer w2)
 				{
-					if(w1.checked.booleanValue())
+					if(w1.checked)
 						return -1;
-					if(w2.checked.booleanValue())
+					if(w2.checked)
 						return 1;
 					return settings.getWmsLayers().indexOf(w1) - settings.getWmsLayers().indexOf(w2);
 				}
 			});
+			*/
 			for(WmsLayer l : settings.getWmsLayers())
 			{
 				//if(l.checked.booleanValue())
