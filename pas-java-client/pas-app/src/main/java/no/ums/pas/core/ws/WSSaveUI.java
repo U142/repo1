@@ -54,6 +54,8 @@ public class WSSaveUI extends WSThread
 					layerlist+=",";
 				layerlist+=settings.getSelectedWmsLayers().get(i);
 			}*/
+            // TODO: Make a proper sort method if needed. This one adds a random layer
+            /*
 			Collections.sort(settings.getWmsLayers(), new Comparator<WmsLayer>() {
 				public int compare(WmsLayer w1, WmsLayer w2)
 				{
@@ -64,6 +66,7 @@ public class WSSaveUI extends WSThread
 					return settings.getWmsLayers().indexOf(w1) - settings.getWmsLayers().indexOf(w2);
 				}
 			});
+			*/
 			for(WmsLayer l : settings.getWmsLayers())
 			{
 				//if(l.checked.booleanValue())
