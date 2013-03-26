@@ -845,7 +845,8 @@ namespace com.ums.ws.integration
                                 Name = currentName,
                                 DateTime = createtimestamp,
                                 SmsMessage = smsMessage,
-                                TtsMessage = ttsMessage
+                                TtsMessage = ttsMessage,
+                                AlertTitle = rs.GetString(rs.GetOrdinal("alertname"))
                             };
 
                             line.LogLines = new List<LogLinePhone>();
