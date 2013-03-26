@@ -28,6 +28,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>70</ApplicationRevision>
+    <ApplicationRevision>85</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -93,6 +94,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressCleanup\DuplicateCleanerImpl.cs" />
+    <Compile Include="AddressCleanup\IDuplicateCleaner.cs" />
+    <Compile Include="AddressLookup\FollowupLookupImpl.cs" />
+    <Compile Include="AddressLookup\IFollowupLookupFacade.cs" />
     <Compile Include="AddressLookup\IPropertyAddressLookupFacade.cs" />
     <Compile Include="AddressLookup\IOwnerLookupFacade.cs" />
     <Compile Include="AddressLookup\IStreetAddressLookupFacade.cs" />

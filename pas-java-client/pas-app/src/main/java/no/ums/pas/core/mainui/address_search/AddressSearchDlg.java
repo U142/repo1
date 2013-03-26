@@ -147,21 +147,6 @@ public class AddressSearchDlg extends JFrame {
             StringSelection selection = new StringSelection(textField.getText().substring(start,end));
             clipboard.setContents(selection, null);
         }
-        /*
-        if((e.getKeyCode() == KeyEvent.VK_X) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            int start = textField.getSelectionStart();
-            int end = textField.getSelectionEnd();
-            String startContent = textField.getText().substring(0,start);
-            String endContent = textField.getText().substring(end);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringSelection selection = new StringSelection(textField.getText().substring(start,end));
-            clipboard.setContents(selection, null);
-            textField.setText(startContent + endContent);
-            textField.setCaretPosition(start);
-        }*/
-    }
-
-    private void cut(KeyEvent e, JTextField textField) {
         if((e.getKeyCode() == KeyEvent.VK_X) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             int start = textField.getSelectionStart();
             int end = textField.getSelectionEnd();

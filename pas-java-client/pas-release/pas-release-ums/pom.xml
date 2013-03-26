@@ -233,7 +233,7 @@
                 </pluginManagement>
             </build>
         </profile>
-		<profile>
+        <profile>
             <id>gas-se_qa</id>
             <properties>
                 <jnlp_title>UMS Population Alert System</jnlp_title>

@@ -6,6 +6,8 @@ using System.Web.Services;
 using com.ums.pas.integration;
 using System.Xml.Serialization;
 using com.ums.UmsCommon;
+using com.ums.UmsDbLib;
+using System.Data.Odbc;
 
 namespace com.ums.ws.integration
 {
@@ -118,12 +120,27 @@ namespace com.ums.ws.integration
         /// <param name="StartDateTime">Depends on StartImmediately=false</param>
         /// <param name="Repeats">Number of repeats (only voice)</param>
         /// <param name="Frequency">Frequency in minutes between repeats</param>
+        /// <param name="Exercise">Is configurable so it will be possible to simulate a resend of a live alert</param>
         /// <returns>An alert response</returns>
         [WebMethod(Description=@"<b>Send new alert to same receivers as a previous sent alert.</b><br>Message content may differ in SMS and Text-to-speech, may specify both indipendently.<br>")]
-        public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, Boolean StartImmediately, DateTime StartDateTime,
-            Int32 Repeats, Int32 Frequency)
+        public AlertResponse StartFollowUpAlert(Account Account, String Title, String SmsMessage, String VoiceMessage, AlertId AlertId, Boolean StartImmediately, DateTime StartDateTime,
+            Int32 Repeats, Int32 Frequency, Boolean Exercise)
         {
-            throw new NotImplementedException();
+            //Create a target for followup
+            List<AlertTarget> alertTargets = new List<AlertTarget>()
+            {
+                AlertTargetFactory.newFollowupAlertObject(AlertId),
+            };
+            return StartAlert(Account,
+                            Title,
+                            SmsMessage,
+                            VoiceMessage,
+                            StartImmediately,
+                            StartDateTime,
+                            Repeats,
+                            Frequency,
+                            Exercise,
+                            alertTargets);
         }
 
         /// <summary>
@@ -190,7 +207,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get object log for a previously sent alert.</b>")]
         public List<LogLineDetailed> GetAlertObjectLog(Account Account, AlertId AlertId, int StatusCodeFilter, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetAlertObjectLog(Account, AlertId, StatusCodeFilter, StartIndex, PageSize);
         }
 
         /// <summary>
@@ -217,7 +234,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Search for a specific recipient in any alert, either by person name, org name or phone number</b>")]
         public List<LogObject> GetObjectLog(Account Account, String SearchText, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetObjectLog(Account, SearchText, StartIndex, PageSize);
         }
 
         /// <summary>
@@ -233,6 +250,9 @@ namespace com.ums.ws.integration
             throw new NotImplementedException();
         }
 
+
+
+
 #region Templates
         /// <summary>
         /// Save a template
@@ -243,7 +263,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Save a template</b>")]
         public MessageTemplateResponse SaveTemplate(Account Account, MessageTemplate MessageTemplate)
         {
-            throw new NotImplementedException();
+            return new Integration().SaveTemplate(Account, MessageTemplate);
         }
 
         /// <summary>
@@ -255,7 +275,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Delete a Message template</b>")]
         public MessageTemplateResponse DeleteTemplate(Account Account, MessageTemplateId TemplateId)
         {
-            throw new NotImplementedException();
+            return new Integration().DeleteTemplate(Account, TemplateId);
         }
 
         /// <summary>
@@ -266,7 +286,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get a list of all message templates available for Account</b>")]
         public List<MessageTemplateListItem> GetTemplates(Account Account)
         {
-            throw new NotImplementedException();
+            return new Integration().GetTemplates(Account, 14);
         }
 
         /// <summary>
@@ -276,9 +296,9 @@ namespace com.ums.ws.integration
         /// <param name="TemplateId">Template ID</param>
         /// <returns></returns>
         [WebMethod(Description = @"<b>Get a template from id.</b>")]
-        public List<MessageTemplate> GetTemplate(Account Account, MessageTemplateId TemplateId)
+        public MessageTemplate GetTemplate(Account Account, MessageTemplateId TemplateId)
         {
-            throw new NotImplementedException();
+            return new Integration().GetTemplate(Account, TemplateId);
         }
 
 

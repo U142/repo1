@@ -86,6 +86,8 @@ namespace com.ums.pas.integration
 
     /// <summary>
     /// Endpoint is a common class for ways of receive messages.
+    /// 
+    /// By default the equals implements String.Equals check on Address property.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
@@ -98,6 +100,15 @@ namespace com.ums.pas.integration
         {
             get { return _address; }
             set { _address = value; }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Address != null && obj is Endpoint ? Address.Equals(((Endpoint)obj).Address) : false;
+        }
+        public override int GetHashCode()
+        {
+            return Address.GetHashCode();
         }
     }
 
@@ -115,6 +126,30 @@ namespace com.ums.pas.integration
             get { return _canReceiveSms; }
             set { _canReceiveSms = value; }
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Phone))
+            {
+                return false;
+            }
+            return GetHashCode().Equals(obj.GetHashCode());
+        }
+        public override int GetHashCode()
+        {
+            String tmp = String.Empty;
+            tmp = Address.Replace("+47", "");
+            tmp = tmp.Replace("+", "");
+            if (tmp.StartsWith("0047"))
+                tmp = tmp.Substring(4);
+            else if (tmp.StartsWith("00"))
+                tmp = tmp.Substring(2);
+            if (tmp.Length == 10 && tmp.StartsWith("47"))
+                tmp = tmp.Substring(2);
+
+            return tmp.GetHashCode();
+        }
+
+        
     }
 
     [Serializable]
@@ -123,6 +158,7 @@ namespace com.ums.pas.integration
     {
         public string Key;
         public string Value;
+        
         public DataItem()
         {
         }
@@ -130,6 +166,51 @@ namespace com.ums.pas.integration
         {
             Key = key;
             Value = value;
+        }
+
+        /// <summary>
+        /// Create a list of attributes based on input string.
+        /// </summary>
+        /// <param name="DataItemString">Pipe separated using equals sign</param>
+        /// <returns></returns>
+        public static List<DataItem> FromString(String DataItemString)
+        {
+            List<DataItem> list = new List<DataItem>();
+            DataItemString.Split('|').ToList().ForEach(n => 
+            {
+                if (n.Length > 0 && n.IndexOf("=") > 0)
+                {
+                    if (n.IndexOf("=") > 0 && n.Length > n.IndexOf("="))
+                    {
+                        list.Add(new DataItem()
+                        {
+                            Key = n.Substring(0, n.IndexOf("=")),
+                            Value = n.Substring(n.IndexOf("=") + 1),
+                        });
+                    }
+                }
+            });
+            return list;
+        }
+
+        /// <summary>
+        /// Create a pipe separated string from 
+        /// </summary>
+        /// <param name="List"></param>
+        /// <returns></returns>
+        public static String FromList(List<DataItem> List)
+        {
+            String toReturn = "";
+            
+            List.ForEach(n =>
+                {
+                    if (n.Key.Length > 0)
+                    {
+                        toReturn += toReturn.Length == 0 ? "" : "|";
+                        toReturn += n.Key + "=" + n.Value;
+                    }
+                });
+            return toReturn;
         }
     }
 
@@ -161,19 +242,19 @@ namespace com.ums.pas.integration
     [XmlInclude(typeof(StreetAddress))]
     [XmlInclude(typeof(PropertyAddress))]
     [XmlInclude(typeof(OwnerAddress))]
+    [XmlInclude(typeof(FollowupAlertObject))]
+    [XmlInclude(typeof(DataItem))]
     public abstract class AlertTarget
     {
-
-
-        private List<DataItem> _attributes;
+        /*private List<DataItem> _attributes;
 
         public List<DataItem> Attributes
         {
-            get { 
-                return _attributes != null ? _attributes : new List<DataItem>(); 
-            }
+            get { return _attributes != null ? _attributes : new List<DataItem>(); }
             set { _attributes = value; }
-        }
+        }*/
+        public List<DataItem> Attributes = new List<DataItem>();
+
 
         /// <summary>
         /// All alert types must be discriminated into a numeric value
@@ -187,6 +268,7 @@ namespace com.ums.pas.integration
             else if (type is StreetAddress) return 2;
             else if (type is PropertyAddress) return 3;
             else if (type is OwnerAddress) return 4;
+            else if (type is FollowupAlertObject) return 5;
             return -1;
         }
     }
@@ -198,17 +280,17 @@ namespace com.ums.pas.integration
         {
             return new StreetAddress(s);
         }
-        public static StreetAddress newStreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang)
+        public static StreetAddress newStreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang, List<DataItem> attributes)
         {
-            return new StreetAddress(municipalCode, streetNo, houseNo, letter, oppgang);
+            return new StreetAddress(municipalCode, streetNo, houseNo, letter, oppgang, attributes);
         }
         public static PropertyAddress newPropertyAddress(PropertyAddress p)
         {
             return new PropertyAddress(p);
         }
-        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int snr)
+        public static PropertyAddress newPropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr, List<DataItem> attributes)
         {
-            return new PropertyAddress(municipalCode, gnr, bnr, fnr, snr);
+            return new PropertyAddress(municipalCode, gnr, bnr, fnr, unr, attributes);
         }
         public static StoredAddress newStoredAddress(StoredAddress s)
         {
@@ -218,14 +300,71 @@ namespace com.ums.pas.integration
         {
             return new StoredList();
         }
-        public static AlertObject newAlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms)
+        public static AlertObject newAlertObject(String Name, String ExternalId, String PhoneNumber, Boolean CanReceiveSms, List<DataItem> attributes)
         {
             return new AlertObject(Name, ExternalId, PhoneNumber, CanReceiveSms);
         }
-
+        public static FollowupAlertObject newFollowupAlertObject(AlertId AlertId)
+        {
+            return new FollowupAlertObject()
+            {
+                AlertId = AlertId,
+                Attributes = new List<DataItem>()
+                {
+                    new DataItem("FollowUpAlert", AlertId.Id.ToString()),
+                },
+            };
+        }
+        public static OwnerAddress newOwnerAddress(String addressLine1,
+                                    String addressLine2,
+                                    String addressLine3,
+                                    List<DataItem> attributes,
+                                    String dateOfBirth,
+                                    long ownerId,
+                                    NorwayEierIdKode ownerIdCode,
+                                    NorwayEierKategoriKode ownerCategoryCode,
+                                    NorwayEierStatusKode ownerStatusCode,
+                                    String name,
+                                    int postNo)
+        {
+            return new OwnerAddress()
+                                    
+            {
+                Adresselinje1 = addressLine1,
+                Adresselinje2 = addressLine2,
+                Adresselinje3 = addressLine3,
+                Attributes = attributes,
+                DateOfBirth = dateOfBirth,
+                EierId = ownerId,
+                EierIdKode = ownerIdCode,
+                EierKategoriKode = ownerCategoryCode,
+                EierStatusKode = ownerStatusCode,
+                Navn = name,
+                Postnr = postNo,
+            };
+        }
     }
 
+    /// <summary>
+    /// Target for re-alerting a previously alerted group of targets.
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class FollowupAlertObject : AlertTarget
+    {
+        private AlertId _alertId;
 
+        public AlertId AlertId
+        {
+            get { return _alertId; }
+            set { _alertId = value; }
+        }
+        
+    }
+
+    /// <summary>
+    /// Target for alerting specific persons.
+    /// </summary>
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class AlertObject : AlertTarget
@@ -289,21 +428,23 @@ namespace com.ums.pas.integration
     [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class StreetAddress : AlertTarget
     {
+
         public StreetAddress()
         {
         }
         public StreetAddress(StreetAddress s)
-            : this(s.MunicipalCode, s.StreetNo, s.HouseNo, s.Letter, s.Oppgang)
+            : this(s.MunicipalCode, s.StreetNo, s.HouseNo, s.Letter, s.Oppgang, s.Attributes)
         {
             this.Attributes = s.Attributes;
         }
-        public StreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang)
+        public StreetAddress(String municipalCode, int streetNo, int houseNo, String letter, String oppgang, List<DataItem> attributes)
         {
             this.MunicipalCode = municipalCode;
             this.StreetNo = streetNo;
             this.HouseNo = houseNo;
             this.Letter = letter;
             this.Oppgang = oppgang;
+            this.Attributes = attributes;
         }
         private String _municipalCode;
 
@@ -341,7 +482,6 @@ namespace com.ums.pas.integration
             get { return _oppgang; }
             set { _oppgang = value; }
         }
-
 
     }
 
@@ -384,17 +524,18 @@ namespace com.ums.pas.integration
         {
         }
         public PropertyAddress(PropertyAddress p)
-            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Snr)
+            : this(p.MunicipalCode, p.Gnr, p.Bnr, p.Fnr, p.Unr, p.Attributes)
         {
             this.Attributes = p.Attributes;
         }
-        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int snr)
+        public PropertyAddress(String municipalCode, int gnr, int bnr, int fnr, int unr, List<DataItem> attributes)
         {
             this.MunicipalCode = municipalCode;
             this.Gnr = gnr;
             this.Bnr = bnr;
             this.Fnr = fnr;
-            this.Snr = snr;
+            this.Unr = unr;
+            this.Attributes = attributes;
         }
         private String _municipalCode;
 
@@ -425,12 +566,12 @@ namespace com.ums.pas.integration
             get { return _fnr; }
             set { _fnr = value; }
         }
-        private int _snr;
+        private int _unr;
 
-        public int Snr
+        public int Unr
         {
-            get { return _snr; }
-            set { _snr = value; }
+            get { return _unr; }
+            set { _unr = value; }
         }
 
     }
@@ -505,7 +646,7 @@ namespace com.ums.pas.integration
         private NorwayEierStatusKode _eierStatusKode;
         private NorwayEierIdKode _eierIdKode;
 
-        private int _eierId;
+        private long _eierId;
         private String _navn;
         private int _postnr;
         private String _adresselinje1;
@@ -553,15 +694,15 @@ namespace com.ums.pas.integration
         }
 
 
-        public int EierId
+        public long EierId
         {
             get { return _eierId; }
             set { _eierId = value; }
         }
 
-        private int _dateOfBirth;
+        private String _dateOfBirth;
 
-        public int DateOfBirth
+        public String DateOfBirth
         {
             get { return _dateOfBirth; }
             set { _dateOfBirth = value; }
@@ -581,7 +722,6 @@ namespace com.ums.pas.integration
             get { return _eierKategoriKode; }
             set { _eierKategoriKode = value; }
         }
-
     }
 
 /*    /// <summary>
@@ -632,7 +772,6 @@ namespace com.ums.pas.integration
             get { return _addressPk; }
             set { _addressPk = value; }
         }
-
     }
 
 
@@ -994,15 +1133,31 @@ namespace com.ums.pas.integration
             get { return _smsTotal; }
             set { _smsTotal = value; }
         }
-        private List<LogLine> _errors;
+        private List<LogLinePhone> _errors;
 
-        public List<LogLine> Errors
+        public List<LogLinePhone> Errors
         {
             get { return _errors; }
             set { _errors = value; }
         }
 
-        
+        private String _voiceMessage;
+
+        public String VoiceMessage
+        {
+            get { return _voiceMessage; }
+            set { _voiceMessage = value; }
+        }
+
+        private String _smsMessage;
+
+        public String SmsMessage
+        {
+            get { return _smsMessage; }
+            set { _smsMessage = value; }
+        }
+
+        public byte [] VoiceAudio { get; set; }
     }
 
 
@@ -1054,19 +1209,36 @@ namespace com.ums.pas.integration
     public class LogLineDetailed
     {
         private String _name;
-
         public String Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        private Endpoint _endpoint;
+        public List<LogLinePhone> LogLines { get; set; }
 
-        public Endpoint Endpoint
+        private AlertTarget _alertTarget;
+        public AlertTarget AlertTarget
         {
-            get { return _endpoint; }
-            set { _endpoint = value; }
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
+        }
+    }
+
+    /// <summary>
+    /// Single object from Log, also containing alert information.
+    /// Used when searching for specific persons and numbers
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogObject : LogLineDetailed
+    {
+        private String _alertTitle;
+
+        public String AlertTitle
+        {
+            get { return _alertTitle; }
+            set { _alertTitle = value; }
         }
 
         private DateTime _dateTime;
@@ -1077,32 +1249,34 @@ namespace com.ums.pas.integration
             set { _dateTime = value; }
         }
 
-        private int _status;
+        private String ttsMessage;
 
-        public int Status
+        public String TtsMessage
         {
-            get { return _status; }
-            set { _status = value; }
-        }
-        private String _externalId;
-
-        public String ExternalId
-        {
-            get { return _externalId; }
-            set { _externalId = value; }
+            get { return ttsMessage; }
+            set { ttsMessage = value; }
         }
 
-        private AlertObject _alertObject;
 
-        public AlertObject AlertObject
+        private String smsMessage;
+
+        public String SmsMessage
         {
-            get { return _alertObject; }
-            set { _alertObject = value; }
+            get { return smsMessage; }
+            set { smsMessage = value; }
         }
 
-                
+        private AlertId alertId;
+
+        public AlertId AlertId
+        {
+            get { return alertId; }
+            set { alertId = value; }
+        }
+
     }
-
+    
+    /*
     /// <summary>
     /// Single object from Log, also containing alert information.
     /// Used when searching for specific persons and numbers
@@ -1147,6 +1321,30 @@ namespace com.ums.pas.integration
             set { _statusCode = value; }
         }
 
+        private String _status;
+
+        public String Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
+
+        private int _reasonCode;
+
+        public int ReasonCode
+        {
+            get { return _reasonCode; }
+            set { _reasonCode = value; }
+        }
+
+        private String _reason;
+
+        public String Reason
+        {
+            get { return _reason; }
+            set { _reason = value; }
+        }
+
         private AlertId _alertId;
 
         public AlertId AlertId
@@ -1171,16 +1369,16 @@ namespace com.ums.pas.integration
             set { _alertMessage = value; }
         }
 
-        private List<AlertTarget> _alertTargets;
+        private AlertTarget _alertTarget;
 
-        public List<AlertTarget> AlertTargets
+        public AlertTarget AlertTarget
         {
-            get { return _alertTargets; }
-            set { _alertTargets = value; }
+            get { return _alertTarget; }
+            set { _alertTarget = value; }
         }
 
     }
-
+    */
     /// <summary>
     /// Log line specifies an Endpoint and it's status.
     /// It does not specify who owns the Endpoint (Recipient)
@@ -1214,6 +1412,72 @@ namespace com.ums.pas.integration
 
     }
 
+    /// <summary>
+    /// Log line specific for phone endpoint and it's status.
+    /// It does not specify who owns the Endpoint (Recipient)
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class LogLinePhone : Phone
+    {
+        public LogLinePhone() { }
+        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime) 
+        {
+            Address = address;
+            
+            DateTime = dateTime;
+
+            switch (type)
+            {
+                case 1: // voice
+                    StatusCode = statusCode;
+                    CanReceiveSms = false;
+                    break;
+                case 2: // sms
+                    CanReceiveSms = true;
+
+                    switch (statusCode)
+                    {
+                        case 0: // delivered
+                            StatusCode = 2;
+                            break;
+                        case 2: // error
+                            StatusCode = 4;
+                            break;
+                        case -1:// undelivered
+                        case 1: // only used by some providers, but should still show as undelivered
+                            StatusCode = 3;
+                            break;
+                    }
+                    break;
+            }
+
+            switch (StatusCode)
+            {
+                case 1:
+                    Status = "Confirmed";
+                    break;
+                case 2:
+                    Status = "Delivered";
+                    break;
+                case 3:
+                    Status = "Undelivered";
+                    break;
+                case 4:
+                    Status = "Error";
+                    break;
+            }
+
+            ReasonCode = reasonCode;
+            Reason = reason;
+        }
+
+        public DateTime DateTime { get; set; }
+        public int StatusCode { get; set; }
+        public String Status { get; set; }
+        public int ReasonCode { get; set; }
+        public string Reason { get; set; }
+    }
     #endregion Log
 
 

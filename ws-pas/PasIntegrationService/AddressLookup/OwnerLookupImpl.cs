@@ -58,6 +58,7 @@ namespace com.ums.pas.integration.AddressLookup
                                                     + ",ISNULL(FR.POSTSTED,'') POSTSTED "
                                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                                    + ",ISNULL(FR.KON_DMID, 0) KON_DMID "
                                                     + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
                 CommandWithHouseNo.Parameters.Add("postnr", OdbcType.Int);
                 CommandWithHouseNo.Parameters.Add("husnr", OdbcType.Int);
@@ -77,6 +78,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.POSTSTED,'') POSTSTED "
                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
+                                    + ",ISNULL(FR.KON_DMID, 0) KON_DMID "
                                     + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and CONTAINS(NAVN, ?)");
 
                 CommandNoHouse.Parameters.Add("postnr", OdbcType.Int);
@@ -141,7 +143,9 @@ namespace com.ums.pas.integration.AddressLookup
                                             Address = rs.GetString(rs.GetOrdinal("ADRESSE")),
                                             Postno = Int32.Parse(rs.GetString(rs.GetOrdinal("POSTNR"))),
                                             PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
-
+                                            KonDmid = rs.GetInt32(rs.GetOrdinal("KON_DMID")),
+                                            
+                                            
                                         };
                                         if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                                         {
@@ -194,7 +198,7 @@ namespace com.ums.pas.integration.AddressLookup
                         log.InfoFormat("Failed to look up owner '{0}' due to single name", owner.Navn);
                     }
                 }
-                log.InfoFormat("Found {0} recipients living on {1} PropertyAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
+                log.InfoFormat("Found {0} owners based on {1} OwnerAddresses, owning {2} mobile and {3} fixed phones", recipients.Count, ownerAddresses.Count, mobilePhones, fixedPhones);
 
                 Connection.Close();
 

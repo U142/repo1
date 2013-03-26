@@ -13,6 +13,6 @@ namespace com.ums.pas.integration.AddressLookup
         /// <param name="connectionString"></param>
         /// <param name="propertyAddresses"></param>
         /// <returns></returns>
-        IEnumerable<RecipientData> GetMatchingPropertyAddresses(String connectionString, List<PropertyAddress> propertyAddresses);
+        IEnumerable<RecipientData> GetMatchingPropertyAddresses(String ConnectionString, List<PropertyAddress> PropertyAddresses);
     }
 }

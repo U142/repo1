@@ -2507,5 +2507,23 @@ namespace com.ums.UmsParm
                     rs.Close();
             }
         }
+
+        /// <summary>
+        /// Register what text was used in an alert.
+        /// </summary>
+        /// <param name="Refno"></param>
+        /// <param name="Fileno"></param>
+        /// <param name="MessageContent"></param>
+        public void InsertTtsRef(int Refno, int Fileno, String MessageContent)
+        {
+            String Sql = "INSERT INTO BBQREF_TTSREF(l_refno, l_fileno, sz_content) VALUES(?, ?, ?)";
+            using (OdbcCommand cmd = CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("l_fileno", OdbcType.TinyInt).Value = Fileno;
+                cmd.Parameters.Add("sz_content", OdbcType.Text).Value = MessageContent;
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

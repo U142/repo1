@@ -57,17 +57,18 @@ namespace com.ums.pas.integration.AddressLookup
                 Connection.Open();
 
                 start = DateTime.Now;
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5) COLLATE Latin1_General_100_CI_AI)";
+                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5) COLLATE Latin1_General_100_CI_AI, ATTRIBUTES varchar(8000) COLLATE Latin1_General_100_CI_AI)";
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
 
                 start = DateTime.Now;
-                Command.CommandText = "INSERT INTO #SAMATCH(KOMMUNENR, GATEKODE, HUSNR, OPPGANG) VALUES(?,?,?,?)";
+                Command.CommandText = "INSERT INTO #SAMATCH(KOMMUNENR, GATEKODE, HUSNR, OPPGANG, ATTRIBUTES) VALUES(?,?,?,?,?)";
                 Command.Parameters.Add("knr", OdbcType.Int);
                 Command.Parameters.Add("gatenr", OdbcType.Int);
                 Command.Parameters.Add("husnr", OdbcType.Int);
                 Command.Parameters.Add("husbokstav", OdbcType.VarChar, 5);
+                Command.Parameters.Add("attr", OdbcType.VarChar, 8000);
                 Command.Prepare();
 
                 foreach (StreetAddress sa in streetAddresses)
@@ -79,7 +80,7 @@ namespace com.ums.pas.integration.AddressLookup
                         Command.Parameters["gatenr"].Value = sa.StreetNo;
                         Command.Parameters["husnr"].Value = sa.HouseNo;
                         Command.Parameters["husbokstav"].Value = sa.Letter;
-
+                        Command.Parameters["attr"].Value = DataItem.FromList(sa.Attributes);
                         Command.ExecuteNonQuery();
                     }
                     else
@@ -92,10 +93,10 @@ namespace com.ums.pas.integration.AddressLookup
 
                 start = DateTime.Now;
                 Command.CommandText = "SELECT DISTINCT "
-                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
-                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
-                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
-                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                    + "ISNULL(SA.KOMMUNENR,0) KOMMUNENR "
+                                    + ",ISNULL(SA.GATEKODE,0) GATEKODE "
+                                    + ",ISNULL(SA.HUSNR,0) HUSNR "
+                                    + ",ISNULL(SA.OPPGANG,'') OPPGANG "
                                     + ",ISNULL(FR.NAVN,'') NAVN "
                                     + ",ISNULL(FR.LAT,0) LAT "
                                     + ",ISNULL(FR.LON,0) LON "
@@ -105,7 +106,10 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.POSTSTED,'') POSTSTED "
                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
-                                    + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                                    + ",ISNULL(FR.KON_DMID,0) KON_DMID "
+                                    + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
+                                    + ",ISNULL(FR.KOMMUNENR,-1) NORECIPIENTS "
+                                    + "FROM #SAMATCH SA LEFT OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 int mobilePhones = 0;
                 int fixedPhones = 0;
 
@@ -121,7 +125,8 @@ namespace com.ums.pas.integration.AddressLookup
                                                                 rs.GetInt32(rs.GetOrdinal("GATEKODE")),
                                                                 rs.GetInt32(rs.GetOrdinal("HUSNR")),
                                                                 rs.GetString(rs.GetOrdinal("OPPGANG")),
-                                                                ""),
+                                                                "",
+                                                                DataItem.FromString(rs.GetString(rs.GetOrdinal("ATTRIBUTES")))),
                                 Name = rs.GetString(rs.GetOrdinal("NAVN")),
                                 Endpoints = new List<Endpoint>(),
                                 Lon = rs.IsDBNull(rs.GetOrdinal("LAT")) ? 0 : rs.GetDouble(rs.GetOrdinal("LAT")),
@@ -130,8 +135,10 @@ namespace com.ums.pas.integration.AddressLookup
                                 Address = rs.GetString(rs.GetOrdinal("ADRESSE")),
                                 Postno = rs.GetInt32(rs.GetOrdinal("POSTNR")),
                                 PostPlace = rs.GetString(rs.GetOrdinal("POSTSTED")),
+                                KonDmid = rs.GetInt32(rs.GetOrdinal("KON_DMID")),
 
                             };
+                            r.NoRecipients = rs.GetInt32(rs.GetOrdinal("NORECIPIENTS")) < 0;
                             if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                             {
                                 r.Endpoints.Add(new Phone()
