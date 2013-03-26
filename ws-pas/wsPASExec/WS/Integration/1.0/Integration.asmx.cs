@@ -134,6 +134,10 @@ namespace com.ums.ws.integration
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
+            string TemplateFolder = Path.Combine(UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk.ToString());
+            if (!Directory.Exists(TemplateFolder))
+                Directory.CreateDirectory(TemplateFolder);
+
             if (MessageTemplate.TemplateId != null && MessageTemplate.TemplateId.Id > 0)
             {
                 using (OdbcCommand cmd = umsDb.CreateCommand("SELECT l_messagepk FROM BBMESSAGES WHERE l_deptpk=? AND l_messagepk=?"))
