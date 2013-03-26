@@ -667,15 +667,15 @@ namespace com.ums.ws.integration
                 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    string previousName = null;
+                    long previousSource = 0;
                     LogLineDetailed line = null;
                     AlertObject alertObject = null;
 
                     while (rs.Read() && (PageSize == 0 || objectLog.Count <= PageSize + StartIndex) )
                     {
-                        string currentName = rs.GetString(rs.GetOrdinal("name"));
+                        long currentSource = rs.GetInt64(rs.GetOrdinal("l_alertsourcepk"));
 
-                        if (line == null || previousName != currentName)
+                        if (line == null || previousSource != currentSource)
                         {
                             line = new LogLineDetailed();
                             line.LogLines = new List<LogLinePhone>();
@@ -772,10 +772,10 @@ namespace com.ums.ws.integration
                         if (targetAttributes.Count > 0)
                             line.AlertTarget.Attributes = targetAttributes;
 
-                        if(previousName != currentName)
+                        if(previousSource != currentSource)
                             objectLog.Add(line);
 
-                        previousName = currentName;
+                        previousSource = currentSource;
                     }
                 }
             }
@@ -821,17 +821,16 @@ namespace com.ums.ws.integration
 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    string previousName = null;
-                    long previousProject = 0;
+                    long previousSource = 0;
                     LogObject line = null;
                     AlertObject alertObject = null;
 
                     while (rs.Read() && (PageSize == 0 || objectLog.Count <= PageSize + StartIndex))
                     {
-                        string currentName = rs.GetString(rs.GetOrdinal("name"));
+                        long currentSource = rs.GetInt64(rs.GetOrdinal("l_alertsourcepk"));
                         long currentProject = (long)rs.GetDecimal(rs.GetOrdinal("l_projectpk"));
 
-                        if (line == null || previousName != currentName || previousProject != currentProject)
+                        if (line == null || previousSource != currentSource)
                         {
                             DateTime createtimestamp;
                             DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_createtimestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out createtimestamp);
@@ -842,7 +841,7 @@ namespace com.ums.ws.integration
                             line = new LogObject()
                             { 
                                 AlertId = new AlertId(currentProject),
-                                Name = currentName,
+                                Name = rs.GetString(rs.GetOrdinal("name")),
                                 DateTime = createtimestamp,
                                 SmsMessage = smsMessage,
                                 TtsMessage = ttsMessage,
@@ -942,11 +941,10 @@ namespace com.ums.ws.integration
                         if (targetAttributes.Count > 0)
                             line.AlertTarget.Attributes = targetAttributes;
 
-                        if (previousName != currentName || previousProject != currentProject)
+                        if (previousSource != currentSource)
                             objectLog.Add(line);
 
-                        previousProject = currentProject;
-                        previousName = currentName;
+                        previousSource = currentSource;
                     }
                 }
 
