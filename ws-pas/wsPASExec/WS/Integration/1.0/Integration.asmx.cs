@@ -369,6 +369,12 @@ namespace com.ums.ws.integration
                 return AlertResponseFactory.Failed(-31, "Test alert phone must be capable of receiving SMS");
             }
 
+            //force can receive to false, as we're testing voice.
+            if (SendTo.Equals(SendChannel.VOICE))
+            {
+                phone.CanReceiveSms = false;
+            }
+
             AlertConfiguration alertConfiguration = new AlertConfiguration()
             {
                 AlertName = String.Format("Test message to {0} via channel {1}", Endpoint.Address, SendTo.ToString()),
