@@ -109,7 +109,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.KON_DMID,0) KON_DMID "
                                     + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
                                     + ",ISNULL(FR.KOMMUNENR,-1) NORECIPIENTS "
-                                    + "FROM #SAMATCH SA OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                                    + "FROM #SAMATCH SA LEFT OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 int mobilePhones = 0;
                 int fixedPhones = 0;
 
