@@ -186,6 +186,7 @@ namespace com.ums.pas.integration
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
                 int Refno = (int) Database.newRefno();
+                log.InfoFormat("AlertId={0} Created new Refno={1} for channelConfig {2}", Payload.AlertId.Id, Refno, channelConfig.GetType().ToString());
 
                 //connect refno to AlertId (project)
                 BBPROJECT project = new BBPROJECT();
@@ -287,8 +288,8 @@ namespace com.ums.pas.integration
                     TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
                     tw.WriteLine("/MDV");
                     tw.WriteLine("/MPC");
-                    tw.WriteLine(String.Format("/Company={0}", Account.CompanyId));
-                    tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId));
+                    tw.WriteLine(String.Format("/Company={0}", Account.CompanyId.ToUpper()));
+                    tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId.ToUpper()));
                     tw.WriteLine(String.Format("/Pri={0}", AccountDetails.DeptPri));
                     tw.WriteLine(String.Format("/Channels={0}", AccountDetails.MaxVoiceChannels));
                     tw.WriteLine(String.Format("/SchedDate={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("yyyyMMdd") : AlertConfiguration.Scheduled.ToString("yyyyMMdd")));
