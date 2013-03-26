@@ -11,7 +11,7 @@ namespace com.ums.pas.integration.AddressCleanup
     {
         private static ILog log = LogManager.GetLogger(typeof(DuplicateCleanerImpl));
 
-        public List<RecipientData> DuplicateCleanup(List<RecipientData> ListOfRecipients)
+        public List<RecipientData> DuplicateCleanup(List<RecipientData> ListOfRecipients, Action<RecipientData, Endpoint> Callback)
         {
             List<RecipientData> workingSet = new List<RecipientData>();
             workingSet.AddRange(ListOfRecipients);
@@ -23,22 +23,35 @@ namespace com.ums.pas.integration.AddressCleanup
             {
                 RecipientData recipientData = workingSet[index];
                 List<Endpoint> endpointsToRemove = new List<Endpoint>();
+                bool endpointsDeducted = false;
                 for (int epIndex = recipientData.Endpoints.Count - 1; epIndex >= 0; epIndex--)
                 {
                     if (!endpointsAdded.Add(recipientData.Endpoints[epIndex]))
                     {
-                        log.InfoFormat("Duplicate endpoint detected [{0}], removing from endpoints", recipientData.Endpoints[epIndex].Address);
+                        log.DebugFormat("Duplicate endpoint detected [{0}], removing from endpoints", recipientData.Endpoints[epIndex].Address);
                         endpointsToRemove.Add(recipientData.Endpoints[epIndex]);
+                        endpointsDeducted = true;
+                        if (Callback != null)
+                        {
+                            Callback(recipientData, recipientData.Endpoints[epIndex]);
+                        }
                     }
                 }
-                endpointsToRemove.ForEach(e => recipientData.Endpoints.Remove(e));
-                if (recipientData.Endpoints.Count == 0)
+                //Add removed endpoint to duplicates list
+                endpointsToRemove.ForEach(e =>
+                    {
+                        recipientData.Duplicates.Add(e);
+                        recipientData.Endpoints.Remove(e);
+                    });
+                /*
+                //If no endpoints because all were deducted, then.
+                if (recipientData.Endpoints.Count == 0 && endpointsDeducted)
                 {
-                    log.InfoFormat("Recipient [{0}] have no more endpoints, removing from list", recipientData.Name);
-                    recipientsToRemove.Add(recipientData);
-                }
+                    //log.DebugFormat("Recipient [{0}] have no more endpoints, removing from list", recipientData.Name);
+                    //recipientsToRemove.Add(recipientData);
+                }*/
             }
-            recipientsToRemove.ForEach(r => workingSet.Remove(r));
+            //recipientsToRemove.ForEach(r => workingSet.Remove(r));
             return workingSet;
         }
     }

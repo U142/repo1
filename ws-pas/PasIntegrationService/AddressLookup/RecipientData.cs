@@ -54,7 +54,7 @@ namespace com.ums.pas.integration.AddressLookup
         public String Name { get; set; }
 
 
-        private List<Endpoint> _endpoints;
+        private List<Endpoint> _endpoints = new List<Endpoint>();
 
         /// <summary>
         /// The endpoints that was found.
@@ -64,7 +64,17 @@ namespace com.ums.pas.integration.AddressLookup
             get { return _endpoints != null ? _endpoints : new List<Endpoint>(); }
             set { _endpoints = value; }
         }
-        
+
+        private List<Endpoint> _duplicates = new List<Endpoint>();
+
+        /// <summary>
+        /// Endpoints that are omitted
+        /// </summary>
+        public List<Endpoint> Duplicates
+        {
+            get { return _duplicates; }
+            set { _duplicates = value; }
+        }
 
 
         /// <summary>
@@ -106,6 +116,8 @@ namespace com.ums.pas.integration.AddressLookup
         /// hold kondmid
         /// </summary>
         public int KonDmid { get; set; }
+
+        public bool NoRecipients { get; set; }
 
 
     }

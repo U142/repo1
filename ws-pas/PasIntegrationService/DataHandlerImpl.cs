@@ -41,7 +41,6 @@ namespace com.ums.pas.integration
             {
                 foreach (Endpoint endPoint in recipientData.Endpoints)
                 {
-                    //if(endPoint is Phone &&
                     switch (byChannel)
                     {
                         case SendChannel.VOICE:
@@ -56,29 +55,10 @@ namespace com.ums.pas.integration
             return returnCount;
         }
 
-        public int Duplicates { get; private set; }
-
-        protected bool TryAddEndpoint(Endpoint Endpoint)
-        {
-            //TODO clean it first to avoid different spelling on the same number
-            if (!AddedEndpoints.Contains(Endpoint))
-            {
-                AddedEndpoints.Add(Endpoint);
-                return true;
-            }
-            else
-            {
-                ULog.write("Duplicate number found");
-                log.Warn("Duplicate number found");
-                ++Duplicates;
-            }
-            return false;
-        }
 
 
         public void HandleAlert(AlertMqPayload Payload)
         {
-            //PasIntegrationService.Default.DatabaseConnection
             String folkeregConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_folkereg"].ConnectionString;
             String regularConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_regular"].ConnectionString;
             String FolkeregDatabaseConnectionString = String.Format(folkeregConfig, Payload.AccountDetails.StdCc);
@@ -174,7 +154,8 @@ namespace com.ums.pas.integration
                                 recipientDataList.Add(new RecipientData()
                                 {
                                     AlertTarget = ownerAddress,
-                                    Name = "<No inhabitants found>",
+                                    Name = "",
+                                    NoRecipients = true,
                                 });
                             }
                         }
@@ -191,7 +172,14 @@ namespace com.ums.pas.integration
 
             //now we have all data
             //do a duplicate cleanup
-            recipientDataList = DuplicateCleaner.DuplicateCleanup(recipientDataList);
+            using (new TimeProfiler(Payload.AlertId.Id, "Duplicate cleanup", timeProfileCollector, new TimeProfilerCallbackImpl()))
+            {
+                recipientDataList = DuplicateCleaner.DuplicateCleanup(recipientDataList,
+                                        (r, e) =>
+                                        {
+                                            //log.DebugFormat("Insert duplicate mark in database for {0} with endpoint {1}", r.Name, e.Address);
+                                        });
+            }
             
 
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
@@ -424,7 +412,7 @@ namespace com.ums.pas.integration
         /// </summary>
         private void WriteMetaData(AlertId AlertId, List<RecipientData> recipientData)
         {
-            String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+            String Sql = "sp_ins_mdvAddressSource ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
                 cmd.Parameters.Add("projectpk", OdbcType.Numeric);
@@ -446,6 +434,7 @@ namespace com.ums.pas.integration
                 cmd.Parameters.Add("birthdate", OdbcType.Int);
                 cmd.Parameters.Add("attr", OdbcType.VarChar, 8000);
                 cmd.Parameters.Add("extid", OdbcType.VarChar, 50);
+                cmd.Parameters.Add("noRecipients", OdbcType.Bit);
 
                 foreach (RecipientData recipient in recipientData)
                 {
@@ -456,6 +445,9 @@ namespace com.ums.pas.integration
 
                     int streetid = 0, houseno = 0, gnr = 0, bnr = 0, fnr = 0, snr = 0, unr = 0, postnr = 0, birthdate = 0;
                     String municipalid = "0", letter = "", oppgang = "", data = "", externalId = "";
+                    bool noRecipients = false;
+
+
                     if (recipient.AlertTarget is StreetAddress)
                     {
                         StreetAddress streetAddress = (StreetAddress)recipient.AlertTarget;
@@ -510,15 +502,6 @@ namespace com.ums.pas.integration
                     {
                         municipalid = "0";
                     }
-                    // build attribute string, pipe-separated key=value pairs
-                    /*StringBuilder customAttributes = new StringBuilder("");
-                    foreach (DataItem attribute in recipient.AlertTarget.Attributes)
-                    {
-                        customAttributes.Append(attribute.Key.Replace("=", "-").Replace("|", "-"));
-                        customAttributes.Append("=");
-                        customAttributes.Append(attribute.Value.Replace("=", "-").Replace("|", "-"));
-                        customAttributes.Append("|");
-                    }*/
 
                     int tmp = 0;
                     long alertSourcePk = -1;
@@ -542,6 +525,7 @@ namespace com.ums.pas.integration
                     cmd.Parameters["birthdate"].Value = birthdate;
                     cmd.Parameters["attr"].Value = DataItem.FromList(recipient.AlertTarget.Attributes);
                     cmd.Parameters["extid"].Value = externalId == null ? (object)DBNull.Value : externalId;
+                    cmd.Parameters["noRecipients"].Value = recipient.NoRecipients ? 1 : 0;
                     using (OdbcDataReader rs = cmd.ExecuteReader())
                     {
                         if (rs.Read())
@@ -563,6 +547,17 @@ namespace com.ums.pas.integration
                             cmdLink.Parameters["alertSourcePk"].Value = alertSourcePk;
                             cmdLink.Parameters["refno"].Value = alertLink.Refno;
                             cmdLink.Parameters["item"].Value = alertLink.Item;
+                            cmdLink.ExecuteNonQuery();
+                        }
+                    }
+
+                    Sql = "INSERT INTO MDVHIST_ADDRESS_SOURCE_DUPLICATES VALUES(?,?)";
+                    foreach(Endpoint duplicate in recipient.Duplicates)
+                    {
+                        using (OdbcCommand cmdLink = Database.CreateCommand(Sql))
+                        {
+                            cmdLink.Parameters.Add("alertSourcePk", OdbcType.Numeric).Value = alertSourcePk;
+                            cmdLink.Parameters.Add("endpoint", OdbcType.VarChar, 50).Value = duplicate.Address;
                             cmdLink.ExecuteNonQuery();
                         }
                     }

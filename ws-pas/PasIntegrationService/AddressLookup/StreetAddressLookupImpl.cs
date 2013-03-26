@@ -93,10 +93,10 @@ namespace com.ums.pas.integration.AddressLookup
 
                 start = DateTime.Now;
                 Command.CommandText = "SELECT DISTINCT "
-                                    + "ISNULL(FR.KOMMUNENR,0) KOMMUNENR "
-                                    + ",ISNULL(FR.GATEKODE,0) GATEKODE "
-                                    + ",ISNULL(FR.HUSNR,0) HUSNR "
-                                    + ",ISNULL(FR.OPPGANG,'') OPPGANG "
+                                    + "ISNULL(SA.KOMMUNENR,0) KOMMUNENR "
+                                    + ",ISNULL(SA.GATEKODE,0) GATEKODE "
+                                    + ",ISNULL(SA.HUSNR,0) HUSNR "
+                                    + ",ISNULL(SA.OPPGANG,'') OPPGANG "
                                     + ",ISNULL(FR.NAVN,'') NAVN "
                                     + ",ISNULL(FR.LAT,0) LAT "
                                     + ",ISNULL(FR.LON,0) LON "
@@ -108,7 +108,8 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
                                     + ",ISNULL(FR.KON_DMID,0) KON_DMID "
                                     + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
-                                    + "FROM #SAMATCH SA INNER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
+                                    + ",ISNULL(FR.KOMMUNENR,-1) NORECIPIENTS "
+                                    + "FROM #SAMATCH SA OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR AND isnull(FR.GATEKODE,0)=SA.GATEKODE AND isnull(FR.HUSNR,0)=SA.HUSNR AND ISNULL(FR.OPPGANG,'')=SA.OPPGANG";
                 int mobilePhones = 0;
                 int fixedPhones = 0;
 
@@ -137,6 +138,7 @@ namespace com.ums.pas.integration.AddressLookup
                                 KonDmid = rs.GetInt32(rs.GetOrdinal("KON_DMID")),
 
                             };
+                            r.NoRecipients = rs.GetInt32(rs.GetOrdinal("NORECIPIENTS")) < 0;
                             if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs["MOBIL"].ToString().Length > 0)
                             {
                                 r.Endpoints.Add(new Phone()

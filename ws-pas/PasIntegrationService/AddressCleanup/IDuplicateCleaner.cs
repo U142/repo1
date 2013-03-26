@@ -14,6 +14,6 @@ namespace com.ums.pas.integration.AddressCleanup
         /// </summary>
         /// <param name="ListOfRecipients">List of recipients with contact endpoints</param>
         /// <returns>The cleaned list</returns>
-        List<RecipientData> DuplicateCleanup(List<RecipientData> ListOfRecipients);
+        List<RecipientData> DuplicateCleanup(List<RecipientData> ListOfRecipients, Action<RecipientData, Endpoint> Callback);
     }
 }
