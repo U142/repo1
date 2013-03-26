@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>85</ApplicationRevision>
+    <ApplicationRevision>86</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -191,6 +191,8 @@
   <Target Name="BeforeBuild">
     <Copy Condition=" '$(Configuration)' == 'Beta' " SourceFiles="config-beta\app.config" DestinationFolder="." ContinueOnError="false" />
     <Copy Condition=" '$(Configuration)' == 'Debug' " SourceFiles="config-debug\app.config" DestinationFolder="." ContinueOnError="false" />
+    <Copy Condition=" '$(Configuration)' == 'Orange_Prod' " SourceFiles="config-orangeprod\app.config" DestinationFolder="." ContinueOnError="false" />
+    <Copy Condition=" '$(Configuration)' == 'Orange_QA' " SourceFiles="config-orangeqa\app.config" DestinationFolder="." ContinueOnError="false" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
