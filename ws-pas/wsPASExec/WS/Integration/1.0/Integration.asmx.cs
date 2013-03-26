@@ -241,8 +241,6 @@ namespace com.ums.ws.integration
                     String templateContent = String.Format("{0}\\{1}\\{2}.txt", UCommon.UPATHS.sz_path_bbmessages, logonInfo.l_deptpk, TemplateId.Id);
                     if (File.Exists(templateContent))
                         File.Delete(templateContent);
-                    else
-                        return new MessageTemplateResponse() { Code = -2, Message = "Message content not found", TemplateId = TemplateId };
                 }
             }
 
