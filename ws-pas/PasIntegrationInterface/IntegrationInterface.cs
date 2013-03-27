@@ -82,6 +82,7 @@ namespace com.ums.pas.integration
         FINISHED = 0,
         FAILED = 2,
         SCHEDULED = 3,
+        STOPPED = 4,
     }
 
     /// <summary>
