@@ -68,6 +68,29 @@ namespace com.ums.pas.integration
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
 
+            IDictionary<ChannelConfiguration, int> refnoLookup = new Dictionary<ChannelConfiguration, int>();
+            //Preparing refnos for immediate status lookup
+            foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
+            {
+                int Refno = (int)Database.newRefno();
+                log.InfoFormat("AlertId={0} Created new Refno={1} for channelConfig {2}", Payload.AlertId.Id, Refno, channelConfig.GetType().ToString());
+                refnoLookup.Add(channelConfig, Refno);
+                //connect refno to AlertId (project)
+                BBPROJECT project = new BBPROJECT();
+                project.sz_projectpk = Payload.AlertId.Id.ToString();
+                Database.linkRefnoToProject(ref project, Refno, 0, 0);
+
+                if (channelConfig is VoiceConfiguration)
+                {
+                    InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
+                }
+                else if (channelConfig is SmsConfiguration)
+                {
+                    InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
+                }
+            }
+
+
             List<AlertObject> alertObjectList = Payload.AlertTargets.OfType<AlertObject>().ToList();
             using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
             {
@@ -185,20 +208,15 @@ namespace com.ums.pas.integration
 
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
-                int Refno = (int) Database.newRefno();
-                log.InfoFormat("AlertId={0} Created new Refno={1} for channelConfig {2}", Payload.AlertId.Id, Refno, channelConfig.GetType().ToString());
+                int Refno = refnoLookup[channelConfig];
+                log.InfoFormat("Preparing channel {0} with lookup refno={1}", channelConfig.GetType().ToString(), Refno);
 
-                //connect refno to AlertId (project)
-                BBPROJECT project = new BBPROJECT();
-                project.sz_projectpk = Payload.AlertId.Id.ToString();
-                Database.linkRefnoToProject(ref project, Refno, 0, 0);
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
                     using (new TimeProfiler(Payload.AlertId.Id, "Voice database/file inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
                         //prepare voice alert
-                        InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                         InsertResched(Refno, voiceConfig);
                         InsertBbValid(Refno, voiceConfig.ValidDays);
                         InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
@@ -217,7 +235,6 @@ namespace com.ums.pas.integration
                     //SMSQ
                     using (new TimeProfiler(Payload.AlertId.Id, "SMS database inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
-                        InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
                         int numberOfSmsRecipients = InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
                         log.InfoFormat("AlertId={0} Created SMS alert to {1} recipients", Payload.AlertId.Id, numberOfSmsRecipients);
@@ -671,7 +688,7 @@ namespace com.ums.pas.integration
                             cmd.Parameters["l_server"].Value = Account.PrimarySmsServer;
                             cmd.Parameters["l_tries"].Value = 0;
                             cmd.Parameters["l_chanid"].Value = 0;
-                            cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                            cmd.Parameters["l_schedtime"].Value = 0; //AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
                             cmd.Parameters["sz_referenceid"].Value = DBNull.Value;
                             cmd.Parameters["sz_number"].Value = endPoint.Address;
                             cmd.Parameters["l_adrpk"].Value = -1;
