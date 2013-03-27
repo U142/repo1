@@ -565,9 +565,20 @@ namespace com.ums.ws.integration
             logonInfo.sz_password = Account.Password;
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
+            using (OdbcCommand cmdStopProject = cancelDb.CreateCommand("UPDATE BBPROJECT SET l_finished=8 WHERE l_projectpk=?"))
+            {
+                cmdStopProject.Parameters.Add("projectpk", OdbcType.BigInt).Value = AlertId.Id;
+                if (cmdStopProject.ExecuteNonQuery() != 1)
+                {
+                    response.Code = -1;
+                    response.Message = String.Format("Failed to stop alertid={0}", AlertId.Id);
+
+                    return response;
+                }
+            }
+
             // Get all refnos corresponding to the alertid (projectpk)
             String Sql = String.Format("SELECT PR.l_refno, MI.l_type FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
-
             using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
             {
                 cmd.Parameters.Add("dept", OdbcType.Int).Value = logonInfo.l_deptpk;
@@ -575,12 +586,7 @@ namespace com.ums.ws.integration
 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    if (!rs.HasRows)
-                    {
-                        response.Code = -1;
-                        response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
-                    }
-                    else
+                    if (rs.HasRows)
                     {
                         using (OdbcCommand cancelCmd = cancelDb.CreateCommand(""))
                         {
@@ -598,9 +604,6 @@ namespace com.ums.ws.integration
                                     response.Code = -1;
                                     response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
                                 }
-
-                                cancelCmd.CommandText = "UPDATE MDVSENDINGINFO SET l_sendingstatus=8 WHERE l_refno=?";
-                                cancelCmd.ExecuteNonQuery();
 
                                 if (l_type == 1) // voice, set secheddate to now 0 to cancel immediately
                                 {
@@ -1146,7 +1149,7 @@ namespace com.ums.ws.integration
             + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
             + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
             + "isnull(MDV.l_refno, 0) IsProcessing, isnull(TTS.l_fileno,0) TtsFileno, isnull(TTS.sz_content,'') TtsContent, "
-            + "isnull(SQ.sz_text, '') SmsContent "
+            + "isnull(SQ.sz_text, '') SmsContent, isnull(BP.l_finished, 0) l_finished "
             + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
             + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
             + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
@@ -1159,14 +1162,14 @@ namespace com.ums.ws.integration
             {
                 long prevProjectpk = -1;
                 LogSummary currentSummary = new LogSummary();
-                int worstStatus = 8;
+                int worstStatus = 9;
                 int VoiceProc = 0;
                 while (rs.Read())
                 {
                     long projectPk = rs.GetInt64(0);
                     if (!prevProjectpk.Equals(projectPk))
                     {
-                        worstStatus = 8;
+                        worstStatus = 9;
                         currentSummary = new LogSummary()
                         {
                             AlertId = new AlertId(rs.GetInt64(0)),
@@ -1175,17 +1178,16 @@ namespace com.ums.ws.integration
                         };
                     }
 
-
+                    int stopped = rs.GetInt32(rs.GetOrdinal("l_finished"));
                     SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
-                    int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
-                    
+                    int status = stopped == 8 ? stopped : type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : (int)rs.GetByte(6);
 
                     int createDate = rs.GetInt32(12);
-                    int createTime = rs.GetInt32(13);
+                    int createTime = rs.GetInt16(13);
                     int schedDate = rs.GetInt32(3);
                     int schedTime = rs.GetInt32(4);
                     int refno = rs.GetInt32(14);
-                    int ttsFileno = rs.GetInt32(15);
+                    int ttsFileno = rs.GetByte(15);
                     String ttsContent = rs.GetString(16);
                     String smsContent = rs.GetString(17);
 
@@ -1419,6 +1421,8 @@ namespace com.ums.ws.integration
                     return AlertOverallStatus.IN_PROGRESS;
                 case 7:
                     return AlertOverallStatus.FINISHED;
+                case 8:
+                    return AlertOverallStatus.STOPPED;
             }
             return AlertOverallStatus.FAILED;
         }
