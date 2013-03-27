@@ -1709,6 +1709,7 @@ namespace com.ums.pas.integration
         public AlertConfiguration AlertConfiguration = new AlertConfiguration();
         public List<AlertTarget> AlertTargets = new List<AlertTarget>();
         public List<ChannelConfiguration> ChannelConfigurations = new List<ChannelConfiguration>();
+        public bool IsTestAlert { get; set; }
     }
     #endregion
 
