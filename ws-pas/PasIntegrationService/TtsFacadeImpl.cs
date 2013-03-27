@@ -26,7 +26,7 @@ namespace com.ums.pas.integration
             UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(tempPath, ttsPath, convertReq);
             if (response.n_responsecode == 0)
             {
-                byte[] rawBytes = File.ReadAllBytes(System.Configuration.ConfigurationManager.AppSettings["TtsPath"] + @"\" + response.sz_server_filename);
+                byte[] rawBytes = File.ReadAllBytes(System.Configuration.ConfigurationManager.AppSettings["TtsPath"] + @"\" + response.sz_server_filename.Replace(".wav", ".raw"));
                 return new AudioContent()
                 {
                     RawVersion = rawBytes,

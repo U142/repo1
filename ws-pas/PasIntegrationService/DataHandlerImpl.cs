@@ -249,10 +249,19 @@ namespace com.ums.pas.integration
                     {
                         AudioContent audioContent = ttsFacade.ConvertTtsRaw(Message, LangPk);
                         ++counter;
+                        String tempFile = System.Configuration.ConfigurationManager.AppSettings["TempPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "raw");
                         String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "raw");
-                        File.WriteAllBytes(publishFile, audioContent.RawVersion);
+                        log.DebugFormat("Writing raw file {0} [{1} bytes]", audioContent.RawVersion.LongLength);
+                        File.WriteAllBytes(tempFile, audioContent.RawVersion);
+                        log.InfoFormat("Moving raw file {0} to {1}", tempFile, publishFile);
+                        File.Move(tempFile, publishFile);
+
+                        tempFile = System.Configuration.ConfigurationManager.AppSettings["TempPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
                         String publishWave = System.Configuration.ConfigurationManager.AppSettings["BBMessages"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
-                        File.WriteAllBytes(publishWave, audioContent.WavVersion);
+                        File.WriteAllBytes(tempFile, audioContent.WavVersion);
+                        log.InfoFormat("Moving wav file {0} to {1}", tempFile, publishWave);
+                        File.Move(tempFile, publishWave);
+
                         Database.InsertTtsRef(Refno, counter, Message);
                     }
                 }
