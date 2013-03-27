@@ -624,6 +624,9 @@ namespace com.ums.ws.integration
             return response;
         }
 
+
+
+
         [WebMethod]
         public LogSummary testGetAlertLog(long Projectpk)
         {
@@ -826,9 +829,95 @@ namespace com.ums.ws.integration
             /*
              * Get ADDRESS_SOURCE where there are no link to _ALERTS nor _DUPLICATES, if norecipients=1 then the AlertTarget didn't produce any inhabitants
              */
-            
-            //String Sql = "SELECT * FROM MDVHIST_ADDRESS_SOURCE MAS LEFT OUTER JOIN ON MDVHIST_ADDRESS_SOURCE_ALERTS MASA 
-            return new List<LogLineNotFound>();
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            if (StartIndex < 0)
+            {
+                throw new Exception("Invalid StartIndex, should be 0..n");
+            }
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+            if (!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
+            {
+                throw new Exception("Account has no access to the specified alert or the alert does not exist");
+            }
+
+            String Sql = @"-- select all records that have norecipients=1, this means that no persons are registered on the alerttarget and no name attached
+                            -- select all records that have no relations to an alert nor was a duplicate, this means that the 
+                            SELECT 
+                                    ISNULL(MAS.municipalid,0) municipalid 
+                                    ,ISNULL(MAS.streetid,0) streetid 
+                                    ,ISNULL(MAS.houseno,0) houseno 
+                                    ,ISNULL(MAS.letter,'') letter
+                                    ,ISNULL(MAS.oppgang,'') oppgang
+                                    ,ISNULL(MAS.gnr,0) gnr
+                                    ,ISNULL(MAS.bnr,0) bnr
+                                    ,ISNULL(MAS.fnr,0) fnr
+                                    ,ISNULL(MAS.snr,0) snr
+                                    ,ISNULL(MAS.unr,0) unr
+                                    ,ISNULL(MAS.alerttarget,0) alerttarget
+                                    ,ISNULL(MAS.birthdate,0) birthdate
+                                    ,ISNULL(MAS.name,'') name
+                                    ,ISNULL(MAS.iscompany,0) iscompany 
+                                    ,ISNULL(MAS.postno,0) postno
+                                    ,ISNULL(MAS.externalid,'') externalid
+                                    ,ISNULL(MAS.data,'') data
+                                     ,ISNULL(MAS.attributes, '') attributes
+                                    ,MASA.l_alertsourcepk, MASAD.l_alertsourcepk 
+                            FROM 
+                            MDVHIST_ADDRESS_SOURCE MAS 
+                            LEFT JOIN MDVHIST_ADDRESS_SOURCE_ALERTS MASA ON MASA.l_alertsourcepk=MAS.l_alertsourcepk
+                            LEFT JOIN MDVHIST_ADDRESS_SOURCE_DUPLICATES MASAD ON MASAD.l_alertsourcepk=MAS.l_alertsourcepk
+                            where 
+                            (MASA.l_alertsourcepk IS NULL AND MASAD.l_alertsourcepk IS NULL) and
+                             MAS.l_projectpk=?";
+            List<LogLineNotFound> list = new List<LogLineNotFound>();
+
+            int count = 0;
+            using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.Numeric).Value = AlertId.Id;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read() && (PageSize == 0 || count < PageSize + StartIndex))
+                    {
+                        if (++count <= StartIndex)
+                        {
+                            continue;
+                        }
+                        list.Add(new LogLineNotFound()
+                        {
+                            Name = rs.GetString(rs.GetOrdinal("name")),
+                            ExternalId = rs.GetString(rs.GetOrdinal("externalid")),
+                            RequestedAlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
+                                                        rs.GetByte(rs.GetOrdinal("alerttarget")),
+                                                        rs.GetByte(rs.GetOrdinal("iscompany")),
+                                                        rs.GetString(rs.GetOrdinal("name")),
+                                                        rs.GetInt32(rs.GetOrdinal("municipalid")),
+                                                        rs.GetInt32(rs.GetOrdinal("streetid")),
+                                                        rs.GetInt32(rs.GetOrdinal("houseno")),
+                                                        rs.GetString(rs.GetOrdinal("letter")),
+                                                        rs.GetString(rs.GetOrdinal("oppgang")),
+                                                        rs.GetInt32(rs.GetOrdinal("gnr")),
+                                                        rs.GetInt32(rs.GetOrdinal("bnr")),
+                                                        rs.GetInt32(rs.GetOrdinal("fnr")),
+                                                        rs.GetInt32(rs.GetOrdinal("snr")),
+                                                        rs.GetInt32(rs.GetOrdinal("unr")),
+                                                        rs.GetInt32(rs.GetOrdinal("postno")),
+                                                        rs.GetString(rs.GetOrdinal("data")),
+                                                        rs.GetInt32(rs.GetOrdinal("birthdate")),
+                                                        rs.GetString(rs.GetOrdinal("attributes")),
+                                                        rs.GetString(rs.GetOrdinal("externalid")),
+                                                        new Phone()),
+                                            
+                        });
+                    }
+                }
+            }
+            return list;
         }
 
 
@@ -1333,7 +1422,7 @@ namespace com.ums.ws.integration
                         + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
                         + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
-                        + "WHERE BP.l_deptpk={0} AND XR.l_type=0 "
+                        + "WHERE BP.l_deptpk={0} "
                         + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
 
