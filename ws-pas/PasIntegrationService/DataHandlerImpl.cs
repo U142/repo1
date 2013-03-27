@@ -80,6 +80,7 @@ namespace com.ums.pas.integration
                 project.sz_projectpk = Payload.AlertId.Id.ToString();
                 Database.linkRefnoToProject(ref project, Refno, 0, 0);
 
+                InsertIntoBbCancel(Payload.AlertId, Refno);
                 if (channelConfig is VoiceConfiguration)
                 {
                     InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
@@ -252,6 +253,33 @@ namespace com.ums.pas.integration
 
             Database.close();
 
+        }
+
+
+        private bool InsertIntoBbCancel(AlertId AlertId, int Refno)
+        {
+            String Sql = "SELECT ISNULL(l_finished,0) FROM BBPROJECT WHERE l_projectpk=? AND l_finished=8";
+            bool doCancel = false;
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.Numeric).Value = AlertId.Id;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    doCancel = rs.Read();
+                }
+            }
+            if (doCancel)
+            {
+                Sql = "INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)";
+                using (OdbcCommand cmd = Database.CreateCommand(Sql))
+                {
+                    cmd.Parameters.Add("refno", OdbcType.Int).Value = Refno;
+                    cmd.ExecuteNonQuery();
+                }
+                log.InfoFormat("AlertId={0} Alert was tagged to be cancelled, cancel refno {1}",
+                                    AlertId.Id, Refno);
+            }
+            return doCancel;
         }
 
         private void CreateTtsBackboneAudioFiles(AlertId AlertId, int Refno, List<String> Messages, int LangPk)
