@@ -688,7 +688,7 @@ namespace com.ums.pas.integration
                             cmd.Parameters["l_server"].Value = Account.PrimarySmsServer;
                             cmd.Parameters["l_tries"].Value = 0;
                             cmd.Parameters["l_chanid"].Value = 0;
-                            cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                            cmd.Parameters["l_schedtime"].Value = 0; //AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
                             cmd.Parameters["sz_referenceid"].Value = DBNull.Value;
                             cmd.Parameters["sz_number"].Value = endPoint.Address;
                             cmd.Parameters["l_adrpk"].Value = -1;
