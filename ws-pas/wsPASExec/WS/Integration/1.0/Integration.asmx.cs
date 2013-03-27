@@ -619,9 +619,6 @@ namespace com.ums.ws.integration
             return response;
         }
 
-
-
-
         [WebMethod]
         public LogSummary testGetAlertLog(long Projectpk)
         {
@@ -1310,7 +1307,7 @@ namespace com.ums.ws.integration
                         + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
                         + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
-                        + "WHERE BP.l_deptpk={0} "
+                        + "WHERE BP.l_deptpk={0} AND XR.l_type=0 "
                         + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
 
