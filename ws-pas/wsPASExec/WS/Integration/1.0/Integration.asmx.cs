@@ -607,11 +607,6 @@ namespace com.ums.ws.integration
                                     cancelCmd.CommandText = "UPDATE BBQREF SET l_startdate=0, l_starttime=0 WHERE l_refno=?";
                                     cancelCmd.ExecuteNonQuery();
                                 }
-                                else if (l_type == 2) // sms, set schedtime to 0 to cancel immediately
-                                {
-                                    cancelCmd.CommandText = "UPDATE SMSQREF SET l_schedtime=0 WHERE l_refno=?";
-                                    cancelCmd.ExecuteNonQuery();
-                                }
                             }
                         }
                     }
