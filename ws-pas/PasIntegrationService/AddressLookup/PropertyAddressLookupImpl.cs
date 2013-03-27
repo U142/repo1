@@ -111,7 +111,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.KON_DMID,0) KON_DMID "
                                     + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
                                     + ",ISNULL(FR.KOMMUNENR,-1) NORECIPIENTS "
-                                    + "FROM #SAMATCH SA LEFT OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
+                                    + "FROM #SAMATCH SA LEFT JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
                                     + "AND ISNULL(FR.GNR,0)=SA.GNR "
                                     + "AND ISNULL(FR.BNR,0)=SA.BNR "
                                     + "AND ISNULL(FR.FNR,0)=SA.FNR "
