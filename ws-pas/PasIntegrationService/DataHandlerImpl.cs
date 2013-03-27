@@ -209,6 +209,7 @@ namespace com.ums.pas.integration
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
                 int Refno = refnoLookup[channelConfig];
+                log.InfoFormat("Preparing channel {0} with lookup refno={1}", channelConfig.GetType().ToString(), Refno);
 
                 if (channelConfig is VoiceConfiguration)
                 {
