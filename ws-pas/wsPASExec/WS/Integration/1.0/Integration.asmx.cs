@@ -1305,7 +1305,7 @@ namespace com.ums.ws.integration
                         + "isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1), isnull(SQ.l_status, 1), isnull(MDV.l_type,1), "
                         + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
                         + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
-                        + "isnull(MDV.l_refno, 0) IsProcessing "
+                        + "isnull(MDV.l_refno, 0) IsProcessing, isnull(BP.l_finished, 0) l_finished "
                         + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
                         + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
@@ -1318,7 +1318,7 @@ namespace com.ums.ws.integration
 
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
-            int worstStatus = 8;
+            int worstStatus = 9;
             int SmsItems = 0;
             int VoiceItems = 0;
             int SmsProc = 0;
@@ -1329,15 +1329,19 @@ namespace com.ums.ws.integration
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
+                /*SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
+                int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);*/
+                int stopped = rs.GetInt32(rs.GetOrdinal("l_finished"));
                 SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
-                int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
+                int status = stopped == 8 ? stopped : type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : (int)rs.GetByte(6);
+
                 SmsProc += rs.GetInt32(8);
                 SmsItems += rs.GetInt32(9);
                 VoiceProc += rs.GetInt32(10);
                 VoiceItems += rs.GetInt32(11);
 
                 int createDate = rs.GetInt32(12);
-                int createTime = rs.GetInt32(13);
+                int createTime = rs.GetInt16(13);
                 int schedDate = rs.GetInt32(3);
                 int schedTime = rs.GetInt32(4);
                 bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
@@ -1375,7 +1379,7 @@ namespace com.ums.ws.integration
                         break;
                     }
 
-                    worstStatus = 8;
+                    worstStatus = 9;
                     currentSummary = new AlertSummary()
                     {
                         AlertId = new AlertId(rs.GetInt64(0)),
