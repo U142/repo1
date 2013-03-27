@@ -221,7 +221,7 @@ namespace com.ums.ws.integration
         [WebMethod(Description = @"<b>Get log of addresses where no telephone number was found for a previously sent alert.</b>")]
         public List<LogLineNotFound> GetAlertNumberNotFoundLog(Account Account, AlertId AlertId, int StartIndex, int PageSize)
         {
-            throw new NotImplementedException();
+            return new Integration().GetAlertNumberNotFoundLog(Account, AlertId, StartIndex, PageSize);
         }
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace com.ums.pas.integration.AddressLookup
                                 Lat = rs.GetDouble(rs.GetOrdinal("l_lat")),
                                 Lon = rs.GetDouble(rs.GetOrdinal("l_lon")),
 
-                                AlertTarget = reconstructAlertTarget(
+                                AlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
                                                         rs.GetByte(rs.GetOrdinal("alerttarget")),
                                                         rs.GetByte(rs.GetOrdinal("iscompany")),
                                                         rs.GetString(rs.GetOrdinal("name")),
@@ -108,88 +108,11 @@ namespace com.ums.pas.integration.AddressLookup
 
         }
 
-        private AlertTarget reconstructAlertTarget(int alertTarget, 
-                                                int company,
-                                                String name,
-            int municipalId,
-            int streetId,
-            int houseNo,
-            String letter,
-            String oppgang,
-            int gnr,
-            int bnr,
-            int fnr,
-            int snr,
-            int unr,
-            int postno,
-            String data,
-            int birthdate,
-            String attributes,
-            String extId,
-            Endpoint endPoint)                  
-        {
-            switch (alertTarget)
-            {
-                case 5: //resolves to FollowUpAlertObject - should not be used nor reconstrucable
-                case 1: //AlertObject
-                    return AlertTargetFactory.newAlertObject(name, extId, endPoint.Address, endPoint is Phone ? ((Phone)endPoint).CanReceiveSms : false, DataItem.FromString(attributes));
-                case 2: //StreetId
-                    return AlertTargetFactory.newStreetAddress(municipalId.ToString(), streetId, houseNo, letter, oppgang, DataItem.FromString(attributes));
-                case 3: //PropertyAddress
-                    return AlertTargetFactory.newPropertyAddress(municipalId.ToString(), gnr, bnr, fnr, unr, DataItem.FromString(attributes));
-                case 4: //OwnerAddress
-                    OwnerAddress ownerAddress = new OwnerAddress();
 
-                    String[] ownerProperties = data.Split('|');
-                    if (ownerProperties.Count() == 6)
-                    {
-                        ownerAddress.Adresselinje1 = ownerProperties[0];
-                        ownerAddress.Adresselinje2 = ownerProperties[1];
-                        ownerAddress.Adresselinje3 = ownerProperties[2];
-                        int eierId;
-                        if (int.TryParse(extId, out eierId))
-                            ownerAddress.EierId = eierId;
-                        ownerAddress.EierIdKode = (NorwayEierIdKode)Enum.Parse(typeof(NorwayEierIdKode), ownerProperties[3], true);
-                        ownerAddress.EierKategoriKode = (NorwayEierKategoriKode)Enum.Parse(typeof(NorwayEierKategoriKode), ownerProperties[4], true);
-                        ownerAddress.EierStatusKode = (NorwayEierStatusKode)Enum.Parse(typeof(NorwayEierStatusKode), ownerProperties[5], true);
-                    }
-                    else
-                    {
-                        ownerAddress.EierIdKode = NorwayEierIdKode.ANNEN_PERSON;
-                        ownerAddress.EierKategoriKode = NorwayEierKategoriKode.IKKE_DEFINERT;
-                        ownerAddress.EierStatusKode = NorwayEierStatusKode.IKKE_DEFINERT;
-                    }
-                    ownerAddress.DateOfBirth = DateOfBirthToString(birthdate);
-                    ownerAddress.Navn = name;
-                    ownerAddress.Postnr = postno;
-                    ownerAddress.Attributes = DataItem.FromString(attributes);
-                    return ownerAddress;
-                default:
-                    return new AlertObject()
-                    {
-                        Name = "Unknown source",
-                    };
-            }
-
-
-        }
 
 
         #endregion
 
-        /// <summary>
-        /// Convert from int (yyyyMMdd) to string (ddMMyy)
-        /// </summary>
-        /// <param name="dateOfBirth"></param>
-        /// <returns></returns>
-        private string DateOfBirthToString(int dateOfBirth)
-        {
-            string tmp = dateOfBirth.ToString();
-            if (tmp.Length == 8)
-                return tmp.Substring(6, 2) + tmp.Substring(4, 2) + tmp.Substring(2, 2);
-            else
-                return DateTime.Now.ToString("ddMMyy");
-        }
 
     }
 }
