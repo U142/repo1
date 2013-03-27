@@ -566,7 +566,7 @@ namespace com.ums.ws.integration
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
             // Get all refnos corresponding to the alertid (projectpk)
-            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
+            String Sql = String.Format("SELECT PR.l_refno, MI.l_type FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
 
             using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
             {
@@ -582,18 +582,35 @@ namespace com.ums.ws.integration
                     }
                     else
                     {
-                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand("INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)"))
+                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand(""))
                         {
                             cancelCmd.Parameters.Add("refno", OdbcType.Int);
                             while (rs.Read())
                             {
-                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(0);
+                                int l_type = rs.GetInt32(rs.GetOrdinal("l_type"));
 
+                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(rs.GetOrdinal("l_refno"));
+
+                                cancelCmd.CommandText = "INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)";
                                 if (cancelCmd.ExecuteNonQuery() != 1)
                                 {
                                     // TODO: Set proper status code (-1 is probably in use)
                                     response.Code = -1;
                                     response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                                }
+
+                                cancelCmd.CommandText = "UPDATE MDVSENDINGINFO SET l_sendingstatus=8 WHERE l_refno=?";
+                                cancelCmd.ExecuteNonQuery();
+
+                                if (l_type == 1) // voice, set secheddate to now 0 to cancel immediately
+                                {
+                                    cancelCmd.CommandText = "UPDATE BBQREF SET l_startdate=0, l_starttime=0 WHERE l_refno=?";
+                                    cancelCmd.ExecuteNonQuery();
+                                }
+                                else if (l_type == 2) // sms, set schedtime to 0 to cancel immediately
+                                {
+                                    cancelCmd.CommandText = "UPDATE SMSQREF SET l_schedtime=0 WHERE l_refno=?";
+                                    cancelCmd.ExecuteNonQuery();
                                 }
                             }
                         }
