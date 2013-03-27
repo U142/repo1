@@ -105,7 +105,7 @@ namespace com.ums.ws.integration
             }
 
 
-            return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets);
+            return new Integration().StartAlert(account, alertConfiguration, channelConfigurations, AlertTargets, false);
         }
 
         /// <summary>

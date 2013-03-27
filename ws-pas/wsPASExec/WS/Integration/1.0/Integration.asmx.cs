@@ -397,11 +397,12 @@ namespace com.ums.ws.integration
             {
                 new AlertObject("Send Test", "", phone.Address, phone.CanReceiveSms),
             };
-            return StartAlert(Account, alertConfiguration, channelConfigurations, alertTargets);
+            return StartAlert(Account, alertConfiguration, channelConfigurations, alertTargets, true);
         }
 
         [WebMethod]
-        public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets)
+        public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets, 
+                                        bool IsTestAlert)
         {
             String ActiveMqUri = System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"];
             String ActiveMqDestination = System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"];
@@ -527,6 +528,8 @@ namespace com.ums.ws.integration
                         payload.AlertTargets = AlertTargets;
                         payload.AlertConfiguration = AlertConfiguration;
                         payload.ChannelConfigurations = ChannelConfigurations;
+
+                        payload.IsTestAlert = IsTestAlert;
 
                         IObjectMessage message = mqSession.CreateObjectMessage(payload);
                         mqProducer.Send(destination, message);

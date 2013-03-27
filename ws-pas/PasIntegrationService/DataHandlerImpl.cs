@@ -78,7 +78,7 @@ namespace com.ums.pas.integration
                 //connect refno to AlertId (project)
                 BBPROJECT project = new BBPROJECT();
                 project.sz_projectpk = Payload.AlertId.Id.ToString();
-                Database.linkRefnoToProject(ref project, Refno, 0, 0);
+                Database.linkRefnoToProject(ref project, Refno, Payload.IsTestAlert ? 9 : 0, 0);
 
                 InsertIntoBbCancel(Payload.AlertId, Refno);
                 if (channelConfig is VoiceConfiguration)
