@@ -528,6 +528,8 @@ namespace com.ums.pas.integration
 
                         // TODO: insert alert target data
                         OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
+                        if(ownerAddress.DateOfBirth == null) 
+                            ownerAddress.DateOfBirth = "";
 
                         if (ownerAddress.DateOfBirth.Length == 6 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "ddMMyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
                             birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
