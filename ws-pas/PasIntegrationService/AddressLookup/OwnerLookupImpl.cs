@@ -215,7 +215,7 @@ namespace com.ums.pas.integration.AddressLookup
 
         private static int? GetHouseNr(string s)
         {
-            Match m = Regex.Match(s, @"\d+");
+            Match m = Regex.Match(s, @"\d\w+");
             if (m.Success)
                 return Convert.ToInt32(m.Value);
             else
