@@ -1157,35 +1157,35 @@ namespace com.ums.ws.integration
                 throw new Exception("Account has no access to the specified alert or the alert does not exist");
             }
 
-            String Sql = @"-- select all records that have norecipients=1, this means that no persons are registered on the alerttarget and no name attached
-                            -- select all records that have no relations to an alert nor was a duplicate, this means that the 
-                            SELECT 
-                                    ISNULL(MAS.municipalid,0) municipalid 
-                                    ,ISNULL(MAS.streetid,0) streetid 
-                                    ,ISNULL(MAS.houseno,0) houseno 
-                                    ,ISNULL(MAS.letter,'') letter
-                                    ,ISNULL(MAS.oppgang,'') oppgang
-                                    ,ISNULL(MAS.gnr,0) gnr
-                                    ,ISNULL(MAS.bnr,0) bnr
-                                    ,ISNULL(MAS.fnr,0) fnr
-                                    ,ISNULL(MAS.snr,0) snr
-                                    ,ISNULL(MAS.unr,0) unr
-                                    ,ISNULL(MAS.alerttarget,0) alerttarget
-                                    ,ISNULL(MAS.birthdate,0) birthdate
-                                    ,ISNULL(MAS.name,'') name
-                                    ,ISNULL(MAS.iscompany,0) iscompany 
-                                    ,ISNULL(MAS.postno,0) postno
-                                    ,ISNULL(MAS.externalid,'') externalid
-                                    ,ISNULL(MAS.data,'') data
-                                     ,ISNULL(MAS.attributes, '') attributes
-                                    ,MASA.l_alertsourcepk, MASAD.l_alertsourcepk 
-                            FROM 
-                            MDVHIST_ADDRESS_SOURCE MAS 
-                            LEFT JOIN MDVHIST_ADDRESS_SOURCE_ALERTS MASA ON MASA.l_alertsourcepk=MAS.l_alertsourcepk
-                            LEFT JOIN MDVHIST_ADDRESS_SOURCE_DUPLICATES MASAD ON MASAD.l_alertsourcepk=MAS.l_alertsourcepk
-                            where 
-                            (MASA.l_alertsourcepk IS NULL AND MASAD.l_alertsourcepk IS NULL) and
-                             MAS.l_projectpk=?";
+            // select all records that have norecipients=1, this means that no persons are registered on the alerttarget and no name attached
+            // select all records that have no relations to an alert nor was a duplicate, this means that the 
+            String Sql = @"SELECT 
+                                ISNULL(MAS.municipalid,0) municipalid 
+                                ,ISNULL(MAS.streetid,0) streetid 
+                                ,ISNULL(MAS.houseno,0) houseno 
+                                ,ISNULL(MAS.letter,'') letter
+                                ,ISNULL(MAS.oppgang,'') oppgang
+                                ,ISNULL(MAS.gnr,0) gnr
+                                ,ISNULL(MAS.bnr,0) bnr
+                                ,ISNULL(MAS.fnr,0) fnr
+                                ,ISNULL(MAS.snr,0) snr
+                                ,ISNULL(MAS.unr,0) unr
+                                ,ISNULL(MAS.alerttarget,0) alerttarget
+                                ,ISNULL(MAS.birthdate,0) birthdate
+                                ,ISNULL(MAS.name,'') name
+                                ,ISNULL(MAS.iscompany,0) iscompany 
+                                ,ISNULL(MAS.postno,0) postno
+                                ,ISNULL(MAS.externalid,'') externalid
+                                ,ISNULL(MAS.data,'') data
+                                    ,ISNULL(MAS.attributes, '') attributes
+                                ,MASA.l_alertsourcepk, MASAD.l_alertsourcepk 
+                        FROM 
+                        MDVHIST_ADDRESS_SOURCE MAS 
+                        LEFT JOIN MDVHIST_ADDRESS_SOURCE_ALERTS MASA ON MASA.l_alertsourcepk=MAS.l_alertsourcepk
+                        LEFT JOIN MDVHIST_ADDRESS_SOURCE_DUPLICATES MASAD ON MASAD.l_alertsourcepk=MAS.l_alertsourcepk
+                        where 
+                        (MASA.l_alertsourcepk IS NULL AND MASAD.l_alertsourcepk IS NULL) and
+                            MAS.l_projectpk=?";
             List<LogLineNotFound> list = new List<LogLineNotFound>();
 
             int count = 0;
@@ -1200,6 +1200,7 @@ namespace com.ums.ws.integration
                         {
                             continue;
                         }
+
                         list.Add(new LogLineNotFound()
                         {
                             Name = rs.GetString(rs.GetOrdinal("name")),
