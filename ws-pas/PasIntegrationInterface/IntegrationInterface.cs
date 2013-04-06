@@ -484,6 +484,27 @@ namespace com.ums.pas.integration
             set { _oppgang = value; }
         }
 
+        // Custom equality
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            StreetAddress compare = obj as StreetAddress;
+            if ((object)compare == null)
+                return false;
+
+            return MunicipalCode == compare.MunicipalCode
+                && StreetNo == compare.StreetNo
+                && HouseNo == compare.HouseNo
+                && Letter == compare.Letter
+                && Oppgang == compare.Oppgang;
+        }
+        public override int GetHashCode()
+        {
+            return String.Format("{0}{1}{2}{3}{4}",  MunicipalCode, StreetNo, HouseNo, Letter, Oppgang).GetHashCode();
+        }
+
     }
 
     /// <summary>

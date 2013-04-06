@@ -118,7 +118,5 @@ namespace com.ums.pas.integration.AddressLookup
         public int KonDmid { get; set; }
 
         public bool NoRecipients { get; set; }
-
-
     }
 }

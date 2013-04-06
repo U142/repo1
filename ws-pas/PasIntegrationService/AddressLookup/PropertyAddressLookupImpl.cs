@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net;
 using System.Data.Odbc;
+using log4net;
 
 namespace com.ums.pas.integration.AddressLookup
 {
@@ -18,6 +18,20 @@ namespace com.ums.pas.integration.AddressLookup
             set { _connectionString = value; }
         }
 
+        public List<PropertyAddress> NoNumbersFoundList { get; private set; }
+        public IEnumerable<PropertyAddress> GetNoNumbersFoundList()
+        {
+            if (NoNumbersFoundList != null)
+            {
+                return NoNumbersFoundList;
+            }
+            throw new Exception("GetMatchingOwnerAddresses not yet executed");
+        }
+
+        public PropertyAddressLookupImpl()
+        {
+            NoNumbersFoundList = new List<PropertyAddress>();
+        }
 
         #region IPropertyAddressLookupFacade Members
         public IEnumerable<RecipientData> GetMatchingPropertyAddresses(string connectionString, List<PropertyAddress> propertyAddresses)
@@ -164,8 +178,11 @@ namespace com.ums.pas.integration.AddressLookup
                                 });
                                 ++fixedPhones;
                             }
-                            
-                            recipients.Add(r);
+
+                            if (r.NoRecipients)
+                                NoNumbersFoundList.Add((PropertyAddress)r.AlertTarget);
+                            else
+                                recipients.Add(r);
                         }
                     }
                 }

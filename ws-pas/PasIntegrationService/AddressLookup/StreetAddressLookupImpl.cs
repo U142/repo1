@@ -24,6 +24,21 @@ namespace com.ums.pas.integration.AddressLookup
             set { _connectionString = value; }
         }
 
+        public List<StreetAddress> NoNumbersFoundList { get; private set; }
+        public IEnumerable<StreetAddress> GetNoNumbersFoundList()
+        {
+            if (NoNumbersFoundList != null)
+            {
+                return NoNumbersFoundList;
+            }
+            throw new Exception("GetMatchingOwnerAddresses not yet executed");
+        }
+
+        public StreetAddressLookupImpl()
+        {
+            NoNumbersFoundList = new List<StreetAddress>();
+        }
+
         #region IStreetAddressLookupFacade Members
 
         public IEnumerable<RecipientData> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
@@ -157,8 +172,15 @@ namespace com.ums.pas.integration.AddressLookup
                                 });
                                 ++fixedPhones;
                             }
-                            
-                            recipients.Add(r);
+
+                            if (r.NoRecipients)
+                            {
+                                NoNumbersFoundList.Add((StreetAddress)r.AlertTarget);
+                            }
+                            else
+                            {
+                                recipients.Add(r);
+                            }
                         }
                     }
                 }
