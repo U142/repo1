@@ -132,89 +132,95 @@ namespace com.ums.pas.integration
 
             }*/
 
-            // Normal folkereg lookup
-/*            List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+            if (System.Configuration.ConfigurationManager.AppSettings["UseDoubleAdrLookup"] == "false")
             {
-                IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
-                IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
-                                                            FolkeregDatabaseConnectionString,
-                                                            streetAddressList);
-                recipientDataList.AddRange(streetAddressLookup);
-            }            
-            List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
-            {
-                IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
-                IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
-                                                                                FolkeregDatabaseConnectionString,
-                                                                                propertyAddressList);
-                recipientDataList.AddRange(propertyLookup);
-            }*/
-
-            // Double lookup
-            List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
-            {
-                IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
-                // Get Folkereg data
-                IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
-                                                            FolkeregDatabaseConnectionString,
-                                                            streetAddressList);
-                // Get Norway data
-                IEnumerable<RecipientData> streetAddressLookup2 = streetLookupInterface.GetMatchingStreetAddresses(
-                                                            NorwayDatabaseConnectionString,
-                                                            streetAddressList);
-                // Match lists
-                IEnumerable<RecipientData> streetAdressLookupTotal = streetAddressLookup.Union(streetAddressLookup2);
-
-                // Remove number not found that was found in one of the databases
-                List<StreetAddress> NumberNotFound = streetLookupInterface.GetNoNumbersFoundList().ToList();
-                foreach (RecipientData rd in streetAdressLookupTotal)
-                    if (NumberNotFound.Contains((StreetAddress)rd.AlertTarget))
-                        NumberNotFound.Remove((StreetAddress)rd.AlertTarget);
-
-                // Build complete list
-                recipientDataList.AddRange(streetAdressLookupTotal);
-                foreach (StreetAddress sa in NumberNotFound)
-                    recipientDataList.Add(new RecipientData()
-                    {
-                        AlertTarget = sa,
-                        Name = "",
-                        NoRecipients = true,
-                    });
+                log.Info("Looking up addresses using only folkereg");
+                // Normal folkereg lookup
+                List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+                    IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                FolkeregDatabaseConnectionString,
+                                                                streetAddressList);
+                    recipientDataList.AddRange(streetAddressLookup);
+                }
+                List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+                    IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    FolkeregDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    recipientDataList.AddRange(propertyLookup);
+                }
             }
-
-            List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+            else if (System.Configuration.ConfigurationManager.AppSettings["UseDoubleAdrLookup"] == "true")
             {
-                IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
-                // Get Folkereg data
-                IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
-                                                                                FolkeregDatabaseConnectionString,
-                                                                                propertyAddressList);
-                // Get Norway data
-                IEnumerable<RecipientData> propertyLookup2 = propertyLookupInterface.GetMatchingPropertyAddresses(
-                                                                                NorwayDatabaseConnectionString,
-                                                                                propertyAddressList);
-                // Match lists
-                IEnumerable<RecipientData> propertyLookupTotal = propertyLookup.Union(propertyLookup2);
+                log.Info("Looking up addresses using both folkereg and konsument");
+                // Double lookup
+                List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+                    // Get Folkereg data
+                    IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                FolkeregDatabaseConnectionString,
+                                                                streetAddressList);
+                    // Get Norway data
+                    IEnumerable<RecipientData> streetAddressLookup2 = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                NorwayDatabaseConnectionString,
+                                                                streetAddressList);
+                    // Match lists
+                    IEnumerable<RecipientData> streetAdressLookupTotal = streetAddressLookup.Union(streetAddressLookup2);
 
-                // Remove number not found that was found in one of the databases
-                List<PropertyAddress> NumberNotFound = propertyLookupInterface.GetNoNumbersFoundList().ToList();
-                foreach (RecipientData rd in propertyLookupTotal)
-                    if (NumberNotFound.Contains((PropertyAddress)rd.AlertTarget))
-                        NumberNotFound.Remove((PropertyAddress)rd.AlertTarget);
-                
-                // Build complete list
-                recipientDataList.AddRange(propertyLookupTotal);
-                foreach (PropertyAddress pa in NumberNotFound)
-                    recipientDataList.Add(new RecipientData()
-                    {
-                        AlertTarget = pa,
-                        Name = "",
-                        NoRecipients = true,
-                    });
+                    // Remove number not found that was found in one of the databases
+                    List<StreetAddress> NumberNotFound = streetLookupInterface.GetNoNumbersFoundList().ToList();
+                    foreach (RecipientData rd in streetAdressLookupTotal)
+                        if (NumberNotFound.Contains((StreetAddress)rd.AlertTarget))
+                            NumberNotFound.Remove((StreetAddress)rd.AlertTarget);
+
+                    // Build complete list
+                    recipientDataList.AddRange(streetAdressLookupTotal);
+                    foreach (StreetAddress sa in NumberNotFound)
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = sa,
+                            Name = "",
+                            NoRecipients = true,
+                        });
+                }
+                List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+                    // Get Folkereg data
+                    IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    FolkeregDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    // Get Norway data
+                    IEnumerable<RecipientData> propertyLookup2 = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    NorwayDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    // Match lists
+                    IEnumerable<RecipientData> propertyLookupTotal = propertyLookup.Union(propertyLookup2);
+
+                    // Remove number not found that was found in one of the databases
+                    List<PropertyAddress> NumberNotFound = propertyLookupInterface.GetNoNumbersFoundList().ToList();
+                    foreach (RecipientData rd in propertyLookupTotal)
+                        if (NumberNotFound.Contains((PropertyAddress)rd.AlertTarget))
+                            NumberNotFound.Remove((PropertyAddress)rd.AlertTarget);
+
+                    // Build complete list
+                    recipientDataList.AddRange(propertyLookupTotal);
+                    foreach (PropertyAddress pa in NumberNotFound)
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = pa,
+                            Name = "",
+                            NoRecipients = true,
+                        });
+                }
             }
 
             try
