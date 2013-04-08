@@ -676,7 +676,7 @@ namespace com.ums.ws.integration
             if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
                 throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
 
-            string sql = "sp_getProjectStatus ?, ?";
+            string sql = "sp_getProjectStatus_pricall ?, ?";
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {
@@ -686,13 +686,15 @@ namespace com.ums.ws.integration
                 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
+                    bool isPricall = false;
                     long previousSource = 0;
                     LogLineDetailed line = null;
                     AlertObject alertObject = null;
 
                     while (rs.Read() && (PageSize == 0 || objectLog.Count <= PageSize + StartIndex) )
                     {
-                        long currentSource = rs.GetInt64(rs.GetOrdinal("l_alertsourcepk"));
+                        isPricall = !rs.IsDBNull(rs.GetOrdinal("pricall"));
+                        long currentSource = (long)rs.GetDecimal(rs.GetOrdinal("l_alertsourcepk"));
 
                         if (line == null || previousSource != currentSource)
                         {
@@ -705,7 +707,12 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        // check pricall and use last pricall number if bbq number is PRICALL
+                        string number = rs.GetString(rs.GetOrdinal("sz_number"));
+                        if (isPricall && number.ToUpper() == "PRICALL")
+                            number = rs.GetString(rs.GetOrdinal("pricall"));
+
+                        LogLinePhone phoneLine = new LogLinePhone(number, rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
@@ -720,8 +727,8 @@ namespace com.ums.ws.integration
                                 }
 
                                 Phone phone = new Phone();
-                                phone.Address = phoneLine.Address;
-                                phone.CanReceiveSms = phone.CanReceiveSms;
+                                phone.Address = isPricall ? rs.GetString(rs.GetOrdinal("pricall")) : phoneLine.Address; // use pricall no if it is pricall
+                                phone.CanReceiveSms = isPricall ? false : phoneLine.CanReceiveSms; // pricall is voice and pr. def not capabale of receiving sms
 
                                 alertObject.Endpoints.Add(phone);
 
@@ -777,7 +784,8 @@ namespace com.ums.ws.integration
                                 break;
                         }
 
-                        line.LogLines.Add(phoneLine);
+                        if(!isPricall || line.LogLines.Count==0) // add line if logline is not pricall or no lines have been added yet 
+                            line.LogLines.Add(phoneLine);
 
                         // Get attributes, listed as key=value and seperated with | ex: "Morten=Tester|Gate=Steinstemveien 20|"
                         List<DataItem> targetAttributes = new List<DataItem>();
