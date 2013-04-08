@@ -712,7 +712,7 @@ namespace com.ums.ws.integration
                         if (isPricall && number.ToUpper() == "PRICALL")
                             number = rs.GetString(rs.GetOrdinal("pricall"));
 
-                        LogLinePhone phoneLine = new LogLinePhone(number, rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        LogLinePhone phoneLine = new LogLinePhone(number, rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, rs.GetInt32(rs.GetOrdinal("l_tries")), rs.GetInt32(rs.GetOrdinal("l_retries")));
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
@@ -784,7 +784,8 @@ namespace com.ums.ws.integration
                                 break;
                         }
 
-                        if(!isPricall || line.LogLines.Count==0) // add line if logline is not pricall or no lines have been added yet 
+                        //if(!isPricall || line.LogLines.Count==0) // add line if logline is not pricall or no lines have been added yet 
+                        if(!line.LogLines.Contains(phoneLine))
                             line.LogLines.Add(phoneLine);
 
                         // Get attributes, listed as key=value and seperated with | ex: "Morten=Tester|Gate=Steinstemveien 20|"
@@ -882,7 +883,7 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, -1, -1);
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
@@ -1619,7 +1620,7 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, -1, -1);
                         errorList.Add(phoneLine);
                     }
                 }

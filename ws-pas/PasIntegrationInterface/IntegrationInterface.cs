@@ -1443,7 +1443,7 @@ namespace com.ums.pas.integration
     public class LogLinePhone : Phone
     {
         public LogLinePhone() { }
-        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime) 
+        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime, int tries, int retries) 
         {
             Address = address;
             
@@ -1490,8 +1490,24 @@ namespace com.ums.pas.integration
                     break;
             }
 
-            ReasonCode = reasonCode;
-            Reason = reason;
+            if (StatusCode == 3 && tries >= 0) // set special status for messages in progress
+            {
+                if (tries == 0) // message is still in queue
+                {
+                    ReasonCode = 0; // queue
+                    Reason = "IN QUEUE";
+                }
+                else
+                {
+                    ReasonCode = 1; // sending
+                    Reason = String.Format("SENDING ({0}/{1})", tries, retries+1);
+                }
+            }
+            else
+            {
+                ReasonCode = reasonCode;
+                Reason = reason;
+            }
         }
 
         public DateTime DateTime { get; set; }
@@ -1499,6 +1515,29 @@ namespace com.ums.pas.integration
         public String Status { get; set; }
         public int ReasonCode { get; set; }
         public string Reason { get; set; }
+
+        // Custom equality
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            LogLinePhone compare = obj as LogLinePhone;
+            if ((object)compare == null)
+                return false;
+
+            return Address == compare.Address
+                && CanReceiveSms == compare.CanReceiveSms
+                && DateTime == compare.DateTime
+                && Reason == compare.Reason
+                && ReasonCode == compare.ReasonCode
+                && Status == compare.Status
+                && StatusCode == compare.StatusCode;
+        }
+        public override int GetHashCode()
+        {
+            return String.Format("{0}{1}{2}{3}{4}{5}", Address, DateTime, Reason, ReasonCode, Status, StatusCode).GetHashCode();
+        }
     }
     #endregion Log
 
