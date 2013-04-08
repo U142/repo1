@@ -180,9 +180,14 @@ namespace com.ums.pas.integration.AddressLookup
                             }
 
                             if (r.NoRecipients)
-                                NoNumbersFoundList.Add((PropertyAddress)r.AlertTarget);
+                            {
+                                if(!NoNumbersFoundList.Contains((PropertyAddress)r.AlertTarget))
+                                    NoNumbersFoundList.Add((PropertyAddress)r.AlertTarget);
+                            }
                             else
+                            {
                                 recipients.Add(r);
+                            }
                         }
                     }
                 }

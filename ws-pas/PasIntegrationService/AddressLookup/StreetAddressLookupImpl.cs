@@ -175,7 +175,8 @@ namespace com.ums.pas.integration.AddressLookup
 
                             if (r.NoRecipients)
                             {
-                                NoNumbersFoundList.Add((StreetAddress)r.AlertTarget);
+                                if(!NoNumbersFoundList.Contains((StreetAddress)r.AlertTarget)) // check is this street already has been added
+                                    NoNumbersFoundList.Add((StreetAddress)r.AlertTarget);
                             }
                             else
                             {
