@@ -1500,7 +1500,7 @@ namespace com.ums.pas.integration
                 else
                 {
                     ReasonCode = 1; // sending
-                    Reason = String.Format("SENDING ({0}/{1})", tries, retries+1);
+                    Reason = String.Format("SENDING ({0}/{1})", tries, retries);
                 }
             }
             else
