@@ -390,7 +390,26 @@ namespace com.ums.ws.integration
                     channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration(Account.CompanyId.Substring(0, 1).ToUpper() + Account.CompanyId.Substring(1).ToLower(), Message, false));
                     break;
                 case SendChannel.VOICE:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "", Message));
+                    // Get default sender number
+                    ULOGONINFO logonInfo = new ULOGONINFO();
+                    logonInfo.sz_compid = Account.CompanyId;
+                    logonInfo.sz_deptid = Account.DepartmentId;
+                    logonInfo.sz_password = Account.Password;
+
+                    UmsDb umsDb = new UmsDb();
+                    umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+                    string defaultNumber = umsDb.GetDefaultVoiceNumber(logonInfo.l_deptpk);
+
+                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 
+                                                                                                1, 
+                                                                                                -1, 
+                                                                                                -1, 
+                                                                                                7, 
+                                                                                                true, 
+                                                                                                -1,
+                                                                                                defaultNumber != null ? false : true,
+                                                                                                defaultNumber != null ? defaultNumber : "",
+                                                                                                Message));
                     break;
             }
             List<AlertTarget> alertTargets = new List<AlertTarget>()
