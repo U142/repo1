@@ -79,11 +79,20 @@ namespace com.ums.ws.integration
                 return AlertResponseFactory.Failed(-100, "Account information was not complete");
             }
 
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = account.CompanyId;
+            logonInfo.sz_deptid = account.DepartmentId;
+            logonInfo.sz_password = account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+            string defaultNumber = umsDb.GetDefaultVoiceNumber(logonInfo.l_deptpk);
+
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
 
             if (VoiceMessage != null && VoiceMessage.Length > 0)
             {
-                //TODO - Get default voice origin number.
+                //TODO - Get resched profile?
                 channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(Repeats,
                                                                                             Frequency,
                                                                                             2200,
@@ -91,8 +100,8 @@ namespace com.ums.ws.integration
                                                                                             7,
                                                                                             true,
                                                                                             -1,
-                                                                                            true,
-                                                                                            "",
+                                                                                            defaultNumber != null ? false : true,
+                                                                                            defaultNumber != null ? defaultNumber : "",
                                                                                             VoiceMessage));
             }
 

@@ -119,6 +119,27 @@ namespace com.ums.UmsDbLib
         }
 
         /// <summary>
+        /// Retrieve list of all available voice numbers for department (and common numbers, owner=-1)
+        /// </summary>
+        /// <param name="DeptPk"></param>
+        /// <returns></returns>
+        public String GetDefaultVoiceNumber(int DeptPk)
+        {
+            String Sql = String.Format("SELECT sz_number FROM BBDEPTNUMBERS WHERE l_deptpk = {0}", DeptPk);
+            using (OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    return rs.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Select delivery status on sms on a specified refno
         /// Deliverystatus:
         /// 0 = delivered
