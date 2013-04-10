@@ -315,6 +315,27 @@ WHERE BH.l_refno=?";
             return bValidate;
         }
 
+        public bool GetPauseValuesOfProfile(int ProfilePk, out int pauseAtTime, out int pauseDurationMinutes, out int validDays)
+        {
+            bool GotValues = false;
+            pauseAtTime = 2200; pauseDurationMinutes = 600; validDays = 7;
+
+            String Sql = String.Format("SELECT isnull(BP.l_pausetime, 2200) l_pausetime, isnull(BP.l_pauseinterval, 600) l_pauseinterval, isnull(BP.l_canceldate, 7) l_canceldate FROM BBRESCHEDPROFILES BP INNER JOIN BBACTIONPROFILESNAME AN ON BP.l_reschedpk=AN.l_reschedpk AND AN.l_profilepk = {0}", ProfilePk);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    pauseAtTime = rs.GetInt32(rs.GetOrdinal("l_pausetime"));
+                    pauseDurationMinutes = rs.GetInt32(rs.GetOrdinal("l_pauseinterval"));
+                    validDays = rs.GetInt32(rs.GetOrdinal("l_canceldate"));
+
+                    GotValues = true;
+                }
+            }
+
+            return GotValues;
+        }
+
         public bool ValidateOwnerOfProject(long projectPk, int deptPk)
         {
             bool bValidate = false;

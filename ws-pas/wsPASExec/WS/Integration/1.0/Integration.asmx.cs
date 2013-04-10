@@ -507,6 +507,15 @@ namespace com.ums.ws.integration
                                     return AlertResponseFactory.Failed(-4, "You are not allowed to use the voice profile specified");
                                 }
                             }
+                            //set stop and pause based on config profile
+                            int pauseAtTime, pauseDurationMinutes, validDays;
+                            if (umsDb.GetPauseValuesOfProfile(voiceConfig.VoiceProfilePk, out pauseAtTime, out pauseDurationMinutes, out validDays))
+                            {
+                                voiceConfig.PauseAtTime = pauseAtTime;
+                                voiceConfig.PauseDurationMinutes = pauseDurationMinutes;
+                                voiceConfig.ValidDays = validDays;
+                            }
+
                             int dynVoice = umsDb.getNumDynfilesInProfile(voiceConfig.VoiceProfilePk);
                             if (dynVoice != 1)
                             {
