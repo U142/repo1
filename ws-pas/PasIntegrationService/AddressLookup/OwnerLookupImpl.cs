@@ -217,7 +217,13 @@ namespace com.ums.pas.integration.AddressLookup
         {
             Match m = Regex.Match(s, @"\d\w+");
             if (m.Success)
-                return Convert.ToInt32(m.Value);
+            {
+                int housenr;
+                if (int.TryParse(m.Value, out housenr))
+                    return housenr;
+                else
+                    return null;
+            }
             else
                 return null;
         }

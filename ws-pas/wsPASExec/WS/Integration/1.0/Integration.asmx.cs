@@ -475,7 +475,7 @@ namespace com.ums.ws.integration
                         accountDetails.SecondarySmsServer = logonInfo.l_altservers;
                         accountDetails.StdCc = logonInfo.sz_stdcc;
                         accountDetails.MaxVoiceChannels = umsDb.GetMaxAlloc(accountDetails.Deptpk);
-                        accountDetails.AvailableVoiceNumbers = umsDb.GetAvailableVoiceNumbers(accountDetails.Deptpk);
+                        accountDetails.AvailableVoiceNumbers = new List<String>() { umsDb.GetDefaultVoiceNumber(accountDetails.Deptpk) }; // only get default, no need to get full list
                         accountDetails.DefaultTtsLang = umsDb.GetDefaultTtsLanguage(accountDetails.Deptpk);
 
                         if (accountDetails.DefaultTtsLang <= 0)
@@ -509,7 +509,7 @@ namespace com.ums.ws.integration
                             }
                             //set stop and pause based on config profile
                             int pauseAtTime, pauseDurationMinutes, validDays;
-                            if (umsDb.GetPauseValuesOfProfile(voiceConfig.VoiceProfilePk, out pauseAtTime, out pauseDurationMinutes, out validDays))
+                            if (! IsTestAlert && umsDb.GetPauseValuesOfProfile(voiceConfig.VoiceProfilePk, out pauseAtTime, out pauseDurationMinutes, out validDays))
                             {
                                 voiceConfig.PauseAtTime = pauseAtTime;
                                 voiceConfig.PauseDurationMinutes = pauseDurationMinutes;

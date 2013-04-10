@@ -63,9 +63,15 @@ namespace com.ums.pas.integration.AddressLookup
 
                 Connection.Open();
 
+                string collate = "";
+                Command.CommandText = "SELECT collation_name FROM sys.databases WHERE name = '" + Command.Connection.Database + "'";
+                var collation = Command.ExecuteScalar();
+                if (collation != null)
+                    collate = String.Format("COLLATE {0}", collation);
+
                 start = DateTime.Now;
                 //Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5))";
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, SNR int, ATTRIBUTES varchar(8000) COLLATE Latin1_General_100_CI_AI)";
+                Command.CommandText = String.Format("CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, SNR int, ATTRIBUTES varchar(8000) {0})", collate);
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
