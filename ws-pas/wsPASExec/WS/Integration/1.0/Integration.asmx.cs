@@ -1222,7 +1222,8 @@ namespace com.ums.ws.integration
                         LEFT JOIN MDVHIST_ADDRESS_SOURCE_DUPLICATES MASAD ON MASAD.l_alertsourcepk=MAS.l_alertsourcepk
                         where 
                         (MASA.l_alertsourcepk IS NULL AND MASAD.l_alertsourcepk IS NULL) and
-                            MAS.l_projectpk=?";
+                            MAS.l_projectpk=?
+                        order by name, alerttarget";
             List<LogLineNotFound> list = new List<LogLineNotFound>();
 
             int count = 0;
