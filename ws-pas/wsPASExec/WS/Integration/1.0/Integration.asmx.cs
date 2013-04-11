@@ -1196,7 +1196,7 @@ namespace com.ums.ws.integration
 
             // select all records that have norecipients=1, this means that no persons are registered on the alerttarget and no name attached
             // select all records that have no relations to an alert nor was a duplicate, this means that the 
-            String Sql = @"SELECT 
+            String Sql = @"SELECT distinct
                                 ISNULL(MAS.municipalid,0) municipalid 
                                 ,ISNULL(MAS.streetid,0) streetid 
                                 ,ISNULL(MAS.houseno,0) houseno 
@@ -1238,32 +1238,35 @@ namespace com.ums.ws.integration
                             continue;
                         }
 
-                        list.Add(new LogLineNotFound()
-                        {
-                            Name = rs.GetString(rs.GetOrdinal("name")),
-                            ExternalId = rs.GetString(rs.GetOrdinal("externalid")),
-                            RequestedAlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
-                                                        rs.GetByte(rs.GetOrdinal("alerttarget")),
-                                                        rs.GetByte(rs.GetOrdinal("iscompany")),
-                                                        rs.GetString(rs.GetOrdinal("name")),
-                                                        rs.GetInt32(rs.GetOrdinal("municipalid")),
-                                                        rs.GetInt32(rs.GetOrdinal("streetid")),
-                                                        rs.GetInt32(rs.GetOrdinal("houseno")),
-                                                        rs.GetString(rs.GetOrdinal("letter")),
-                                                        rs.GetString(rs.GetOrdinal("oppgang")),
-                                                        rs.GetInt32(rs.GetOrdinal("gnr")),
-                                                        rs.GetInt32(rs.GetOrdinal("bnr")),
-                                                        rs.GetInt32(rs.GetOrdinal("fnr")),
-                                                        rs.GetInt32(rs.GetOrdinal("snr")),
-                                                        rs.GetInt32(rs.GetOrdinal("unr")),
-                                                        rs.GetInt32(rs.GetOrdinal("postno")),
-                                                        rs.GetString(rs.GetOrdinal("data")),
-                                                        rs.GetInt32(rs.GetOrdinal("birthdate")),
-                                                        rs.GetString(rs.GetOrdinal("attributes")),
-                                                        rs.GetString(rs.GetOrdinal("externalid")),
-                                                        new Phone()),
+                        string name = rs.GetString(rs.GetOrdinal("name"));
 
-                        });
+                        if (name.Trim() == "" || !list.Any(line => line.Name == name))
+                            list.Add(new LogLineNotFound()
+                            {
+                                Name = rs.GetString(rs.GetOrdinal("name")),
+                                ExternalId = rs.GetString(rs.GetOrdinal("externalid")),
+                                RequestedAlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
+                                                            rs.GetByte(rs.GetOrdinal("alerttarget")),
+                                                            rs.GetByte(rs.GetOrdinal("iscompany")),
+                                                            rs.GetString(rs.GetOrdinal("name")),
+                                                            rs.GetInt32(rs.GetOrdinal("municipalid")),
+                                                            rs.GetInt32(rs.GetOrdinal("streetid")),
+                                                            rs.GetInt32(rs.GetOrdinal("houseno")),
+                                                            rs.GetString(rs.GetOrdinal("letter")),
+                                                            rs.GetString(rs.GetOrdinal("oppgang")),
+                                                            rs.GetInt32(rs.GetOrdinal("gnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("bnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("fnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("snr")),
+                                                            rs.GetInt32(rs.GetOrdinal("unr")),
+                                                            rs.GetInt32(rs.GetOrdinal("postno")),
+                                                            rs.GetString(rs.GetOrdinal("data")),
+                                                            rs.GetInt32(rs.GetOrdinal("birthdate")),
+                                                            rs.GetString(rs.GetOrdinal("attributes")),
+                                                            rs.GetString(rs.GetOrdinal("externalid")),
+                                                            new Phone()),
+
+                            });
                     }
                 }
             }
