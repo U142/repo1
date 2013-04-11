@@ -1241,7 +1241,7 @@ namespace com.ums.ws.integration
 
                         string name = rs.GetString(rs.GetOrdinal("name"));
 
-                        if (name.Trim() == "" || !list.Any(line => line.Name == name))
+                        if (name.Trim() == "" || !list.Any(line => line.Name.Trim().ToUpper() == name.Trim().ToUpper()))
                             list.Add(new LogLineNotFound()
                             {
                                 Name = rs.GetString(rs.GetOrdinal("name")),
