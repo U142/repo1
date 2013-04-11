@@ -1243,7 +1243,7 @@ namespace com.ums.ws.integration
                         if (name == "" || !list.Any(line => line.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
                             list.Add(new LogLineNotFound()
                             {
-                                Name = rs.GetString(rs.GetOrdinal("name")),
+                                Name = name,
                                 ExternalId = rs.GetString(rs.GetOrdinal("externalid")),
                                 RequestedAlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
                                                             rs.GetByte(rs.GetOrdinal("alerttarget")),
