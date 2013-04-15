@@ -119,6 +119,27 @@ namespace com.ums.UmsDbLib
         }
 
         /// <summary>
+        /// Retrieve list of all available voice numbers for department (and common numbers, owner=-1)
+        /// </summary>
+        /// <param name="DeptPk"></param>
+        /// <returns></returns>
+        public String GetDefaultVoiceNumber(int DeptPk)
+        {
+            String Sql = String.Format("SELECT sz_number FROM BBDEPTNUMBERS WHERE l_deptpk = {0}", DeptPk);
+            using (OdbcDataReader rs = ExecReader(Sql, UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    return rs.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Select delivery status on sms on a specified refno
         /// Deliverystatus:
         /// 0 = delivered
@@ -250,6 +271,27 @@ namespace com.ums.UmsDbLib
                 }
             }
             return bValidate;
+        }
+
+        public bool GetPauseValuesOfProfile(int ProfilePk, out int pauseAtTime, out int pauseDurationMinutes, out int validDays)
+        {
+            bool GotValues = false;
+            pauseAtTime = 2200; pauseDurationMinutes = 600; validDays = 7;
+
+            String Sql = String.Format("SELECT isnull(BP.l_pausetime, 2200) l_pausetime, isnull(BP.l_pauseinterval, 600) l_pauseinterval, isnull(BP.l_canceldate, 7) l_canceldate FROM BBRESCHEDPROFILES BP INNER JOIN BBACTIONPROFILESNAME AN ON BP.l_reschedpk=AN.l_reschedpk AND AN.l_profilepk = {0}", ProfilePk);
+            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            {
+                if (rs.Read())
+                {
+                    pauseAtTime = rs.GetInt32(rs.GetOrdinal("l_pausetime"));
+                    pauseDurationMinutes = rs.GetInt32(rs.GetOrdinal("l_pauseinterval"));
+                    validDays = rs.GetInt32(rs.GetOrdinal("l_canceldate"));
+
+                    GotValues = true;
+                }
+            }
+
+            return GotValues;
         }
 
         /// <summary>

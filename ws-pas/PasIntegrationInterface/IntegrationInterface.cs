@@ -82,6 +82,7 @@ namespace com.ums.pas.integration
         FINISHED = 0,
         FAILED = 2,
         SCHEDULED = 3,
+        STOPPED = 4,
     }
 
     /// <summary>
@@ -481,6 +482,27 @@ namespace com.ums.pas.integration
         {
             get { return _oppgang; }
             set { _oppgang = value; }
+        }
+
+        // Custom equality
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            StreetAddress compare = obj as StreetAddress;
+            if ((object)compare == null)
+                return false;
+
+            return MunicipalCode == compare.MunicipalCode
+                && StreetNo == compare.StreetNo
+                && HouseNo == compare.HouseNo
+                && Letter == compare.Letter
+                && Oppgang == compare.Oppgang;
+        }
+        public override int GetHashCode()
+        {
+            return String.Format("{0}{1}{2}{3}{4}",  MunicipalCode, StreetNo, HouseNo, Letter, Oppgang).GetHashCode();
         }
 
     }
@@ -1421,7 +1443,7 @@ namespace com.ums.pas.integration
     public class LogLinePhone : Phone
     {
         public LogLinePhone() { }
-        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime) 
+        public LogLinePhone(string address, int type, int statusCode, int reasonCode, string reason, DateTime dateTime, int tries, int retries) 
         {
             Address = address;
             
@@ -1468,8 +1490,24 @@ namespace com.ums.pas.integration
                     break;
             }
 
-            ReasonCode = reasonCode;
-            Reason = reason;
+            if (StatusCode == 3 && tries >= 0) // set special status for messages in progress
+            {
+                if (tries == 0) // message is still in queue
+                {
+                    ReasonCode = 0; // queue
+                    Reason = "IN QUEUE";
+                }
+                else
+                {
+                    ReasonCode = 1; // sending
+                    Reason = String.Format("SENDING ({0}/{1})", tries, retries);
+                }
+            }
+            else
+            {
+                ReasonCode = reasonCode;
+                Reason = reason;
+            }
         }
 
         public DateTime DateTime { get; set; }
@@ -1477,6 +1515,29 @@ namespace com.ums.pas.integration
         public String Status { get; set; }
         public int ReasonCode { get; set; }
         public string Reason { get; set; }
+
+        // Custom equality
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            LogLinePhone compare = obj as LogLinePhone;
+            if ((object)compare == null)
+                return false;
+
+            return Address == compare.Address
+                && CanReceiveSms == compare.CanReceiveSms
+                && DateTime == compare.DateTime
+                && Reason == compare.Reason
+                && ReasonCode == compare.ReasonCode
+                && Status == compare.Status
+                && StatusCode == compare.StatusCode;
+        }
+        public override int GetHashCode()
+        {
+            return String.Format("{0}{1}{2}{3}{4}{5}", Address, DateTime, Reason, ReasonCode, Status, StatusCode).GetHashCode();
+        }
     }
     #endregion Log
 
@@ -1694,6 +1755,111 @@ namespace com.ums.pas.integration
 
     }
 
+    public class AlertTargetHelpers
+    {
+        /// <summary>
+        /// Method for using data from database to reconstruct originally used AlertTarget based on type
+        /// </summary>
+        /// <param name="alertTarget"></param>
+        /// <param name="company"></param>
+        /// <param name="name"></param>
+        /// <param name="municipalId"></param>
+        /// <param name="streetId"></param>
+        /// <param name="houseNo"></param>
+        /// <param name="letter"></param>
+        /// <param name="oppgang"></param>
+        /// <param name="gnr"></param>
+        /// <param name="bnr"></param>
+        /// <param name="fnr"></param>
+        /// <param name="snr"></param>
+        /// <param name="unr"></param>
+        /// <param name="postno"></param>
+        /// <param name="data"></param>
+        /// <param name="birthdate"></param>
+        /// <param name="attributes"></param>
+        /// <param name="extId"></param>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
+        public static AlertTarget ReconstructAlertTarget(int alertTarget,
+                                        int company,
+                                        String name,
+                                        int municipalId,
+                                        int streetId,
+                                        int houseNo,
+                                        String letter,
+                                        String oppgang,
+                                        int gnr,
+                                        int bnr,
+                                        int fnr,
+                                        int snr,
+                                        int unr,
+                                        int postno,
+                                        String data,
+                                        int birthdate,
+                                        String attributes,
+                                        String extId,
+                                        Endpoint endPoint)
+        {
+            switch (alertTarget)
+            {
+                case 5: //resolves to FollowUpAlertObject - should not be used nor reconstrucable
+                case 1: //AlertObject
+                    return AlertTargetFactory.newAlertObject(name, extId, endPoint.Address, endPoint is Phone ? ((Phone)endPoint).CanReceiveSms : false, DataItem.FromString(attributes));
+                case 2: //StreetId
+                    return AlertTargetFactory.newStreetAddress(municipalId.ToString(), streetId, houseNo, letter, oppgang, DataItem.FromString(attributes));
+                case 3: //PropertyAddress
+                    return AlertTargetFactory.newPropertyAddress(municipalId.ToString(), gnr, bnr, fnr, unr, DataItem.FromString(attributes));
+                case 4: //OwnerAddress
+                    OwnerAddress ownerAddress = new OwnerAddress();
+
+                    String[] ownerProperties = data.Split('|');
+                    if (ownerProperties.Count() == 6)
+                    {
+                        ownerAddress.Adresselinje1 = ownerProperties[0];
+                        ownerAddress.Adresselinje2 = ownerProperties[1];
+                        ownerAddress.Adresselinje3 = ownerProperties[2];
+                        int eierId;
+                        if (int.TryParse(extId, out eierId))
+                            ownerAddress.EierId = eierId;
+                        ownerAddress.EierIdKode = (NorwayEierIdKode)Enum.Parse(typeof(NorwayEierIdKode), ownerProperties[3], true);
+                        ownerAddress.EierKategoriKode = (NorwayEierKategoriKode)Enum.Parse(typeof(NorwayEierKategoriKode), ownerProperties[4], true);
+                        ownerAddress.EierStatusKode = (NorwayEierStatusKode)Enum.Parse(typeof(NorwayEierStatusKode), ownerProperties[5], true);
+                    }
+                    else
+                    {
+                        ownerAddress.EierIdKode = NorwayEierIdKode.ANNEN_PERSON;
+                        ownerAddress.EierKategoriKode = NorwayEierKategoriKode.IKKE_DEFINERT;
+                        ownerAddress.EierStatusKode = NorwayEierStatusKode.IKKE_DEFINERT;
+                    }
+                    ownerAddress.DateOfBirth = DateOfBirthToString(birthdate);
+                    ownerAddress.Navn = name;
+                    ownerAddress.Postnr = postno;
+                    ownerAddress.Attributes = DataItem.FromString(attributes);
+                    return ownerAddress;
+                default:
+                    return new AlertObject()
+                    {
+                        Name = "Unknown source",
+                    };
+            }
+        }
+
+        /// <summary>
+        /// Convert from int (yyyyMMdd) to string (ddMMyy)
+        /// </summary>
+        /// <param name="dateOfBirth"></param>
+        /// <returns></returns>
+        public static string DateOfBirthToString(int dateOfBirth)
+        {
+            string tmp = dateOfBirth.ToString();
+            if (tmp.Length == 8)
+                return tmp.Substring(6, 2) + tmp.Substring(4, 2) + tmp.Substring(2, 2);
+            else
+                return DateTime.Now.ToString("ddMMyy");
+        }
+
+    }
+
     #endregion Div
 
 
@@ -1708,6 +1874,7 @@ namespace com.ums.pas.integration
         public AlertConfiguration AlertConfiguration = new AlertConfiguration();
         public List<AlertTarget> AlertTargets = new List<AlertTarget>();
         public List<ChannelConfiguration> ChannelConfigurations = new List<ChannelConfiguration>();
+        public bool IsTestAlert { get; set; }
     }
     #endregion
 

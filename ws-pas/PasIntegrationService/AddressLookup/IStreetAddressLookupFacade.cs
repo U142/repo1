@@ -11,5 +11,6 @@ namespace com.ums.pas.integration.AddressLookup
     interface IStreetAddressLookupFacade
     {
         IEnumerable<RecipientData> GetMatchingStreetAddresses(String ConnectionString, List<StreetAddress> StreetAddresses);
+        IEnumerable<StreetAddress> GetNoNumbersFoundList();
     }
 }

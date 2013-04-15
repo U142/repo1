@@ -15,7 +15,7 @@
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\192.168.3.57\ums\PasIntegrationService\</PublishUrl>
+    <PublishUrl>\\192.168.3.57\ums\bin\PasIntegrationService\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -29,6 +29,7 @@
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>70</ApplicationRevision>
     <ApplicationRevision>85</ApplicationRevision>
+    <ApplicationRevision>113</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -70,6 +71,27 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_Prod|x86'">
+    <OutputPath>bin\x86\Orange_Prod\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Orange_QA|x86'">
+    <OutputPath>bin\x86\Orange_QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apache.NMS, Version=1.5.1.2739, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL">
@@ -192,6 +214,8 @@
   <Target Name="BeforeBuild">
     <Copy Condition=" '$(Configuration)' == 'Beta' " SourceFiles="config-beta\app.config" DestinationFolder="." ContinueOnError="false" />
     <Copy Condition=" '$(Configuration)' == 'Debug' " SourceFiles="config-debug\app.config" DestinationFolder="." ContinueOnError="false" />
+    <Copy Condition=" '$(Configuration)' == 'Orange_Prod' " SourceFiles="config-orangeprod\app.config" DestinationFolder="." ContinueOnError="false" />
+    <Copy Condition=" '$(Configuration)' == 'Orange_QA' " SourceFiles="config-orangeqa\app.config" DestinationFolder="." ContinueOnError="false" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

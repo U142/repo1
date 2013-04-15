@@ -24,6 +24,21 @@ namespace com.ums.pas.integration.AddressLookup
             set { _connectionString = value; }
         }
 
+        public List<StreetAddress> NoNumbersFoundList { get; private set; }
+        public IEnumerable<StreetAddress> GetNoNumbersFoundList()
+        {
+            if (NoNumbersFoundList != null)
+            {
+                return NoNumbersFoundList;
+            }
+            throw new Exception("GetMatchingOwnerAddresses not yet executed");
+        }
+
+        public StreetAddressLookupImpl()
+        {
+            NoNumbersFoundList = new List<StreetAddress>();
+        }
+
         #region IStreetAddressLookupFacade Members
 
         public IEnumerable<RecipientData> GetMatchingStreetAddresses(String connectionString, List<StreetAddress> streetAddresses)
@@ -55,9 +70,15 @@ namespace com.ums.pas.integration.AddressLookup
                 TimeSpan duration;
 
                 Connection.Open();
+                
+                string collate = "";
+                Command.CommandText = "SELECT collation_name FROM sys.databases WHERE name = '" + Command.Connection.Database + "'";
+                var collation = Command.ExecuteScalar();
+                if (collation != null)
+                    collate = String.Format("COLLATE {0}", collation);
 
                 start = DateTime.Now;
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5) COLLATE Latin1_General_100_CI_AI, ATTRIBUTES varchar(8000) COLLATE Latin1_General_100_CI_AI)";
+                Command.CommandText = String.Format("CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5) {0}, ATTRIBUTES varchar(8000) {0})", collate);
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
@@ -157,8 +178,16 @@ namespace com.ums.pas.integration.AddressLookup
                                 });
                                 ++fixedPhones;
                             }
-                            
-                            recipients.Add(r);
+
+                            if (r.NoRecipients)
+                            {
+                                if(!NoNumbersFoundList.Contains((StreetAddress)r.AlertTarget)) // check is this street already has been added
+                                    NoNumbersFoundList.Add((StreetAddress)r.AlertTarget);
+                            }
+                            else
+                            {
+                                recipients.Add(r);
+                            }
                         }
                     }
                 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net;
 using System.Data.Odbc;
+using log4net;
 
 namespace com.ums.pas.integration.AddressLookup
 {
@@ -18,6 +18,20 @@ namespace com.ums.pas.integration.AddressLookup
             set { _connectionString = value; }
         }
 
+        public List<PropertyAddress> NoNumbersFoundList { get; private set; }
+        public IEnumerable<PropertyAddress> GetNoNumbersFoundList()
+        {
+            if (NoNumbersFoundList != null)
+            {
+                return NoNumbersFoundList;
+            }
+            throw new Exception("GetMatchingOwnerAddresses not yet executed");
+        }
+
+        public PropertyAddressLookupImpl()
+        {
+            NoNumbersFoundList = new List<PropertyAddress>();
+        }
 
         #region IPropertyAddressLookupFacade Members
         public IEnumerable<RecipientData> GetMatchingPropertyAddresses(string connectionString, List<PropertyAddress> propertyAddresses)
@@ -49,9 +63,15 @@ namespace com.ums.pas.integration.AddressLookup
 
                 Connection.Open();
 
+                string collate = "";
+                Command.CommandText = "SELECT collation_name FROM sys.databases WHERE name = '" + Command.Connection.Database + "'";
+                var collation = Command.ExecuteScalar();
+                if (collation != null)
+                    collate = String.Format("COLLATE {0}", collation);
+
                 start = DateTime.Now;
                 //Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GATEKODE int, HUSNR int, OPPGANG varchar(5))";
-                Command.CommandText = "CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, SNR int, ATTRIBUTES varchar(8000) COLLATE Latin1_General_100_CI_AI)";
+                Command.CommandText = String.Format("CREATE TABLE #SAMATCH(KOMMUNENR int, GNR int, BNR int, FNR int, SNR int, ATTRIBUTES varchar(8000) {0})", collate);
                 Command.ExecuteNonQuery();
                 duration = DateTime.Now - start;
                 log.InfoFormat("Create temp table took {0:0} ms", duration.TotalMilliseconds);
@@ -164,8 +184,16 @@ namespace com.ums.pas.integration.AddressLookup
                                 });
                                 ++fixedPhones;
                             }
-                            
-                            recipients.Add(r);
+
+                            if (r.NoRecipients)
+                            {
+                                if(!NoNumbersFoundList.Contains((PropertyAddress)r.AlertTarget))
+                                    NoNumbersFoundList.Add((PropertyAddress)r.AlertTarget);
+                            }
+                            else
+                            {
+                                recipients.Add(r);
+                            }
                         }
                     }
                 }

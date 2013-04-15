@@ -59,13 +59,38 @@ namespace com.ums.pas.integration
 
         public void HandleAlert(AlertMqPayload Payload)
         {
+            //Payload.AccountDetails.StdCc
             String folkeregConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_folkereg"].ConnectionString;
             String regularConfig = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_regular"].ConnectionString;
-            String FolkeregDatabaseConnectionString = String.Format(folkeregConfig, Payload.AccountDetails.StdCc);
-            String NorwayDatabaseConnectionString = String.Format(regularConfig, Payload.AccountDetails.StdCc);
+            String FolkeregDatabaseConnectionString = folkeregConfig;
+            String NorwayDatabaseConnectionString = regularConfig; 
 
 
             Database = new PASUmsDb(System.Configuration.ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 10);
+
+            IDictionary<ChannelConfiguration, int> refnoLookup = new Dictionary<ChannelConfiguration, int>();
+            //Preparing refnos for immediate status lookup
+            foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
+            {
+                int Refno = (int)Database.newRefno();
+                log.InfoFormat("AlertId={0} Created new Refno={1} for channelConfig {2}", Payload.AlertId.Id, Refno, channelConfig.GetType().ToString());
+                refnoLookup.Add(channelConfig, Refno);
+                //connect refno to AlertId (project)
+                BBPROJECT project = new BBPROJECT();
+                project.sz_projectpk = Payload.AlertId.Id.ToString();
+                Database.linkRefnoToProject(ref project, Refno, Payload.IsTestAlert ? 9 : 0, 0);
+
+                InsertIntoBbCancel(Payload.AlertId, Refno);
+                if (channelConfig is VoiceConfiguration)
+                {
+                    InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
+                }
+                else if (channelConfig is SmsConfiguration)
+                {
+                    InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
+                }
+            }
+
 
             List<AlertObject> alertObjectList = Payload.AlertTargets.OfType<AlertObject>().ToList();
             using (new TimeProfiler(Payload.AlertId.Id, String.Format("AlertObject {0} records", alertObjectList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
@@ -106,23 +131,96 @@ namespace com.ums.pas.integration
             {
 
             }*/
-            List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+
+            if (System.Configuration.ConfigurationManager.AppSettings["UseDoubleAdrLookup"] == "false")
             {
-                IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
-                IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
-                                                            FolkeregDatabaseConnectionString,
-                                                            streetAddressList);
-                recipientDataList.AddRange(streetAddressLookup);
+                log.Info("Looking up addresses using only folkereg");
+                // Normal folkereg lookup
+                List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+                    IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                FolkeregDatabaseConnectionString,
+                                                                streetAddressList);
+                    recipientDataList.AddRange(streetAddressLookup);
+                }
+                List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+                    IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    FolkeregDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    recipientDataList.AddRange(propertyLookup);
+                }
             }
-            List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
-            using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+            else if (System.Configuration.ConfigurationManager.AppSettings["UseDoubleAdrLookup"] == "true")
             {
-                IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
-                IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
-                                                                                FolkeregDatabaseConnectionString,
-                                                                                propertyAddressList);
-                recipientDataList.AddRange(propertyLookup);
+                log.Info("Looking up addresses using both folkereg and konsument");
+                // Double lookup
+                List<StreetAddress> streetAddressList = Payload.AlertTargets.OfType<StreetAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("StreetId {0} records", streetAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+                    // Get Folkereg data
+                    IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                FolkeregDatabaseConnectionString,
+                                                                streetAddressList);
+                    // Get Norway data
+                    IEnumerable<RecipientData> streetAddressLookup2 = streetLookupInterface.GetMatchingStreetAddresses(
+                                                                NorwayDatabaseConnectionString,
+                                                                streetAddressList);
+                    // Match lists
+                    IEnumerable<RecipientData> streetAdressLookupTotal = streetAddressLookup.Union(streetAddressLookup2);
+
+                    // Remove number not found that was found in one of the databases
+                    List<StreetAddress> NumberNotFound = streetLookupInterface.GetNoNumbersFoundList().ToList();
+                    foreach (RecipientData rd in streetAdressLookupTotal)
+                        if (NumberNotFound.Contains((StreetAddress)rd.AlertTarget))
+                            NumberNotFound.Remove((StreetAddress)rd.AlertTarget);
+
+                    // Build complete list
+                    recipientDataList.AddRange(streetAdressLookupTotal);
+                    foreach (StreetAddress sa in NumberNotFound)
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = sa,
+                            Name = "",
+                            NoRecipients = true,
+                        });
+                }
+                List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
+                using (new TimeProfiler(Payload.AlertId.Id, String.Format("PropertyAddress {0} records", propertyAddressList.Count), timeProfileCollector, new TimeProfilerCallbackImpl()))
+                {
+                    IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+                    // Get Folkereg data
+                    IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    FolkeregDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    // Get Norway data
+                    IEnumerable<RecipientData> propertyLookup2 = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                    NorwayDatabaseConnectionString,
+                                                                                    propertyAddressList);
+                    // Match lists
+                    IEnumerable<RecipientData> propertyLookupTotal = propertyLookup.Union(propertyLookup2);
+
+                    // Remove number not found that was found in one of the databases
+                    List<PropertyAddress> NumberNotFound = propertyLookupInterface.GetNoNumbersFoundList().ToList();
+                    foreach (RecipientData rd in propertyLookupTotal)
+                        if (NumberNotFound.Contains((PropertyAddress)rd.AlertTarget))
+                            NumberNotFound.Remove((PropertyAddress)rd.AlertTarget);
+
+                    // Build complete list
+                    recipientDataList.AddRange(propertyLookupTotal);
+                    foreach (PropertyAddress pa in NumberNotFound)
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = pa,
+                            Name = "",
+                            NoRecipients = true,
+                        });
+                }
             }
 
             try
@@ -184,19 +282,15 @@ namespace com.ums.pas.integration
 
             foreach (ChannelConfiguration channelConfig in Payload.ChannelConfigurations)
             {
-                int Refno = (int) Database.newRefno();
+                int Refno = refnoLookup[channelConfig];
+                log.InfoFormat("Preparing channel {0} with lookup refno={1}", channelConfig.GetType().ToString(), Refno);
 
-                //connect refno to AlertId (project)
-                BBPROJECT project = new BBPROJECT();
-                project.sz_projectpk = Payload.AlertId.Id.ToString();
-                Database.linkRefnoToProject(ref project, Refno, 0, 0);
                 if (channelConfig is VoiceConfiguration)
                 {
                     VoiceConfiguration voiceConfig = (VoiceConfiguration)channelConfig;
                     using (new TimeProfiler(Payload.AlertId.Id, "Voice database/file inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
                         //prepare voice alert
-                        InsertMdvSendinginfoVoice(Refno, Payload.AccountDetails, channelConfig, Payload.AlertConfiguration);
                         InsertResched(Refno, voiceConfig);
                         InsertBbValid(Refno, voiceConfig.ValidDays);
                         InsertBbActionprofileSend(Refno, voiceConfig.VoiceProfilePk);
@@ -215,7 +309,6 @@ namespace com.ums.pas.integration
                     //SMSQ
                     using (new TimeProfiler(Payload.AlertId.Id, "SMS database inserts", timeProfileCollector, new TimeProfilerCallbackImpl()))
                     {
-                        InsertSmsQref(Refno, Payload.AccountDetails, Payload.AlertConfiguration, (SmsConfiguration)channelConfig);
                         UpdateSmsQref(Refno, CountEndpoints(SendChannel.SMS));
                         int numberOfSmsRecipients = InsertSmsQ(Refno, Payload.AccountDetails, Payload.AlertConfiguration);
                         log.InfoFormat("AlertId={0} Created SMS alert to {1} recipients", Payload.AlertId.Id, numberOfSmsRecipients);
@@ -235,6 +328,33 @@ namespace com.ums.pas.integration
 
         }
 
+
+        private bool InsertIntoBbCancel(AlertId AlertId, int Refno)
+        {
+            String Sql = "SELECT ISNULL(l_finished,0) FROM BBPROJECT WHERE l_projectpk=? AND l_finished=8";
+            bool doCancel = false;
+            using (OdbcCommand cmd = Database.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.Numeric).Value = AlertId.Id;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    doCancel = rs.Read();
+                }
+            }
+            if (doCancel)
+            {
+                Sql = "INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)";
+                using (OdbcCommand cmd = Database.CreateCommand(Sql))
+                {
+                    cmd.Parameters.Add("refno", OdbcType.Int).Value = Refno;
+                    cmd.ExecuteNonQuery();
+                }
+                log.InfoFormat("AlertId={0} Alert was tagged to be cancelled, cancel refno {1}",
+                                    AlertId.Id, Refno);
+            }
+            return doCancel;
+        }
+
         private void CreateTtsBackboneAudioFiles(AlertId AlertId, int Refno, List<String> Messages, int LangPk)
         {
             using (new TimeProfiler(AlertId.Id, "Text to Speech", timeProfileCollector, new TimeProfilerCallbackImpl()))
@@ -247,10 +367,19 @@ namespace com.ums.pas.integration
                     {
                         AudioContent audioContent = ttsFacade.ConvertTtsRaw(Message, LangPk);
                         ++counter;
+                        String tempFile = System.Configuration.ConfigurationManager.AppSettings["TempPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "raw");
                         String publishFile = System.Configuration.ConfigurationManager.AppSettings["BackboneEatPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "raw");
-                        File.WriteAllBytes(publishFile, audioContent.RawVersion);
+                        log.DebugFormat("Writing raw file {0} [{1} bytes]", audioContent.RawVersion.LongLength);
+                        File.WriteAllBytes(tempFile, audioContent.RawVersion);
+                        log.InfoFormat("Moving raw file {0} to {1}", tempFile, publishFile);
+                        File.Move(tempFile, publishFile);
+
+                        tempFile = System.Configuration.ConfigurationManager.AppSettings["TempPath"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
                         String publishWave = System.Configuration.ConfigurationManager.AppSettings["BBMessages"] + "\\" + GetVoiceFilenameFor(Refno, counter, "wav");
-                        File.WriteAllBytes(publishWave, audioContent.WavVersion);
+                        File.WriteAllBytes(tempFile, audioContent.WavVersion);
+                        log.InfoFormat("Moving wav file {0} to {1}", tempFile, publishWave);
+                        File.Move(tempFile, publishWave);
+
                         Database.InsertTtsRef(Refno, counter, Message);
                     }
                 }
@@ -286,8 +415,8 @@ namespace com.ums.pas.integration
                     TextWriter tw = new StreamWriter(tempFile, false, Encoding.GetEncoding("ISO-8859-1"));
                     tw.WriteLine("/MDV");
                     tw.WriteLine("/MPC");
-                    tw.WriteLine(String.Format("/Company={0}", Account.CompanyId));
-                    tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId));
+                    tw.WriteLine(String.Format("/Company={0}", Account.CompanyId.ToUpper()));
+                    tw.WriteLine(String.Format("/Department={0}", Account.DepartmentId.ToUpper()));
                     tw.WriteLine(String.Format("/Pri={0}", AccountDetails.DeptPri));
                     tw.WriteLine(String.Format("/Channels={0}", AccountDetails.MaxVoiceChannels));
                     tw.WriteLine(String.Format("/SchedDate={0}", AlertConfiguration.StartImmediately ? DateTime.Now.ToString("yyyyMMdd") : AlertConfiguration.Scheduled.ToString("yyyyMMdd")));
@@ -472,6 +601,8 @@ namespace com.ums.pas.integration
 
                         // TODO: insert alert target data
                         OwnerAddress ownerAddress = (OwnerAddress)recipient.AlertTarget;
+                        if(ownerAddress.DateOfBirth == null) 
+                            ownerAddress.DateOfBirth = "";
 
                         if (ownerAddress.DateOfBirth.Length == 6 && DateTime.TryParseExact(ownerAddress.DateOfBirth, "ddMMyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateOfBirth))
                             birthdate = int.Parse(DateOfBirth.ToString("yyyyMMdd"));
@@ -660,7 +791,7 @@ namespace com.ums.pas.integration
                             cmd.Parameters["l_server"].Value = Account.PrimarySmsServer;
                             cmd.Parameters["l_tries"].Value = 0;
                             cmd.Parameters["l_chanid"].Value = 0;
-                            cmd.Parameters["l_schedtime"].Value = AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
+                            cmd.Parameters["l_schedtime"].Value = 0; //AlertConfig.StartImmediately ? 0 : Int64.Parse(AlertConfig.Scheduled.ToString("yyyyMMddHHmmss"));
                             cmd.Parameters["sz_referenceid"].Value = DBNull.Value;
                             cmd.Parameters["sz_number"].Value = endPoint.Address;
                             cmd.Parameters["l_adrpk"].Value = -1;

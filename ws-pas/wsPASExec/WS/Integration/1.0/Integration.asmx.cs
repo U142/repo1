@@ -369,33 +369,59 @@ namespace com.ums.ws.integration
                 return AlertResponseFactory.Failed(-31, "Test alert phone must be capable of receiving SMS");
             }
 
+            //force can receive to false, as we're testing voice.
+            if (SendTo.Equals(SendChannel.VOICE))
+            {
+                phone.CanReceiveSms = false;
+            }
+
             AlertConfiguration alertConfiguration = new AlertConfiguration()
             {
                 AlertName = String.Format("Test message to {0} via channel {1}", Endpoint.Address, SendTo.ToString()),
                 Scheduled = new DateTime(),
                 SendToAllChannels = false,
-                SimulationMode = true,
+                SimulationMode = false,
                 StartImmediately = true,
             };
             List<ChannelConfiguration> channelConfigurations = new List<ChannelConfiguration>();
             switch (SendTo)
             {
                 case SendChannel.SMS:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration("Default", Message, false));
+                    channelConfigurations.Add(ChannelConfigurationFactory.newSmsConfiguration(Account.CompanyId.Substring(0, 1).ToUpper() + Account.CompanyId.Substring(1).ToLower(), Message, false));
                     break;
                 case SendChannel.VOICE:
-                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 1, -1, -1, 7, true, -1, false, "23500801", Message));
+                    // Get default sender number
+                    ULOGONINFO logonInfo = new ULOGONINFO();
+                    logonInfo.sz_compid = Account.CompanyId;
+                    logonInfo.sz_deptid = Account.DepartmentId;
+                    logonInfo.sz_password = Account.Password;
+
+                    UmsDb umsDb = new UmsDb();
+                    umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+                    string defaultNumber = umsDb.GetDefaultVoiceNumber(logonInfo.l_deptpk);
+
+                    channelConfigurations.Add(ChannelConfigurationFactory.newVoiceConfiguration(1, 
+                                                                                                1, 
+                                                                                                -1, 
+                                                                                                -1, 
+                                                                                                7, 
+                                                                                                true, 
+                                                                                                -1,
+                                                                                                defaultNumber != null ? false : true,
+                                                                                                defaultNumber != null ? defaultNumber : "",
+                                                                                                Message));
                     break;
             }
             List<AlertTarget> alertTargets = new List<AlertTarget>()
             {
                 new AlertObject("Send Test", "", phone.Address, phone.CanReceiveSms),
             };
-            return StartAlert(Account, alertConfiguration, channelConfigurations, alertTargets);
+            return StartAlert(Account, alertConfiguration, channelConfigurations, alertTargets, true);
         }
 
         [WebMethod]
-        public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets)
+        public AlertResponse StartAlert(Account Account, AlertConfiguration AlertConfiguration, List<ChannelConfiguration> ChannelConfigurations, List<AlertTarget> AlertTargets, 
+                                        bool IsTestAlert)
         {
             String ActiveMqUri = System.Configuration.ConfigurationManager.AppSettings["ActiveMqUri"];
             String ActiveMqDestination = System.Configuration.ConfigurationManager.AppSettings["ActiveMqDestination"];
@@ -449,7 +475,7 @@ namespace com.ums.ws.integration
                         accountDetails.SecondarySmsServer = logonInfo.l_altservers;
                         accountDetails.StdCc = logonInfo.sz_stdcc;
                         accountDetails.MaxVoiceChannels = umsDb.GetMaxAlloc(accountDetails.Deptpk);
-                        accountDetails.AvailableVoiceNumbers = umsDb.GetAvailableVoiceNumbers(accountDetails.Deptpk);
+                        accountDetails.AvailableVoiceNumbers = new List<String>() { umsDb.GetDefaultVoiceNumber(accountDetails.Deptpk) }; // only get default, no need to get full list
                         accountDetails.DefaultTtsLang = umsDb.GetDefaultTtsLanguage(accountDetails.Deptpk);
 
                         if (accountDetails.DefaultTtsLang <= 0)
@@ -481,6 +507,15 @@ namespace com.ums.ws.integration
                                     return AlertResponseFactory.Failed(-4, "You are not allowed to use the voice profile specified");
                                 }
                             }
+                            //set stop and pause based on config profile
+                            int pauseAtTime, pauseDurationMinutes, validDays;
+                            if (! IsTestAlert && umsDb.GetPauseValuesOfProfile(voiceConfig.VoiceProfilePk, out pauseAtTime, out pauseDurationMinutes, out validDays))
+                            {
+                                voiceConfig.PauseAtTime = pauseAtTime;
+                                voiceConfig.PauseDurationMinutes = pauseDurationMinutes;
+                                voiceConfig.ValidDays = validDays;
+                            }
+
                             int dynVoice = umsDb.getNumDynfilesInProfile(voiceConfig.VoiceProfilePk);
                             if (dynVoice != 1)
                             {
@@ -522,6 +557,8 @@ namespace com.ums.ws.integration
                         payload.AlertConfiguration = AlertConfiguration;
                         payload.ChannelConfigurations = ChannelConfigurations;
 
+                        payload.IsTestAlert = IsTestAlert;
+
                         IObjectMessage message = mqSession.CreateObjectMessage(payload);
                         mqProducer.Send(destination, message);
                         responseObject.AlertId = payload.AlertId;
@@ -559,9 +596,20 @@ namespace com.ums.ws.integration
             logonInfo.sz_password = Account.Password;
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
             
-            // Get all refnos corresponding to the alertid (projectpk)
-            String Sql = String.Format("SELECT PR.l_refno FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
+            using (OdbcCommand cmdStopProject = cancelDb.CreateCommand("UPDATE BBPROJECT SET l_finished=8 WHERE l_projectpk=?"))
+            {
+                cmdStopProject.Parameters.Add("projectpk", OdbcType.BigInt).Value = AlertId.Id;
+                if (cmdStopProject.ExecuteNonQuery() != 1)
+                {
+                    response.Code = -1;
+                    response.Message = String.Format("Failed to stop alertid={0}", AlertId.Id);
 
+                    return response;
+                }
+            }
+
+            // Get all refnos corresponding to the alertid (projectpk)
+            String Sql = String.Format("SELECT PR.l_refno, MI.l_type FROM BBPROJECT_X_REFNO PR INNER JOIN MDVSENDINGINFO MI ON PR.l_refno=MI.l_refno AND MI.l_deptpk=? WHERE PR.l_projectpk=?");
             using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
             {
                 cmd.Parameters.Add("dept", OdbcType.Int).Value = logonInfo.l_deptpk;
@@ -569,25 +617,29 @@ namespace com.ums.ws.integration
 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    if (!rs.HasRows)
+                    if (rs.HasRows)
                     {
-                        response.Code = -1;
-                        response.Message += String.Format("No refnos found for alertid={0}", AlertId.Id);
-                    }
-                    else
-                    {
-                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand("INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)"))
+                        using (OdbcCommand cancelCmd = cancelDb.CreateCommand(""))
                         {
                             cancelCmd.Parameters.Add("refno", OdbcType.Int);
                             while (rs.Read())
                             {
-                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(0);
+                                int l_type = rs.GetInt32(rs.GetOrdinal("l_type"));
 
+                                cancelCmd.Parameters["refno"].Value = rs.GetInt32(rs.GetOrdinal("l_refno"));
+
+                                cancelCmd.CommandText = "INSERT INTO BBCANCEL(l_refno, l_item) VALUES(?, -1)";
                                 if (cancelCmd.ExecuteNonQuery() != 1)
                                 {
                                     // TODO: Set proper status code (-1 is probably in use)
                                     response.Code = -1;
                                     response.Message += String.Format("Failed to stop message with alertid={0} refno={1}", AlertId.Id, rs.GetInt32(0));
+                                }
+
+                                if (l_type == 1) // voice, set secheddate to now 0 to cancel immediately
+                                {
+                                    cancelCmd.CommandText = "UPDATE BBQREF SET l_startdate=0, l_starttime=0 WHERE l_refno=?";
+                                    cancelCmd.ExecuteNonQuery();
                                 }
                             }
                         }
@@ -597,9 +649,6 @@ namespace com.ums.ws.integration
 
             return response;
         }
-
-
-
 
         [WebMethod]
         public LogSummary testGetAlertLog(long Projectpk)
@@ -655,7 +704,7 @@ namespace com.ums.ws.integration
             if(!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
                 throw new Exception("Alert Log not found for the specified AlertId or wrong account used");
 
-            string sql = "sp_getProjectStatus ?, ?";
+            string sql = "sp_getProjectStatus_pricall ?, ?";
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {
@@ -665,13 +714,15 @@ namespace com.ums.ws.integration
                 
                 using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
+                    bool isPricall = false;
                     long previousSource = 0;
                     LogLineDetailed line = null;
                     AlertObject alertObject = null;
 
                     while (rs.Read() && (PageSize == 0 || objectLog.Count <= PageSize + StartIndex) )
                     {
-                        long currentSource = rs.GetInt64(rs.GetOrdinal("l_alertsourcepk"));
+                        isPricall = !rs.IsDBNull(rs.GetOrdinal("pricall"));
+                        long currentSource = (long)rs.GetDecimal(rs.GetOrdinal("l_alertsourcepk"));
 
                         if (line == null || previousSource != currentSource)
                         {
@@ -684,7 +735,12 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        // check pricall and use last pricall number if bbq number is PRICALL
+                        string number = rs.GetString(rs.GetOrdinal("sz_number"));
+                        if (isPricall && number.ToUpper() == "PRICALL")
+                            number = rs.GetString(rs.GetOrdinal("pricall"));
+
+                        LogLinePhone phoneLine = new LogLinePhone(number, rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, rs.GetInt32(rs.GetOrdinal("l_tries")), rs.GetInt32(rs.GetOrdinal("l_retries")));
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
@@ -699,8 +755,8 @@ namespace com.ums.ws.integration
                                 }
 
                                 Phone phone = new Phone();
-                                phone.Address = phoneLine.Address;
-                                phone.CanReceiveSms = phone.CanReceiveSms;
+                                phone.Address = isPricall ? rs.GetString(rs.GetOrdinal("pricall")) : phoneLine.Address; // use pricall no if it is pricall
+                                phone.CanReceiveSms = isPricall ? false : phoneLine.CanReceiveSms; // pricall is voice and pr. def not capabale of receiving sms
 
                                 alertObject.Endpoints.Add(phone);
 
@@ -756,7 +812,9 @@ namespace com.ums.ws.integration
                                 break;
                         }
 
-                        line.LogLines.Add(phoneLine);
+                        //if(!isPricall || line.LogLines.Count==0) // add line if logline is not pricall or no lines have been added yet 
+                        if(!line.LogLines.Contains(phoneLine))
+                            line.LogLines.Add(phoneLine);
 
                         // Get attributes, listed as key=value and seperated with | ex: "Morten=Tester|Gate=Steinstemveien 20|"
                         List<DataItem> targetAttributes = new List<DataItem>();
@@ -853,7 +911,7 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, -1, -1);
 
                         // Alert Targets
                         switch (rs.GetByte(rs.GetOrdinal("alerttarget")))
@@ -1107,6 +1165,115 @@ namespace com.ums.ws.integration
         }
 
         /// <summary>
+        /// Get log of addresses where no telephone number was found for a previously sent alert.
+        /// </summary>
+        /// <param name="Account">The account</param>
+        /// <param name="AlertId">Alert ID</param>
+        /// <param name="StartIndex">Start at</param>
+        /// <param name="PageSize">Number of rows</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"<b>Get log of addresses where no telephone number was found for a previously sent alert.</b>")]
+        public List<LogLineNotFound> GetAlertNumberNotFoundLog(Account Account, AlertId AlertId, int StartIndex, int PageSize)
+        {
+            /*
+             * Get ADDRESS_SOURCE where there are no link to _ALERTS nor _DUPLICATES, if norecipients=1 then the AlertTarget didn't produce any inhabitants
+             */
+            UmsDb umsDb = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            if (StartIndex < 0)
+            {
+                throw new Exception("Invalid StartIndex, should be 0..n");
+            }
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+            if (!umsDb.ValidateOwnerOfProject(AlertId.Id, logonInfo.l_deptpk))
+            {
+                throw new Exception("Account has no access to the specified alert or the alert does not exist");
+            }
+
+            // select all records that have norecipients=1, this means that no persons are registered on the alerttarget and no name attached
+            // select all records that have no relations to an alert nor was a duplicate, this means that the 
+            String Sql = @"SELECT distinct
+                                ISNULL(MAS.municipalid,0) municipalid 
+                                ,ISNULL(MAS.streetid,0) streetid 
+                                ,ISNULL(MAS.houseno,0) houseno 
+                                ,ISNULL(MAS.letter,'') letter
+                                ,ISNULL(MAS.oppgang,'') oppgang
+                                ,ISNULL(MAS.gnr,0) gnr
+                                ,ISNULL(MAS.bnr,0) bnr
+                                ,ISNULL(MAS.fnr,0) fnr
+                                ,ISNULL(MAS.snr,0) snr
+                                ,ISNULL(MAS.unr,0) unr
+                                ,ISNULL(MAS.alerttarget,0) alerttarget
+                                ,ISNULL(MAS.birthdate,0) birthdate
+                                ,ISNULL(MAS.name,'') name
+                                ,ISNULL(MAS.iscompany,0) iscompany 
+                                ,ISNULL(MAS.postno,0) postno
+                                ,ISNULL(MAS.externalid,'') externalid
+                                ,ISNULL(MAS.data,'') data
+                                    ,ISNULL(MAS.attributes, '') attributes
+                                ,MASA.l_alertsourcepk, MASAD.l_alertsourcepk 
+                        FROM 
+                        MDVHIST_ADDRESS_SOURCE MAS 
+                        LEFT JOIN MDVHIST_ADDRESS_SOURCE_ALERTS MASA ON MASA.l_alertsourcepk=MAS.l_alertsourcepk
+                        LEFT JOIN MDVHIST_ADDRESS_SOURCE_DUPLICATES MASAD ON MASAD.l_alertsourcepk=MAS.l_alertsourcepk
+                        where 
+                        (MASA.l_alertsourcepk IS NULL AND MASAD.l_alertsourcepk IS NULL) and
+                            MAS.l_projectpk=?
+                        order by name, alerttarget";
+            List<LogLineNotFound> list = new List<LogLineNotFound>();
+
+            int count = 0;
+            using (OdbcCommand cmd = umsDb.CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.Numeric).Value = AlertId.Id;
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read() && (PageSize == 0 || count < PageSize + StartIndex))
+                    {
+                        if (++count <= StartIndex)
+                        {
+                            continue;
+                        }
+
+                        string name = rs.GetString(rs.GetOrdinal("name")).Trim();
+                        if (name == "" || !list.Any(line => line.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                            list.Add(new LogLineNotFound()
+                            {
+                                Name = name,
+                                ExternalId = rs.GetString(rs.GetOrdinal("externalid")),
+                                RequestedAlertTarget = AlertTargetHelpers.ReconstructAlertTarget(
+                                                            rs.GetByte(rs.GetOrdinal("alerttarget")),
+                                                            rs.GetByte(rs.GetOrdinal("iscompany")),
+                                                            rs.GetString(rs.GetOrdinal("name")),
+                                                            rs.GetInt32(rs.GetOrdinal("municipalid")),
+                                                            rs.GetInt32(rs.GetOrdinal("streetid")),
+                                                            rs.GetInt32(rs.GetOrdinal("houseno")),
+                                                            rs.GetString(rs.GetOrdinal("letter")),
+                                                            rs.GetString(rs.GetOrdinal("oppgang")),
+                                                            rs.GetInt32(rs.GetOrdinal("gnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("bnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("fnr")),
+                                                            rs.GetInt32(rs.GetOrdinal("snr")),
+                                                            rs.GetInt32(rs.GetOrdinal("unr")),
+                                                            rs.GetInt32(rs.GetOrdinal("postno")),
+                                                            rs.GetString(rs.GetOrdinal("data")),
+                                                            rs.GetInt32(rs.GetOrdinal("birthdate")),
+                                                            rs.GetString(rs.GetOrdinal("attributes")),
+                                                            rs.GetString(rs.GetOrdinal("externalid")),
+                                                            new Phone()),
+
+                            });
+                    }
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
         /// Get status of a previously sent alert.
         /// </summary>
         /// <param name="Account">The account</param>
@@ -1128,7 +1295,7 @@ namespace com.ums.ws.integration
             + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
             + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
             + "isnull(MDV.l_refno, 0) IsProcessing, isnull(TTS.l_fileno,0) TtsFileno, isnull(TTS.sz_content,'') TtsContent, "
-            + "isnull(SQ.sz_text, '') SmsContent "
+            + "isnull(SQ.sz_text, '') SmsContent, isnull(BP.l_finished, 0) l_finished "
             + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
             + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
             + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
@@ -1141,14 +1308,14 @@ namespace com.ums.ws.integration
             {
                 long prevProjectpk = -1;
                 LogSummary currentSummary = new LogSummary();
-                int worstStatus = 8;
+                int worstStatus = 9;
                 int VoiceProc = 0;
                 while (rs.Read())
                 {
                     long projectPk = rs.GetInt64(0);
                     if (!prevProjectpk.Equals(projectPk))
                     {
-                        worstStatus = 8;
+                        worstStatus = 9;
                         currentSummary = new LogSummary()
                         {
                             AlertId = new AlertId(rs.GetInt64(0)),
@@ -1157,17 +1324,16 @@ namespace com.ums.ws.integration
                         };
                     }
 
-
+                    int stopped = rs.GetInt32(rs.GetOrdinal("l_finished"));
                     SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
-                    int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
-                    
+                    int status = stopped == 8 ? stopped : type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : (int)rs.GetByte(6);
 
                     int createDate = rs.GetInt32(12);
-                    int createTime = rs.GetInt32(13);
+                    int createTime = rs.GetInt16(13);
                     int schedDate = rs.GetInt32(3);
                     int schedTime = rs.GetInt32(4);
                     int refno = rs.GetInt32(14);
-                    int ttsFileno = rs.GetInt32(15);
+                    int ttsFileno = rs.GetByte(15);
                     String ttsContent = rs.GetString(16);
                     String smsContent = rs.GetString(17);
 
@@ -1285,12 +1451,12 @@ namespace com.ums.ws.integration
                         + "isnull(MDV.l_schedtime,0), isnull(MDV.f_dynacall,1), isnull(SQ.l_status, 1), isnull(MDV.l_type,1), "
                         + "isnull(SQ.l_proc, 0) SmsProc, isnull(SQ.l_items, 0) SmsItems, isnull(BQ.l_proc, 0) VoiceProc, "
                         + "isnull(BQ.l_items, 0) VoiceItems, isnull(MDV.l_createdate,0), isnull(MDV.l_createtime,0), "
-                        + "isnull(MDV.l_refno, 0) IsProcessing "
+                        + "isnull(MDV.l_refno, 0) IsProcessing, isnull(BP.l_finished, 0) l_finished "
                         + "FROM BBPROJECT BP LEFT OUTER JOIN BBPROJECT_X_REFNO XR ON BP.l_projectpk=XR.l_projectpk "
                         + "LEFT OUTER JOIN MDVSENDINGINFO MDV ON MDV.l_refno=XR.l_refno "
                         + "LEFT OUTER JOIN SMSQREF SQ ON MDV.l_refno=SQ.l_refno "
                         + "LEFT OUTER JOIN BBQREF BQ ON MDV.l_refno=BQ.l_refno "
-                        + "WHERE BP.l_deptpk={0} "
+                        + "WHERE BP.l_deptpk={0} AND XR.l_type=0 "
                         + "ORDER BY BP.l_projectpk DESC, XR.l_refno DESC", logonInfo.l_deptpk, PageSize);
             OdbcDataReader rs = umsDb.ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE);
 
@@ -1298,7 +1464,7 @@ namespace com.ums.ws.integration
 
             long prevProjectpk = -1;
             AlertSummary currentSummary = null;
-            int worstStatus = 8;
+            int worstStatus = 9;
             int SmsItems = 0;
             int VoiceItems = 0;
             int SmsProc = 0;
@@ -1309,15 +1475,19 @@ namespace com.ums.ws.integration
             while (rs.Read())
             {
                 long projectPk = rs.GetInt64(0);
+                /*SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
+                int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);*/
+                int stopped = rs.GetInt32(rs.GetOrdinal("l_finished"));
                 SendChannel type = (SendChannel)Enum.ToObject(typeof(SendChannel), rs.GetInt32(7)); //1 = voice, 2 = sms
-                int status = type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : rs.GetByte(6);
+                int status = stopped == 8 ? stopped : type.Equals(SendChannel.VOICE) ? rs.GetInt32(2) : (int)rs.GetByte(6);
+
                 SmsProc += rs.GetInt32(8);
                 SmsItems += rs.GetInt32(9);
                 VoiceProc += rs.GetInt32(10);
                 VoiceItems += rs.GetInt32(11);
 
                 int createDate = rs.GetInt32(12);
-                int createTime = rs.GetInt32(13);
+                int createTime = rs.GetInt16(13);
                 int schedDate = rs.GetInt32(3);
                 int schedTime = rs.GetInt32(4);
                 bool isProcessing = rs.GetInt32(14) > 0; //if record exist in MDVSENDINGINFO, the service have picked it up.
@@ -1355,7 +1525,7 @@ namespace com.ums.ws.integration
                         break;
                     }
 
-                    worstStatus = 8;
+                    worstStatus = 9;
                     currentSummary = new AlertSummary()
                     {
                         AlertId = new AlertId(rs.GetInt64(0)),
@@ -1401,6 +1571,8 @@ namespace com.ums.ws.integration
                     return AlertOverallStatus.IN_PROGRESS;
                 case 7:
                     return AlertOverallStatus.FINISHED;
+                case 8:
+                    return AlertOverallStatus.STOPPED;
             }
             return AlertOverallStatus.FAILED;
         }
@@ -1479,7 +1651,7 @@ namespace com.ums.ws.integration
                         DateTime timestamp;
                         DateTime.TryParseExact(rs.GetDecimal(rs.GetOrdinal("l_timestamp")).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out timestamp);
 
-                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp);
+                        LogLinePhone phoneLine = new LogLinePhone(rs.GetString(rs.GetOrdinal("sz_number")), rs.GetInt32(rs.GetOrdinal("l_type")), rs.GetInt32(rs.GetOrdinal("l_dst")), rs.GetInt32(rs.GetOrdinal("l_status")), rs.GetString(rs.GetOrdinal("sz_status")), timestamp, -1, -1);
                         errorList.Add(phoneLine);
                     }
                 }
