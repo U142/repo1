@@ -27,7 +27,7 @@ namespace com.ums.pas.integration.AddressLookup
         }
 
 
-        public IEnumerable<RecipientData> GetMatchingOwnerAddressesOld(String ConnectionString, List<OwnerAddress> ownerAddresses)
+        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses)
         {
             NoMatchList = new List<OwnerAddress>();
             if (ownerAddresses.Count == 0)
@@ -208,7 +208,7 @@ namespace com.ums.pas.integration.AddressLookup
             return recipients;
 
         }
-        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses)
+        public IEnumerable<RecipientData> GetMatchingOwnerAddressesNew(String ConnectionString, List<OwnerAddress> ownerAddresses)
         {
             NoMatchList = new List<OwnerAddress>();
             if (ownerAddresses.Count == 0)
