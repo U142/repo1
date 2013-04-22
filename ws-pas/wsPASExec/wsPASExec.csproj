@@ -167,6 +167,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="WS\Infosentral.asmx" />
+    <Content Include="WS\Integration\1.1\Integration.asmx" />
+    <Content Include="WS\Integration\1.1\Simplified.asmx" />
     <Content Include="WS\ParmAdmin.asmx" />
     <Content Include="WS\PAS.asmx" />
     <Content Include="Web.config">
@@ -215,6 +217,14 @@
     </Compile>
     <Compile Include="WS\Infosentral.asmx.cs">
       <DependentUpon>Infosentral.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WS\Integration\1.1\Integration.asmx.cs">
+      <DependentUpon>Integration.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WS\Integration\1.1\Simplified.asmx.cs">
+      <DependentUpon>Simplified.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WS\ParmAdmin.asmx.cs">
