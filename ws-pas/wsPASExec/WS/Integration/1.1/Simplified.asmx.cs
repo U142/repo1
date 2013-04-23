@@ -30,9 +30,9 @@ namespace com.ums.ws.integration.v11
         /// <param name="CompanyCategories">List of companies (hospitals, kindergarders etc.). If none are provided, all are selected</param>
         /// <returns>List of AlertObject where attributes are set with the code and categories</returns>
         [WebMethod(Description = @"Get a list of vulnerable subscribers for a set of municipailities")]
-        public List<VulnerableSubscriber> GetVulnerableSubscribers(Account Account, List<int> Municipals, List<int> Categories, List<int> Professions)
+        public List<VulnerableSubscriber> GetVulnerableSubscribers(Account Account, List<int> Municipals, List<int> Categories, List<int> Professions, string Language)
         {
-            return new Integration().GetVulnerableSubscribers(Account, Municipals, Categories, Professions);
+            return new Integration().GetVulnerableSubscribers(Account, Municipals, Categories, Professions, Language);
         }
     }
 }

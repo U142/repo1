@@ -32,7 +32,7 @@ namespace com.ums.ws.integration.v11
         /// <param name="CompanyCategories">List of companies (hospitals, kindergarders etc.). If none are provided, all are selected</param>
         /// <returns>List of AlertObject where attributes are set with the code and categories</returns>
         [WebMethod(Description = @"Get a list of vulnerable subscribers for a set of municipailities")]
-        public List<VulnerableSubscriber> GetVulnerableSubscribers(Account Account, List<int> Municipals, List<int> Categories, List<int> Professions)
+        public List<VulnerableSubscriber> GetVulnerableSubscribers(Account Account, List<int> Municipals, List<int> Categories, List<int> Professions, string Language)
         {
             List<VulnerableSubscriber> ret = new List<VulnerableSubscriber>();
 
@@ -52,11 +52,13 @@ namespace com.ums.ws.integration.v11
             string SqlVulnerabilityCodes = Categories != null && Categories.Count > 0 ? String.Format("AND SO.l_category IN ({0})", String.Join(",", Categories.Select(code => code.ToString()).ToArray())) : "";
             string SqlCompanyCategories = Professions != null && Professions.Count > 0 ? String.Format("AND SO.l_profession IN ({0})", String.Join(",", Professions.Select(category => category.ToString()).ToArray())) : "";
 
+            Language = Language ?? ""; // set language to empty if it is null
+
             string SqlSelectFields = @"
                                         SC.l_category,
-                                        SC.sz_description sz_category,
+                                        ISNULL(SCL.sz_description, SC.sz_description) sz_category,
                                         SP.l_profession,
-                                        SP.sz_description sz_profession,
+                                        ISNULL(SPL.sz_description, SP.sz_description) sz_profession,
                                         ISNULL(AE.NAVN, '') NAVN,
                                         ISNULL(AE.TELEFON, '') TELEFON,
                                         ISNULL(AE.MOBIL, '') MOBIL,
@@ -78,6 +80,8 @@ namespace com.ums.ws.integration.v11
 		                            AE.KON_DMID = SO.KON_DMID {2} {3}
 	                            LEFT OUTER JOIN SO_CATEGORY SC ON SC.l_category=SO.l_category
 	                            LEFT OUTER JOIN SO_PROFESSION SP ON SP.l_profession=SO.l_profession
+                                LEFT OUTER JOIN SO_CATEGORY_LANG SCL ON SCL.l_category=SC.l_category AND SCL.sz_lang=?
+                                LEFT OUTER JOIN SO_PROFESSION_LANG SPL ON SPL.l_profession=SP.l_profession AND SCL.sz_lang=?
                             where AE.KOMMUNENR IN ({1})
                             union select AP.KON_DMID ID, {0}
                             from
@@ -88,6 +92,8 @@ namespace com.ums.ws.integration.v11
 		                            AP.KON_DMID = SO.KON_DMID {2} {3}
 	                            LEFT OUTER JOIN SO_CATEGORY SC ON SC.l_category=SO.l_category
 	                            LEFT OUTER JOIN SO_PROFESSION SP ON SP.l_profession=SO.l_profession
+                                LEFT OUTER JOIN SO_CATEGORY_LANG SCL ON SCL.l_category=SC.l_category AND SCL.sz_lang=?
+                                LEFT OUTER JOIN SO_PROFESSION_LANG SPL ON SPL.l_profession=SP.l_profession AND SCL.sz_lang=?
                             where AE.KOMMUNENR IN ({1})
                             order by ID"
                 , SqlSelectFields
@@ -97,56 +103,63 @@ namespace com.ums.ws.integration.v11
 
             // Get list of subscribers
             using (OdbcCommand cmd = folkeReg.CreateCommand(Sql))
-            using (OdbcDataReader rs = cmd.ExecuteReader())
             {
-                int previousId = 0;
-                VulnerableSubscriber subscriber = null;
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language;
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language;
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language;
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language;
 
-                while (rs.Read())
+                using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    if (rs.GetInt32(rs.GetOrdinal("ID")) != previousId)
+                    int previousId = 0;
+                    VulnerableSubscriber subscriber = null;
+
+                    while (rs.Read())
                     {
-                        subscriber = new VulnerableSubscriber();
-                        subscriber.Endpoints = new List<Endpoint>();
-                        subscriber.StreetAddresses = new List<StreetAddress>();
-                        subscriber.PropertyAddresses = new List<PropertyAddress>();
+                        if (rs.GetInt32(rs.GetOrdinal("ID")) != previousId)
+                        {
+                            subscriber = new VulnerableSubscriber();
+                            subscriber.Endpoints = new List<Endpoint>();
+                            subscriber.StreetAddresses = new List<StreetAddress>();
+                            subscriber.PropertyAddresses = new List<PropertyAddress>();
+                        }
+
+                        subscriber.Name = rs.GetString(rs.GetOrdinal("NAVN"));
+
+                        if (rs.GetString(rs.GetOrdinal("TELEFON")) != "")
+                        {
+                            Phone phone = new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false };
+                            if (!subscriber.Endpoints.Contains(phone))
+                                subscriber.Endpoints.Add(phone);
+                        }
+
+                        if (rs.GetString(rs.GetOrdinal("MOBIL")) != "")
+                        {
+                            Phone phone = new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true };
+                            if (!subscriber.Endpoints.Contains(phone))
+                                subscriber.Endpoints.Add(phone);
+                        }
+
+                        if (!rs.IsDBNull(rs.GetOrdinal("sz_category")) && !rs.IsDBNull(rs.GetOrdinal("l_category")))
+                            subscriber.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
+
+                        if (!rs.IsDBNull(rs.GetOrdinal("sz_profession")) && !rs.IsDBNull(rs.GetOrdinal("l_profession")))
+                            subscriber.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
+
+                        if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) != 0) // streetaddress
+                        {
+                            subscriber.StreetAddresses.Add(new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("HUSBOKSTAV")), null, null));
+                        }
+                        else
+                        {
+                            subscriber.PropertyAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
+                        }
+
+                        if (rs.GetInt32(rs.GetOrdinal("ID")) != previousId)
+                            ret.Add(subscriber);
+
+                        previousId = rs.GetInt32(rs.GetOrdinal("ID"));
                     }
-
-                    subscriber.Name = rs.GetString(rs.GetOrdinal("NAVN"));
-
-                    if (rs.GetString(rs.GetOrdinal("TELEFON")) != "")
-                    {
-                        Phone phone = new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false };
-                        if (!subscriber.Endpoints.Contains(phone))
-                            subscriber.Endpoints.Add(phone);
-                    }
-
-                    if (rs.GetString(rs.GetOrdinal("MOBIL")) != "")
-                    {
-                        Phone phone = new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true };
-                        if(!subscriber.Endpoints.Contains(phone))
-                            subscriber.Endpoints.Add(phone);
-                    }
-
-                    if (!rs.IsDBNull(rs.GetOrdinal("sz_category")) && !rs.IsDBNull(rs.GetOrdinal("l_category")))
-                        subscriber.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
-                    
-                    if (!rs.IsDBNull(rs.GetOrdinal("sz_profession")) && !rs.IsDBNull(rs.GetOrdinal("l_profession")))
-                        subscriber.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
-
-                    if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) != 0) // streetaddress
-                    {
-                        subscriber.StreetAddresses.Add(new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("HUSBOKSTAV")), null, null));
-                    }
-                    else
-                    {
-                        subscriber.PropertyAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
-                    }
-
-                    if (rs.GetInt32(rs.GetOrdinal("ID")) != previousId)
-                        ret.Add(subscriber);
-                    
-                    previousId = rs.GetInt32(rs.GetOrdinal("ID"));
                 }
             }
 
