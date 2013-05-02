@@ -1362,7 +1362,7 @@ namespace com.ums.ws.integration
                         IDictionary<int, int> voiceDeliveryStatus = dbCount.GetNumberOfVoiceBasedOnDst(refno);
                         if (voiceDeliveryStatus.ContainsKey(0))
                         {
-                            currentSummary.VoiceAnswered = voiceDeliveryStatus[0];
+                            currentSummary.VoiceAnswered = voiceDeliveryStatus[3];
                         }
                         if (voiceDeliveryStatus.ContainsKey(2))
                         {
@@ -1370,7 +1370,7 @@ namespace com.ums.ws.integration
                         }
                         if (voiceDeliveryStatus.ContainsKey(3))
                         {
-                            currentSummary.VoiceConfirmed = voiceDeliveryStatus[3];
+                            currentSummary.VoiceConfirmed = voiceDeliveryStatus[0];
                         }
 
                         currentSummary.VoiceMessage = ttsContent;

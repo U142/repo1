@@ -749,10 +749,11 @@ namespace com.ums.pas.integration
         {
             String Sql = "INSERT INTO BBDYNARESCHED(l_refno, l_retries, l_interval, l_canceltime, l_canceldate, l_pausetime, l_pauseinterval) "
                                         + "VALUES(?, ?, ?, ?, ?, ?, ?)";
+
             using (OdbcCommand cmd = Database.CreateCommand(Sql))
             {
                 cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
-                cmd.Parameters.Add("l_retries", OdbcType.TinyInt).Value = VoiceConfig.Repeats;
+                cmd.Parameters.Add("l_retries", OdbcType.TinyInt).Value = VoiceConfig.Repeats + 1; // Web service has defined that Repeats is retries after the first
                 cmd.Parameters.Add("l_interval", OdbcType.SmallInt).Value = VoiceConfig.FrequencyMinutes;
                 cmd.Parameters.Add("l_canceltime", OdbcType.SmallInt).Value = -1;
                 cmd.Parameters.Add("l_canceldate", OdbcType.Int).Value = -1;

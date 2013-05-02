@@ -1506,7 +1506,7 @@ namespace com.ums.pas.integration
             else
             {
                 ReasonCode = reasonCode;
-                Reason = reason;
+                Reason = type == 2 && reasonCode == 51000 && StatusCode == 4 ? "Unkown error" : reason; // Set reason to "Unkown error" if type is SMS, status is Error and reasoncode is 51000 (success)
             }
         }
 
