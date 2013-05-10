@@ -95,7 +95,7 @@ namespace com.ums.ws.integration.v11
                                 LEFT OUTER JOIN SO_CATEGORY_LANG SCL ON SCL.l_category=SC.l_category AND SCL.sz_lang=?
                                 LEFT OUTER JOIN SO_PROFESSION_LANG SPL ON SPL.l_profession=SP.l_profession AND SCL.sz_lang=?
                             where AE.KOMMUNENR IN ({1})
-                            order by ID"
+                            order by SC.l_category, SP.l_profession, ID"
                 , SqlSelectFields
                 , String.Join(",", Municipals.Select(muni => muni.ToString()).ToArray())
                 , SqlVulnerabilityCodes
