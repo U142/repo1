@@ -50,7 +50,7 @@ namespace com.ums.ws.integration.v11
                 throw new Exception("No municipals selected.");
 
             string SqlVulnerabilityCodes = Categories != null && Categories.Count > 0 ? String.Format("AND SO.l_category IN ({0})", String.Join(",", Categories.Select(code => code.ToString()).ToArray())) : "";
-            string SqlCompanyCategories = Professions != null && Professions.Count > 0 ? String.Format("AND SO.l_profession IN ({0})", String.Join(",", Professions.Select(category => category.ToString()).ToArray())) : "";
+            string SqlCompanyCategories = Professions != null && Professions.Count > 0 ? String.Format("AND (SO.l_profession IN ({0}) OR SO.l_profession IS NULL)", String.Join(",", Professions.Select(category => category.ToString()).ToArray())) : "";
 
             Language = Language ?? ""; // set language to empty if it is null
 
