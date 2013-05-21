@@ -265,7 +265,8 @@ namespace com.ums.ws.integration
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            string sql = "SELECT l_messagepk, isnull(sz_name, '') sz_name FROM BBMESSAGES WHERE l_deptpk=? AND l_type=?";
+            //string sql = "SELECT l_messagepk, isnull(sz_name, '') sz_name FROM BBMESSAGES WHERE l_deptpk=? AND l_type=?";
+            string sql = "SELECT l_messagepk, isnull(sz_name, '') sz_name FROM BBMESSAGES WHERE l_deptpk=? AND l_type=? and l_langpk=6 and sz_number is null and f_template is null and l_ivrcode is null and l_parentpk is null and l_depth is null and l_timestamp is null and l_categorypk is null and sz_description='' order by sz_name";
 
             using (OdbcCommand cmd = umsDb.CreateCommand(sql))
             {

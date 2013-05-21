@@ -50,7 +50,7 @@ namespace com.ums.ws.integration.v11
                 throw new Exception("No municipals selected.");
 
             string SqlVulnerabilityCodes = Categories != null && Categories.Count > 0 ? String.Format("AND SO.l_category IN ({0})", String.Join(",", Categories.Select(code => code.ToString()).ToArray())) : "";
-            string SqlCompanyCategories = Professions != null && Professions.Count > 0 ? String.Format("AND SO.l_profession IN ({0})", String.Join(",", Professions.Select(category => category.ToString()).ToArray())) : "";
+            string SqlCompanyCategories = Professions != null && Professions.Count > 0 ? String.Format("AND (SO.l_profession IN ({0}) OR SO.l_profession IS NULL)", String.Join(",", Professions.Select(category => category.ToString()).ToArray())) : "";
 
             Language = Language ?? ""; // set language to empty if it is null
 
@@ -95,7 +95,7 @@ namespace com.ums.ws.integration.v11
                                 LEFT OUTER JOIN SO_CATEGORY_LANG SCL ON SCL.l_category=SC.l_category AND SCL.sz_lang=?
                                 LEFT OUTER JOIN SO_PROFESSION_LANG SPL ON SPL.l_profession=SP.l_profession AND SCL.sz_lang=?
                             where AE.KOMMUNENR IN ({1})
-                            order by ID"
+                            order by SC.l_category, SP.l_profession, ID"
                 , SqlSelectFields
                 , String.Join(",", Municipals.Select(muni => muni.ToString()).ToArray())
                 , SqlVulnerabilityCodes
