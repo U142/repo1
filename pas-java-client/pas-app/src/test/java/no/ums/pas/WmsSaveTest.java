@@ -47,9 +47,9 @@ public class WmsSaveTest {
 
         for(WmsLayer l : settings.getWmsLayers())
         {
-            //if(l.checked) {
+            if(l.checked) {
                 layerlist+=l.toString() + ",";
-            //}
+            }
         }
 
         assertEquals("MetriaTatortPlus=1,", layerlist);
