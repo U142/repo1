@@ -201,16 +201,6 @@
                     </execution>
                 </executions>
             </plugin>
-	    	<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-			 	<artifactId>maven-jar-plugin</artifactId>
-			 	<version>2.3.1</version>
-			 	<configuration>
-			 		<archive>
-			 			<addMavenDescriptor>false</addMavenDescriptor>
-			 		</archive>
-			 	</configuration>
-			</plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -244,7 +234,7 @@
         <profile>
             <id>nlbeta</id>
             <properties>
-                <wsdl.base>http://192.168.3.41/nlalertws/WS</wsdl.base>
+                <wsdl.base>https://secure.ums2.no/PAS/ws_nlutv/WS</wsdl.base>
             </properties>
         </profile>
         <profile>

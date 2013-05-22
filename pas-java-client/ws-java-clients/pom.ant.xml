@@ -183,16 +183,6 @@
                     </execution>
                 </executions>
             </plugin>
-	    	<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-			 	<artifactId>maven-jar-plugin</artifactId>
-			 	<version>2.3.1</version>
-			 	<configuration>
-			 		<archive>
-			 			<addMavenDescriptor>false</addMavenDescriptor>
-			 		</archive>
-			 	</configuration>
-			</plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -224,12 +214,6 @@
             </properties>
         </profile>
         <profile>
-            <id>nlbeta</id>
-            <properties>
-                <wsdl.base>http://192.168.3.41/nlalertws/ws</wsdl.base>
-            </properties>
-        </profile>
-        <profile>
             <id>orange_qa</id>
             <properties>
                 <wsdl.base>https://secure.ums.no/PAS/ws_pasqa/WS</wsdl.base>
@@ -239,18 +223,6 @@
             <id>orange_prod</id>
             <properties>
                 <wsdl.base>https://secure.ums.no/PAS/ws_pas/WS</wsdl.base>
-            </properties>
-        </profile>
-        <profile>
-            <id>gas-se_qa</id>
-            <properties>
-                <wsdl.base>https://secure.umscom.se/pas/ws_pas_qa/WS</wsdl.base>
-            </properties>
-        </profile>
-        <profile>
-            <id>gas-se_prod</id>
-            <properties>
-                <wsdl.base>https://secure.umscom.se/pas/ws_pas/WS</wsdl.base>
             </properties>
         </profile>
     </profiles>

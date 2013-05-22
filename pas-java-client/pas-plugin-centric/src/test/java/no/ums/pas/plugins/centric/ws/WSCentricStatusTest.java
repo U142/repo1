@@ -4,8 +4,6 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.cb.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.PasStatus;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.namespace.QName;
@@ -16,7 +14,6 @@ import java.net.URL;
  */
 public class WSCentricStatusTest {
 
-	@Ignore
     @Test
     public void testGetCBStatus() throws Exception {
         CBPROJECTSTATUSREQUEST cbsreq = new CBPROJECTSTATUSREQUEST();
@@ -34,7 +31,7 @@ public class WSCentricStatusTest {
         cbsreq.setLogon(l);
 
         //To change body of created methods use File | Settings | File Templates.
-        URL wsdl = new URL("http://secure.ums2.no/pas/ws_NLAlert/ws/passtatus.asmx?wsdl");
+        URL wsdl = new URL("http://localhost/ws_pas/ws/passtatus.asmx?wsdl");
         QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
 
         cbpres = new PasStatus(wsdl, service).getPasStatusSoap12().getCBStatus(cbsreq);

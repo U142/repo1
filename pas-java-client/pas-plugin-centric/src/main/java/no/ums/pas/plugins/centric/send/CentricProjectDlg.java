@@ -3,8 +3,6 @@ package no.ums.pas.plugins.centric.send;
 import no.ums.pas.core.project.ProjectDlg;
 
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -19,12 +17,6 @@ public class CentricProjectDlg extends ProjectDlg
 	@Override
 	protected void createPanel() {
 		m_projectpanel = new CentricProjectPanel();
-		// Removes the delete column, shouldn't be available in NLAlert
-		TableColumn deleteColumn = m_projectpanel.get_projectlist().get_table().getColumnModel().getColumn(DELETE_COLUMN);
-		if(deleteColumn != null) {
-			m_projectpanel.get_projectlist().get_table().removeColumn(deleteColumn);
-		}
-		String TooltipText = m_projectpanel.get_projectlist().get_table().getToolTipText();
         m_projectpanel.start();
 	}
 	

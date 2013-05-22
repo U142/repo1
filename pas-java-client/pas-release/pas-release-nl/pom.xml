@@ -12,7 +12,7 @@
     <name>NLAlert - Beta</name>
     <description>NLAlert Beta</description>
     <properties>
-		<NLAlert.version>1.1</NLAlert.version>
+		<NLAlert.version>1.0.2</NLAlert.version>
         <jnlp.filename>nlalert.jnlp</jnlp.filename>
         <jnlp_title>PAS - DEVEL</jnlp_title>
         <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/	</jnlp_codebase_url>
@@ -246,16 +246,6 @@
 						
                     </executions>
                 </plugin>
-                <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-				 	<artifactId>maven-jar-plugin</artifactId>
-				 	<version>2.3.1</version>
-				 	<configuration>
-				 		<archive>
-				 			<addMavenDescriptor>false</addMavenDescriptor>
-				 		</archive>
-				 	</configuration>
-				 </plugin>
         </plugins>
     </build>
     <profiles>
@@ -276,7 +266,7 @@
                             <artifactId>maven-ums-plugin</artifactId>
                             <configuration>
                                 <destinations>
-                                    <destination>smb://Administrator:digi20ums@192.168.3.40/www/nlalert/nlalert/
+                                    <destination>smb://Administrator:digi20ums@192.168.3.40/www/PAS/nlalert/
                                     </destination>
                                 </destinations>
                             </configuration>

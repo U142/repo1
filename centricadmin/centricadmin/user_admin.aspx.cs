@@ -236,16 +236,7 @@ public partial class user_admin : System.Web.UI.Page
         {
             // Only on region
             user.l_profilepk = int.Parse(ConfigurationManager.AppSettings["usertype_regional"]);
-            try
-            {
-                user.l_deptpk = int.Parse(lst_regions.SelectedValue);
-            }
-            catch (Exception ex)
-            {
-                lbl_feedback.Text = "Error getting region id";
-                lbl_feedback.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
+            user.l_deptpk = int.Parse(lst_regions.SelectedValue);
         }
 
         centric.com.ums.ws.pas.admin.UBBUSER[] users = (centric.com.ums.ws.pas.admin.UBBUSER[])Session["users"];
@@ -307,17 +298,8 @@ public partial class user_admin : System.Web.UI.Page
                 }
                 else
                 {
-                    
-                    centric.com.ums.ws.pas.admin.UBBUSER[] tmpusers = new centric.com.ums.ws.pas.admin.UBBUSER[users.Length + 1];
-                    
-                    for (int i = 0; i < users.Length;i++)
-                    {
-                        tmpusers[i] = users[i];
-                    }
-
-                    tmpusers[tmpusers.Length - 1] = user;
-
-                    Session["users"] = tmpusers;
+                    users[users.Length - 1] = user;
+                    Session["users"] = users;
                     if (lst_users.SelectedIndex == -1)
                         lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
                     else
@@ -328,7 +310,7 @@ public partial class user_admin : System.Web.UI.Page
                         lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
                     }
                     tbl_users.Rows.Clear();
-                    buildTable(tmpusers);
+                    buildTable(users);
                 }
                 deselect();
             }
@@ -369,7 +351,6 @@ public partial class user_admin : System.Web.UI.Page
         lst_regions.SelectedIndex = -1;
         lst_users.SelectedIndex = -1;
         selected.Text = "";
-        lbl_feedback.Text = "";
     }
 
     private void deselect()

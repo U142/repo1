@@ -430,18 +430,6 @@ namespace com.ums.PAS.Database
 
                 if (!ret.f_granted)
                 {
-                    OdbcCommand cmdLogonTriesCheck = conn.CreateCommand();
-                    cmdLogonTriesCheck.CommandText = "SELECT l.l_incorrect,u.l_logontries from BBUSER u, LBAPARAMETER l where sz_userid = ?";
-                    cmdLogonTriesCheck.Parameters.Add("@sz_userid", OdbcType.VarChar, 20).Value = l.sz_userid.ToUpper();
-                    rs = cmdLogonTriesCheck.ExecuteReader();
-                    while (rs.Read())
-                    {
-                        ret.maxLogonTries = rs.GetInt32(rs.GetOrdinal("l_incorrect"));
-                        ret.logonTries = rs.GetInt32(rs.GetOrdinal("l_logontries"));
-                    }
-                    rs.Close();
-                    rs.Dispose();
-                    cmdLogonTriesCheck.Dispose();
                     ret.l_userpk = 0;
                     return ret;
                 }
@@ -721,7 +709,7 @@ namespace com.ums.PAS.Database
                 //l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
 
-                szSQL = String.Format("sp_cb_pasadmin_logon '{0}', '{1}', '{2}', 0",
+                szSQL = String.Format("sp_cb_pasadmin_logon '{0}', '{1}', '{2}'",
                     l.sz_userid,
                     l.sz_password,
                     l.sz_compid);

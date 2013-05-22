@@ -54,13 +54,11 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { 
-            	cut(e, txtAddress);
-            }
+            public void keyPressed(KeyEvent e) { }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                copyPaste(e, txtAddress);
+                cutCopyPaste(e, txtAddress);
             }
         });
         txtNumber.addKeyListener(new KeyListener() {
@@ -68,13 +66,11 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) {
-            	cut(e, txtNumber);
-            }
+            public void keyPressed(KeyEvent e) { }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                copyPaste(e, txtNumber);
+                cutCopyPaste(e, txtNumber);
             }
         });
         txtPlace.addKeyListener(new KeyListener() {
@@ -82,13 +78,11 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) { 
-            	cut(e, txtPlace);
-            }
+            public void keyPressed(KeyEvent e) { }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                copyPaste(e, txtPlace);
+                cutCopyPaste(e, txtPlace);
             }
         });
         txtPostCode.addKeyListener(new KeyListener() {
@@ -96,13 +90,11 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) {
-            	cut(e, txtPostCode);
-            }
+            public void keyPressed(KeyEvent e) { }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                copyPaste(e, txtPostCode);
+                cutCopyPaste(e, txtPostCode);
             }
         });
         txtRegion.addKeyListener(new KeyListener() {
@@ -110,18 +102,16 @@ public class AddressSearchDlg extends JFrame {
             public void keyTyped(KeyEvent e) { }
 
             @Override
-            public void keyPressed(KeyEvent e) {
-            	cut(e,txtRegion);
-            }
+            public void keyPressed(KeyEvent e) { }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                copyPaste(e, txtRegion);
+                cutCopyPaste(e, txtRegion);
             }
         });
 	}
 
-    private void copyPaste(KeyEvent e, JTextField textField) {
+    private void cutCopyPaste(KeyEvent e, JTextField textField) {
         if((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             Transferable clipData = clipboard.getContents(clipboard);
@@ -159,7 +149,7 @@ public class AddressSearchDlg extends JFrame {
             textField.setCaretPosition(start);
         }
     }
-    
+
     public AddressSearchCountry newAddressSearchCountry(int cc, String country)
 	{
 		return new AddressSearchCountry(cc, country);

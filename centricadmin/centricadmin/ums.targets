@@ -2,18 +2,11 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="UmsDeploy">
 		<Error Condition="$(Configuration) == 'Beta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderBeta parameter required for $(Configuration)" />
-		<Error Condition="$(Configuration) == 'nlbeta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderBeta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'QA' And $(DeployTargetFolderQa) == ''" Text="Missing DeployTargetFolderQa parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Prod' And $(DeployTargetFolderProd) == ''" Text="Missing DeployTargetFolderProd parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_Prod' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_QA' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<PropertyGroup Condition="$(Configuration) == 'Beta'">
-			<DeployShare1>\\192.168.3.40\www</DeployShare1>
-			<DeployUser1>Administrator</DeployUser1>
-			<DeployPassword1>digi20ums</DeployPassword1>
-			<DeployLocation1>$(DeployShare1)$(DeployTargetFolderBeta)</DeployLocation1>
-		</PropertyGroup>
-		<PropertyGroup Condition="$(Configuration) == 'nlbeta'">
 			<DeployShare1>\\192.168.3.40\www</DeployShare1>
 			<DeployUser1>Administrator</DeployUser1>
 			<DeployPassword1>digi20ums</DeployPassword1>

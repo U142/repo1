@@ -21,10 +21,8 @@ public class WSLogon extends WSThread
 	protected String sz_username, sz_companyid, sz_password, sz_onetimekey;
 	public String getGeneratedPassword() { return sz_password; } 
 	UPASLOGON ret;
-	public UPASLOGON getLogonResponse() { return ret; }
 	BBUSERBLOCKREASONS reason = BBUSERBLOCKREASONS.NONE;
 	public BBUSERBLOCKREASONS getReason() { return reason; }
-	public void setReason(BBUSERBLOCKREASONS reason) { this.reason = reason; }  
 	protected boolean b_responded = false;
 	public boolean getResponded() { return b_responded;}
 	String sz_last_error = "";

@@ -890,8 +890,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			String m_message = m_txt_preview.getText();
 			String m_characters = m_lbl_pages.getText() + " - " + m_lbl_characters.getText();
 
-			CentricPrintCtrl pctrl = new CentricPrintCtrl(Variables.getDraw().get_buff_image() ,m_headerfooter, m_message, m_characters, m_headerfooter);
-			//CentricPrintCtrl pctrl = new CentricPrintCtrl(Variables.getDraw().get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
+			CentricPrintCtrl pctrl = new CentricPrintCtrl(Variables.getDraw().get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
 			pctrl.doPrint();
 		}
         if("act_download_lba_parameters_finished".equals(e.getActionCommand())) {

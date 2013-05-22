@@ -167,28 +167,39 @@ namespace com.ums.UmsDbLib
         /// Deliverystatus
         /// 0 = delivered ok (item in bbhist)
         /// 1 = in proc
-        /// 2 = failed
+        /// 2 = no anwser
         /// 3 = delivered ok and confirmed status code (item in bbhist with confirmedStatusCode
         /// </summary>
         /// <param name="Refno"></param>
         /// <param name="ConfirmedStatusCode"></param>
         /// <returns></returns>
-        public IDictionary<int, int> GetNumberOfVoiceBasedOnDst(int Refno, String ConfirmedStatusCodes, String NoAnswerCodes)
+        public IDictionary<int, int> GetNumberOfVoiceBasedOnDst(int Refno)//, String ConfirmedStatusCodes, String NoAnswerCodes)
         {
             Dictionary<int, int> ret = new Dictionary<int, int>();
-            String Sql = String.Format(
-                                        "SELECT l_dst=0, count(*) FROM BBHIST WHERE l_refno={0} AND l_status NOT IN {1} AND l_status>=3000 "
-                                        + "UNION "
-                                        + "SELECT l_dst=3, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({1}) "
-                                        + "UNION "
-                                        + "SELECT l_dst=2, count(*) FROM BBHIST WHERE l_refno={0} AND l_status IN ({2}) ",
-                                        
-                                        Refno, ConfirmedStatusCodes, NoAnswerCodes);
-            using (OdbcDataReader rs = ExecReader(Sql, UmsDb.UREADER_AUTOCLOSE))
+            String sql = @"SELECT l_dst=0, COUNT(*) 
+FROM BBHIST BH INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON BH.l_status=SC.l_status AND SC.l_type=1
+WHERE BH.l_refno=?
+UNION 
+SELECT l_dst=3, COUNT(*)
+FROM BBHIST BH INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON BH.l_status=SC.l_status AND SC.l_type=2
+WHERE BH.l_refno=?
+UNION 
+SELECT l_dst=2, COUNT(*)
+FROM BBHIST BH INNER JOIN v_BBSTATUSGROUPS_INTEGRATION SC ON BH.l_status=SC.l_status AND SC.l_type=3
+WHERE BH.l_refno=?";
+
+            using (OdbcCommand cmd = CreateCommand(sql))
             {
-                while (rs.Read())
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = Refno;
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = Refno;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
                 {
-                    ret.Add(rs.GetInt32(0), rs.GetInt32(1));
+                    while (rs.Read())
+                    {
+                        ret.Add(rs.GetInt32(0), rs.GetInt32(1));
+                    }
                 }
             }
             return ret;
@@ -212,6 +223,37 @@ namespace com.ums.UmsDbLib
             }
             rs.Close();
             return toReturn;
+        }
+
+        public void GetAlertMessage(long projectPk, out String ttsMessage, out String smsMessage)
+        {
+            ttsMessage = null; smsMessage = null;
+
+
+            string sql = @"select 
+                            TTS.sz_content ttsMessage, 
+                            SQ.sz_text smsMessage
+	                        from BBPROJECT_X_REFNO XR
+	                        INNER JOIN MDVSENDINGINFO SI ON SI.l_refno = XR.l_refno
+	                        LEFT OUTER JOIN BBQREF_TTSREF TTS ON TTS.l_refno = XR.l_refno
+	                        LEFT OUTER JOIN SMSQREF SQ ON SQ.l_refno = XR.l_refno
+	                        where XR.l_projectpk = ?";
+
+            using (OdbcCommand cmd = CreateCommand(sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = projectPk;
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                    {
+                        if(!rs.IsDBNull(rs.GetOrdinal("ttsMessage")))
+                            ttsMessage += rs.GetString(rs.GetOrdinal("ttsMessage"));
+                        if(!rs.IsDBNull(rs.GetOrdinal("smsMessage")))
+                            smsMessage += rs.GetString(rs.GetOrdinal("smsMessage"));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -294,6 +336,25 @@ namespace com.ums.UmsDbLib
             return GotValues;
         }
 
+        public bool ValidateOwnerOfProject(long projectPk, int deptPk)
+        {
+            bool bValidate = false;
+
+            String Sql = String.Format("SELECT l_projectpk FROM BBPROJECT WHERE l_projectpk=? and l_deptpk=?");
+            using (OdbcCommand cmd = CreateCommand(Sql))
+            {
+                cmd.Parameters.Add("projectpk", OdbcType.BigInt).Value = projectPk;
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = deptPk;
+
+                var result = cmd.ExecuteScalar();
+                if (result != null)
+                    if (long.Parse(result.ToString()) == projectPk)
+                        bValidate = true;
+            }
+
+            return bValidate;
+        }
+
         /// <summary>
         /// Get default number for department.
         /// </summary>
@@ -361,57 +422,64 @@ namespace com.ums.UmsDbLib
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
             String szSQL = String.Format("SELECT BD.l_deptpri, BD.sz_stdcc, BD.l_deptpk, BC.l_comppk FROM BBCOMPANY BC, BBDEPARTMENT BD WHERE " +
-                                            "BC.sz_compid='{0}' AND BD.sz_deptid='{1}' AND BC.l_comppk=BD.l_comppk AND " +
-                                            "BD.sz_password='{2}'",
-                                            info.sz_compid, info.sz_deptid, info.sz_password);
-            OdbcDataReader rs = null;
-            try
+                                            "UPPER(BC.sz_compid)=? AND UPPER(BD.sz_deptid)=? AND BC.l_comppk=BD.l_comppk AND " +
+                                            "BD.sz_password=?");
+
+            using (OdbcCommand cmd = CreateCommand(szSQL))
             {
-                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
-                if (rs.Read())
+                cmd.Parameters.Add("compid", OdbcType.VarChar).Value = info.sz_compid.ToUpper();
+                cmd.Parameters.Add("deptid", OdbcType.VarChar).Value = info.sz_deptid.ToUpper();
+                cmd.Parameters.Add("password", OdbcType.VarChar).Value = info.sz_password;
+
+                try
                 {
-                    info.l_deptpri = rs.GetInt32(0);
-                    info.sz_stdcc = rs.GetString(1);
-                    info.l_deptpk = rs.GetInt32(2);
-                    info.l_comppk = rs.GetInt32(3);
-                    info.l_priserver = 0;
-                    info.l_altservers = 0;
-                    b_ret = true;
-                    rs.Close();
-                    rs = ExecReader(String.Format("SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk={0} ORDER BY l_pri", info.l_deptpk), UREADER_AUTOCLOSE);
-                    if (rs.Read())
+                    using (OdbcDataReader rs = cmd.ExecuteReader())
                     {
-                        info.l_priserver = rs.GetInt32(0);
+                        if (rs.Read())
+                        {
+                            info.l_deptpri = rs.GetInt32(0);
+                            info.sz_stdcc = rs.GetString(1);
+                            info.l_deptpk = rs.GetInt32(2);
+                            info.l_comppk = rs.GetInt32(3);
+                            info.l_priserver = 0;
+                            info.l_altservers = 0;
+                            b_ret = true;
+                        }
                     }
-                    if (rs.Read())
+
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = "SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk=? ORDER BY l_pri";
+                    cmd.Parameters.Add("deptpk", OdbcType.Int).Value = info.l_deptpk;
+
+                    using (OdbcDataReader rs = cmd.ExecuteReader())
                     {
-                        info.l_altservers = rs.GetInt32(1);
+                        if (rs.Read())
+                        {
+                            info.l_priserver = rs.GetInt32(0);
+                        }
+                        if (rs.Read())
+                        {
+                            info.l_altservers = rs.GetInt32(1);
+                        }
                     }
-                    rs.Close();
                 }
-                rs.Close();
-            }
-            catch (SoapException e)
-            {
-                throw e;
-            }
-            catch (USessionDoesNotExsistException e)
-            {
-                throw e;
-            }
-            catch (USessionExpiredException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                setLastError(e.Message);
-                throw new UDbQueryException("CheckLogon");
-            }
-            finally
-            {
-                if (rs != null && !rs.IsClosed)
-                    rs.Close();
+                catch (SoapException e)
+                {
+                    throw e;
+                }
+                catch (USessionDoesNotExsistException e)
+                {
+                    throw e;
+                }
+                catch (USessionExpiredException e)
+                {
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    setLastError(e.Message);
+                    throw new UDbQueryException("CheckLogon");
+                }
             }
             if (!b_ret)
             {
@@ -1097,31 +1165,21 @@ namespace com.ums.UmsDbLib
             return n_ret;
         }
 
-        public int getMaxTries()
+        /// <summary>
+        /// Create a new command, ensure to dispose it
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public OdbcCommand CreateCommand(String s)
         {
-            OdbcDataReader rs = null;
-            int tries = 0;
-            try
-            {
-                rs = ExecReader("SELECT l_incorrect FROM LBAPARAMETER", UREADER_AUTOCLOSE);
-                if (rs.Read())
-                {
-                    tries = rs.GetInt32(0);
-                }
-                rs.Close();
-            }
-            catch (Exception e)
-            {
-                throw new UDbQueryException(e.Message);
-            }
-            finally
-            {
-                if (rs != null && !rs.IsClosed)
-                    rs.Close();
-            }
-            return tries;
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            OdbcCommand cmd = conn.CreateCommand();
+            cmd.CommandTimeout = timeout;
+            cmd.CommandText = s;
+            return cmd;
+           
         }
-
 
         public OdbcCommand CreateCommand(String s, int OPENMODE)
         {

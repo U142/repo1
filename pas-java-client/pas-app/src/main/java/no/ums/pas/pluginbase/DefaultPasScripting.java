@@ -45,9 +45,7 @@ import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.send.SendPropertiesGIS;
-import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.common.PASVERSION;
@@ -1466,84 +1464,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			}			
 		}.execute();
 		return true;
-	}
-
-	@Override
-	public String onSetProjectListToolTip(
-			ArrayList<StatusListObject> status_sendings) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<html>");
-		//sb.append("<b><font size=3>");
-		//sb.append(get_projectname());
-		//sb.append("</b>");
-		sb.append("<table CELLPADDING=5>");
-		//headings
-		//String bgcolor = "#" + Integer.toHexString(SystemColor.controlLtHighlight.getRGB()).substring(2);
-		//sb.append("<tr bgcolor=");
-		//sb.append(bgcolor);
-		//sb.append(">");
-		sb.append("<tr>");
-		sb.append("<td><b>");
-		sb.append(Localization.l("common_owner"));
-		sb.append("</b></td><td><b>");
-		sb.append(Localization.l("common_refno"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_sendingname"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_channel"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_mode"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_items"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_type"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_created"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_time"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_sendingstatus"));
-		sb.append("</td>");
-		sb.append("</tr>");
-		for(StatusListObject slo : status_sendings)
-		{
-			sb.append("<tr>");
-			sb.append("<td>");
-			sb.append(slo.get_deptid());
-			sb.append("</td><td>");
-			sb.append(slo.get_refno());
-			sb.append("</td><td>");
-			sb.append(slo.get_sendingname());
-			sb.append("</td><td>");
-			sb.append(slo.getChannel());
-			sb.append("</td><td>");
-			sb.append(slo.getSimulationText());
-			sb.append("</td><td>");
-			//Localization.l("common_items"), 
-			//Localization.l("common_type"), 
-			sb.append(slo.get_totitem());
-			sb.append("</td><td>");
-			sb.append(slo.get_groupdesc());
-			sb.append("</td><td>");
-			sb.append(TextFormat.format_date(slo.get_createdate()));
-			sb.append("</td><td>");
-			sb.append(TextFormat.format_time(slo.get_createtime(),4));
-			sb.append("</td>");
-			if(!slo.HasFinalStatus()) //not finished nor error
-			{
-				sb.append("<td>");
-			}
-			else
-			{
-				sb.append((slo.HasErrorStatus() ? "<td color=red>" : "<td color=green>"));
-			}
-			sb.append(slo.getStatusText());
-			sb.append("</td>");
-			sb.append("</tr>");
-		}
-		sb.append("</html>");
-		
-		return sb.toString();
 	}
 
 	

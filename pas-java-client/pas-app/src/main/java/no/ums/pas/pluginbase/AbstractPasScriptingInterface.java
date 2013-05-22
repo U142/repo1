@@ -2,6 +2,7 @@ package no.ums.pas.pluginbase;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
 import no.ums.ws.common.USYSTEMMESSAGES;
 
 import javax.swing.UIDefaults;

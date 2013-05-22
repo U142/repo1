@@ -11,7 +11,6 @@ import no.ums.pas.ums.errorhandling.Error;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
@@ -197,7 +196,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				width = (int)((double)actual_width / percent_of_actual);
 				height = (int)((double)actual_height / percent_of_actual);
 				//width = width + height;
-				//width = (int)((double)width / percent_of_actual);				
+				//width = (int)((double)width / percent_of_actual);
 				m_mapimage = Variables.getDraw().get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 				//m_mapimage = Variables.DRAW.get_buff_image();
 			}
@@ -219,18 +218,16 @@ public class CentricPrintCtrl implements Printable, Pageable {
 			}
 		}
 		
-		int w = m_mapimage.getWidth(null), h = m_mapimage.getHeight(null);  
-		int type = BufferedImage.TYPE_INT_RGB;
-		BufferedImage dest = new BufferedImage(w, h, type);
-		Variables.getMapFrame().paintToImage(dest);
-		
-		int maph = dest.getHeight(null);
+		//int maxwh = (int)pageFormat.getImageableWidth();
+//		int maxwh = (int)pageFormat.getImageableHeight();
+//		int mapw = m_mapimage.getWidth(null)/2;
+		int maph = m_mapimage.getHeight(null);
 		float maxmaph = 300.0f;
 		float factor = maxmaph / maph;
 
         float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
 		g.scale(factor, factor);
-		g.drawImage(dest, 0, 0, null);
+		g.drawImage(m_mapimage, 0, 0, null);
 		g.scale(scalerev, scalerev);
 		return (int)(maph* factor);
 	}

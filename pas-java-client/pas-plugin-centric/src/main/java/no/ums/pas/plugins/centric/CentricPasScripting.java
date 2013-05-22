@@ -36,11 +36,9 @@ import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.status.StatusListObject;
 import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.common.UBBNEWS;
 import no.ums.ws.common.USYSTEMMESSAGES;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
@@ -197,19 +195,17 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.change_buttoncolor(menu.get_btn_zoom(), false);
         menu.change_buttoncolor(menu_btn_draw_ellipse, false);
         menu.change_buttoncolor(menu_btn_draw_polygon, false);
-        menu.change_buttoncolor(menu_btn_draw_plmn, false);
 
         // For native GUI
         menu.get_btn_pan().setSelected(false);
         menu.get_btn_zoom().setSelected(false);
         menu_btn_draw_ellipse.setSelected(false);
         menu_btn_draw_polygon.setSelected(false);
-        menu_btn_draw_plmn.setSelected(false);
 
         switch(Variables.getMapFrame().get_mode())
         {
             case PAN:
-            	menu.get_btn_pan().setSelected(true);
+                menu.get_btn_pan().setSelected(true);
             case PAN_BY_DRAG:
                 menu.change_buttoncolor(menu.get_btn_pan(), true);
                 menu.get_btn_pan().setSelected(true);
@@ -232,7 +228,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
 	@Override
-    public boolean onAddMainMenuButtons(final MainMenu menu) {
+    public boolean onAddMainMenuButtons(MainMenu menu) {
         menu.set_gridconst(menu.inc_xpanels(), 0, 15, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu.get_selectmenu().get_bar(), menu.m_gridconst);
 
@@ -244,7 +240,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.add(menu.get_btn_zoom(), menu.m_gridconst);
         menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu.get_btn_search(), menu.m_gridconst);
-        menu.get_btn_search().setEnabled(false);
+        menu.get_btn_search().setEnabled(false); //IDDIATTS
 
         JButton btn_goto_restriction = new JButton(Localization.l("common_navigate_home"));
         btn_goto_restriction.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
@@ -289,15 +285,8 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu_btn_draw_plmn.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_plmn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
+                Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
                 Variables.getMapFrame().set_active_shape(new PLMNShape());
-                PAS.get_pas().get_mainmenu().reset_buttons_foreground();
-                // Select and activate blue color on national button
-                menu_btn_draw_plmn.setSelected(true);
-                menu.change_buttoncolor(menu_btn_draw_plmn, true);
-                // Select and deactivate blue color on pan button
-                menu.get_btn_pan().setSelected(false);
-                menu.change_buttoncolor(menu.get_btn_pan(), false);
                 PAS.get_pas().repaint();
             }
         });
@@ -1067,7 +1056,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         dlg.get_logonpanel().getLblCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);
-        dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("logon_submit"));
+        dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("common_submit"));
         dlg.get_logonpanel().getErrorScroller().setPreferredSize(new Dimension(390, 50));
         return super.onCustomizeLogonDlg(dlg);
     }
@@ -1519,60 +1508,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 	public void onShapeIntegrityAfterEdit(ShapeStruct shape,
 			ShapeIntegrity integrity) {
 		log.debug("shape-integrity reports %s", integrity.toString());
-	}
-	
-	@Override
-	public String onSetProjectListToolTip(
-			ArrayList<StatusListObject> status_sendings) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<html>");
-		//sb.append("<b><font size=3>");
-		//sb.append(get_projectname());
-		//sb.append("</b>");
-		sb.append("<table CELLPADDING=5>");
-		//headings
-		//String bgcolor = "#" + Integer.toHexString(SystemColor.controlLtHighlight.getRGB()).substring(2);
-		//sb.append("<tr bgcolor=");
-		//sb.append(bgcolor);
-		//sb.append(">");
-		sb.append("<tr>");
-		sb.append("<td><b>");
-		sb.append(Localization.l("common_owner"));
-		sb.append("</b></td><td><b>");
-		sb.append(Localization.l("common_refno"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_channel"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_type"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_created"));
-		sb.append("</td><td><b>");
-		sb.append(Localization.l("common_time"));
-		sb.append("</td>");
-		sb.append("</tr>");
-		for(StatusListObject slo : status_sendings)
-		{
-			sb.append("<tr>");
-			sb.append("<td>");
-			sb.append(slo.get_deptid());
-			sb.append("</td><td>");
-			sb.append(slo.get_refno());
-			sb.append("</td><td>");
-			sb.append(slo.getChannel());
-			sb.append("</td><td>");
-			//Localization.l("common_items"), 
-			//Localization.l("common_type"), 
-			sb.append(slo.get_groupdesc());
-			sb.append("</td><td>");
-			sb.append(TextFormat.format_date(slo.get_createdate()));
-			sb.append("</td><td>");
-			sb.append(TextFormat.format_time(slo.get_createtime(),4));
-			sb.append("</td>");
-			sb.append("</tr>");
-		}
-		sb.append("</html>");
-		
-		return sb.toString();
 	}
     
     

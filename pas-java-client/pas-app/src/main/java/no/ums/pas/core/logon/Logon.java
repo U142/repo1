@@ -6,7 +6,6 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.ws.common.BBUSERBLOCKREASONS;
 import no.ums.ws.common.UNSLOOKUP;
 import no.ums.ws.common.parm.UDEPARTMENT;
 import no.ums.ws.common.parm.UPASLOGON;
@@ -79,15 +78,12 @@ public class Logon implements ActionListener {
 		return m_b_cantryagain;
 	}
 	public boolean triesExceeded() {
+		if(m_n_logontries >= m_n_max_tries)
+			return true;
 		return false; 		
 	}
-	private void incLogonTries(int logonTries) {
-		if(logonTries > 0) {
-			m_n_logontries = logonTries;
-		}
-		else if(m_n_logontries < m_n_max_tries) {
-			m_n_logontries++;
-		}
+	private void incLogonTries() {
+		m_n_logontries++;
 		if(triesExceeded())
 			m_b_cantryagain = false;
 	}
@@ -202,7 +198,7 @@ public class Logon implements ActionListener {
 			set_last_error(Localization.l("error_logon_request_timed_out"));
 			if(canTryAgain()) {
 				dlg.set_errortext(get_last_error());
-				incLogonTries(proc.getLogonResponse().getLogonTries());
+				incLogonTries();
 				return start();
 			}
 			else {
@@ -229,15 +225,6 @@ public class Logon implements ActionListener {
 		}*/
 		else if(m_info==null) {
 			set_last_error("Error: " + proc.get_last_error());
-			// sets logontries if it has found a user
-			if(proc.getLogonResponse().getLogonTries()> 0) {
-				m_n_logontries = proc.getLogonResponse().getLogonTries();
-				setMaxTries(proc.getLogonResponse().getMaxLogonTries());
-			}
-			// To not differentiate between actual users and non-existing ones.
-			if(m_n_logontries >= m_n_max_tries && proc.getLogonResponse().getReason() == BBUSERBLOCKREASONS.NONE) {
-				proc.setReason(BBUSERBLOCKREASONS.REACHED_RETRY_LIMIT);
-			}
 			switch(proc.getReason())
 			{
 			case BLOCKED_BY_ADMIN:
@@ -252,7 +239,7 @@ public class Logon implements ActionListener {
 			}
 			m_logoninfo = null;
 			if(canTryAgain()) {
-				incLogonTries(proc.getLogonResponse().getLogonTries());
+				incLogonTries();
 				return start();
 			}
 			else {

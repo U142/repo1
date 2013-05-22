@@ -61,8 +61,6 @@ namespace com.ums.UmsParm
         public UPASUISETTINGS uisettings;
         public String sessionid;
         public BBUSER_BLOCK_REASONS reason = BBUSER_BLOCK_REASONS.NONE;
-        public int logonTries;
-        public int maxLogonTries;
         public String sz_organization;
         public MDSOADC_DEFAULT default_oadc = new MDSOADC_DEFAULT();
     }
@@ -1409,18 +1407,7 @@ namespace com.ums.UmsParm
             StringReader read = new StringReader(xml);
             XmlSerializer serializer = new XmlSerializer(typeof(UPolygon), "http://ums.no/ws/common/parm");
             var xmlReader = new XmlTextReader(read);
-            try
-            {
-                return (UPolygon)serializer.Deserialize(xmlReader);
-            }
-            catch (Exception e)
-            {
-                read.Close();
-                read = new StringReader(xml);
-                serializer = new XmlSerializer(typeof(UPolygon), "");
-                xmlReader = new XmlTextReader(read);
-                return (UPolygon)serializer.Deserialize(xmlReader);
-            }
+            return (UPolygon) serializer.Deserialize(xmlReader);
         }
 
         public String Serialize()

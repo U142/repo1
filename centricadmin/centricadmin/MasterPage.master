@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="expires" content="0" />
-    <title>NL-Alert Administration <%=System.Reflection.Assembly.GetAssembly(typeof(centric.SiteMaster)).GetName().Version%></title>
+    <title>NL-Alert Administration <%=System.Configuration.ConfigurationManager.AppSettings["version"]%></title>
      <style type="text/css">
         .IE8Fix
         {
@@ -259,19 +259,6 @@
            }
            return false; //any other values, bad date
        }
-
-
-       function validateSecondChannel(oSrc, args) {
-            //Use JQuery to look for the checked checkbox and only if it is found, validate
-            if (!document.getElementById('body_chk_second_channel').checked) {
-                args.IsValid = true;
-            }
-            else {
-                if(!isNaN(args.valueOf)) {
-                    args.IsValid = (args.Value > 0);
-                }
-            }
-        }
        
 
     -->

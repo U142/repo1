@@ -31,8 +31,6 @@ public partial class predefine_text : System.Web.UI.Page
     {
         disabled_color = System.Drawing.ColorTranslator.FromHtml("#abaaa3");
 
-        txt_name.Attributes.Add("onkeyup", "javascript:nameLengthCheck()");
-
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
 

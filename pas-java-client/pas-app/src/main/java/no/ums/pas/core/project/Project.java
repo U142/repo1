@@ -1,6 +1,5 @@
 package no.ums.pas.core.project;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.TooltipItem;
 import no.ums.pas.core.logon.DeptInfo;
@@ -12,7 +11,7 @@ import no.ums.ws.common.UDeleteStatusResponse;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 
-public class Project extends Object implements TooltipItem, Comparable<Project> {
+public class Project extends Object implements TooltipItem {
 	
 	
 	private UDeleteStatusResponse may_be_deleted = UDeleteStatusResponse.ERROR;
@@ -203,7 +202,7 @@ public class Project extends Object implements TooltipItem, Comparable<Project> 
 				return "Restricted by ownership";
 			}
 		}
-		return PAS.pasplugin.onSetProjectListToolTip(get_status_sendings());
+		return toTooltipString();
 	}
 	@Override
 	public String toTooltipString() {
@@ -280,12 +279,6 @@ public class Project extends Object implements TooltipItem, Comparable<Project> 
 		sb.append("</html>");
 		
 		return sb.toString();
-	}
-	@Override
-	public int compareTo(Project o) {
-		int projectPK = Integer.parseInt(o.get_projectpk()); 
-		int localProjectPK = Integer.parseInt(get_projectpk());
-		return localProjectPK - projectPK;
 	}
 	
 }
