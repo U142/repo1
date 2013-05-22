@@ -2517,7 +2517,7 @@ namespace com.ums.UmsParm
         public void InsertTtsRef(int Refno, int Fileno, String MessageContent)
         {
             String Sql = "INSERT INTO BBQREF_TTSREF(l_refno, l_fileno, sz_content) VALUES(?, ?, ?)";
-            using (OdbcCommand cmd = CreateCommand(Sql))
+            using (OdbcCommand cmd = CreateCommand(Sql, UmsDb.UREADER_AUTOCLOSE))
             {
                 cmd.Parameters.Add("l_refno", OdbcType.Int).Value = Refno;
                 cmd.Parameters.Add("l_fileno", OdbcType.TinyInt).Value = Fileno;
