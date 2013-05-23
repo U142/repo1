@@ -37,25 +37,19 @@ public class WSSaveUI extends WSThread
 		{
 			//PAS.get_pas().setSubstanceChanges();
 			//PAS.pasplugin.onUserChangedLookAndFeel(PAS.get_pas().get_settings());
-			ULOGONINFO logon = new ULOGONINFO();
-			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
-			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
-			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
-			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
-			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
-			UPASUISETTINGS ui = new UPASUISETTINGS();
+
+            ULOGONINFO logon = new ULOGONINFO();
+            logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
+            logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+            logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
+            logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+            logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
+
+            UPASUISETTINGS ui = new UPASUISETTINGS();
 			MailAccount account = PAS.get_pas().get_userinfo().get_mailaccount();
 			final Settings settings = PAS.get_pas().get_settings();
 			String layerlist = "";
-			//Element layer;
-			/*for(int i=0; i < settings.getSelectedWmsLayers().size(); i++)
-			{
-				if(i>0)
-					layerlist+=",";
-				layerlist+=settings.getSelectedWmsLayers().get(i);
-			}*/
             // TODO: Make a proper sort method if needed. This one adds a random layer
-            /*
 			Collections.sort(settings.getWmsLayers(), new Comparator<WmsLayer>() {
 				public int compare(WmsLayer w1, WmsLayer w2)
 				{
@@ -66,11 +60,12 @@ public class WSSaveUI extends WSThread
 					return settings.getWmsLayers().indexOf(w1) - settings.getWmsLayers().indexOf(w2);
 				}
 			});
-			*/
+
 			for(WmsLayer l : settings.getWmsLayers())
 			{
-				//if(l.checked.booleanValue())
+				if(l.checked) {
 					layerlist+=l.toString() + ",";
+                }
 			}
 			
 			if(account!=null)
