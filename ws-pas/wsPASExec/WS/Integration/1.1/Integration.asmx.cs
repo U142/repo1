@@ -24,7 +24,7 @@ namespace com.ums.ws.integration.v11
     public class Integration : com.ums.ws.integration.Integration {
 
         /// <summary>
-        /// Get a list of vulnerable subscribers for a set of municipalities. Can filter by vulnerability code and company category
+        /// (DEPRECATED) Get a list of vulnerable subscribers for a set of municipalities. Can filter by vulnerability code and company category
         /// </summary>
         /// <param name="Account">Login credentials</param>
         /// <param name="Municipals">List of municipals to restrict search to</param>
@@ -165,6 +165,456 @@ namespace com.ums.ws.integration.v11
 
             return ret;
         }
+
+        /// <summary>
+        /// Searches the folkereg and additional registry for entries matching search text. Searches in name, address and phone number fields.
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="Municipalities">Filter on municipalities (if excluded, searches all available municipalities)</param>
+        /// <param name="SearchText">Name, address or number</param>
+        /// <param name="EntryType">Person or Company</param>
+        /// <param name="Language">Which language to return category and professions (Norwegian if excluded)</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"Search all available registries for a specific person, company, address or number")]
+        public List<RegistryEntry> SearchRegistry(Account Account, List<int> Municipalities, String SearchText, EntryType EntryType, string Language)
+        {
+            List<RegistryEntry> ret = new List<RegistryEntry>();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            string sql = "";
+            string searchMunicipalities = "";
+
+            if (Municipalities == null || Municipalities.Count == 0)
+                Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+            else
+                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
+
+            // TODO: Check if municipalities is empty + cross reference with municipalities available for department
+            foreach (int m in Municipalities)
+                searchMunicipalities = string.Format("{0}{1}{2}", searchMunicipalities, searchMunicipalities.Length > 0 ? "," : "", m);
+
+            switch (EntryType)
+            {
+                case v11.EntryType.PERSON:
+                    sql = "exec sp_SearchPerson ?, ?";
+                    break;
+                case v11.EntryType.COMPANY:
+                    sql = "exec sp_SearchCompany ?, ?";
+                    break;
+                default:
+                    throw new Exception("Unsupported entry type");
+            }
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("searchText", OdbcType.VarChar).Value = SearchText;
+                cmd.Parameters.Add("municipalities", OdbcType.VarChar).Value = searchMunicipalities;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    RegistryEntry entry = null;
+
+                    while (rs.Read())
+                    {
+                        // new entry, create and add to ret
+                        if ((rs.GetInt32(rs.GetOrdinal("l_parent_adr")) == 0 && rs.GetInt32(rs.GetOrdinal("l_parent_comp")) == 0) || entry == null)
+                        {
+                            entry = new RegistryEntry();
+                            ret.Add(entry);
+
+                            entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
+                            entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
+                            entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
+                            entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
+                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_profession")) && !rs.IsDBNull(rs.GetOrdinal("sz_profession")))
+                                entry.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) && 
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            ) 
+                            {
+                                entry.AddressDetails = new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null);
+                            }
+                            else
+                            {
+                                entry.AddressDetails = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null);
+                            }
+
+                            // Add phone numbers
+                            entry.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+                            
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            // Add changed and changeddate if appropriate
+                            entry.IsChanged = rs.GetBoolean(rs.GetOrdinal("IsChanged"));
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("Updated")) && rs.GetInt64(rs.GetOrdinal("Updated")) > 0)
+                                entry.Updated = new DateTime(rs.GetInt64(rs.GetOrdinal("Updated")));
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_adr")) > 0) // additional address
+                        {
+                            if (entry.AdditionalAddresses == null)
+                                entry.AdditionalAddresses = new List<AlertTarget>();
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            ) 
+                            {
+                                entry.AdditionalAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
+                            }
+                            else
+                            {
+                                entry.AdditionalAddresses.Add(new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null));
+                            }
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_comp")) > 0) // contact person
+                        {
+                            if (entry.ContactPersons == null)
+                                entry.ContactPersons = new List<ContactPerson>();
+
+                            ContactPerson cp = new ContactPerson();
+                            cp.FirstName = rs.GetString(rs.GetOrdinal("sz_firstname"));
+                            cp.MiddleName = rs.GetString(rs.GetOrdinal("sz_midname"));
+                            cp.LastName = rs.GetString(rs.GetOrdinal("sz_surname"));
+
+                            cp.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            entry.ContactPersons.Add(cp);
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Get all additional entries.
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="Municipalities">Filter on municipalities (if excluded, searches all available municipalities)</param>
+        /// <param name="Categories">Filter on categories</param>
+        /// <param name="Professions">Filter on professions (only if profession is applicable for category)</param>
+        /// <param name="EntryType">Person or Company</param>
+        /// <param name="Language">Which languge to return category and professions (Norweian if excluded)</param>
+        /// <returns></returns>
+        [WebMethod(Description = @"Get all additional entries")]
+        public List<RegistryEntry> GetAdditionalRegistry(Account Account, List<int> Municipalities, List<int> Categories, List<int> Professions, EntryType EntryType, string Language)
+        {
+            List<RegistryEntry> ret = new List<RegistryEntry>();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            string sql = "sp_GetAdditionalRegistry ?, ?, ? ,? ,?";
+
+            if (Municipalities == null || Municipalities.Count == 0)
+                Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+            else
+                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
+
+            string searchMunicipalities = string.Join(",", Municipalities.Select(m => m.ToString()).ToArray());
+            string searchCategories = Categories == null ? "" : string.Join(",", Categories.Select(c => c.ToString()).ToArray());
+            string searchProfessions = Professions == null ? "" : string.Join(",", Professions.Select(p => p.ToString()).ToArray());
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("municipalities", OdbcType.VarChar).Value = searchMunicipalities;
+                cmd.Parameters.Add("categories", OdbcType.VarChar).Value = searchCategories;
+                cmd.Parameters.Add("professions", OdbcType.VarChar).Value = searchProfessions;
+                switch(EntryType)
+                {
+                    case v11.EntryType.PERSON:
+                        cmd.Parameters.Add("bedrift", OdbcType.Int).Value = 0;
+                        break;
+                    case v11.EntryType.COMPANY:
+                    default:
+                        cmd.Parameters.Add("bedrift", OdbcType.Int).Value = 1;
+                        break;
+                }
+                cmd.Parameters.Add("language", OdbcType.VarChar).Value = Language;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    RegistryEntry entry = null;
+
+                    while (rs.Read())
+                    {
+                        // new entry, create and add to ret
+                        if ((rs.GetInt32(rs.GetOrdinal("l_parent_adr")) == 0 && rs.GetInt32(rs.GetOrdinal("l_parent_comp")) == 0) || entry == null)
+                        {
+                            entry = new RegistryEntry();
+                            ret.Add(entry);
+
+                            entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
+                            entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
+                            entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
+                            entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
+                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_profession")) && !rs.IsDBNull(rs.GetOrdinal("sz_profession")))
+                                entry.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            )
+                            {
+                                entry.AddressDetails = new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null);
+                            }
+                            else
+                            {
+                                entry.AddressDetails = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null);
+                            }
+
+                            // Add phone numbers
+                            entry.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            // Add changed and changeddate if appropriate
+                            entry.IsChanged = true;
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("Updated")) && rs.GetInt64(rs.GetOrdinal("Updated")) > 0)
+                                entry.Updated = new DateTime(rs.GetInt64(rs.GetOrdinal("Updated")));
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_adr")) > 0) // additional address
+                        {
+                            if (entry.AdditionalAddresses == null)
+                                entry.AdditionalAddresses = new List<AlertTarget>();
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            )
+                            {
+                                entry.AdditionalAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
+                            }
+                            else
+                            {
+                                entry.AdditionalAddresses.Add(new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null));
+                            }
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_comp")) > 0) // contact person
+                        {
+                            if (entry.ContactPersons == null)
+                                entry.ContactPersons = new List<ContactPerson>();
+
+                            ContactPerson cp = new ContactPerson();
+                            cp.FirstName = rs.GetString(rs.GetOrdinal("sz_firstname"));
+                            cp.MiddleName = rs.GetString(rs.GetOrdinal("sz_midname"));
+                            cp.LastName = rs.GetString(rs.GetOrdinal("sz_surname"));
+
+                            cp.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            entry.ContactPersons.Add(cp);
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [WebMethod(Description= @"Get available municipalities, message profiles, configuraiton profiles, ttslangauages and more for a give account")]
+        public AccountInfo GetAccountInfo(Account Account)
+        {
+            AccountInfo ret = new AccountInfo();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            ret.Municipalities = GetMunicipalities(logonInfo.l_deptpk);
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <returns></returns>
+        [WebMethod(Description= @"Get available categories")]
+        public List<Category> GetCategories(Account Account, EntryType? EntryType, string Language)
+        {
+            List<Category> ret = new List<Category>();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            string sql;
+
+            if (EntryType == null || EntryType.Value == com.ums.ws.integration.v11.EntryType.COMPANY)
+            {
+                sql = @"select 
+	                        SC.l_category,
+	                        isnull(SCL.sz_description, SC.sz_description) sz_description,
+	                        SC.f_hasprofessions
+                        from 
+	                        SO_CATEGORY SC
+	                        LEFT OUTER JOIN SO_CATEGORY_LANG SCL ON
+		                        SC.l_category=SCL.l_category AND
+		                        SCL.sz_lang = ?
+                        where
+	                        SC.f_company = 1
+                        order by
+                            SC.l_category";
+            }
+            else
+            {
+                throw new Exception("Entry type not supported");
+            }
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language == null ? "" : Language;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                        ret.Add(new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_description")), HasProfessions = rs.GetBoolean(rs.GetOrdinal("f_hasprofessions")) });
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <returns></returns>
+        [WebMethod(Description = @"Get available professions")]
+        public List<Profession> GetProfessions(Account Account, string Language)
+        {
+            List<Profession> ret = new List<Profession>();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            string sql = @"select 
+	                    SP.l_profession,
+	                    isnull(SPL.sz_description, SP.sz_description) sz_description
+                    from 
+	                    SO_PROFESSION SP
+	                    LEFT OUTER JOIN SO_PROFESSION_LANG SPL ON
+		                    SP.l_profession=SPL.l_profession AND
+		                    SPL.sz_lang = ?
+                    order by
+                        SP.l_profession";
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("lang", OdbcType.VarChar).Value = Language == null ? "" : Language;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                        ret.Add(new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_description")) });
+                }
+            }
+
+            return ret;
+        }
+
+
+        private List<Municipality> GetMunicipalities(int department)
+        {
+            List<Municipality> ret = new List<Municipality>();
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            string sql = "select D.l_municipalid, M.sz_name from DEPARTMENT_X_MUNICIPAL D INNER JOIN MUNICIPAL M ON D.l_municipalid=M.l_municipalid where D.l_deptpk=? order by M.sz_name";
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("deptpk", OdbcType.Int).Value = department;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                        ret.Add(new Municipality() { Id = rs.GetInt32(rs.GetOrdinal("l_municipalid")), Name = rs.GetString(rs.GetOrdinal("sz_name")) });
+                }
+            }
+
+            return ret;
+        }
     }
 
     [Serializable]
@@ -183,10 +633,90 @@ namespace com.ums.ws.integration.v11
 
     [Serializable]
     [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class RegistryEntry
+    {
+        public long Id;
+        public bool IsChanged;
+        public DateTime? Updated;
+        public string Name;                 // company or person
+        public string OrganizationNo;       // company only
+        public string Address;              // string representation of main address
+        public int ZipCode;                 // Zip code for the main address
+        public string ZipArea;              // Zip area for the main address
+        public AlertTarget AddressDetails;  // alerttarget for main address
+        public List<Endpoint> Endpoints;
+
+        public List<ContactPerson> ContactPersons;  // company only
+        public List<AlertTarget> AdditionalAddresses;
+
+        // initially only for companies
+        public Category Category;
+        public Profession Profession;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class ContactPerson
+    {
+        public long Id;
+        public string FirstName;
+        public string MiddleName;
+        public string LastName;
+        public List<Endpoint> Endpoints;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public enum EntryType
+    {
+        PERSON = 0,
+        COMPANY = 1
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class AccountInfo
+    {
+        public List<Municipality> Municipalities;
+        public List<MessageProfile> MessageProfiles;
+        public List<ConfigurationProfile> ConfigurationProfiles;
+        public List<TtsLanguage> TtsLangauges;
+        public List<String> SmsOriginators;
+        public List<String> VoiceOriginators;
+        public List<DataItem> Attribues;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class Municipality
+    {
+        public int Id;
+        public string Name;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class MessageProfile
+    {
+        public int Id;
+        public string Name;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class ConfigurationProfile
+    {
+        public int Id;
+        public string Name;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
     public class Category
     {
         public int Id;
         public string Name;
+        public bool HasProfessions;
     }
 
     [Serializable]
