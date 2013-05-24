@@ -234,6 +234,7 @@ namespace com.ums.ws.integration.v11
                             entry = new RegistryEntry();
                             ret.Add(entry);
 
+                            entry.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
                             entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
                             entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
@@ -299,6 +300,7 @@ namespace com.ums.ws.integration.v11
                                 entry.ContactPersons = new List<ContactPerson>();
 
                             ContactPerson cp = new ContactPerson();
+                            cp.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             cp.FirstName = rs.GetString(rs.GetOrdinal("sz_firstname"));
                             cp.MiddleName = rs.GetString(rs.GetOrdinal("sz_midname"));
                             cp.LastName = rs.GetString(rs.GetOrdinal("sz_surname"));
@@ -385,6 +387,7 @@ namespace com.ums.ws.integration.v11
                             entry = new RegistryEntry();
                             ret.Add(entry);
 
+                            entry.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
                             entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
                             entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
@@ -450,6 +453,7 @@ namespace com.ums.ws.integration.v11
                                 entry.ContactPersons = new List<ContactPerson>();
 
                             ContactPerson cp = new ContactPerson();
+                            cp.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             cp.FirstName = rs.GetString(rs.GetOrdinal("sz_firstname"));
                             cp.MiddleName = rs.GetString(rs.GetOrdinal("sz_midname"));
                             cp.LastName = rs.GetString(rs.GetOrdinal("sz_surname"));
