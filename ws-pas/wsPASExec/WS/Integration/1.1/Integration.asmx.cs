@@ -208,7 +208,7 @@ namespace com.ums.ws.integration.v11
                     sql = "exec sp_SearchPerson ?, ?";
                     break;
                 case v11.EntryType.COMPANY:
-                    sql = "exec sp_SearchCompany ?, ?";
+                    sql = "exec sp_SearchCompany ?, ?, ?";
                     break;
                 default:
                     throw new Exception("Unsupported entry type");
@@ -218,6 +218,9 @@ namespace com.ums.ws.integration.v11
             {
                 cmd.Parameters.Add("searchText", OdbcType.VarChar).Value = SearchText;
                 cmd.Parameters.Add("municipalities", OdbcType.VarChar).Value = searchMunicipalities;
+
+                if (EntryType == v11.EntryType.COMPANY)
+                    cmd.Parameters.Add("language", OdbcType.VarChar).Value = Language == null ? "" : Language;
 
                 using (var rs = cmd.ExecuteReader())
                 {
@@ -237,7 +240,7 @@ namespace com.ums.ws.integration.v11
                             entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
-                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
+                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")), HasProfessions = !rs.IsDBNull(rs.GetOrdinal("l_profession")) };
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_profession")) && !rs.IsDBNull(rs.GetOrdinal("sz_profession")))
                                 entry.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
@@ -368,7 +371,7 @@ namespace com.ums.ws.integration.v11
                         cmd.Parameters.Add("bedrift", OdbcType.Int).Value = 1;
                         break;
                 }
-                cmd.Parameters.Add("language", OdbcType.VarChar).Value = Language;
+                cmd.Parameters.Add("language", OdbcType.VarChar).Value = Language == null ? "" : Language;
 
                 using (var rs = cmd.ExecuteReader())
                 {
@@ -388,7 +391,7 @@ namespace com.ums.ws.integration.v11
                             entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
-                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")) };
+                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")), HasProfessions = !rs.IsDBNull(rs.GetOrdinal("l_profession")) };
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_profession")) && !rs.IsDBNull(rs.GetOrdinal("sz_profession")))
                                 entry.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
