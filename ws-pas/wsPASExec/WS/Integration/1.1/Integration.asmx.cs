@@ -398,10 +398,12 @@ namespace com.ums.ws.integration.v11
                                 entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
 
                             // Add changed and changeddate if appropriate
-                            entry.IsChanged = true;
+                            entry.IsChanged = rs.GetBoolean(rs.GetOrdinal("IsChanged"));
 
                             if (!rs.IsDBNull(rs.GetOrdinal("Updated")) && rs.GetInt64(rs.GetOrdinal("Updated")) > 0)
                                 entry.Updated = new DateTime(rs.GetInt64(rs.GetOrdinal("Updated")));
+                            else
+                                entry.Updated = null;
                         }
                         else if (rs.GetInt32(rs.GetOrdinal("l_parent_adr")) > 0) // additional address
                         {
