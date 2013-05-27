@@ -66,6 +66,12 @@ namespace com.ums.ws.integration.v11
             return new Integration().GetAdditionalRegistry(Account, Municipalities, Categories, Professions, EntryType, Language);
         }
 
+        [WebMethod(Description = "Get a single entry from the additional registry")]
+        public RegistryEntry GetAdditionalRegistryEntry(Account Account, int ID, string Language)
+        {
+            return new Integration().GetAdditionalRegistryEntry(Account, ID, Language);
+        }
+
         /// <summary>
         /// 
         /// </summary>

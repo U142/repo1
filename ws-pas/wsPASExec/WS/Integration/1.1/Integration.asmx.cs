@@ -323,6 +323,133 @@ namespace com.ums.ws.integration.v11
         }
 
         /// <summary>
+        /// Get a single entry from the additional registry
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="ID">Unique identifier from the additional registry</param>
+        /// <returns></returns>
+        [WebMethod(Description= "Get a single entry from the additional registry")]
+        public RegistryEntry GetAdditionalRegistryEntry(Account Account, int ID, string Language)
+        {
+            RegistryEntry entry = new RegistryEntry();
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+
+            string sql = "sp_GetAdditionalRegistryEntry ?, ?, ?";
+
+            List<int> Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+            string searchMunicipalities = string.Join(",", Municipalities.Select(m => m.ToString()).ToArray());
+
+            using (var cmd = folkeReg.CreateCommand(sql))
+            {
+                cmd.Parameters.Add("kon_dmid", OdbcType.Int).Value = ID;
+                cmd.Parameters.Add("municipalities", OdbcType.VarChar).Value = searchMunicipalities;
+                cmd.Parameters.Add("language", OdbcType.VarChar).Value = Language == null ? "" : Language;
+
+                using (var rs = cmd.ExecuteReader())
+                {
+                    while (rs.Read())
+                    {
+                        // new entry, create and add to ret
+                        if ((rs.GetInt32(rs.GetOrdinal("l_parent_adr")) == 0 && rs.GetInt32(rs.GetOrdinal("l_parent_comp")) == 0) || entry == null)
+                        {
+                            entry.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
+                            entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
+                            entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
+                            entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
+                            entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
+                                entry.Category = new Category() { Id = rs.GetInt32(rs.GetOrdinal("l_category")), Name = rs.GetString(rs.GetOrdinal("sz_category")), HasProfessions = !rs.IsDBNull(rs.GetOrdinal("l_profession")) };
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("l_profession")) && !rs.IsDBNull(rs.GetOrdinal("sz_profession")))
+                                entry.Profession = new Profession() { Id = rs.GetInt32(rs.GetOrdinal("l_profession")), Name = rs.GetString(rs.GetOrdinal("sz_profession")) };
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            )
+                            {
+                                entry.AddressDetails = new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null);
+                            }
+                            else
+                            {
+                                entry.AddressDetails = new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null);
+                            }
+
+                            // Add phone numbers
+                            entry.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            // Add changed and changeddate if appropriate
+                            entry.IsChanged = true;
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("Updated")) && rs.GetInt64(rs.GetOrdinal("Updated")) > 0)
+                                entry.Updated = new DateTime(rs.GetInt64(rs.GetOrdinal("Updated")));
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_adr")) > 0) // additional address
+                        {
+                            if (entry.AdditionalAddresses == null)
+                                entry.AdditionalAddresses = new List<AlertTarget>();
+
+                            // property address
+                            if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
+                                    rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
+                                )
+                            )
+                            {
+                                entry.AdditionalAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
+                            }
+                            else
+                            {
+                                entry.AdditionalAddresses.Add(new StreetAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GATEKODE")), rs.GetInt32(rs.GetOrdinal("HUSNR")), rs.GetString(rs.GetOrdinal("OPPGANG")), null, null));
+                            }
+                        }
+                        else if (rs.GetInt32(rs.GetOrdinal("l_parent_comp")) > 0) // contact person
+                        {
+                            if (entry.ContactPersons == null)
+                                entry.ContactPersons = new List<ContactPerson>();
+
+                            ContactPerson cp = new ContactPerson();
+                            cp.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
+                            cp.FirstName = rs.GetString(rs.GetOrdinal("sz_firstname"));
+                            cp.MiddleName = rs.GetString(rs.GetOrdinal("sz_midname"));
+                            cp.LastName = rs.GetString(rs.GetOrdinal("sz_surname"));
+
+                            cp.Endpoints = new List<Endpoint>();
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
+
+                            if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
+                                cp.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
+
+                            entry.ContactPersons.Add(cp);
+                        }
+                    }
+                }
+            }
+
+            return entry;
+        }
+
+        /// <summary>
         /// Get all additional entries.
         /// </summary>
         /// <param name="Account"></param>
