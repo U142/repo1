@@ -323,14 +323,14 @@ namespace com.ums.ws.integration.v11
         }
 
         /// <summary>
-        /// Get a single entry from the additional registry
+        /// Get a single entry from the registry
         /// </summary>
         /// <param name="Account"></param>
         /// <param name="ID">Unike ID for the entry</param>
         /// <param name="Language">Which language to return the vulnerable categories if appliccable</param>
         /// <returns>A entry from the additional registry with all additional addresses and contact persons</returns>
         [WebMethod(Description= "Get a single entry from the additional registry")]
-        public RegistryEntry GetAdditionalRegistryEntry(Account Account, int ID, string Language)
+        public RegistryEntry GetRegistryEntry(Account Account, int ID, string Language)
         {
             RegistryEntry entry = new RegistryEntry();
 
@@ -344,7 +344,7 @@ namespace com.ums.ws.integration.v11
 
             UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
 
-            string sql = "sp_GetAdditionalRegistryEntry ?, ?, ?";
+            string sql = "sp_GetRegistryEntry ?, ?, ?";
 
             List<int> Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
             string searchMunicipalities = string.Join(",", Municipalities.Select(m => m.ToString()).ToArray());
