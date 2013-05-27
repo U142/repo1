@@ -66,6 +66,13 @@ namespace com.ums.ws.integration.v11
             return new Integration().GetAdditionalRegistry(Account, Municipalities, Categories, Professions, EntryType, Language);
         }
 
+        /// <summary>
+        /// Get a single entry from the additional registry
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="ID">Unike ID for the entry</param>
+        /// <param name="Language">Which language to return the vulnerable categories if appliccable</param>
+        /// <returns>A entry from the additional registry with all additional addresses and contact persons</returns>
         [WebMethod(Description = "Get a single entry from the additional registry")]
         public RegistryEntry GetAdditionalRegistryEntry(Account Account, int ID, string Language)
         {
