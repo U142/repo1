@@ -13,7 +13,7 @@ namespace com.ums.pas.integration.AddressLookup
     /// Got the code from 
     /// git@github.com:jone-l/diverse.git/GISOptimization
     /// </summary>
-    class StreetAddressLookupImpl : IStreetAddressLookupFacade
+    public class StreetAddressLookupImpl : IStreetAddressLookupFacade
     {
         private static ILog log = LogManager.GetLogger(typeof(StreetAddressLookupImpl));
         private String _connectionString;

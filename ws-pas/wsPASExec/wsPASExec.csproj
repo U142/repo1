@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>wsPASExec</RootNamespace>
     <AssemblyName>wsPASExec</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SignAssembly>false</SignAssembly>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -146,11 +146,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Extensions.Design" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -269,6 +270,10 @@
     <ProjectReference Include="..\PasIntegrationInterface\PasIntegrationInterface.csproj">
       <Project>{5F25B3F4-CA67-4BB1-B693-A7AF76170ABF}</Project>
       <Name>PasIntegrationInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PasIntegrationService\PasIntegrationService.csproj">
+      <Project>{44CFE1C2-DCA8-48B5-B04A-7F08AE37B305}</Project>
+      <Name>PasIntegrationService</Name>
     </ProjectReference>
     <ProjectReference Include="..\UmsAudio\UmsAudio.csproj">
       <Project>{C44B04EA-5C9D-4BB0-B365-FC9B0C87E93F}</Project>

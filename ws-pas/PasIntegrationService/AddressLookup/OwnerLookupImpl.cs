@@ -8,7 +8,7 @@ using log4net;
 
 namespace com.ums.pas.integration.AddressLookup
 {
-    class OwnerLookupImpl : IOwnerLookupFacade
+    public class OwnerLookupImpl : IOwnerLookupFacade
     {
         private static ILog log = LogManager.GetLogger(typeof(OwnerLookupImpl));
 

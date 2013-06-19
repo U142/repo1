@@ -10,6 +10,8 @@ using com.ums.PAS.Project;
 using System.Data.Odbc;
 using System.Configuration;
 using System.Xml.Serialization;
+using com.ums.pas.integration.AddressLookup;
+using com.ums.pas.integration.AddressCleanup;
 
 namespace com.ums.ws.integration.v11
 {
@@ -730,6 +732,164 @@ namespace com.ums.ws.integration.v11
             return ret;
         }
 
+        /// <summary>
+        /// Match addresses without creating alert
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="AlertTargets">List of alert targets</param>
+        /// <returns></returns>
+        [WebMethod(Description = "Do a address lookup without generating an alert")]
+        public List<AlertTargetData> GetPhoneNumbers(Account Account, List<AlertTarget> AlertTargets)
+        {
+            List<RecipientData> recipientDataList = new List<RecipientData>();
+
+            string FolkeregDatabaseConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_folkereg"].ConnectionString;
+            string NorwayDatabaseConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["adrdb_regular"].ConnectionString;
+
+            bool useDoubleAdrLookup = false;
+            if (System.Configuration.ConfigurationManager.AppSettings["UseDoubleAdrLookup"] == "true") useDoubleAdrLookup = true;
+
+            ULOGONINFO logonInfo = new ULOGONINFO();
+            logonInfo.sz_compid = Account.CompanyId;
+            logonInfo.sz_deptid = Account.DepartmentId;
+            logonInfo.sz_password = Account.Password;
+
+            UmsDb umsDb = new UmsDb();
+            umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
+
+            List<StreetAddress> streetAddresses = AlertTargets.OfType<StreetAddress>().ToList();
+            List<PropertyAddress> propertyAddresses = AlertTargets.OfType<PropertyAddress>().ToList();
+            List<OwnerAddress> ownerAddresses = AlertTargets.OfType<OwnerAddress>().ToList();
+            List<AlertObject> alertObjects = AlertTargets.OfType<AlertObject>().ToList();
+
+            #region alertObject
+            foreach (AlertObject alertObject in alertObjects)
+            {
+                recipientDataList.Add(new RecipientData()
+                {
+                    AlertTarget = alertObject,
+                    Endpoints = alertObject.Endpoints,
+                    Name = alertObject.Name,
+                    Address = "",
+                    Postno = 0,
+                    PostPlace = "",
+                });
+            }
+            #endregion
+            #region streetAddress
+            IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
+            // Get Folkereg data
+            IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
+                                                        FolkeregDatabaseConnectionString,
+                                                        streetAddresses);
+            
+            if (useDoubleAdrLookup)
+            {
+                // Get Norway data
+                IEnumerable<RecipientData> streetAddressLookup2 = streetLookupInterface.GetMatchingStreetAddresses(
+                                                            NorwayDatabaseConnectionString,
+                                                            streetAddresses);
+                // Match lists
+                IEnumerable<RecipientData> streetAddressLookupTotal = streetAddressLookup.Union(streetAddressLookup2);
+                streetAddressLookup = streetAddressLookupTotal;
+            }
+
+            // Remove number not found that was found in one of the databases
+            List<StreetAddress> saNumberNotFound = streetLookupInterface.GetNoNumbersFoundList().ToList();
+            foreach (RecipientData rd in streetAddressLookup)
+                if (saNumberNotFound.Contains((StreetAddress)rd.AlertTarget))
+                    saNumberNotFound.Remove((StreetAddress)rd.AlertTarget);
+
+            // Build complete list
+            recipientDataList.AddRange(streetAddressLookup);
+            foreach (StreetAddress sa in saNumberNotFound)
+                recipientDataList.Add(new RecipientData()
+                {
+                    AlertTarget = sa,
+                    Name = "",
+                    NoRecipients = true,
+                });
+            #endregion
+            #region propertyAddress
+            IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
+            // Get Folkereg data
+            IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                            FolkeregDatabaseConnectionString,
+                                                                            propertyAddresses);
+
+            if (useDoubleAdrLookup)
+            {
+                // Get Norway data
+                IEnumerable<RecipientData> propertyLookup2 = propertyLookupInterface.GetMatchingPropertyAddresses(
+                                                                                NorwayDatabaseConnectionString,
+                                                                                propertyAddresses);
+                // Match lists
+                IEnumerable<RecipientData> propertyLookupTotal = propertyLookup.Union(propertyLookup2);
+                propertyLookup = propertyLookupTotal;
+            }
+
+            // Remove number not found that was found in one of the databases
+            List<PropertyAddress> paNumberNotFound = propertyLookupInterface.GetNoNumbersFoundList().ToList();
+            foreach (RecipientData rd in propertyLookup)
+                if (paNumberNotFound.Contains((PropertyAddress)rd.AlertTarget))
+                    paNumberNotFound.Remove((PropertyAddress)rd.AlertTarget);
+
+            // Build complete list
+            recipientDataList.AddRange(propertyLookup);
+            foreach (PropertyAddress pa in paNumberNotFound)
+                recipientDataList.Add(new RecipientData()
+                {
+                    AlertTarget = pa,
+                    Name = "",
+                    NoRecipients = true,
+                });
+            #endregion
+            #region ownerAddress
+            IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
+            IEnumerable<RecipientData> ownerLookup1 = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                FolkeregDatabaseConnectionString,
+                                                                                ownerAddresses);
+            recipientDataList.AddRange(ownerLookup1);
+
+            if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+            {
+                IEnumerable<RecipientData> ownerLookup2 = ownerLookupInterface.GetMatchingOwnerAddresses(
+                                                                                    NorwayDatabaseConnectionString,
+                                                                                    ownerLookupInterface.GetNoMatchList().ToList());
+                recipientDataList.AddRange(ownerLookup2);
+                if (ownerLookupInterface.GetNoMatchList().Count() > 0)
+                {
+                    foreach (OwnerAddress ownerAddress in ownerLookupInterface.GetNoMatchList())
+                    {
+                        recipientDataList.Add(new RecipientData()
+                        {
+                            AlertTarget = ownerAddress,
+                            Name = "",
+                            NoRecipients = true,
+                        });
+                    }
+                }
+            }
+            #endregion
+
+            IDuplicateCleaner DuplicateCleaner = new DuplicateCleanerImpl();
+            recipientDataList = DuplicateCleaner.DuplicateCleanup(recipientDataList,
+                        (r, e) =>
+                        {
+                            //log.DebugFormat("Insert duplicate mark in database for {0} with endpoint {1}", r.Name, e.Address);
+                        });
+
+            List<AlertTargetData> ret = new List<AlertTargetData>();
+            foreach (RecipientData rd in recipientDataList)
+                ret.Add(new AlertTargetData()
+                {
+                    Name = rd.Name,
+                    Endpoints = rd.Endpoints,
+                    AlertTarget = rd.AlertTarget
+                });
+
+            return ret;
+        }
 
         private List<Municipality> GetMunicipalities(int department)
         {
@@ -862,5 +1022,14 @@ namespace com.ums.ws.integration.v11
     {
         public int Id;
         public string Name;
+    }
+
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public class AlertTargetData
+    {
+        public string Name;
+        public List<Endpoint> Endpoints;
+        public AlertTarget AlertTarget;
     }
 }

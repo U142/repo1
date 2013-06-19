@@ -111,5 +111,17 @@ namespace com.ums.ws.integration.v11
         {
             return new Integration().GetProfessions(Account, Language);
         }    
+
+                /// <summary>
+        /// Match addresses without creating alert
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="AlertTargets">List of alert targets</param>
+        /// <returns></returns>
+        [WebMethod(Description = "Do a address lookup without generating an alert")]
+        public List<AlertTargetData> GetPhoneNumbers(Account Account, List<AlertTarget> AlertTargets)
+        {
+            return new Integration().GetPhoneNumbers(Account, AlertTargets);
+        }
     }
 }

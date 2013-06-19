@@ -7,7 +7,7 @@ using log4net;
 
 namespace com.ums.pas.integration.AddressLookup
 {
-    class PropertyAddressLookupImpl : IPropertyAddressLookupFacade
+    public class PropertyAddressLookupImpl : IPropertyAddressLookupFacade
     {
         private static ILog log = LogManager.GetLogger(typeof(PropertyAddressLookupImpl));
         private String _connectionString;
