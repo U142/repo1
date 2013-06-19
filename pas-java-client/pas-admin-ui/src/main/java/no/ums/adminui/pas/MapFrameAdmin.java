@@ -191,6 +191,9 @@ public class MapFrameAdmin extends MapFrame {
         private String host;
         private String path;
         private String version;
+        private String wmsUser;
+        private String wmsPassword;
+
 
 
         private void update() {
@@ -201,6 +204,8 @@ public class MapFrameAdmin extends MapFrame {
                     scheme = base.getScheme();
                     host = base.getHost();
                     path = base.getPath();
+                    wmsUser = Variables.getSettings().getWmsUsername();
+                    wmsPassword = Variables.getSettings().getWmsPassword();
 
                     m_maploader.setWmsAuthenticator(Variables.getSettings().getWmsUsername(), Variables.getSettings().getWmsPassword().toCharArray());
                     WebMapServer wms = new WebMapServer(new URL(wmsSite));
@@ -249,7 +254,17 @@ public class MapFrameAdmin extends MapFrame {
             return Joiner.on(",").join(Variables.getSettings().getSelectedWmsLayers());
         }
 
-		@Override
+        @Override
+        public String getWmsUser() {
+            return wmsUser;
+        }
+
+        @Override
+        public String getWmsPassword() {
+            return wmsPassword;
+        }
+
+        @Override
 		public int getSrs() {
 			int srs = Integer.parseInt(Variables.getSettings().getWmsEpsg());
 			if(srs<=0)
