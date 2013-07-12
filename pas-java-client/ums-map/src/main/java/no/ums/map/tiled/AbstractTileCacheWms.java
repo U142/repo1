@@ -98,7 +98,8 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
 
             //Hack version for danish demo
             if (getHost().contains("kortforsyningen.kms.dk")) {
-                query = String.format(Locale.ENGLISH, "SERVICE=WMS&servicename=topo_skaermkort&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&SRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
+                query = String.format(Locale.ENGLISH, "SERVICE=WMS&servicename=topo_skaermkort&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&SRS=EPSG:%s&VERSION=%s&login=%s&password=%s",
+                        getLayers(), getFormat(), n_lbo, n_bbo, n_rbo, n_ubo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion(), getWmsUser(), getWmsPassword());
             } else if(getVersion().contains("1.3")) {
             	query = String.format(Locale.ENGLISH, "SERVICE=WMS&LAYERS=%s&FORMAT=%s&TRANSPARENT=TRUE&REQUEST=GetMap&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d&STYLES=&CRS=EPSG:%s&VERSION=%s", getLayers(), getFormat(), n_bbo, n_lbo, n_ubo, n_rbo, TILE_SIZE, TILE_SIZE, getSrs(), getVersion());
             } else {
@@ -121,6 +122,10 @@ public abstract class AbstractTileCacheWms extends AbstractTileCacheUri {
     public abstract String getFormat();
 
     public abstract String getLayers();
+
+    public abstract String getWmsUser();
+
+    public abstract String getWmsPassword();
     
     public abstract int getSrs();
 }

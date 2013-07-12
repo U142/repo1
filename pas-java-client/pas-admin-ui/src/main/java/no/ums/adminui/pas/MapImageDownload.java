@@ -110,7 +110,10 @@ public class MapImageDownload extends JApplet {
             log.warn("Failed to fetch WMS version", ex);
         }
 
-        final TileCacheWms wmsTileCache = new TileCacheWms(scheme,host,mappath,"1.1.1",Variables.getSettings().getSelectedWmsFormat(),Integer.valueOf(Variables.getSettings().getWmsEpsg()),Variables.getSettings().getSelectedWmsLayers());
+        final TileCacheWms wmsTileCache = new TileCacheWms(scheme,host,mappath,"1.1.1",
+                Variables.getSettings().getSelectedWmsFormat(),Integer.valueOf(Variables.getSettings().getWmsEpsg()),
+                Variables.getSettings().getWmsUsername(), Variables.getSettings().getWmsPassword(),
+                Variables.getSettings().getSelectedWmsLayers());
 
         //final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
         mapComponent.setTileLookup(new TileLookupImpl(wmsTileCache));
