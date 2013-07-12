@@ -21,8 +21,8 @@ public final class TileData {
 
     public TileData(final int zoom, final int row, final int column, final int x, final int y, final int width,
                     final int height) {
-        Preconditions.checkElementIndex(column, (int) Math.pow(2, zoom), "column");
-        Preconditions.checkElementIndex(row, (int) Math.pow(2, zoom), "row");
+        //Preconditions.checkElementIndex(column, (int) Math.pow(2, zoom), "column");
+        //Preconditions.checkElementIndex(row, (int) Math.pow(2, zoom), "row");
         Preconditions.checkArgument(width > 0, "width must be positive");
         Preconditions.checkArgument(height > 0, "height must be positive");
         this.zoom = zoom;

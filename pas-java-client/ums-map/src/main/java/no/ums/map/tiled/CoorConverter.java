@@ -131,7 +131,73 @@ public class CoorConverter {
 	
 		return LetterDesignator;
 	}
-	
+
+    // Convert using a specific UTM zone
+    public UTMCoor LL2UTM(int ReferenceEllipsoid, double Lat, double Long, String UTMZone)
+    {
+        int ZoneNumber;
+        char ZoneLetter;
+        double yOffset = 0;
+
+        //ZoneNumber = strtoul(UTMZone, ZoneLetter, 10);
+        ZoneNumber = Integer.parseInt(UTMZone.substring(0, 2));//strtoul(UTMZone, ZoneLetter, 10);
+        ZoneLetter = UTMZone.charAt(2);
+        if((ZoneLetter - 'N') >= 0) {
+
+        }
+        else
+        {
+            yOffset = 10000000.0;//add 10,000,000 meter offset used for southern hemisphere
+        }
+
+        //converts lat/long to UTM coords.  Equations from USGS Bulletin 1532
+        //East Longitudes are positive, West longitudes are negative.
+        //North latitudes are positive, South latitudes are negative
+        //Lat and Long are in decimal degrees
+        double UTMNorthing;
+        double UTMEasting;
+
+        double a = CoorConst.ellipsoid[ReferenceEllipsoid].EquatorialRadius;
+        double eccSquared = CoorConst.ellipsoid[ReferenceEllipsoid].eccentricitySquared;
+        double k0 = 0.9996;
+
+        double LongOrigin;
+        double eccPrimeSquared;
+        double N, T, C, A, M;
+
+        //Make sure the longitude is between -180.00 .. 179.9
+        double LongTemp = (Long+180)-(int)((Long+180.0)/360.0)*360.0-180.0; // -180.00 .. 179.9;
+
+        double LatRad = Lat*CoorConverter.deg2rad;
+        double LongRad = LongTemp*CoorConverter.deg2rad;
+        double LongOriginRad;
+
+        LongOrigin = (ZoneNumber - 1)*6 - 180 + 3;  //+3 puts origin in middle of zone
+        LongOriginRad = LongOrigin * CoorConverter.deg2rad;
+
+        eccPrimeSquared = (eccSquared)/(1-eccSquared);
+
+        N = a/Math.sqrt(1-eccSquared*Math.sin(LatRad)*Math.sin(LatRad));
+        T = Math.tan(LatRad)*Math.tan(LatRad);
+        C = eccPrimeSquared*Math.cos(LatRad)*Math.cos(LatRad);
+        A = Math.cos(LatRad)*(LongRad-LongOriginRad);
+
+        M = a*((1	- eccSquared/4		- 3*eccSquared*eccSquared/64	- 5*eccSquared*eccSquared*eccSquared/256)*LatRad
+                - (3*eccSquared/8	+ 3*eccSquared*eccSquared/32	+ 45*eccSquared*eccSquared*eccSquared/1024)*Math.sin(2*LatRad)
+                + (15*eccSquared*eccSquared/256 + 45*eccSquared*eccSquared*eccSquared/1024)*Math.sin(4*LatRad)
+                - (35*eccSquared*eccSquared*eccSquared/3072)*Math.sin(6*LatRad));
+
+        UTMEasting = (double)(k0*N*(A+(1-T+C)*A*A*A/6
+                + (5-18*T+T*T+72*C-58*eccPrimeSquared)*A*A*A*A*A/120)
+                + 500000.0);
+
+        UTMNorthing = (double)(k0*(M+N*Math.tan(LatRad)*(A*A/2+(5-T+9*C+4*C*C)*A*A*A*A/24
+                + (61-58*T+T*T+600*C-330*eccPrimeSquared)*A*A*A*A*A*A/720)));
+
+        UTMNorthing += yOffset;
+
+        return new UTMCoor(UTMNorthing, UTMEasting, UTMZone);
+    }
 	
 	public UTMCoor LL2UTM(int ReferenceEllipsoid, double Lat, double Long)
 	{

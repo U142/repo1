@@ -4,6 +4,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.ZoomLookupImpl;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
@@ -119,7 +120,7 @@ public class HouseController extends Controller {
 		return ((ADR_TYPES_SHOW_ & n_type) == n_type);
 	}
 
-    private final ZoomLookup stdZoom = new ZoomLookup(17, 256);
+    private final ZoomLookup stdZoom = new ZoomLookupImpl(17, 256);
     private final HouseDownloadCache cache = new HouseDownloadCache();
     public HouseDownloadCache getCache() { return cache; }
     

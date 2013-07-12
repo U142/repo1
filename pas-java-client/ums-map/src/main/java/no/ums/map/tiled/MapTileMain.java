@@ -12,7 +12,7 @@ import java.util.Locale;
  * @author Ståle Undheim <su@ums.no>
  */
 public final class MapTileMain {
-    private static final File TILES = new File("/storage/osm/mapnik/tiles2");
+    private static final File TILES = new File("/storage/Geodata/GeocacheBasis/tiles");
 
     private MapTileMain() {
     }
@@ -23,16 +23,28 @@ public final class MapTileMain {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 final  TestFrame mainFrame = new TestFrame();
-                mainFrame.getMapComponent1().getModel().setTopLeft(new LonLat(5, 58));
+                mainFrame.getMapComponent1().getModel().setTopLeft(new LonLat(5.7098, 58.8188));
                 mainFrame.getMapComponent1().getModel().setZoom(4);
-                final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
 //                final TileCacheGoogle googleTileCache = new TileCacheGoogle();
 //                final TileCacheLocal localTileCache = new TileCacheLocal(TILES);
 //                final TileCachePas pas = new TileCachePas();
 //                final TileCacheFleximap fleximap = new TileCacheFleximap();
 //                final TileCacheWms wms = new TileCacheWms("http", "www.webatlas.no", "/wms-UMs", "1.1.1",
 //                        "image/png", "ortofoto");
+                /*
+                // Open Street Map
+                final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(osmTileCache));
+
+                // Defautl Geodata
+                final TileCacheGeodataDefault tileCacheGeodataDefault = new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis);
+                mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodataDefault));
+                */
+
+                // UMS Tiled Geodata
+                final TileCacheGeodata tileCacheGeodata = new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis);
+                mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodata));
+
                 mainFrame.getMapComponent1().addMouseMotionListener(new MouseAdapter() {
                     @Override
                     public void mouseMoved(final MouseEvent e) {

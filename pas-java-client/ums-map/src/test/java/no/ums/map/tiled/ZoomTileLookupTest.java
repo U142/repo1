@@ -18,7 +18,7 @@ public class ZoomTileLookupTest {
     
     @Test
     public void testGetTiles() {
-        ZoomLookup zoomLookup = new ZoomLookup(1, 256);
+        ZoomLookup zoomLookup = new ZoomLookupImpl(1, 256);
         List<Point> tilePoints = zoomLookup.getTiles(new LonLat(-90, 45), new LonLat(90, -45));
         assertThat(tilePoints, equalTo(Arrays.asList(new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1))));
     }
@@ -52,7 +52,7 @@ public class ZoomTileLookupTest {
 
     @Test
     public void testGetLon() {
-        ZoomLookup zoomLookup = new ZoomLookup(1, 256);
+        ZoomLookup zoomLookup = new ZoomLookupImpl(1, 256);
         assertThat(zoomLookup.getLonLat(0,0).getLon(), closeTo(-180, .01));
         assertThat(zoomLookup.getLonLat(128,0).getLon(), closeTo(-90, .01));
         assertThat(zoomLookup.getLonLat(256,0).getLon(), closeTo(0, .01));

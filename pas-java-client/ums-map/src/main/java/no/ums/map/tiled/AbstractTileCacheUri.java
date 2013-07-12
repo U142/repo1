@@ -14,6 +14,10 @@ import java.net.URL;
  */
 public abstract class AbstractTileCacheUri extends AbstractTileCache {
 
+    public AbstractTileCacheUri(final int maxZoom, final int tileZise, final ZoomLookup.ZoomLookupType zoomLookupType) {
+        super(maxZoom, tileZise, zoomLookupType);
+    }
+
     public AbstractTileCacheUri(final int maxZoom, final int tileSize) {
         super(maxZoom, tileSize);
     }
