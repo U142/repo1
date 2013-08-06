@@ -17,7 +17,7 @@ public final class TileCacheGeodata extends AbstractTileCacheUri {
     private static final int TILE_SIZE = 256;
 
     public static enum Layer {
-        GeocacheBasis("customservices.geodataonline.no", "/arcgis/rest/services/UMS/UMSBaseMap/MapServer/tile/%d/%d/%d", "token=_rcLdtkkHFdW3CEZL8qr5AJfDTQ5zirI84AOMXN-Wl9qn-f-c8KhilaUDUsWR3D409bvcT1pK_Sv5RuLyEfyVw..");
+        GeocacheBasis("customservices.geodataonline.no", "/arcgis/rest/services/UMS/UMSBaseMap/MapServer/tile/%d/%d/%d", "token=_rcLdtkkHFdW3CEZL8qr5I5VDQPySW6LFebxHSjMhafS9BqCOALBcoTrsesazImsxB_W6qTx2f9Ui4Ih_GlMXA..");
 
         private final String hostPostfix;
         private final String pathFormat;
