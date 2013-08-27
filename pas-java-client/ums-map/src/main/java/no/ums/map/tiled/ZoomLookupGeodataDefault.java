@@ -17,8 +17,8 @@ public final class ZoomLookupGeodataDefault implements  ZoomLookup {
     private final double xOrigin = -2500000;
     private final double yOrigin = 9045984;
 
-    private final double minX = -3708422.0276739914;
-    private final double minY = 3479849.9391751494;
+    private final double minX = -3708422.0276739914; // 25.085582
+    private final double minY = 3479849.9391751494; // -24.983028
     private final double maxX = 4766389.58857987;
     private final double maxY = 9997963.94301857;
 

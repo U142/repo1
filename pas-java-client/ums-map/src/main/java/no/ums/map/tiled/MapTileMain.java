@@ -35,8 +35,10 @@ public final class MapTileMain {
                 // Open Street Map
                 final TileCacheOsm osmTileCache = new TileCacheOsm(TileCacheOsm.Layer.MAPNIK);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(osmTileCache));
+                */
 
-                // Defautl Geodata
+                /*
+                // Default Geodata
                 final TileCacheGeodataDefault tileCacheGeodataDefault = new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodataDefault));
                 */

@@ -325,6 +325,7 @@ public class CoorConverter {
 		Long = (D-(1+2*T1+C1)*D*D*D/6+(5-2*C1+28*T1-3*C1*C1+8*eccPrimeSquared+24*T1*T1)
 						*D*D*D*D*D/120)/Math.cos(phi1Rad);
 		Long = LongOrigin + Long * CoorConverter.rad2deg;
+
 		return new LLCoor(Long, Lat);
 	}
 	

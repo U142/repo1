@@ -839,6 +839,7 @@ public class MapFrame extends JPanel implements ActionListener {
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheOsm(TileCacheOsm.Layer.MAPNIK));
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
     private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
+    //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
     private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
 
         private String lastLookup = null;
