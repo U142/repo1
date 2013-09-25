@@ -143,7 +143,7 @@ public class PASActions implements ActionListener {
 			//NavStruct nav = new NavStruct(-150, 150, 80, -80);
 			//if(Variables.getNavigation().setNavigation(Navigation.NAV_WORLD))
 			//	PAS.get_pas().get_mappane().load_map(true);
-			Variables.getMapFrame().getMapModel().setZoom(1);
+			Variables.getMapFrame().getMapModel().setZoom(2);
 			Variables.getMapFrame().getMapModel().setTopLeft(new LonLat(-180, 90));
 			PAS.get_pas().kickRepaint();
 		}

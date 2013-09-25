@@ -43,9 +43,15 @@ public final class MapTileMain {
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodataDefault));
                 */
 
+                /*
                 // UMS Tiled Geodata
                 final TileCacheGeodata tileCacheGeodata = new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodata));
+                */
+
+                // Arcgis
+                final TileCacheArcgis tileCacheArcgis = new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis);
+                mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheArcgis));
 
                 mainFrame.getMapComponent1().addMouseMotionListener(new MouseAdapter() {
                     @Override
