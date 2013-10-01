@@ -10,8 +10,8 @@ using com.ums.PAS.Project;
 using System.Data.Odbc;
 using System.Configuration;
 using System.Xml.Serialization;
-using com.ums.pas.integration.AddressLookup;
-using com.ums.pas.integration.AddressCleanup;
+//using com.ums.pas.integration.AddressLookup;
+//using com.ums.pas.integration.AddressCleanup;
 
 namespace com.ums.ws.integration.v11
 {
@@ -731,7 +731,7 @@ namespace com.ums.ws.integration.v11
 
             return ret;
         }
-
+        /*
         /// <summary>
         /// Match addresses without creating alert
         /// </summary>
@@ -890,7 +890,7 @@ namespace com.ums.ws.integration.v11
 
             return ret;
         }
-
+        */
         private List<Municipality> GetMunicipalities(int department)
         {
             List<Municipality> ret = new List<Municipality>();
