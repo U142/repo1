@@ -275,10 +275,6 @@
       <Project>{5F25B3F4-CA67-4BB1-B693-A7AF76170ABF}</Project>
       <Name>PasIntegrationInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PasIntegrationService\PasIntegrationService.csproj">
-      <Project>{44CFE1C2-DCA8-48B5-B04A-7F08AE37B305}</Project>
-      <Name>PasIntegrationService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UmsAudio\UmsAudio.csproj">
       <Project>{C44B04EA-5C9D-4BB0-B365-FC9B0C87E93F}</Project>
       <Name>UmsAudio</Name>
