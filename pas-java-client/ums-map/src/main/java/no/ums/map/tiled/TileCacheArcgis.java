@@ -18,7 +18,8 @@ public class TileCacheArcgis extends AbstractTileCacheUri {
 
     public static enum Layer {
         ArcgisBasis("server.arcgisonline.com", "/ArcGIS/rest/services/World_Street_Map/MapServer/tile/%d/%d/%d", ""),
-        ArcgisTopo("server.arcgisonline.com", "/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/%d/%d/%d", "");
+        ArcgisTopo("server.arcgisonline.com", "/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/%d/%d/%d", ""),
+        Geocache("services.geodataonline.no", "/arcgis/rest/services/Geocache_WMAS_WGS84/GeocacheLandskap/MapServer/tile/%d/%d/%d", "token=_rcLdtkkHFdW3CEZL8qr5I5VDQPySW6LFebxHSjMhafS9BqCOALBcoTrsesazImsxB_W6qTx2f9Ui4Ih_GlMXA..");
 
         private final String hostPostfix;
         private final String pathFormat;

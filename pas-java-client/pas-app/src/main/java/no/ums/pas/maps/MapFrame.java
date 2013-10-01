@@ -835,14 +835,19 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    //mod for å bruke OSM en liten periode.
+    // Test maps..
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheOsm(TileCacheOsm.Layer.MAPNIK));
-    //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
 
+    // TAS map
     private final transient TileLookup defaultLookup_tas = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisTopo));
 
+    // Default map
     private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis));
+
+    // Country specific default maps (dk, no, se)
     private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
 
 
@@ -1028,6 +1033,8 @@ public class MapFrame extends JPanel implements ActionListener {
         }
     });
     private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
+
+    // Custom WMS map
     private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
 
         private String lastLookup = null;
