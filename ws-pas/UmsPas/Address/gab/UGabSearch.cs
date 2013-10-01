@@ -11,7 +11,8 @@ using System.Text;
 using com.ums.UmsCommon;
 using com.ums.PAS.Address;
 using com.ums.UmsDbLib;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace com.ums.PAS.Address.gab
 {
@@ -32,7 +33,7 @@ namespace com.ums.PAS.Address.gab
 
         public UGabSearchParams()
         {
-
+            
         }
     }
 
@@ -202,7 +203,25 @@ namespace com.ums.PAS.Address.gab
                                     m_params.sz_region + ", Sverige&scheme=adress_WGS84";
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("umsas:Zyl00pon"));
 
+            } else if(m_params.sz_country.Equals("NO")) {
+                sz_server = "http://services2.geodataonline.no/arcgis/rest/services/Geosok/GeosokLokasjon/GeocodeServer/findAddressCandidates";
+                sz_params = String.Format("StreetName={0}+{1}&Postal={2}&PostalArea={3}&Muni={4}&outFields=*&outSR=4326&searchExtent=&f=pjson&token={5}",
+                    m_params.sz_address,
+                    m_params.sz_no,
+                    m_params.sz_postno,
+                    m_params.sz_postarea,
+                    m_params.sz_region,
+                    "_rcLdtkkHFdW3CEZL8qr5GfSO_AjuMdPr3BvR0P4wp0BK0BZ2DX2pVztrTQF2thc8pyFtVT9CfxwtTpei7Wb5w..");
             } else {
+                sz_server = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer/findAddressCandidates";
+                sz_params = String.Format("Address={0}+{1}&Postcode={2}&City={3}&Country={4}&outFields=*&outSR=4326&searchExtent=&f=pjson",
+                    m_params.sz_address,
+                    m_params.sz_no,
+                    m_params.sz_postno,
+                    m_params.sz_postarea,
+                    m_params.sz_country);
+            }
+            /*} else {
                     sz_server = "http://api.fleximap.com/servlet/FlexiMap";
                     sz_params = "UID=" + m_params.sz_uid +
                                 "&UPA=" + m_params.sz_pwd +
@@ -215,7 +234,7 @@ namespace com.ums.PAS.Address.gab
                                 "&count=" + m_params.n_count +
                                 "&Sort=" + m_params.n_sort +
                                 "&Unique=" + n_unique;
-            }
+            }*/
             //Byte[] param_bytes = encoder.GetBytes(sz_params);
             //string sz_params_8859 = Encoding.GetEncoding("iso-8859-1").GetString(param_bytes);
 
@@ -235,6 +254,7 @@ namespace com.ums.PAS.Address.gab
                 web.Method = "POST";
                 web.ContentType = "application/x-www-form-urlencoded";
                 web.ContentLength = postDataBytes.Length;
+                web.Referer = "https://secure.ums.no";
                 if (authorizationHeader.Length > 0)
                 {
                     web.Headers["Authorization"] = authorizationHeader;
@@ -244,7 +264,7 @@ namespace com.ums.PAS.Address.gab
                 requestStream.Close();
 
                 HttpWebResponse response = (HttpWebResponse)web.GetResponse();
-                StreamReader r = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("iso-8859-1"));
+                StreamReader r = new StreamReader(response.GetResponseStream()/*, Encoding.GetEncoding("iso-8859-1")*/);
                 xmldata = r.ReadToEnd();
                 r.Close();
                 response.Close();
@@ -271,14 +291,20 @@ namespace com.ums.PAS.Address.gab
             XmlDocument doc = new XmlDocument();
             try
             {
-                doc.LoadXml(xmldata_utf8);
                 if (m_params.sz_country.Equals("SE"))
                 {
+                    doc.LoadXml(xmldata_utf8);
                     return parseSE(ref doc);
+                }
+                else if (m_params.sz_country.Equals("NO"))
+                {
+                    return parseJSONGeoData(xmldata_utf8);
                 }
                 else
                 {
-                    return parse(ref doc);
+                    //doc.LoadXml(xmldata_utf8);
+                    //return parse(ref doc);
+                    return parseJSONArcGIS(xmldata_utf8);
                 }
             }
             catch (Exception e)
@@ -419,6 +445,122 @@ namespace com.ums.PAS.Address.gab
             list.finalize();
             return list;
 
+        }
+
+        public UGabSearchResultList parseJSONGeoData(string jsonData)
+        {
+            UGabSearchResultList list = new UGabSearchResultList();
+
+            JObject obj = JObject.Parse(jsonData);
+
+            foreach (JToken token in obj.SelectToken("candidates").Children())
+            {
+                try
+                {
+                    JToken location = token.SelectToken("location");
+                    JToken attrib = token.SelectToken("attributes");
+
+                    if (location.HasValues && attrib.HasValues)
+                    {
+                        UGabResult result = new UGabResult();
+
+                        result.match = float.Parse(token.SelectToken("score").ToString(), UCommon.UGlobalizationInfo);
+
+                        foreach (JProperty coordinate in location.Children<JProperty>())
+                        {
+                            if (coordinate.Name == "x")
+                                result.lon = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
+                            else if (coordinate.Name == "y")
+                                result.lat = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
+                        }
+
+                        foreach (JProperty a in attrib.Children<JProperty>())
+                        {
+                            switch (a.Name)
+                            {
+                                case "Match_addr":
+                                    result.name = a.Value.Value<string>().Split(',')[0];
+                                    break;
+                                case "PostalCode":
+                                    result.postno = a.Value.Value<string>();
+                                    break;
+                                case "Municipality":
+                                    result.region = a.Value.Value<string>();
+                                    break;
+                            }
+                        }
+
+                        list.addLine(ref result);
+                    }
+                    // Search didn't have attributes or location, no value adding it
+                }
+                catch
+                { 
+                    // failed to get information about location, no big deal, just skip it
+                }
+            }
+            list.finalize();
+
+            return list;
+        }
+        
+        public UGabSearchResultList parseJSONArcGIS(string jsonData)
+        {
+            UGabSearchResultList list = new UGabSearchResultList();
+
+            JObject obj = JObject.Parse(jsonData);
+
+            foreach (JToken token in obj.SelectToken("candidates").Children())
+            {
+                try
+                {
+                    JToken location = token.SelectToken("location");
+                    JToken attrib = token.SelectToken("attributes");
+
+                    if (location.HasValues && attrib.HasValues)
+                    {
+                        UGabResult result = new UGabResult();
+
+                        result.match = float.Parse(token.SelectToken("score").ToString(), UCommon.UGlobalizationInfo);
+
+                        foreach (JProperty coordinate in location.Children<JProperty>())
+                        {
+                            if (coordinate.Name == "x")
+                                result.lon = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
+                            else if (coordinate.Name == "y")
+                                result.lat = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
+                        }
+
+                        foreach (JProperty a in attrib.Children<JProperty>())
+                        {
+                            switch (a.Name)
+                            {
+                                case "Match_addr":
+                                    result.name = a.Value.Value<string>().Split(',')[0];
+                                    break;
+                                case "LeftPostcode":
+                                    if (result.postno == null || result.postno.Length == 0)
+                                        result.postno = a.Value.Value<string>();
+                                    break;
+                                case "Postcode":
+                                    if (result.postno == null || result.postno.Length == 0)
+                                        result.postno = a.Value.Value<string>();
+                                    break;
+                            }
+                        }
+
+                        list.addLine(ref result);
+                    }
+                    // Search didn't have attributes or location, no value adding it
+                }
+                catch
+                {
+                    // failed to get information about location, no big deal, just skip it
+                }
+            }
+            list.finalize();
+
+            return list;
         }
 
         private String[] tryParsePostNo(String postNoRegion)
