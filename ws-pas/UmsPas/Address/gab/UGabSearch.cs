@@ -460,7 +460,7 @@ namespace com.ums.PAS.Address.gab
                     JToken location = token.SelectToken("location");
                     JToken attrib = token.SelectToken("attributes");
 
-                    if (location.HasValues && attrib.HasValues)
+                    if (location.HasValues)
                     {
                         UGabResult result = new UGabResult();
 
@@ -474,25 +474,31 @@ namespace com.ums.PAS.Address.gab
                                 result.lat = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
                         }
 
-                        foreach (JProperty a in attrib.Children<JProperty>())
+                        if (attrib.HasValues)
                         {
-                            switch (a.Name)
+                            foreach (JProperty a in attrib.Children<JProperty>())
                             {
-                                case "Match_addr":
-                                    result.name = a.Value.Value<string>().Split(',')[0];
-                                    break;
-                                case "PostalCode":
-                                    result.postno = a.Value.Value<string>();
-                                    break;
-                                case "Municipality":
-                                    result.region = a.Value.Value<string>();
-                                    break;
+                                switch (a.Name)
+                                {
+                                    case "Match_addr":
+                                        result.name = a.Value.Value<string>().Split(',')[0];
+                                        break;
+                                    case "PostalCode":
+                                        result.postno = a.Value.Value<string>();
+                                        break;
+                                    case "Municipality":
+                                        result.region = a.Value.Value<string>();
+                                        break;
+                                }
                             }
+                        }
+                        else // no attributes found, return "raw" data
+                        {
+                            result.name = token.SelectToken("address").ToString();
                         }
 
                         list.addLine(ref result);
                     }
-                    // Search didn't have attributes or location, no value adding it
                 }
                 catch
                 { 
@@ -517,7 +523,7 @@ namespace com.ums.PAS.Address.gab
                     JToken location = token.SelectToken("location");
                     JToken attrib = token.SelectToken("attributes");
 
-                    if (location.HasValues && attrib.HasValues)
+                    if (location.HasValues)
                     {
                         UGabResult result = new UGabResult();
 
@@ -531,27 +537,33 @@ namespace com.ums.PAS.Address.gab
                                 result.lat = double.Parse(coordinate.Value.ToString(), UCommon.UGlobalizationInfo);
                         }
 
-                        foreach (JProperty a in attrib.Children<JProperty>())
+                        if (attrib.HasValues)
                         {
-                            switch (a.Name)
+                            foreach (JProperty a in attrib.Children<JProperty>())
                             {
-                                case "Match_addr":
-                                    result.name = a.Value.Value<string>().Split(',')[0];
-                                    break;
-                                case "LeftPostcode":
-                                    if (result.postno == null || result.postno.Length == 0)
-                                        result.postno = a.Value.Value<string>();
-                                    break;
-                                case "Postcode":
-                                    if (result.postno == null || result.postno.Length == 0)
-                                        result.postno = a.Value.Value<string>();
-                                    break;
+                                switch (a.Name)
+                                {
+                                    case "Match_addr":
+                                        result.name = a.Value.Value<string>().Split(',')[0];
+                                        break;
+                                    case "LeftPostcode":
+                                        if (result.postno == null || result.postno.Length == 0)
+                                            result.postno = a.Value.Value<string>();
+                                        break;
+                                    case "Postcode":
+                                        if (result.postno == null || result.postno.Length == 0)
+                                            result.postno = a.Value.Value<string>();
+                                        break;
+                                }
                             }
+                        }
+                        else // no attributes found, return "raw" data
+                        {
+                            result.name = token.SelectToken("address").ToString();
                         }
 
                         list.addLine(ref result);
                     }
-                    // Search didn't have attributes or location, no value adding it
                 }
                 catch
                 {
