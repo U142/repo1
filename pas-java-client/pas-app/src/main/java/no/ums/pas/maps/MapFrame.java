@@ -840,6 +840,7 @@ public class MapFrame extends JPanel implements ActionListener {
     //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
     //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
 
     // TAS map
     private final transient TileLookup defaultLookup_tas = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisTopo));
@@ -847,7 +848,8 @@ public class MapFrame extends JPanel implements ActionListener {
     // Default map
     private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis));
 
-    // Country specific default maps (dk, no, se)
+    // Country specific default maps (no, dkK47, se)
+    private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
     private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
 
 
@@ -1032,7 +1034,6 @@ public class MapFrame extends JPanel implements ActionListener {
             return srs;
         }
     });
-    private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
 
     // Custom WMS map
     private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
