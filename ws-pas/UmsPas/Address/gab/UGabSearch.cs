@@ -313,9 +313,11 @@ namespace com.ums.PAS.Address.gab
                     doc.LoadXml(xmldata_utf8);
                     return parseSE(ref doc);
                 }
-                else if (m_params.sz_country.Equals("NO"))
+                else if (m_params.sz_country.Equals("NO") || m_params.sz_country.Equals("DK"))
                 {
-                    return parseJSONGeoData(xmldata_utf8);
+                    doc.LoadXml(xmldata_utf8);
+                    return parse(ref doc);
+                    //return parseJSONGeoData(xmldata_utf8);
                 }
                 else
                 {
