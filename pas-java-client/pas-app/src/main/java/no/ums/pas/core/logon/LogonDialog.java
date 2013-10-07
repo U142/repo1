@@ -313,7 +313,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			//load icon
 			try
 			{
-				setIcon(no.ums.pas.ums.tools.ImageLoader.load_icon("nationalities_flags/" + languageid + ".gif"));
+				setIcon(no.ums.pas.ums.tools.ImageLoader.load_icon("nationalities_flags/" + languageid + ".png"));
 			}
 			catch(Exception e)
 			{

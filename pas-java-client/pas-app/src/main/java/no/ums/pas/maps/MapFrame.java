@@ -850,7 +850,8 @@ public class MapFrame extends JPanel implements ActionListener {
 
     // Country specific default maps (no, dkK47, se)
     private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
-    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
+    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new TileCacheFleximap());
+/*    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
 
 
         String sz_wms_site = "http://kortforsyningen.kms.dk/?SERVICE=WMS&servicename=topo_skaermkort";
@@ -941,7 +942,7 @@ public class MapFrame extends JPanel implements ActionListener {
             int srs = 4326;
             return srs;
         }
-    });
+    });*/
     private final transient TileLookup defaultLookup_se = new TileLookupImpl(new AbstractTileCacheWms() {
 
 

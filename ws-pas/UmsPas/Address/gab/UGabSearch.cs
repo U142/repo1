@@ -203,7 +203,7 @@ namespace com.ums.PAS.Address.gab
                                     m_params.sz_region + ", Sverige&scheme=adress_WGS84";
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("umsas:Zyl00pon"));
 
-            } else if(m_params.sz_country.Equals("NO")) {
+            } /*else if(m_params.sz_country.Equals("NO")) {
                 sz_server = "http://services2.geodataonline.no/arcgis/rest/services/Geosok/GeosokLokasjon/GeocodeServer/findAddressCandidates";
                 sz_params = String.Format("StreetName={0}+{1}&Postal={2}&PostalArea={3}&Muni={4}&outFields=*&outSR=4326&searchExtent=&f=pjson&token={5}",
                     m_params.sz_address,
@@ -212,7 +212,24 @@ namespace com.ums.PAS.Address.gab
                     m_params.sz_postarea,
                     m_params.sz_region,
                     "_rcLdtkkHFdW3CEZL8qr5GfSO_AjuMdPr3BvR0P4wp0BK0BZ2DX2pVztrTQF2thc8pyFtVT9CfxwtTpei7Wb5w..");
-            } else {
+            }*/
+            else if (m_params.sz_country.Equals("NO") || m_params.sz_country.Equals("DK"))
+            {
+                    sz_server = "http://api.fleximap.com/servlet/FlexiMap";
+                    sz_params = "UID=" + m_params.sz_uid +
+                                "&UPA=" + m_params.sz_pwd +
+                                "&Language=" + m_params.sz_language +
+                                "&Street=" + m_params.sz_address +
+                                "&House=" + m_params.sz_no +
+                                "&Region=" + m_params.sz_region +
+                                "&PostNo=" + m_params.sz_postno +
+                                "&Post=" + m_params.sz_postarea +
+                                "&count=" + m_params.n_count +
+                                "&Sort=" + m_params.n_sort +
+                                "&Unique=" + n_unique;
+            }
+            else
+            {
                 sz_server = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer/findAddressCandidates";
                 sz_params = String.Format("Address={0}+{1}&Postcode={2}&City={3}&Country={4}&outFields=*&outSR=4326&searchExtent=&f=pjson",
                     m_params.sz_address,
