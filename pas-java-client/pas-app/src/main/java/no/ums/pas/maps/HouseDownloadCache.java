@@ -10,6 +10,7 @@ import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileCell;
 import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.ZoomLookupImpl;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.ws.common.ULOGONINFO;
@@ -39,7 +40,7 @@ public class
 
     static {
         for (int z=MIN_ZOOM; z<=MAX_ZOOM; z++) {
-            zoomLookups[z] = new ZoomLookup(z, 256);
+            zoomLookups[z] = new ZoomLookupImpl(z, 256);
         }
     }
 

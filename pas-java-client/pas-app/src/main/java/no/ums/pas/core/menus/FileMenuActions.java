@@ -3,13 +3,20 @@ package no.ums.pas.core.menus;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.view.PasswordUpdateCtrl;
 import no.ums.pas.importer.ImportPolygon;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.swing.UmsAction;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
 
 /**
  * Actions in the FileMenu.
@@ -62,6 +69,50 @@ public interface FileMenuActions {
 					
 				}
 			});
+        }
+    };
+
+    // act_start_gas
+    Action START_GAS = new UmsAction("mainmenu_file_startgas") {
+        @Override
+        public void actionPerformed(ActionEvent e){
+            UserInfo userinfo = PAS.get_pas().get_userinfo();
+
+            try
+            {
+                String szLanguage = "eng";
+                String szLocale = Localization.INSTANCE.getLocale().getCountry();
+
+                if(szLocale.equals("NO"))
+                    szLanguage = "nor";
+                else if(szLocale.equals("ES"))
+                    szLanguage = "spa";
+                else if(szLocale.equals("DK"))
+                    szLanguage = "dan";
+                else if(szLocale.equals("SE"))
+                    szLanguage = "sve";
+
+                String url = String.format("%slogon_hash_proc.asp?szUserID=%s&szCompanyID=%s&szPassword=%s",
+                    PAS.get_pas().getVB4Url(),
+                    URLEncoder.encode(userinfo.get_userid(), "UTF-8"),
+                    URLEncoder.encode(userinfo.get_compid(), "UTF-8"),
+                    URLEncoder.encode(userinfo.get_passwd(), "UTF-8"),
+                    URLEncoder.encode(String.valueOf(userinfo.get_current_department().get_deptpk()), "UTF-8")
+                );
+            /*,
+                URLEncoder.encode(String.valueOf(profilePkSupplier.get()), "UTF-8"),
+                URLEncoder.encode(String.valueOf(userinfo.get_default_dept().get_deptpk()), "UTF-8"),
+                URLEncoder.encode(szLanguage, "UTF-8")
+        );*/
+                try {
+                    Desktop.getDesktop().browse(URI.create(url));
+                } catch (IOException e1) {
+                    log.warn("Failed to open browser to url %s", url, e1);
+                }
+            }
+            catch (UnsupportedEncodingException e1) {
+                log.warn("Failed to encode parameter.", e1);
+            }
         }
     };
 

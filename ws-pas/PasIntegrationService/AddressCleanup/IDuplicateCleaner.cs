@@ -6,7 +6,7 @@ using com.ums.pas.integration.AddressLookup;
 
 namespace com.ums.pas.integration.AddressCleanup
 {
-    interface IDuplicateCleaner
+    public interface IDuplicateCleaner
     {
         /// <summary>
         /// Method for cleaning endpoint duplicates.

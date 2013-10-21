@@ -835,9 +835,208 @@ public class MapFrame extends JPanel implements ActionListener {
     	repaint();
     }
 
-    //mod for å bruke OSM en liten periode.
+    // Test maps..
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheOsm(TileCacheOsm.Layer.MAPNIK));
-    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheFleximap());
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
+    //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
+
+    // TAS map
+    private final transient TileLookup defaultLookup_tas = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisTopo));
+
+    // Default map
+    private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis));
+
+    // Country specific default maps (no, dkK47, se)
+    private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new TileCacheFleximap());
+/*    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
+
+
+        String sz_wms_site = "http://kortforsyningen.kms.dk/?SERVICE=WMS&servicename=topo_skaermkort";
+        String sz_wms_layers = "dtk_skaermkort";
+        String sz_wms_user = "ums";
+        String sz_wms_password = "Kart0for0Danmark.";
+
+        private String lastLookup = null;
+        private String scheme;
+        private String host;
+        private String path;
+        private String version;
+        private String wmsUser;
+        private String wmsPassword;
+
+
+        private void update() {
+            final String wmsSite = sz_wms_site;
+            if (lastLookup == null || !lastLookup.equals(wmsSite)) {
+                try {
+                    final URI base = URI.create(wmsSite);
+                    scheme = base.getScheme();
+                    host = base.getHost();
+                    path = base.getPath();
+                    wmsUser = sz_wms_user;
+                    wmsPassword = sz_wms_password;
+
+                    m_maploader.setWmsAuthenticator(sz_wms_user, sz_wms_password.toCharArray());
+                    WebMapServer wms = new WebMapServer(new URL(wmsSite));
+                    version = wms.getCapabilities().getVersion();
+                    lastLookup = wmsSite;
+                } catch (IOException e) {
+                    version = "1.1.1";
+                    log.warn("Failed to fetch WMS version", e);
+                } catch (ServiceException e) {
+                    log.warn("Failed to fetch WMS version", e);
+                }
+            }
+        }
+
+
+        @Override
+        public String getScheme() {
+            update();
+            return scheme;
+        }
+
+        @Override
+        public String getHost() {
+            update();
+            return host;
+        }
+
+        @Override
+        public String getPath() {
+            update();
+            return path;
+        }
+
+        @Override
+        public String getVersion() {
+            update();
+            return version;
+        }
+
+        @Override
+        public String getFormat() {
+            return "image/png";
+        }
+
+        @Override
+        public String getLayers() {
+            return sz_wms_layers;
+        }
+
+        @Override
+        public String getWmsUser() {
+            return wmsUser;
+        }
+
+        @Override
+        public String getWmsPassword() {
+            return wmsPassword;
+        }
+
+        @Override
+        public int getSrs() {
+            int srs = 4326;
+            return srs;
+        }
+    });*/
+    private final transient TileLookup defaultLookup_se = new TileLookupImpl(new AbstractTileCacheWms() {
+
+
+        String sz_wms_site = "http://maps.metria.se/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=MetriaTatortPlus";
+        String sz_wms_layers = "MetriaTatortPlus";
+        String sz_wms_user = "umsas";
+        String sz_wms_password = "Zyl00pon";
+
+        private String lastLookup = null;
+        private String scheme;
+        private String host;
+        private String path;
+        private String version;
+        private String wmsUser;
+        private String wmsPassword;
+
+
+        private void update() {
+            final String wmsSite = sz_wms_site;
+            if (lastLookup == null || !lastLookup.equals(wmsSite)) {
+                try {
+                    final URI base = URI.create(wmsSite);
+                    scheme = base.getScheme();
+                    host = base.getHost();
+                    path = base.getPath();
+                    wmsUser = sz_wms_user;
+                    wmsPassword = sz_wms_password;
+
+                    m_maploader.setWmsAuthenticator(sz_wms_user, sz_wms_password.toCharArray());
+                    WebMapServer wms = new WebMapServer(new URL(wmsSite));
+                    version = wms.getCapabilities().getVersion();
+                    lastLookup = wmsSite;
+                } catch (IOException e) {
+                    version = "1.1.1";
+                    log.warn("Failed to fetch WMS version", e);
+                } catch (ServiceException e) {
+                    log.warn("Failed to fetch WMS version", e);
+                }
+            }
+        }
+
+
+        @Override
+        public String getScheme() {
+            update();
+            return scheme;
+        }
+
+        @Override
+        public String getHost() {
+            update();
+            return host;
+        }
+
+        @Override
+        public String getPath() {
+            update();
+            return path;
+        }
+
+        @Override
+        public String getVersion() {
+            update();
+            return version;
+        }
+
+        @Override
+        public String getFormat() {
+            return "image/png";
+        }
+
+        @Override
+        public String getLayers() {
+            return sz_wms_layers;
+        }
+
+        @Override
+        public String getWmsUser() {
+            return wmsUser;
+        }
+
+        @Override
+        public String getWmsPassword() {
+            return wmsPassword;
+        }
+
+        @Override
+        public int getSrs() {
+            int srs = 4326;
+            return srs;
+        }
+    });
+
+    // Custom WMS map
     private final transient TileLookup wmsLookup = new TileLookupImpl(new AbstractTileCacheWms() {
 
         private String lastLookup = null;
@@ -935,8 +1134,20 @@ public class MapFrame extends JPanel implements ActionListener {
 
     public TileLookup getTileLookup() {
         switch (PAS.get_pas().get_settings().getMapServer()) {
-            case DEFAULT:
-                return defaultLookup;
+            case DEFAULT: // return default map based on department STDCC
+                String stdCC = PAS.get_pas().get_userinfo().get_current_department().get_stdcc();
+
+                if(PAS.get_pas().get_eastcontent().get_taspanel()!=null) // tas running??
+                    return defaultLookup_tas;
+
+                if(stdCC.equals("0045"))
+                    return defaultLookup_dk;
+                else if(stdCC.equals("0046"))
+                    return defaultLookup_se;
+                else if(stdCC.equals("0047"))
+                    return defaultLookup_no;
+                else
+                    return defaultLookup;
             case WMS:
                 return wmsLookup;
             default:

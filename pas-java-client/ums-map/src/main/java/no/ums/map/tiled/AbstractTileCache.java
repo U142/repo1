@@ -22,7 +22,7 @@ public abstract class AbstractTileCache {
     private final int maxZoom;
     private final ZoomLookup[] zoomLookups;
     private final int tileSize;
-    
+
     public static class InvalidImage extends BufferedImage
     {
     	public InvalidImage()
@@ -30,13 +30,29 @@ public abstract class AbstractTileCache {
     		super(1, 1, BufferedImage.TYPE_INT_ARGB);
     	}
     }
-    
+
     public AbstractTileCache(int maxZoom, int tileSize) {
+        this(maxZoom, tileSize, ZoomLookup.ZoomLookupType.Default);
+    }
+
+    public AbstractTileCache(int maxZoom, int tileSize, ZoomLookup.ZoomLookupType zoomLookupType) {
         this.maxZoom = maxZoom;
         this.tileSize = tileSize;
         zoomLookups = new ZoomLookup[maxZoom+1];
         for (int i = 0; i < zoomLookups.length; i++) {
-            zoomLookups[i] = new ZoomLookup(i, tileSize);
+            switch (zoomLookupType)
+            {
+                case Geodata:
+                    zoomLookups[i] = new ZoomLookupGeodata(i, tileSize);
+                    break;
+                case GeodataDefault:
+                    zoomLookups[i] = new ZoomLookupGeodataDefault(i, tileSize);
+                    break;
+                case Default:
+                default:
+                    zoomLookups[i] = new ZoomLookupImpl(i, tileSize);
+                    break;
+            }
         }
         
         TimerTask task = new TimerTask() {

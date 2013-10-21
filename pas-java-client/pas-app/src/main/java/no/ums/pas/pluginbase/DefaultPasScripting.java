@@ -191,6 +191,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         file.add(FileMenuActions.OPEN_PROJECT);
         file.add(FileMenuActions.CLOSE_PROJECT);
         file.addSeparator();
+        file.add(FileMenuActions.START_GAS);
+        file.addSeparator();
         file.add(FileMenuActions.FILE_IMPORT);
         file.add(FileMenuActions.PRINT_MAP);
         file.add(FileMenuActions.SAVE_MAP);

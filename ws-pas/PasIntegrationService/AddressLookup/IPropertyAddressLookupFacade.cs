@@ -5,7 +5,7 @@ using System.Text;
 
 namespace com.ums.pas.integration.AddressLookup
 {
-    interface IPropertyAddressLookupFacade
+    public interface IPropertyAddressLookupFacade
     {
         /// <summary>
         /// Get recipient data based on property addresses.
