@@ -14,9 +14,6 @@ namespace UMSAlertiX
 
         public UMSAlertiXWebServer(string uriPrefix)
         {
-            // trenger ikke sette threadpool verdier, holder å bruke defaults (basert på antall cpu'er)
-/*            System.Threading.ThreadPool.SetMaxThreads(50, 1000);
-            System.Threading.ThreadPool.SetMinThreads(50, 50);*/
             _listener = new HttpListener();
             _listener.Prefixes.Add(uriPrefix);
         }
