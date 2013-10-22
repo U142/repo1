@@ -195,6 +195,7 @@ namespace com.ums.PAS.Address.gab
             string sz_server;
             string sz_params;
             string authorizationHeader = ""; // For http authentication
+            string verb = "POST";
 
             if(m_params.sz_country.Equals("SE")) {
                 sz_server = "http://maps.metria.se/geokodning/Geocode";
@@ -213,7 +214,7 @@ namespace com.ums.PAS.Address.gab
                     m_params.sz_region,
                     "_rcLdtkkHFdW3CEZL8qr5GfSO_AjuMdPr3BvR0P4wp0BK0BZ2DX2pVztrTQF2thc8pyFtVT9CfxwtTpei7Wb5w..");
             }*/
-            else if (m_params.sz_country.Equals("NO") || m_params.sz_country.Equals("DK"))
+            else if (m_params.sz_country.Equals("NO"))
             {
                     sz_server = "http://api.fleximap.com/servlet/FlexiMap";
                     sz_params = "UID=" + m_params.sz_uid +
@@ -227,6 +228,17 @@ namespace com.ums.PAS.Address.gab
                                 "&count=" + m_params.n_count +
                                 "&Sort=" + m_params.n_sort +
                                 "&Unique=" + n_unique;
+            }
+            else if (m_params.sz_country.Equals("DK"))
+            {
+                sz_server = "http://ums.maplytic.no/table/address.geojson";
+                sz_params = string.Format("limit=20{0}{1}{2}{3}"
+                    , m_params.sz_address.Length > 0 ? "&street=" + m_params.sz_address + "*" : ""
+                    , m_params.sz_no.Length > 0 ? "&streetnr=" + m_params.sz_no : ""
+                    , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
+                    , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea : "");
+                authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("ums:ums"));
+                verb = "GET";
             }
             else
             {
@@ -261,30 +273,42 @@ namespace com.ums.PAS.Address.gab
             string xmldata;
             try
             {
-                UTF8Encoding enc = new UTF8Encoding();
-                Byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_request);
-                String sz_request_8859 = Encoding.GetEncoding("iso-8859-1").GetString(bytes);
-
-                HttpWebRequest web = (HttpWebRequest)HttpWebRequest.Create(sz_server);
-                byte[] postDataBytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_params);
-                // HTTP Request
-                web.Method = "POST";
-                web.ContentType = "application/x-www-form-urlencoded";
-                web.ContentLength = postDataBytes.Length;
-                web.Referer = "https://secure.ums.no";
-                if (authorizationHeader.Length > 0)
+                if (verb.Equals("GET"))
                 {
-                    web.Headers["Authorization"] = authorizationHeader;
+                    System.Net.WebRequest req = System.Net.WebRequest.Create(sz_request);
+                    req.Headers["Authorization"] = authorizationHeader;
+                    System.Net.WebResponse resp = req.GetResponse();
+                    System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+                    xmldata = sr.ReadToEnd().Trim();
                 }
-                Stream requestStream = web.GetRequestStream();
-                requestStream.Write(postDataBytes, 0, postDataBytes.Length);
-                requestStream.Close();
+                else
+                {
+                    UTF8Encoding enc = new UTF8Encoding();
+                    Byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_request);
+                    String sz_request_8859 = Encoding.GetEncoding("iso-8859-1").GetString(bytes);
 
-                HttpWebResponse response = (HttpWebResponse)web.GetResponse();
-                StreamReader r = new StreamReader(response.GetResponseStream()/*, Encoding.GetEncoding("iso-8859-1")*/);
-                xmldata = r.ReadToEnd();
-                r.Close();
-                response.Close();
+                    HttpWebRequest web = (HttpWebRequest)HttpWebRequest.Create(sz_server);
+                    byte[] postDataBytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_params);
+                    // HTTP Request
+                    web.Method = "POST";
+                    web.ContentType = "application/x-www-form-urlencoded";
+                    web.ContentLength = postDataBytes.Length;
+                    web.Referer = "https://secure.ums.no";
+                    if (authorizationHeader.Length > 0)
+                    {
+                        web.Headers["Authorization"] = authorizationHeader;
+                    }
+
+                    Stream requestStream = web.GetRequestStream();
+                    requestStream.Write(postDataBytes, 0, postDataBytes.Length);
+                    requestStream.Close();
+
+                    HttpWebResponse response = (HttpWebResponse)web.GetResponse();
+                    StreamReader r = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("iso-8859-1"));
+                    xmldata = r.ReadToEnd();
+                    r.Close();
+                    response.Close();
+                }
             }
             catch (WebException e)
             {
@@ -313,11 +337,15 @@ namespace com.ums.PAS.Address.gab
                     doc.LoadXml(xmldata_utf8);
                     return parseSE(ref doc);
                 }
-                else if (m_params.sz_country.Equals("NO") || m_params.sz_country.Equals("DK"))
+                else if (m_params.sz_country.Equals("NO"))
                 {
                     doc.LoadXml(xmldata_utf8);
                     return parse(ref doc);
                     //return parseJSONGeoData(xmldata_utf8);
+                }
+                else if (m_params.sz_country.Equals("DK"))
+                {
+                    return parseJSONNordeca(xmldata_utf8);
                 }
                 else
                 {
@@ -528,7 +556,77 @@ namespace com.ums.PAS.Address.gab
 
             return list;
         }
-        
+
+        public UGabSearchResultList parseJSONNordeca(string jsonData)
+        {
+            UGabSearchResultList list = new UGabSearchResultList();
+
+            JObject obj = JObject.Parse(jsonData);
+
+            foreach (JToken token in obj.SelectToken("features").Children())
+            {
+                try
+                {
+                    JToken location = token.SelectToken("geometry");
+                    JToken attrib = token.SelectToken("properties");
+
+                    if (location.HasValues)
+                    {
+                        UGabResult result = new UGabResult();
+
+                        result.match = 0f;
+
+                        JToken coordinate = location.SelectToken("coordinates");
+                        result.lon = coordinate.First.Value<float>();
+                        result.lat = coordinate.Last.Value<float>();
+
+                        if (attrib.HasValues)
+                        {
+                            string street = "";
+                            string streetnr = "";
+
+                            foreach (JProperty a in attrib.Children<JProperty>())
+                            {
+                                switch (a.Name)
+                                {
+                                    case "street":
+                                        street = a.Value.Value<string>();
+                                        break;
+                                    case "streetnr":
+                                        streetnr = a.Value.Value<string>();
+                                        break;
+                                    case "postnr":
+                                        result.postno = a.Value.Value<string>();
+                                        break;
+                                    case "postname":
+                                        result.region = a.Value.Value<string>();
+                                        break;
+                                    case "gid":
+                                        result.streetid = a.Value.Value<int>();
+                                        break;
+                                }
+                            }
+
+                            result.name = string.Format("{0} {1}", street, streetnr);
+                        }
+                        else // no attributes found, return "raw" data
+                        {
+                            result.name = "NA";
+                        }
+
+                        list.addLine(ref result);
+                    }
+                }
+                catch
+                {
+                    // failed to get information about location, no big deal, just skip it
+                }
+            }
+            list.finalize();
+
+            return list;
+        }
+
         public UGabSearchResultList parseJSONArcGIS(string jsonData)
         {
             UGabSearchResultList list = new UGabSearchResultList();
