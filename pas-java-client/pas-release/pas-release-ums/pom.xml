@@ -62,10 +62,10 @@
             <id>beta</id>
             <properties>
                 <jnlp_title>PAS - BETA</jnlp_title>
-                <jnlp_codebase_url>http://192.168.3.52/PAS/pasbeta/</jnlp_codebase_url>
-                <jnlp_s>http://192.168.3.52/PAS/</jnlp_s>
-                <jnlp_w>http://192.168.3.52/PAS/ws_beta/WS/</jnlp_w>
-                <jnlp_v>http://192.168.3.52/gas/</jnlp_v>
+                <jnlp_codebase_url>https://beta.ums2.no/PAS/pasbeta/</jnlp_codebase_url>
+                <jnlp_s>https://beta.ums2.no/PAS/</jnlp_s>
+                <jnlp_w>https://beta.ums2.no/PAS/ws_beta/WS/</jnlp_w>
+                <jnlp_v>https://beta.ums2.no/gas/</jnlp_v>
             </properties>
             <build>
                 <pluginManagement>
