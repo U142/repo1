@@ -236,7 +236,7 @@ namespace com.ums.PAS.Address.gab
                     , m_params.sz_address.Length > 0 ? "&street=" + m_params.sz_address + "*" : ""
                     , m_params.sz_no.Length > 0 ? "&streetnr=" + m_params.sz_no : ""
                     , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
-                    , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea : "");
+                    , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea  + "*" : "");
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("ums:ums"));
                 verb = "GET";
             }
