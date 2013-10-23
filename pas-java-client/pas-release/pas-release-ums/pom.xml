@@ -64,7 +64,7 @@
                 <jnlp_title>PAS - BETA</jnlp_title>
                 <jnlp_codebase_url>https://beta.ums2.no/PAS/pasbeta/</jnlp_codebase_url>
                 <jnlp_s>https://beta.ums2.no/PAS/</jnlp_s>
-                <jnlp_w>https://beta.ums2.no/PAS/ws_beta/WS/</jnlp_w>
+                <jnlp_w>https://beta.ums2.no/PAS/pasws/WS/</jnlp_w>
                 <jnlp_v>https://beta.ums2.no/gas/</jnlp_v>
             </properties>
             <build>
