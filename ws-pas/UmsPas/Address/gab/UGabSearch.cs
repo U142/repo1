@@ -231,12 +231,26 @@ namespace com.ums.PAS.Address.gab
             }
             else if (m_params.sz_country.Equals("DK"))
             {
-                sz_server = "http://ums.maplytic.no/table/address.geojson";
-                sz_params = string.Format("limit=20{0}{1}{2}{3}"
-                    , m_params.sz_address.Length > 0 ? "&street=" + m_params.sz_address + "*" : ""
-                    , m_params.sz_no.Length > 0 ? "&streetnr=" + m_params.sz_no : ""
-                    , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
-                    , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea  + "*" : "");
+                // Search postno if address and house number is empty and either postno or postarea is specified
+                if (m_params.sz_address.Trim().Length == 0 
+                    && m_params.sz_no.Trim().Length == 0 
+                    && (m_params.sz_postno.Trim().Length > 0 || m_params.sz_postarea.Trim().Length > 0))
+                {
+                    sz_server = "http://ums.maplytic.no/table/postzone.geojson"; //?postname=…&postcode=...&limit=10
+                    sz_params = string.Format("limit=10{0}{1}"
+                        , m_params.sz_postno.Length > 0 ? "&postcode=" + m_params.sz_postno : ""
+                        , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea + "*" : "");
+                }
+                else // all other searches, use street search
+                {
+                    sz_server = "http://ums.maplytic.no/table/address.geojson";
+                    sz_params = string.Format("limit=20{0}{1}{2}{3}"
+                        , m_params.sz_address.Length > 0 ? "&street=" + m_params.sz_address + "*" : ""
+                        , m_params.sz_no.Length > 0 ? "&streetnr=" + m_params.sz_no : ""
+                        , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
+                        , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea + "*" : "");
+                }
+
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("ums:ums"));
                 verb = "GET";
             }
@@ -577,8 +591,16 @@ namespace com.ums.PAS.Address.gab
                         result.match = 0f;
 
                         JToken coordinate = location.SelectToken("coordinates");
-                        result.lon = coordinate.First.Value<float>();
-                        result.lat = coordinate.Last.Value<float>();
+                        
+                        JToken first = coordinate.First;
+                        result.lon = first.Value<float>();
+                        
+                        JToken next = first.Next;
+                        result.lat = next.Value<float>();
+
+                        //result.lon = coordinate.First.Value<float>();
+                        //result.lat = coordinate.Next.Value<float>();
+                        //result.lat = coordinate.Last.Value<float>();
 
                         if (attrib.HasValues)
                         {
