@@ -54,7 +54,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
     <profiles>
@@ -63,6 +62,32 @@
             <properties>
                 <jnlp_title>PAS - BETA</jnlp_title>
                 <jnlp_codebase_url>https://beta.ums2.no/PAS/pasbeta/</jnlp_codebase_url>
+                <jnlp_s>https://beta.ums2.no/PAS/</jnlp_s>
+                <jnlp_w>https://beta.ums2.no/PAS/pasws/WS/</jnlp_w>
+                <jnlp_v>https://beta.ums2.no/gas/</jnlp_v>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>no.ums.maven</groupId>
+                            <artifactId>maven-ums-plugin</artifactId>
+                            <configuration>
+                                <destinations>
+                                    <destination>smb://Administrator:Digi20ums@192.168.3.52/www/PAS/pasbeta/
+                                    </destination>
+                                </destinations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>local</id>
+            <properties>
+                <jnlp_title>PAS - Local</jnlp_title>
+                <jnlp_codebase_url>file://localhost/S:\projects\pas\pas-java-client\pas-release\pas-release-ums\target\jnlp</jnlp_codebase_url>
                 <jnlp_s>https://beta.ums2.no/PAS/</jnlp_s>
                 <jnlp_w>https://beta.ums2.no/PAS/pasws/WS/</jnlp_w>
                 <jnlp_v>https://beta.ums2.no/gas/</jnlp_v>

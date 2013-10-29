@@ -39,7 +39,7 @@
 						</execution>
 					</executions>
 				</plugin>
-                <plugin>
+               <plugin>
                     <groupId>org.codehaus.mojo.webstart</groupId>
                     <version>1.0-beta-2</version>
                     <artifactId>webstart-maven-plugin</artifactId>
@@ -62,7 +62,6 @@
                             <keypass>${key.keypass}</keypass>
                             <storepass>${key.storepass}</storepass>
                             <alias>${key.alias}</alias>
-
                             <verify>true</verify>
                         </sign>
                         <libPath>${jnlp_codebase}</libPath>
@@ -72,9 +71,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>keytool-maven-plugin</artifactId>
                     <configuration>
-                        <dname>CN=Morten H. Helvig, OU=Unified Messaging Systems AS, O=Unified Messaging Systems AS,
-                            L=Sandnes, ST=Rogaland, C=no
-                        </dname>
                         <keystore>ums.keystore</keystore>
                         <keypass>${key.keypass}</keypass>
                         <storepass>${key.storepass}</storepass>
