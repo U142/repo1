@@ -841,6 +841,7 @@ public class MapFrame extends JPanel implements ActionListener {
     //private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
     //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
     //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodata(TileCacheGeodata.Layer.GeocacheBasis));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis));
 
     // TAS map
     private final transient TileLookup defaultLookup_tas = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisTopo));
