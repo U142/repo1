@@ -238,7 +238,7 @@ namespace com.ums.PAS.Address.gab
                 {
                     sz_server = "http://ums.maplytic.no/table/postzone.geojson"; //?postname=…&postcode=...&limit=10
                     sz_params = string.Format("limit=10{0}{1}"
-                        , m_params.sz_postno.Length > 0 ? "&postcode=" + m_params.sz_postno : ""
+                        , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
                         , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea + "*" : "");
                 }
                 else // all other searches, use street search
@@ -629,7 +629,27 @@ namespace com.ums.PAS.Address.gab
                                 }
                             }
 
-                            result.name = string.Format("{0} {1}", street, streetnr);
+                            if (streetnr.Trim().Length > 0)
+                            {
+                                result.type = GABTYPE.House;
+                                result.name = string.Format("{0} {1}", street, streetnr);
+                            }
+                            else if (street.Trim().Length > 0)
+                            {
+                                result.type = GABTYPE.Street;
+                                result.name = street;
+                            }
+                            else if (result.postno.Trim().Length > 0)
+                            {
+                                result.type = GABTYPE.Post;
+                                result.name = result.postno;
+                            }
+                            else
+                            {
+                                result.type = GABTYPE.Region;
+                                result.name = result.region;
+                            }
+
                         }
                         else // no attributes found, return "raw" data
                         {
