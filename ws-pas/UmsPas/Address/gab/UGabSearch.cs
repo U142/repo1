@@ -245,7 +245,7 @@ namespace com.ums.PAS.Address.gab
                 {
                     sz_server = "http://ums.maplytic.no/table/address.geojson";
                     sz_params = string.Format("limit=20{0}{1}{2}{3}"
-                        , m_params.sz_address.Length > 0 ? "&street=" + m_params.sz_address + "*" : ""
+                        , m_params.sz_address.Length > 0 ? "&street=" + GenerateWildcardString(m_params.sz_address) : ""
                         , m_params.sz_no.Length > 0 ? "&streetnr=" + m_params.sz_no : ""
                         , m_params.sz_postno.Length > 0 ? "&postnr=" + m_params.sz_postno : ""
                         , m_params.sz_postarea.Length > 0 ? "&postname=" + m_params.sz_postarea + "*" : "");
@@ -762,6 +762,36 @@ namespace com.ums.PAS.Address.gab
                 address[i] = address[i].Trim();
             }
             return address;
+        }
+
+        private String GenerateWildcardString(String address)
+        {
+            string ret = "";
+            string[] splitChars = new string[] { " ", ",", ".", "-" };
+            string[] addressParts = address.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+
+            Dictionary<string, string> replaceList = new Dictionary<string, string>()
+            {
+                { "nordre", "n* " },
+                { "sønder", "s* " },
+                { "øster", "ø* " },
+                { "vester", "v* " },
+                { "gl", "g* " },
+                { "gammel", "g* " }
+            };
+
+            foreach (string addressPart in addressParts)
+            {
+                if (replaceList.ContainsKey(addressPart.ToLower()))
+                    ret += replaceList[addressPart.ToLower()];
+                else
+                    ret += addressPart.ToLower() + "* ";
+            }
+
+            if (ret.Trim().Length == 0)
+                return address.Trim();
+            else
+                return ret.Trim();
         }
     }
 }
