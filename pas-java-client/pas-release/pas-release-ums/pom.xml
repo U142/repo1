@@ -100,7 +100,7 @@
                             <artifactId>maven-ums-plugin</artifactId>
                             <configuration>
                                 <destinations>
-                                    <destination>smb://Administrator:Digi20ums@192.168.3.52/www/PAS/pasbeta/
+                                    <destination>file:///d:/ums/tmp/paslocal/
                                     </destination>
                                 </destinations>
                             </configuration>

@@ -19,7 +19,7 @@ public class LocalizationFinder
 	static Pattern localePattern = Pattern.compile("(^[a-z]{2})(_([A-Z]{2})){0,1}$");
 	public static List<Locale> getAvailableLangfiles()
 	{
-			return Arrays.asList(new Locale("en", "GB"), new Locale("no", "NO"), new Locale("sv", "SE"), new Locale("de", "DE"), new Locale("fr", "FR"), new Locale("nl", "NL"));
+			return Arrays.asList(new Locale("en", "GB"), new Locale("no", "NO"), new Locale("sv", "SE"), new Locale("de", "DE"), new Locale("fr", "FR"), new Locale("nl", "NL"), new Locale("da", "DK"));
 	}
 	protected static ArrayList<Locale> getAvailableLocales(String bundleName, File dir) {
 		try
