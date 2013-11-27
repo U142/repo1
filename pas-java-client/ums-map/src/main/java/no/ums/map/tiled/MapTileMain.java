@@ -23,7 +23,7 @@ public final class MapTileMain {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 final  TestFrame mainFrame = new TestFrame();
-                mainFrame.getMapComponent1().getModel().setTopLeft(new LonLat(0, 6500000));
+                mainFrame.getMapComponent1().getModel().setTopLeft(new LonLat(-12, 67));
                 mainFrame.getMapComponent1().getModel().setZoom(4);
 //                final TileCacheGoogle googleTileCache = new TileCacheGoogle();
 //                final TileCacheLocal localTileCache = new TileCacheLocal(TILES);
@@ -37,9 +37,11 @@ public final class MapTileMain {
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(osmTileCache));
                 */
 
+                /*
                 // Default Geodata
                 final TileCacheGeodataDefault tileCacheGeodataDefault = new TileCacheGeodataDefault(TileCacheGeodataDefault.Layer.GeocacheBasis);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodataDefault));
+                */
 
                 /*
                 // UMS Tiled Geodata
@@ -47,11 +49,10 @@ public final class MapTileMain {
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheGeodata));
                 */
 
-                /*
+                /* */
                 // Arcgis
-                final TileCacheArcgis tileCacheArcgis = new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis);
+                final TileCacheArcgis tileCacheArcgis = new TileCacheArcgis(TileCacheArcgis.Layer.Geocache);
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(tileCacheArcgis));
-                */
 
                 mainFrame.getMapComponent1().addMouseMotionListener(new MouseAdapter() {
                     @Override

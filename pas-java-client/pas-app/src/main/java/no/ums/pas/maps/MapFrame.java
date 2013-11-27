@@ -850,7 +850,8 @@ public class MapFrame extends JPanel implements ActionListener {
     private final transient TileLookup defaultLookup = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.ArcgisBasis));
 
     // Country specific default maps (no, dkK47, se)
-    private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
+    //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
     private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new TileCacheFleximap());
 /*    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
 

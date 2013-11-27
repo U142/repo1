@@ -13,13 +13,13 @@ import java.net.URISyntaxException;
 public class TileCacheArcgis extends AbstractTileCacheUri {
 
     // info about geodata map (for a generic arcgis map, this could be selected from the JSON)
-    private static final int MAX_ZOOM = 19;
+    private static final int MAX_ZOOM = 18;
     private static final int TILE_SIZE = 256;
 
     public static enum Layer {
         ArcgisBasis("server.arcgisonline.com", "/ArcGIS/rest/services/World_Street_Map/MapServer/tile/%d/%d/%d", ""),
         ArcgisTopo("server.arcgisonline.com", "/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/%d/%d/%d", ""),
-        Geocache("services.geodataonline.no", "/arcgis/rest/services/Geocache_WMAS_WGS84/GeocacheLandskap/MapServer/tile/%d/%d/%d", "token=_rcLdtkkHFdW3CEZL8qr5I5VDQPySW6LFebxHSjMhafS9BqCOALBcoTrsesazImsxB_W6qTx2f9Ui4Ih_GlMXA..");
+        Geocache("services.geodataonline.no", "/arcgis/rest/services/Geocache_WMAS_WGS84/GeocacheBasis/MapServer/tile/%d/%d/%d", "token=_rcLdtkkHFdW3CEZL8qr5I5VDQPySW6LFebxHSjMhafS9BqCOALBcoTrsesazImsxB_W6qTx2f9Ui4Ih_GlMXA..");
 
         private final String hostPostfix;
         private final String pathFormat;
