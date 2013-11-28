@@ -28,28 +28,28 @@ if fs.FileExists(szJnlpFile) then
     szContent = fjnlp.ReadAll()
     fJnlp.Close()
 
-    'find and remove shortcut tag
-    strToFind = "<shortcut"
-    nstart = InStr(1, szContent, strToFind)
-    strToFind = "</shortcut>"
-    nend = InStr(1, szContent, strToFind)
-    szTempContent = left(szContent, nstart-1)
-    szTempContent = szTempContent & mid(szContent, nend+len(strToFind))
-    szContent = szTempContent
+    'find and remove shortcut tag // removed due to signing issues
+    'strToFind = "<shortcut"
+    'nstart = InStr(1, szContent, strToFind)
+    'strToFind = "</shortcut>"
+    'nend = InStr(1, szContent, strToFind)
+    'szTempContent = left(szContent, nstart-1)
+    'szTempContent = szTempContent & mid(szContent, nend+len(strToFind))
+    'szContent = szTempContent
 
-    'find and remove offline tag
-    strToFind = "<offline-allowed/>"
-    nstart = InStr(1, szContent, strToFind)
-    szTempContent = left(szContent, nstart-1)
-    szTempContent = szTempContent & mid(szContent, nstart+len(strToFind))
-    szContent = szTempContent
+    'find and remove offline tag // removed due to signing issues
+    'strToFind = "<offline-allowed/>"
+    'nstart = InStr(1, szContent, strToFind)
+    'szTempContent = left(szContent, nstart-1)
+    'szTempContent = szTempContent & mid(szContent, nstart+len(strToFind))
+    'szContent = szTempContent
 
     'find arguments
-    strToFind = "<argument>"
-    nstart = InStr(1, szContent, strToFind)
+    strToFind = "</argument>"
+    nstart = InStrRev(szContent, strToFind)
     szTempContent = left(szContent, nstart-1)
     for each key in Request.Querystring
-    	szTempContent = szTempContent & "<argument>-" & key & Request.QueryString(key) & "</argument>" &vbCRLF
+    	szTempContent = szTempContent & ";-" & key & Request.QueryString(key)
     next
     szContent = szTempContent & mid(szContent, nstart)
 

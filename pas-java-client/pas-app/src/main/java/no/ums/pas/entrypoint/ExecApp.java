@@ -25,7 +25,13 @@ public class ExecApp {
     private static final Log log = UmsLog.getLogger(ExecApp.class);
 
 
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
+
+        // Workaround for .jnlp template signing with optional number of parameters
+        if (args.length == 2 && args[0].equals("--args")) {
+            args = args[1].split(";");
+        }
+
         // Enable debug logging when there are no JNLP services available
         final boolean enableDebugLogging = ServiceManager.getServiceNames() == null;
         // Install logging handler and frame
