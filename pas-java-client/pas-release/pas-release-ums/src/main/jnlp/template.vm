@@ -8,9 +8,6 @@
 		<icon href="PAS_splash.jpg" kind="splash" />
 		<icon kind="shortcut" href="pas.ico" width="64" height="64"/>
 		<offline-allowed/>
-		<shortcut online="true">
-			<desktop/>
-		</shortcut>
   </information>
   <security>
      <all-permissions/>
