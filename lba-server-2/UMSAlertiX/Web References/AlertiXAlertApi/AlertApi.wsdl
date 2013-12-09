@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://api.alertix.cellvision" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://api.domain.common.alertix.cellvision" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://vo.api.alertix.cellvision" xmlns:ns4="http://vo.common.alertix.cellvision" xmlns:ns3="http://domain.common.alertix.cellvision" targetNamespace="http://api.alertix.cellvision" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.domain.common.alertix.cellvision">
+      <xsd:complexType name="AreaName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AlertMsg">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="countryMessages" nillable="true" type="ns1:ArrayOfCountryTextMessage" />
+          <xsd:element minOccurs="0" name="defaultMessage" nillable="true" type="ns1:TextMessage" />
+          <xsd:element minOccurs="0" name="expiryTime" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TextMessage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="oa" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCountryTextMessage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountryTextMessage" nillable="true" type="ns1:CountryTextMessage" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountryTextMessage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="countryCodes" nillable="true" type="ns1:ArrayOfCountryCode" />
+          <xsd:element minOccurs="0" name="oa" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountryCode" nillable="true" type="ns1:CountryCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WhiteLists">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="whiteLists" nillable="true" type="ns1:ArrayOfWhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfWhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="WhiteListName" nillable="true" type="ns1:WhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdditionalSubscribers">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="subscribers" nillable="true" type="ns1:ArrayOfMsisdn" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMsisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Msisdn" nillable="true" type="ns1:Msisdn" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Msisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="JobId">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Polygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="vertices" nillable="true" type="ns1:ArrayOfPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Point" nillable="true" type="ns1:Point" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Point">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="x" type="xsd:double" />
+          <xsd:element minOccurs="0" name="y" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.alertix.cellvision">
+      <xsd:element name="prepareAreaAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:AreaName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:AlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:AdditionalSubscribers" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="prepareAreaAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAdditionalAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:AlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns3:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAdditionalAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="prepareCustomAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:AreaName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:AlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:Polygon" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in4" nillable="true" type="ns1:AdditionalSubscribers" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="prepareCustomAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeCustomAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:AreaName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:AlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:Polygon" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in4" nillable="true" type="ns1:AdditionalSubscribers" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in5" nillable="true" type="ns3:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeCustomAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cancelPreparedAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cancelPreparedAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns4:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executePreparedAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns3:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executePreparedAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns4:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAreaAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:AreaName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:AlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:AdditionalSubscribers" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in4" nillable="true" type="ns3:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAreaAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.api.alertix.cellvision">
+      <xsd:complexType name="AlertResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="jobId" nillable="true" type="ns1:JobId" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://domain.common.alertix.cellvision">
+      <xsd:simpleType name="ExecuteMode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="UNKNOWN" />
+          <xsd:enumeration value="LIVE" />
+          <xsd:enumeration value="SIMULATE" />
+          <xsd:enumeration value="SILENT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.common.alertix.cellvision">
+      <xsd:complexType name="Response">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="prepareAreaAlertResponse">
+    <wsdl:part name="parameters" element="tns:prepareAreaAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executeCustomAlertRequest">
+    <wsdl:part name="parameters" element="tns:executeCustomAlert" />
+  </wsdl:message>
+  <wsdl:message name="prepareCustomAlertResponse">
+    <wsdl:part name="parameters" element="tns:prepareCustomAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="cancelPreparedAlertResponse">
+    <wsdl:part name="parameters" element="tns:cancelPreparedAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executeCustomAlertResponse">
+    <wsdl:part name="parameters" element="tns:executeCustomAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executeAdditionalAlertResponse">
+    <wsdl:part name="parameters" element="tns:executeAdditionalAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="cancelPreparedAlertRequest">
+    <wsdl:part name="parameters" element="tns:cancelPreparedAlert" />
+  </wsdl:message>
+  <wsdl:message name="executePreparedAlertResponse">
+    <wsdl:part name="parameters" element="tns:executePreparedAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executeAreaAlertRequest">
+    <wsdl:part name="parameters" element="tns:executeAreaAlert" />
+  </wsdl:message>
+  <wsdl:message name="executeAreaAlertResponse">
+    <wsdl:part name="parameters" element="tns:executeAreaAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executePreparedAlertRequest">
+    <wsdl:part name="parameters" element="tns:executePreparedAlert" />
+  </wsdl:message>
+  <wsdl:message name="prepareCustomAlertRequest">
+    <wsdl:part name="parameters" element="tns:prepareCustomAlert" />
+  </wsdl:message>
+  <wsdl:message name="prepareAreaAlertRequest">
+    <wsdl:part name="parameters" element="tns:prepareAreaAlert" />
+  </wsdl:message>
+  <wsdl:message name="executeAdditionalAlertRequest">
+    <wsdl:part name="parameters" element="tns:executeAdditionalAlert" />
+  </wsdl:message>
+  <wsdl:portType name="AlertApiPortType">
+    <wsdl:operation name="prepareAreaAlert">
+      <wsdl:input name="prepareAreaAlertRequest" message="tns:prepareAreaAlertRequest" />
+      <wsdl:output name="prepareAreaAlertResponse" message="tns:prepareAreaAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executeAdditionalAlert">
+      <wsdl:input name="executeAdditionalAlertRequest" message="tns:executeAdditionalAlertRequest" />
+      <wsdl:output name="executeAdditionalAlertResponse" message="tns:executeAdditionalAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="prepareCustomAlert">
+      <wsdl:input name="prepareCustomAlertRequest" message="tns:prepareCustomAlertRequest" />
+      <wsdl:output name="prepareCustomAlertResponse" message="tns:prepareCustomAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executeCustomAlert">
+      <wsdl:input name="executeCustomAlertRequest" message="tns:executeCustomAlertRequest" />
+      <wsdl:output name="executeCustomAlertResponse" message="tns:executeCustomAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelPreparedAlert">
+      <wsdl:input name="cancelPreparedAlertRequest" message="tns:cancelPreparedAlertRequest" />
+      <wsdl:output name="cancelPreparedAlertResponse" message="tns:cancelPreparedAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executePreparedAlert">
+      <wsdl:input name="executePreparedAlertRequest" message="tns:executePreparedAlertRequest" />
+      <wsdl:output name="executePreparedAlertResponse" message="tns:executePreparedAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executeAreaAlert">
+      <wsdl:input name="executeAreaAlertRequest" message="tns:executeAreaAlertRequest" />
+      <wsdl:output name="executeAreaAlertResponse" message="tns:executeAreaAlertResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AlertApiHttpBinding" type="tns:AlertApiPortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="prepareAreaAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="prepareAreaAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="prepareAreaAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeAdditionalAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executeAdditionalAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeAdditionalAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="prepareCustomAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="prepareCustomAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="prepareCustomAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeCustomAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executeCustomAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeCustomAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelPreparedAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="cancelPreparedAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="cancelPreparedAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executePreparedAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executePreparedAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executePreparedAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeAreaAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executeAreaAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeAreaAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AlertApi">
+    <wsdl:port name="AlertApiHttpPort" binding="tns:AlertApiHttpBinding">
+      <wsdlsoap:address location="http://10.250.17.77:8080/alertix/AlertApi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
