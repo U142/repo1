@@ -34,20 +34,20 @@ namespace com.ums.pas.integration.AddressLookup
         }
 
         #region IPropertyAddressLookupFacade Members
-        public IEnumerable<RecipientData> GetMatchingPropertyAddresses(string connectionString, List<PropertyAddress> propertyAddresses)
+        public IEnumerable<RecipientData> GetMatchingPropertyAddresses(string connectionString, List<PropertyAddress> propertyAddresses, SourceRegister sourceRegister)
         {
             ConnectionString = connectionString;
             if(propertyAddresses.Count == 0)
             {
                 return new List<RecipientData>();
             }
-            return GetMatchingPropertyAddressesUsingTempTbl(propertyAddresses);
+            return GetMatchingPropertyAddressesUsingTempTbl(propertyAddresses, sourceRegister);
         }
 
         #endregion
 
         #region Impl_TempTbl
-        public List<RecipientData> GetMatchingPropertyAddressesUsingTempTbl(List<PropertyAddress> propertyAddresses)
+        public List<RecipientData> GetMatchingPropertyAddressesUsingTempTbl(List<PropertyAddress> propertyAddresses, SourceRegister sourceRegister)
         {
             if (propertyAddresses.Count == 0)
             {
@@ -131,6 +131,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.KON_DMID,0) KON_DMID "
                                     + ",ISNULL(SA.ATTRIBUTES, '') ATTRIBUTES "
                                     + ",ISNULL(FR.KOMMUNENR,-1) NORECIPIENTS "
+                                    + ",ISNULL(FR.sz_tablename,'') sz_tablename "
                                     + "FROM #SAMATCH SA LEFT OUTER JOIN ADR_INTEGRATION FR ON FR.KOMMUNENR=SA.KOMMUNENR "
                                     + "AND ISNULL(FR.GNR,0)=SA.GNR "
                                     + "AND ISNULL(FR.BNR,0)=SA.BNR "
@@ -192,6 +193,20 @@ namespace com.ums.pas.integration.AddressLookup
                             }
                             else
                             {
+                                if (sourceRegister == SourceRegister.NATIONAL && rs["sz_tablename"].Equals("ADR_EDITED"))
+                                {
+                                    r.AlertTarget.Attributes.Add(new DataItem("Source", "Tillegg"));
+                                    VulnerableLookup vuln = new VulnerableLookup(rs.GetInt32(rs.GetOrdinal("KON_DMID")), _connectionString);
+                                    if (vuln.Category != null)
+                                        r.AlertTarget.Attributes.Add(vuln.Category);
+                                    if (vuln.Profession != null)
+                                        r.AlertTarget.Attributes.Add(vuln.Profession);
+                                }
+                                else if (sourceRegister == SourceRegister.NATIONAL)
+                                    r.AlertTarget.Attributes.Add(new DataItem("Source", "Folkereg"));
+                                else
+                                    r.AlertTarget.Attributes.Add(new DataItem("Source", "Konsument"));
+
                                 recipients.Add(r);
                             }
                         }

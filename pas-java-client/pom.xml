@@ -32,9 +32,12 @@
         <url>http://www.ums.no/</url>
     </organization>
     <properties>
-        <key.storepass>jotinchOcDoacFor</key.storepass>
+<!--        <key.storepass>jotinchOcDoacFor</key.storepass>
         <key.keypass>wruakipUtcyctac+</key.keypass>
-        <key.alias>UMS</key.alias>
+        <key.alias>UMS</key.alias>-->
+        <key.storepass>digi20ums</key.storepass>
+        <key.keypass>digi20ums</key.keypass>
+        <key.alias>58fc4537-3c8c-11e3-b50e-005056c00008</key.alias>
         <version.geotools>2.6.5</version.geotools>
         <version.ums.ws>1.2-SNAPSHOT</version.ums.ws>
         <jnlp.output>${project.build.directory}/jnlp-output</jnlp.output>

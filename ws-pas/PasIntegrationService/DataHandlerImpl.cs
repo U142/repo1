@@ -142,7 +142,8 @@ namespace com.ums.pas.integration
                     IStreetAddressLookupFacade streetLookupInterface = new StreetAddressLookupImpl();
                     IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                                 FolkeregDatabaseConnectionString,
-                                                                streetAddressList);
+                                                                streetAddressList,
+                                                                SourceRegister.NATIONAL);
                     recipientDataList.AddRange(streetAddressLookup);
                 }
                 List<PropertyAddress> propertyAddressList = Payload.AlertTargets.OfType<PropertyAddress>().ToList();
@@ -151,7 +152,8 @@ namespace com.ums.pas.integration
                     IPropertyAddressLookupFacade propertyLookupInterface = new PropertyAddressLookupImpl();
                     IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
                                                                                     FolkeregDatabaseConnectionString,
-                                                                                    propertyAddressList);
+                                                                                    propertyAddressList,
+                                                                                    SourceRegister.NATIONAL);
                     recipientDataList.AddRange(propertyLookup);
                 }
             }
@@ -166,13 +168,15 @@ namespace com.ums.pas.integration
                     // Get Folkereg data
                     IEnumerable<RecipientData> streetAddressLookup = streetLookupInterface.GetMatchingStreetAddresses(
                                                                 FolkeregDatabaseConnectionString,
-                                                                streetAddressList);
+                                                                streetAddressList,
+                                                                SourceRegister.NATIONAL);
                     // Get Norway data
                     IEnumerable<RecipientData> streetAddressLookup2 = streetLookupInterface.GetMatchingStreetAddresses(
                                                                 NorwayDatabaseConnectionString,
-                                                                streetAddressList);
+                                                                streetAddressList,
+                                                                SourceRegister.CONSUMER);
                     // Match lists
-                    IEnumerable<RecipientData> streetAdressLookupTotal = streetAddressLookup.Union(streetAddressLookup2);
+                    IEnumerable<RecipientData> streetAdressLookupTotal = streetAddressLookup2.Union(streetAddressLookup);
 
                     // Remove number not found that was found in one of the databases
                     List<StreetAddress> NumberNotFound = streetLookupInterface.GetNoNumbersFoundList().ToList();
@@ -197,13 +201,15 @@ namespace com.ums.pas.integration
                     // Get Folkereg data
                     IEnumerable<RecipientData> propertyLookup = propertyLookupInterface.GetMatchingPropertyAddresses(
                                                                                     FolkeregDatabaseConnectionString,
-                                                                                    propertyAddressList);
+                                                                                    propertyAddressList,
+                                                                                    SourceRegister.NATIONAL);
                     // Get Norway data
                     IEnumerable<RecipientData> propertyLookup2 = propertyLookupInterface.GetMatchingPropertyAddresses(
                                                                                     NorwayDatabaseConnectionString,
-                                                                                    propertyAddressList);
+                                                                                    propertyAddressList,
+                                                                                    SourceRegister.CONSUMER);
                     // Match lists
-                    IEnumerable<RecipientData> propertyLookupTotal = propertyLookup.Union(propertyLookup2);
+                    IEnumerable<RecipientData> propertyLookupTotal = propertyLookup2.Union(propertyLookup);
 
                     // Remove number not found that was found in one of the databases
                     List<PropertyAddress> NumberNotFound = propertyLookupInterface.GetNoNumbersFoundList().ToList();
@@ -234,7 +240,8 @@ namespace com.ums.pas.integration
                     IOwnerLookupFacade ownerLookupInterface = new OwnerLookupImpl();
                     IEnumerable<RecipientData> ownerLookup1 = ownerLookupInterface.GetMatchingOwnerAddresses(
                                                                                         FolkeregDatabaseConnectionString,
-                                                                                        Payload.AlertTargets.OfType<OwnerAddress>().ToList());
+                                                                                        Payload.AlertTargets.OfType<OwnerAddress>().ToList(),
+                                                                                        SourceRegister.NATIONAL);
                     recipientDataList.AddRange(ownerLookup1);
 
                     if (ownerLookupInterface.GetNoMatchList().Count() > 0)
@@ -242,7 +249,8 @@ namespace com.ums.pas.integration
                         log.InfoFormat("AlertId={0} - Second owner run, {1} properties not found in first", Payload.AlertId.Id, ownerLookupInterface.GetNoMatchList().Count());
                         IEnumerable<RecipientData> ownerLookup2 = ownerLookupInterface.GetMatchingOwnerAddresses(
                                                                                             NorwayDatabaseConnectionString,
-                                                                                            ownerLookupInterface.GetNoMatchList().ToList());
+                                                                                            ownerLookupInterface.GetNoMatchList().ToList(),
+                                                                                            SourceRegister.CONSUMER);
                         recipientDataList.AddRange(ownerLookup2);
                         if (ownerLookupInterface.GetNoMatchList().Count() > 0)
                         {

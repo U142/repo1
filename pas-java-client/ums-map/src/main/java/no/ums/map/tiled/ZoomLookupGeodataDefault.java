@@ -96,10 +96,13 @@ public final class ZoomLookupGeodataDefault implements  ZoomLookup {
         double tileResolution = zoomResolution[zoomLevel];
 
         // Convert from lon lat to map point
-        CoorConverter.UTMCoor xy = conv.LL2UTM(23, ll.getLat(), ll.getLon(), "33N");
+        //CoorConverter.UTMCoor xy = conv.LL2UTM(23, ll.getLat(), ll.getLon(), "33N");
 
-        int xPos = (int) Math.round((xy.getEasting() - xOrigin) / (tileResolution));
-        int yPos = (int) Math.round((yOrigin - xy.getNorthing()) / (tileResolution));
+        //int xPos = (int) Math.round((xy.getEasting() - xOrigin) / (tileResolution));
+        //int yPos = (int) Math.round((yOrigin - xy.getNorthing()) / (tileResolution));
+
+        int xPos = (int) Math.round((ll.getLon() - xOrigin) / (tileResolution));
+        int yPos = (int) Math.round((yOrigin - ll.getLat()) / (tileResolution));
 
         return new Point(xPos, yPos);
     }
@@ -123,12 +126,13 @@ public final class ZoomLookupGeodataDefault implements  ZoomLookup {
         double tileResolution = zoomResolution[zoomLevel];
 
         // Convert to UTM
-        double easting = x * tileResolution + xOrigin;
-        double northing = - (y * tileResolution - yOrigin);
+        //double easting = x * tileResolution + xOrigin;
+        //double northing = - (y * tileResolution - yOrigin);
 
         // convert from UTM to lon lat
-        CoorConverter.LLCoor ll = conv.UTM2LL(23, northing, easting, "33N");
+        //CoorConverter.LLCoor ll = conv.UTM2LL(23, northing, easting, "33N");
 
-        return new LonLat(ll.get_lon(), ll.get_lat());
+        //return new LonLat(ll.get_lon(), ll.get_lat());
+        return new LonLat(x * tileResolution + xOrigin, -(y * tileResolution - yOrigin));
     }
 }

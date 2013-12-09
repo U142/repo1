@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="$jnlp_codebase_url" href="pas.jnlp">
+<jnlp spec="1.0+" codebase="$jnlp_codebase_url">
   <information>
     <title>$jnlp_title</title>
     <vendor>#if($project.Organization.Name)$project.Organization.Name#end<vendor/>
@@ -8,9 +8,6 @@
 		<icon href="PAS_splash.jpg" kind="splash" />
 		<icon kind="shortcut" href="pas.ico" width="64" height="64"/>
 		<offline-allowed/>
-		<shortcut online="true">
-			<desktop/>
-		</shortcut>
   </information>
   <security>
      <all-permissions/>
@@ -22,9 +19,7 @@
     $dependencies
   </resources>
   <application-desc main-class="$mainClass">
-    <argument>-x$jnlp_codebase</argument>
-    <argument>-s$jnlp_s</argument>
-    <argument>-w$jnlp_w</argument>
-	<argument>-v$jnlp_v</argument>
+    <argument>--args</argument>
+    <argument>-x$jnlp_codebase;-s$jnlp_s;-w$jnlp_w;-v$jnlp_v</argument>
   </application-desc>
 </jnlp>
