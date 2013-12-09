@@ -51,6 +51,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>7CF0D216D95AFC228BCA9D8FE60029E7A15F3E30</ManifestCertificateThumbprint>
@@ -125,6 +126,7 @@
     <Compile Include="AddressLookup\OwnerLookupImpl.cs" />
     <Compile Include="AddressLookup\RecipientData.cs" />
     <Compile Include="AddressLookup\StreetAddressLookupImpl.cs" />
+    <Compile Include="AddressLookup\VulnerableLookup.cs" />
     <Compile Include="DataHandlerImpl.cs" />
     <Compile Include="IChannelItemStorage.cs" />
     <Compile Include="Integration.cs">

@@ -58,6 +58,17 @@ namespace com.ums.pas.integration
     }
 
     /// <summary>
+    /// Specified where the data was found
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = "http://ums.no/ws/integration")]
+    public enum SourceRegister
+    {
+        CONSUMER,   // konsument
+        NATIONAL    // folkereg
+    }
+
+    /// <summary>
     /// Delivery status of each item in an alert
     /// </summary>
     [Serializable]

@@ -27,7 +27,7 @@ namespace com.ums.pas.integration.AddressLookup
         }
 
 
-        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses)
+        public IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses, SourceRegister sourceRegister)
         {
             NoMatchList = new List<OwnerAddress>();
             if (ownerAddresses.Count == 0)
@@ -59,6 +59,7 @@ namespace com.ums.pas.integration.AddressLookup
                                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
                                                     + ",ISNULL(FR.KON_DMID, 0) KON_DMID "
+                                                    + ",ISNULL(FR.sz_tablename,'') sz_tablename "
                                                     + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and HUSNR=? and CONTAINS(NAVN, ?)");
                 CommandWithHouseNo.Parameters.Add("postnr", OdbcType.Int);
                 CommandWithHouseNo.Parameters.Add("husnr", OdbcType.Int);
@@ -79,6 +80,7 @@ namespace com.ums.pas.integration.AddressLookup
                                     + ",ISNULL(FR.MOBIL,'') MOBIL "
                                     + ",ISNULL(FR.TELEFON,'') TELEFON "
                                     + ",ISNULL(FR.KON_DMID, 0) KON_DMID "
+                                    + ",ISNULL(FR.sz_tablename,'') sz_tablename "
                                     + "FROM ADR_KONSUM_SEARCH FR WHERE POSTNR=? and CONTAINS(NAVN, ?)");
 
                 CommandNoHouse.Parameters.Add("postnr", OdbcType.Int);
@@ -126,6 +128,7 @@ namespace com.ums.pas.integration.AddressLookup
                             using (OdbcDataReader rs = Command.ExecuteReader())
                             {
                                 int personsFound = 0;
+                                bool hasSource = false;
                                 while (rs.Read())
                                 {
                                     ++personsFound;
@@ -165,7 +168,29 @@ namespace com.ums.pas.integration.AddressLookup
                                             });
                                             ++fixedPhones;
                                         }
-                            
+
+                                        if (!hasSource)
+                                        {
+                                            if (sourceRegister == SourceRegister.NATIONAL && rs["sz_tablename"].Equals("ADR_EDITED"))
+                                            {
+                                                r.AlertTarget.Attributes.Add(new DataItem("Source", "Tillegg"));
+                                                VulnerableLookup vuln = new VulnerableLookup(rs.GetInt32(rs.GetOrdinal("KON_DMID")), ConnectionString);
+                                                if (vuln.Category != null)
+                                                    r.AlertTarget.Attributes.Add(vuln.Category);
+                                                if (vuln.Profession != null)
+                                                    r.AlertTarget.Attributes.Add(vuln.Profession);
+                                            }
+                                            else if (sourceRegister == SourceRegister.NATIONAL)
+                                            {
+                                                r.AlertTarget.Attributes.Add(new DataItem("Source", "Folkereg"));
+                                            }
+                                            else
+                                            {
+                                                r.AlertTarget.Attributes.Add(new DataItem("Source", "Konsument"));
+                                            }
+                                            hasSource = true;
+                                        }
+
                                         recipients.Add(r);
                                         
                                     }
@@ -208,7 +233,7 @@ namespace com.ums.pas.integration.AddressLookup
             return recipients;
 
         }
-        public IEnumerable<RecipientData> GetMatchingOwnerAddressesNew(String ConnectionString, List<OwnerAddress> ownerAddresses)
+        public IEnumerable<RecipientData> GetMatchingOwnerAddressesNew(String ConnectionString, List<OwnerAddress> ownerAddresses, SourceRegister sourceRegister)
         {
             NoMatchList = new List<OwnerAddress>();
             if (ownerAddresses.Count == 0)
@@ -375,6 +400,20 @@ namespace com.ums.pas.integration.AddressLookup
                                             });
                                             ++fixedPhones;
                                         }
+
+                                        if (sourceRegister == SourceRegister.NATIONAL && rs["sz_tablename"].Equals("ADR_EDITED"))
+                                        {
+                                            r.AlertTarget.Attributes.Add(new DataItem("Source", "Tillegg"));
+                                            VulnerableLookup vuln = new VulnerableLookup(rs.GetInt32(rs.GetOrdinal("KON_DMID")), ConnectionString);
+                                            if (vuln.Category != null)
+                                                r.AlertTarget.Attributes.Add(vuln.Category);
+                                            if (vuln.Profession != null)
+                                                r.AlertTarget.Attributes.Add(vuln.Profession);
+                                        }
+                                        else if (sourceRegister == SourceRegister.NATIONAL)
+                                            r.AlertTarget.Attributes.Add(new DataItem("Source", "Folkereg"));
+                                        else
+                                            r.AlertTarget.Attributes.Add(new DataItem("Source", "Konsument"));
 
                                         recipients.Add(r);
                                     }

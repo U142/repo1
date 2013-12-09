@@ -10,7 +10,7 @@ namespace com.ums.pas.integration.AddressLookup
     /// </summary>
     public interface IStreetAddressLookupFacade
     {
-        IEnumerable<RecipientData> GetMatchingStreetAddresses(String ConnectionString, List<StreetAddress> StreetAddresses);
+        IEnumerable<RecipientData> GetMatchingStreetAddresses(String ConnectionString, List<StreetAddress> StreetAddresses, SourceRegister sourceRegister);
         IEnumerable<StreetAddress> GetNoNumbersFoundList();
     }
 }

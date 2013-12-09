@@ -13,7 +13,7 @@ namespace com.ums.pas.integration.AddressLookup
         /// <param name="ConnectionString"></param>
         /// <param name="ownerAddresses"></param>
         /// <returns></returns>
-        IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses);
+        IEnumerable<RecipientData> GetMatchingOwnerAddresses(String ConnectionString, List<OwnerAddress> ownerAddresses, SourceRegister sourceRegister);
 
 
         /// <summary>
