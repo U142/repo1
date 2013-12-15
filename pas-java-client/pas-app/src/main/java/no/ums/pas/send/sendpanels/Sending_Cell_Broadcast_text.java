@@ -214,7 +214,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	public int getRequestType() { 
 		//return m_n_requesttype;
-		return (m_radio_requesttype_1.isSelected() ? 1 : 0); 
+		return (m_radio_requesttype_1.isSelected() ? 1 : 0);
 	}
 	
 	private Sending_Cell_Broadcast_text() {
@@ -504,6 +504,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 				this.set_gridconst(n_width/3, this.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
 				pnl_lba.add(m_radio_requesttype_0);
 				pnl_lba.add(m_radio_requesttype_1);
+                m_radio_requesttype_1.setEnabled(false);
 				this.add(pnl_lba, this.m_gridconst);
 
 
