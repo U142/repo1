@@ -852,7 +852,99 @@ public class MapFrame extends JPanel implements ActionListener {
     // Country specific default maps (no, dkK47, se)
     private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheArcgis(TileCacheArcgis.Layer.Geocache));
     //private final transient TileLookup defaultLookup_no = new TileLookupImpl(new TileCacheFleximap());
-    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new TileCacheFleximap());
+    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
+
+
+        String sz_wms_site = "http://wms.nordeca.com:80/geoserver/pw_dk_basic/ows?SERVICE=WMS";
+        String sz_wms_layers = "pw_dk_basic";
+        String sz_wms_user = "test_ums";
+        String sz_wms_password = "um5";
+
+        private String lastLookup = null;
+        private String scheme;
+        private String host;
+        private String path;
+        private String version;
+        private String wmsUser;
+        private String wmsPassword;
+
+
+        private void update() {
+            final String wmsSite = sz_wms_site;
+            if (lastLookup == null || !lastLookup.equals(wmsSite)) {
+                try {
+                    final URI base = URI.create(wmsSite);
+                    scheme = base.getScheme();
+                    host = base.getHost();
+                    path = base.getPath();
+                    wmsUser = sz_wms_user;
+                    wmsPassword = sz_wms_password;
+
+                    m_maploader.setWmsAuthenticator(sz_wms_user, sz_wms_password.toCharArray());
+                    WebMapServer wms = new WebMapServer(new URL(wmsSite));
+                    version = wms.getCapabilities().getVersion();
+                    lastLookup = wmsSite;
+                } catch (IOException e) {
+                    version = "1.1.1";
+                    log.warn("Failed to fetch WMS version", e);
+                } catch (ServiceException e) {
+                    log.warn("Failed to fetch WMS version", e);
+                }
+            }
+        }
+
+
+        @Override
+        public String getScheme() {
+            update();
+            return scheme;
+        }
+
+        @Override
+        public String getHost() {
+            update();
+            return host;
+        }
+
+        @Override
+        public String getPath() {
+            update();
+            return path;
+        }
+
+        @Override
+        public String getVersion() {
+            update();
+            return version;
+        }
+
+        @Override
+        public String getFormat() {
+            return "image/png";
+        }
+
+        @Override
+        public String getLayers() {
+            return sz_wms_layers;
+        }
+
+        @Override
+        public String getWmsUser() {
+            return wmsUser;
+        }
+
+        @Override
+        public String getWmsPassword() {
+            return wmsPassword;
+        }
+
+        @Override
+        public int getSrs() {
+            int srs = 4326;
+            return srs;
+        }
+    });
+        //private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new TileCacheFleximap());
 /*    private final transient TileLookup defaultLookup_dk = new TileLookupImpl(new AbstractTileCacheWms() {
 
 
