@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.wsapi.api.alertix.cellvision/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://wsapi.api.alertix.cellvision/" name="AlertixWsApiService" targetNamespace="http://impl.wsapi.api.alertix.cellvision/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsapi.api.alertix.cellvision/" location="AlertixWsApi.wsdl" />
+  <wsdl:types />
+  <wsdl:binding name="AlertixWsApiServiceSoapBinding" type="ns1:AlertixWsApi">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="deleteSubscriberList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteSubscriberList">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteSubscriberListResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertSubscribers">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertSubscribers">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertSubscribersResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSubscriberListMsisdns">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="addSubscriberListMsisdns">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="addSubscriberListMsisdnsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertSubscribersEx">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertSubscribersEx">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertSubscribersExResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAlerts">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteAlerts">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteAlertsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscriberListMsisdns">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteSubscriberListMsisdns">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteSubscriberListMsisdnsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeAlert">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="executeAlert">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeAlertResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilterOptions">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getFilterOptions">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getFilterOptionsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllTargets">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAllTargets">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAllTargetsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberLists">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getSubscriberLists">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getSubscriberListsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSubscriberList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createSubscriberList">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createSubscriberListResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTarget">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getTarget">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getTargetResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertInfos">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertInfos">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertInfosResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSnapshot">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createSnapshot">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createSnapshotResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertInfo">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertInfo">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertInfoResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatus">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertStatus">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertStatusResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertEvents">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertEvents">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertEventsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCountry">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getSubscriberCountByCountry">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getSubscriberCountByCountryResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatusByCell">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertStatusByCell">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertStatusByCellResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllOperators">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAllOperators">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAllOperatorsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCell">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getSubscriberCountByCell">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getSubscriberCountByCellResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createTarget">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createTarget">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createTargetResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilterCategories">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getFilterCategories">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getFilterCategoriesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberListMsisdns">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getSubscriberListMsisdns">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getSubscriberListMsisdnsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAlert">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteAlert">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteAlertResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatusByCountry">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertStatusByCountry">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertStatusByCountryResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteTarget">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteTarget">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteTargetResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AlertixWsApiService">
+    <wsdl:port name="AlertixWsApiPort" binding="tns:AlertixWsApiServiceSoapBinding">
+      <soap:address location="https://148.123.47.27/ax/alertapi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
