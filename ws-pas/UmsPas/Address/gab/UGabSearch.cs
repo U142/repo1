@@ -213,7 +213,7 @@ namespace com.ums.PAS.Address.gab
                     m_params.sz_postarea,
                     m_params.sz_region,
                     "_rcLdtkkHFdW3CEZL8qr5GfSO_AjuMdPr3BvR0P4wp0BK0BZ2DX2pVztrTQF2thc8pyFtVT9CfxwtTpei7Wb5w..");
-            }*/
+            }
             else if (m_params.sz_country.Equals("NO"))
             {
                     sz_server = "http://api.fleximap.com/servlet/FlexiMap";
@@ -228,12 +228,25 @@ namespace com.ums.PAS.Address.gab
                                 "&count=" + m_params.n_count +
                                 "&Sort=" + m_params.n_sort +
                                 "&Unique=" + n_unique;
+            }*/
+            else if (m_params.sz_country.Equals("NO"))
+            {
+                sz_server = "http://ws.geodataonline.no/search/geodataservice/autocomplete";
+                sz_params = String.Format("token={5}&query={0}+{1}+{2}+{3}+{4}&format=3",
+                    m_params.sz_address,
+                    m_params.sz_no,
+                    m_params.sz_postno,
+                    m_params.sz_postarea,
+                    m_params.sz_region,
+                    "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs");
+            
+                verb = "GET";
             }
             else if (m_params.sz_country.Equals("DK"))
             {
                 // Search postno if address and house number is empty and either postno or postarea is specified
-                if (m_params.sz_address.Trim().Length == 0 
-                    && m_params.sz_no.Trim().Length == 0 
+                if (m_params.sz_address.Trim().Length == 0
+                    && m_params.sz_no.Trim().Length == 0
                     && (m_params.sz_postno.Trim().Length > 0 || m_params.sz_postarea.Trim().Length > 0))
                 {
                     sz_server = "http://ums.maplytic.no/table/postzone.geojson"; //?postname=…&postcode=...&limit=10
@@ -353,9 +366,9 @@ namespace com.ums.PAS.Address.gab
                 }
                 else if (m_params.sz_country.Equals("NO"))
                 {
-                    doc.LoadXml(xmldata_utf8);
-                    return parse(ref doc);
-                    //return parseJSONGeoData(xmldata_utf8);
+                    //doc.LoadXml(xmldata_utf8);
+                    //return parse(ref doc);
+                    return parseJSONGeoAutocomplete(xmldata_utf8);
                 }
                 else if (m_params.sz_country.Equals("DK"))
                 {
@@ -506,6 +519,175 @@ namespace com.ums.PAS.Address.gab
             list.finalize();
             return list;
 
+        }
+
+        public UGabSearchResultList parseJSONGeoAutocomplete(string jsonData)
+        {
+            UGabSearchResultList list = new UGabSearchResultList();
+
+            JObject obj = JObject.Parse(jsonData);
+
+            foreach (JToken token in obj.SelectToken("hits").Children())
+            {
+                try
+                {
+                    JToken location = token.SelectToken("location");
+                    JToken numbers = token.SelectToken("numbers");
+
+                    // house
+                    if (numbers != null && numbers.HasValues)
+                    {
+                        foreach (JToken houses in numbers.Children())
+                        {
+                            UGabResult result = new UGabResult();
+
+                            // Get general values
+                            foreach (JProperty a in token.Children<JProperty>())
+                            {
+                                switch (a.Name)
+                                {
+                                    case "entry":
+                                        result.name = a.Value.Value<string>();
+                                        break;
+                                    case "muni_id":
+                                        result.municipalid = a.Value.Value<int>();
+                                        break;
+                                    case "muni_name":
+                                        result.region = a.Value.Value<string>();
+                                        break;
+                                    case "post_id":
+                                        result.postno = a.Value.Value<string>();
+                                        break;
+                                }
+                            }
+
+                            foreach (JProperty h in houses.Children<JProperty>())
+                            {
+                                // get each "house"
+                                switch (h.Name)
+                                {
+                                    case "x":
+                                        result.lon = h.Value.Value<double>();
+                                        break;
+                                    case "y":
+                                        result.lat = h.Value.Value<double>();
+                                        break;
+                                    case "value": // value is house number
+                                        result.name += " " + h.Value.Value<string>();
+                                        break;
+                                }
+                            }
+
+                            result.type = GABTYPE.House;
+
+                            double lat = 0, lng = 0;
+                            double y = result.lon;
+                            double x = result.lat;
+                            com.ums.UmsCommon.CoorConvert.UTM.UTM2LL(23, x, y, "33", 'V', ref lat, ref lng);
+                            result.lon = lng;
+                            result.lat = lat;
+
+                            list.addLine(ref result);
+                        }
+                    }
+                    else if (location != null && location.HasValues)
+                    {
+                        UGabResult result = new UGabResult();
+                        string post_name = "";
+                        string entry = "";
+
+                        foreach (JProperty coordinate in location.Children<JProperty>())
+                        {
+                            switch (coordinate.Name)
+                            {
+                                case "x":
+                                    result.lon = coordinate.Value.Value<double>();
+                                    break;
+                                case "y":
+                                    result.lat = coordinate.Value.Value<double>();
+                                    break;
+                            }
+                        }
+
+                        // Get general values
+                        foreach (JProperty a in token.Children<JProperty>())
+                        {
+                            switch (a.Name)
+                            {
+                                case "entry":
+                                    entry = a.Value.Value<string>();
+                                    break;
+                                case "output":
+                                    result.name = a.Value.Value<string>();
+                                    break;
+                                case "muni_id":
+                                    result.municipalid = a.Value.Value<int>();
+                                    break;
+                                case "muni_name":
+                                    result.region = a.Value.Value<string>();
+                                    break;
+                                case "post_id":
+                                    result.postno = a.Value.Value<string>();
+                                    break;
+                                case "post_name":
+                                    post_name = a.Value.Value<string>();
+                                    break;
+                                case "type_id":
+                                    switch (a.Value.Value<int>())
+                                    {
+                                        case 998:
+                                            result.type = GABTYPE.Post;
+                                            break;
+                                        case 140:
+                                            result.type = GABTYPE.Street;
+                                            break;
+                                        case 164:
+                                        case 100:
+                                        case 102:
+                                        case 103:
+                                        case 104:
+                                        default:
+                                            result.type = GABTYPE.Region;
+                                            break;
+                                    }
+                                    break;
+                            }
+
+                            // reformat some results based on type
+                            switch (result.type)
+                            {
+                                case GABTYPE.House:
+                                    break;
+                                case GABTYPE.Post:
+                                    result.region = post_name;
+                                    result.name = result.postno;
+                                    break;
+                                case GABTYPE.Region:
+                                    break;
+                                case GABTYPE.Street:
+                                    break;
+                            }
+                        }
+
+                        double lat = 0, lng = 0;
+                        double y = result.lon;
+                        double x = result.lat;
+                        com.ums.UmsCommon.CoorConvert.UTM.UTM2LL(23, x, y, "33", 'V', ref lat, ref lng);
+                        result.lon = lng;
+                        result.lat = lat;
+
+                        list.addLine(ref result);
+                    }
+                }
+                catch
+                { 
+                    // failed to get information about location, no big deal, just skip it
+                }
+            }
+
+            list.finalize();
+
+            return list;
         }
 
         public UGabSearchResultList parseJSONGeoData(string jsonData)
