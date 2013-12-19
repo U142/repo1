@@ -262,7 +262,11 @@ namespace com.ums.PAS.Address.gab
 
                 if (m_params.sz_postno.Trim().Length > 0) // use postno filter for results
                 {
-                    postNoFilter = m_params.sz_postno.Trim();
+                    int postno;
+                    if(int.TryParse(m_params.sz_postno.Trim(), out postno))
+                        postNoFilter = postno.ToString();
+                    else
+                        postNoFilter = m_params.sz_postno.Trim();
                 }
 
                 verb = "GET";
@@ -623,6 +627,7 @@ namespace com.ums.PAS.Address.gab
                         UGabResult result = new UGabResult();
                         string post_name = "";
                         string entry = "";
+                        string output = "";
 
                         foreach (JProperty coordinate in location.Children<JProperty>())
                         {
@@ -646,7 +651,7 @@ namespace com.ums.PAS.Address.gab
                                     entry = a.Value.Value<string>();
                                     break;
                                 case "output":
-                                    result.name = a.Value.Value<string>();
+                                    output = a.Value.Value<string>();
                                     break;
                                 case "muni_id":
                                     result.municipalid = a.Value.Value<int>();
@@ -684,15 +689,14 @@ namespace com.ums.PAS.Address.gab
                             // reformat some results based on type
                             switch (result.type)
                             {
-                                case GABTYPE.House:
-                                    break;
                                 case GABTYPE.Post:
-                                    result.region = post_name;
+                                    result.region = output;
                                     result.name = result.postno;
                                     break;
+                                case GABTYPE.House:
                                 case GABTYPE.Region:
-                                    break;
                                 case GABTYPE.Street:
+                                    result.name = output;
                                     break;
                             }
                         }
