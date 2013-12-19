@@ -196,6 +196,7 @@ namespace com.ums.PAS.Address.gab
             string sz_params;
             string authorizationHeader = ""; // For http authentication
             string verb = "POST";
+            string postNoFilter = null;
 
             if(m_params.sz_country.Equals("SE")) {
                 sz_server = "http://maps.metria.se/geokodning/Geocode";
@@ -232,14 +233,38 @@ namespace com.ums.PAS.Address.gab
             else if (m_params.sz_country.Equals("NO"))
             {
                 sz_server = "http://ws.geodataonline.no/search/geodataservice/autocomplete";
-                sz_params = String.Format("token={5}&query={0}+{1}+{2}+{3}+{4}&format=3",
-                    m_params.sz_address,
-                    m_params.sz_no,
-                    m_params.sz_postno,
-                    m_params.sz_postarea,
-                    m_params.sz_region,
-                    "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs");
-            
+
+                if (m_params.sz_address.Trim().Length > 0 ||
+                    m_params.sz_no.Trim().Length > 0 ||
+                    m_params.sz_postarea.Trim().Length > 0 ||
+                    m_params.sz_region.Trim().Length > 0)
+                {
+                    // search address and region, skip postno (regardless of value)
+                    sz_params = String.Format("token={0}&query={1}+{2}+{3}+{4}&format=3",
+                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs",
+                        m_params.sz_address,
+                        m_params.sz_no,
+                        m_params.sz_postarea,
+                        m_params.sz_region);
+                }
+                else if (m_params.sz_postno.Trim().Length > 0)
+                {
+                    // only postno, search for that
+                    sz_params = String.Format("token={0}&query={1}&format=3",
+                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs",
+                        m_params.sz_postno);
+                }
+                else
+                {
+                    sz_params = String.Format("token={0}&query=&format=3",
+                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs");
+                }
+
+                if (m_params.sz_postno.Trim().Length > 0) // use postno filter for results
+                {
+                    postNoFilter = m_params.sz_postno.Trim();
+                }
+
                 verb = "GET";
             }
             else if (m_params.sz_country.Equals("DK"))
@@ -368,7 +393,7 @@ namespace com.ums.PAS.Address.gab
                 {
                     //doc.LoadXml(xmldata_utf8);
                     //return parse(ref doc);
-                    return parseJSONGeoAutocomplete(xmldata_utf8);
+                    return parseJSONGeoAutocomplete(xmldata_utf8, postNoFilter);
                 }
                 else if (m_params.sz_country.Equals("DK"))
                 {
@@ -521,7 +546,7 @@ namespace com.ums.PAS.Address.gab
 
         }
 
-        public UGabSearchResultList parseJSONGeoAutocomplete(string jsonData)
+        public UGabSearchResultList parseJSONGeoAutocomplete(string jsonData, string postNoFilter)
         {
             UGabSearchResultList list = new UGabSearchResultList();
 
@@ -580,6 +605,7 @@ namespace com.ums.PAS.Address.gab
 
                             result.type = GABTYPE.House;
 
+                            // convert coordinate
                             double lat = 0, lng = 0;
                             double y = result.lon;
                             double x = result.lat;
@@ -587,7 +613,9 @@ namespace com.ums.PAS.Address.gab
                             result.lon = lng;
                             result.lat = lat;
 
-                            list.addLine(ref result);
+                            // check postno before adding
+                            if (postNoFilter == null || result.postno.Equals(postNoFilter, StringComparison.OrdinalIgnoreCase))
+                                list.addLine(ref result);
                         }
                     }
                     else if (location != null && location.HasValues)
@@ -669,6 +697,7 @@ namespace com.ums.PAS.Address.gab
                             }
                         }
 
+                        // convert coordinate
                         double lat = 0, lng = 0;
                         double y = result.lon;
                         double x = result.lat;
@@ -676,7 +705,9 @@ namespace com.ums.PAS.Address.gab
                         result.lon = lng;
                         result.lat = lat;
 
-                        list.addLine(ref result);
+                        // check postno before adding
+                        if(postNoFilter == null || result.postno.Equals(postNoFilter, StringComparison.OrdinalIgnoreCase))
+                            list.addLine(ref result);
                     }
                 }
                 catch
