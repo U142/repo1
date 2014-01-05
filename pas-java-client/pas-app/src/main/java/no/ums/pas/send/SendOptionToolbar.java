@@ -108,14 +108,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	JToggleButton m_radio_sendingtype_ellipse;
 	JToggleButton m_radio_sendingtype_polygonal_ellipse;
 	JToggleButton m_radio_sendingtype_municipal;
-    JToggleButton m_radio_sendingtype_house_select;
-
 	ButtonGroup m_btngroup_lba;
 	public JToggleButton get_radio_polygon() { return m_radio_sendingtype_polygon; }
 	public JToggleButton get_radio_ellipse() { return m_radio_sendingtype_ellipse; }
 	public JToggleButton get_radio_polygonal_ellipse() { return m_radio_sendingtype_polygonal_ellipse; }
 	public JToggleButton get_radio_municipal() { return m_radio_sendingtype_municipal; }
-    public JToggleButton get_radio_sendingtype_house_select() { return m_radio_sendingtype_house_select; }
 	JButton m_btn_goto;
 	public ToggleAddresstype m_btn_adrtypes_private_fixed;
 	public ToggleAddresstype m_btn_adrtypes_company_fixed;
@@ -923,11 +920,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_radio_sendingtype_municipal = new JToggleButton(ImageLoader.load_icon("send_municipal_24.png"));
 		else
 			m_radio_sendingtype_municipal = new JToggleButton(ImageLoader.load_icon("send_municipal.png"));
-
-        if(PAS.icon_version==2)
-            m_radio_sendingtype_house_select = new JToggleButton(ImageLoader.load_icon("send_house_select2.png"));
-        else
-            m_radio_sendingtype_house_select = new JToggleButton(ImageLoader.load_icon("send_house_select2.png"));
 			
 		if(PAS.icon_version==2)
 			m_btn_goto = new JButton(ImageLoader.load_icon("find_24.png"));
@@ -1017,7 +1009,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
             m_radio_sendingtype_ellipse.setToolTipText(Localization.l("main_sending_type_ellipse"));
             m_radio_sendingtype_polygonal_ellipse.setToolTipText(Localization.l("main_sending_type_ellipse") + " (polygonal)");
             m_radio_sendingtype_municipal.setToolTipText(Localization.l("main_sending_type_municipal"));
-            m_radio_sendingtype_house_select.setToolTipText(Localization.l("main_sending_type_house_select"));
             m_btn_goto.setToolTipText(Localization.l("main_status_show_map_of_sending"));
             m_btn_adrtypes_private_fixed.setToolTipText(Localization.l("main_sending_adr_btn_fixed_private_tooltip"));
             m_btn_adrtypes_private_mobile.setToolTipText(Localization.l("main_sending_adr_btn_mobile_private_tooltip"));
@@ -1040,12 +1031,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_group_sendingtype.add(m_radio_sendingtype_ellipse);
 		m_group_sendingtype.add(m_radio_sendingtype_polygonal_ellipse);
 		m_group_sendingtype.add(m_radio_sendingtype_municipal);
-        m_group_sendingtype.add(m_radio_sendingtype_house_select);
 		set_size(m_radio_sendingtype_polygon, SIZE_BUTTON_LARGE);
 		set_size(m_radio_sendingtype_ellipse, SIZE_BUTTON_LARGE);
 		set_size(m_radio_sendingtype_polygonal_ellipse, SIZE_BUTTON_LARGE);
 		set_size(m_radio_sendingtype_municipal, SIZE_BUTTON_LARGE);
-        set_size(m_radio_sendingtype_house_select, SIZE_BUTTON_LARGE);
 		set_size(m_btn_goto, SIZE_BUTTON_LARGE);
 		
 		set_size(m_btn_adrtypes_private_fixed, SIZE_BUTTON_LARGE);
@@ -1071,7 +1060,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_radio_sendingtype_ellipse.addActionListener(this);
 		m_radio_sendingtype_polygonal_ellipse.addActionListener(this);
 		m_radio_sendingtype_municipal.addActionListener(this);
-        m_radio_sendingtype_house_select.addActionListener(this);
 		m_btn_goto.addActionListener(this);
 		m_btn_adrtypes_private_fixed.addActionListener(this);
 		m_btn_adrtypes_company_fixed.addActionListener(this);
@@ -1105,7 +1093,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_radio_sendingtype_ellipse.setActionCommand("act_sendingtype_ellipse");
 		m_radio_sendingtype_polygonal_ellipse.setActionCommand("act_sendingtype_polygonal_ellipse");
 		m_radio_sendingtype_municipal.setActionCommand("act_sendingtype_municipal");
-        m_radio_sendingtype_house_select.setActionCommand("act_sendingtype_house_select");
 		m_btn_adrtypes_private_fixed.setActionCommand("act_set_addresstypes");
 		m_btn_adrtypes_company_fixed.setActionCommand("act_set_addresstypes");
 		m_btn_adrtypes_private_mobile.setActionCommand("act_set_addresstypes");
@@ -1334,9 +1321,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_radio_activate, m_gridconst);
 		set_gridconst(inc_xpanels(), get_panel(), 16, 1, GridBagConstraints.WEST);
 		add(m_txt_sendname, m_gridconst);
-		inc_xpanels2(11);
+		inc_xpanels2(13);
 		//add_spacing(DIR_HORIZONTAL, 15);
-		inc_xpanels2(2);
+		inc_xpanels2(3);
 		//addSeparator(15);
 		inc_xpanels2();
 		m_gridconst.anchor = GridBagConstraints.CENTER;
@@ -1348,8 +1335,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		add(m_radio_sendingtype_municipal, m_gridconst);
 		inc_xpanels2();
-        add(m_radio_sendingtype_house_select, m_gridconst);
-        inc_xpanels2();
 		add(m_btn_open, m_gridconst);
 		inc_xpanels2();
 		add_spacing(DIR_VERTICAL, 15);
@@ -1414,7 +1399,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
 
-		inc_xpanels2(1);
+		inc_xpanels2(3);
 		//m_place_holder = new JLabel("");
 		//m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		//add_spacing(DIR_HORIZONTAL, 10);
@@ -1762,18 +1747,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			else if(!this.getIsAlert())
 				m_gis_preview.setVisible(true);
 		}
-        else if("act_sendingtype_house_select".equals(e.getActionCommand())) {
-            GISList list = new GISList();
-
-            get_parent().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
-            get_parent().get_sendproperties().typecast_gis().set_gislist(list);
-            get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
-
-            PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_clear_selected_houses"));
-            get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.HOUSESELECT_ALERT, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
-
-            //PAS.get_pas().kickRepaint();
-        }
 		canFinalize();
 	}
 	
@@ -1919,7 +1892,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_radio_sendingtype_ellipse.setEnabled(!b);
 			m_radio_sendingtype_polygonal_ellipse.setEnabled(!b);
 			m_radio_sendingtype_municipal.setEnabled(!b);
-            m_radio_sendingtype_house_select.setEnabled(!b);
 			m_txt_sendname.setEditable(!b);
 			m_btn_open.setEnabled(!b);
 			m_btn_adrtypes_nofax.setEnabled(!b);
