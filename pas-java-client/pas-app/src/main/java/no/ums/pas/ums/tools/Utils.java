@@ -3,6 +3,10 @@ package no.ums.pas.ums.tools;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 
@@ -21,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -243,5 +248,72 @@ public final class Utils {
 			++ext;
 		return text.length()+ext;
 	}
+
+    /**
+     * Helper for house select, converts house items to GisList
+     *
+     * @param setOfHouseItems this is the same object as used in house editor
+     * @return a list ready for alert
+     */
+    public static GISList convertHouseItemsToGisList(final Set<ArrayList<HouseItem>> setOfHouseItems) {
+        GISList gisList = new GISList();
+
+        for (ArrayList<HouseItem> houseItems : setOfHouseItems) {
+
+            for (HouseItem houseItem : houseItems) {
+
+                ArrayList<Inhabitant> inhabitantsFromHouse = getInhabitantsFromHouse(houseItem);
+
+                if (inhabitantsFromHouse.size() > 0) {
+                    GISRecord gisRecord = new GISRecord(getStreetInfo(inhabitantsFromHouse.get(0)));
+                    for (Inhabitant inhabitant : inhabitantsFromHouse) {
+                        gisRecord.add_inhabitant(inhabitant);
+                    }
+                    gisList.add(gisRecord);
+                }
+            }
+        }
+
+        return gisList;
+    }
+
+    // Gets detailed inhabitant objects
+
+    /**
+     * Method for getting detailed inhabitand objects. Used to populate address information.
+     *
+     * @param houseItem from house editor
+     * @return inhabitant list (not basic info)
+     */
+    public static ArrayList<Inhabitant> getInhabitantsFromHouse(HouseItem houseItem) {
+        ArrayList<Inhabitant> inhabitants = new ArrayList<Inhabitant>();
+
+        for (int i=0; i< houseItem.get_inhabitantcount(); i++) {
+            Inhabitant itemfromhouse = houseItem.get_itemfromhouse(i);
+            inhabitants.add(itemfromhouse);
+        }
+
+        return inhabitants;
+    }
+
+    /**
+     * Simplifier method to generate the needed info for creating gisrecord.
+     *
+     * @param inhabitant also from house editor
+     * @return info to create gis record
+     */
+    public static String[] getStreetInfo(Inhabitant inhabitant) {
+
+        String[] streetInfo = new String[6];
+
+        streetInfo[0] = inhabitant.get_region(); // Municipal
+        streetInfo[1] = String.valueOf(inhabitant.get_streetid());
+        streetInfo[2] = inhabitant.get_no();
+        streetInfo[3] = inhabitant.get_letter();
+        streetInfo[4] = ""; // Namefilter 1
+        streetInfo[5] = ""; // Namefilter 2
+
+        return streetInfo;
+    }
 
 }

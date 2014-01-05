@@ -16,6 +16,7 @@ import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.ws.WSSaveUI;
+import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.parm.voobjects.AlertVO;
@@ -23,6 +24,7 @@ import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -31,13 +33,16 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 //Substance 5.2
 //import org.jvnet.substance.api.SubstanceSkin;
 
 public class PASActions implements ActionListener {
 
     private static final Log log = UmsLog.getLogger(PASActions.class);
+    private Set<ArrayList<HouseItem>> selectedHouses = new HashSet<ArrayList<HouseItem>>();
 
 	//private boolean parm_open = false;
 	
@@ -467,6 +472,31 @@ public class PASActions implements ActionListener {
 		else if("set_houseeditor_coor".equals(e.getActionCommand())) {
 			PAS.get_pas().get_eastcontent().get_houseeditor().reinit((MapPoint)e.getSource(), PAS.get_pas().get_mappane().get_mouseoverhouse());			
 		}
+        else if("set_selected_house".equals(e.getActionCommand())) {
+            // Add the house to a sending list, or remove from a sending list
+
+            ArrayList<HouseItem> mouseoverhouse = PAS.get_pas().get_mappane().get_mouseoverhouse();
+            if (mouseoverhouse != null) {
+                if(selectedHouses.contains(mouseoverhouse)) {
+                    selectedHouses.remove(mouseoverhouse);
+                } else {
+                    selectedHouses.add(mouseoverhouse);
+                }
+            }
+
+            //TODO: Move this to the proper location
+            //Create gis listtest
+            GISList gisList = Utils.convertHouseItemsToGisList(selectedHouses);
+            System.out.println(gisList);
+
+            //TODO: Move this to the proper location
+            Variables.getSendController().get_activesending().get_sendproperties().typecast_gis().set_gislist(gisList);
+            Variables.getSendController().get_activesending().get_sendproperties().set_shapestruct(new GISShape(gisList));
+
+        }
+        else if("act_clear_selected_houses".equals(e.getActionCommand())) {
+            selectedHouses.clear();
+        }
 		else if("act_restart_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().close_parm(false);
 			PAS.setParmOpen(false);//parm_open = false;
@@ -562,6 +592,8 @@ public class PASActions implements ActionListener {
 	public void deptChanged() {
 		PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
 	}
+
+
 }
 
 

@@ -14,7 +14,7 @@ import java.net.URL;
  */
 public class WSCentricStatusTest {
 
-    @Test
+    //@Test
     public void testGetCBStatus() throws Exception {
         CBPROJECTSTATUSREQUEST cbsreq = new CBPROJECTSTATUSREQUEST();
         CBPROJECTSTATUSRESPONSE cbpres;
