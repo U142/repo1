@@ -1043,9 +1043,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					addAction("set_houseeditor_coor", p);
 					get_mappane().set_adredit(p.get_mappointll());
 					PAS.get_pas().kickRepaint();
-
-                    // TODO: New mode here, HOUSE SELECT
-                    addAction("set_selected_house", p);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE) {
 					MapPoint p;

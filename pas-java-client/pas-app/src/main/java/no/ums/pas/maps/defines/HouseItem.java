@@ -340,25 +340,5 @@ public class HouseItem extends Object {
 		}
 		return n_ret;
 	}
-
-    @Override
-    public int hashCode() {
-        int result = 0;
-        final int prime = 31;
-        result = prime * Double.valueOf(this.get_lat()).hashCode();
-        result += prime * Double.valueOf(this.get_lon()).hashCode();
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof HouseItem)) {
-            return false;
-        } else {
-            HouseItem houseItem = (HouseItem) obj;
-            return (this.get_lat() == houseItem.get_lat() && this.get_lon() == houseItem.get_lon());
-        }
-
-
-    }
+	
 }

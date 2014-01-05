@@ -16,8 +16,6 @@ import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.ws.WSSaveUI;
-import no.ums.pas.importer.gis.GISList;
-import no.ums.pas.importer.gis.GISRecord;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.parm.voobjects.AlertVO;
@@ -33,16 +31,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 //Substance 5.2
 //import org.jvnet.substance.api.SubstanceSkin;
 
 public class PASActions implements ActionListener {
 
     private static final Log log = UmsLog.getLogger(PASActions.class);
-    private Set<ArrayList<HouseItem>> selectedHouses = new HashSet<ArrayList<HouseItem>>();
 
 	//private boolean parm_open = false;
 	
@@ -472,37 +467,6 @@ public class PASActions implements ActionListener {
 		else if("set_houseeditor_coor".equals(e.getActionCommand())) {
 			PAS.get_pas().get_eastcontent().get_houseeditor().reinit((MapPoint)e.getSource(), PAS.get_pas().get_mappane().get_mouseoverhouse());			
 		}
-        else if("set_selected_house".equals(e.getActionCommand())) {
-            // Add the house to a sending list, or remove from a sending list
-
-            // switch the icon/start with color
-
-            // TODO: Call a method for adding/removing the house
-
-            ArrayList<HouseItem> mouseoverhouse = PAS.get_pas().get_mappane().get_mouseoverhouse();
-
-            if(selectedHouses.contains(mouseoverhouse)) {
-                selectedHouses.remove(mouseoverhouse);
-            } else {
-                selectedHouses.add(mouseoverhouse);
-            }
-
-            //TODO: Move this to the proper location
-            //Create gis listtest
-            GISList gisList = convertHouseItemsToGisList(selectedHouses);
-            System.out.println(gisList);
-
-            //TODO: Move this to the proper location
-            Variables.getSendController().get_activesending().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
-            Variables.getSendController().get_activesending().get_sendproperties().typecast_gis().set_gislist(gisList);
-            Variables.getSendController().get_activesending().get_sendproperties().set_shapestruct(new GISShape(gisList));
-
-
-
-            //PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent(gislist, ActionEvent.ACTION_PERFORMED, "act_gis_imported"));
-
-
-        }
 		else if("act_restart_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().close_parm(false);
 			PAS.setParmOpen(false);//parm_open = false;
@@ -598,54 +562,6 @@ public class PASActions implements ActionListener {
 	public void deptChanged() {
 		PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
 	}
-
-    private GISList convertHouseItemsToGisList(final Set<ArrayList<HouseItem>> setOfHouseItems) {
-        GISList gisList = new GISList();
-
-        for (ArrayList<HouseItem> houseItems : setOfHouseItems) {
-
-            for (HouseItem houseItem : houseItems) {
-
-                ArrayList<Inhabitant> inhabitantsFromHouse = getInhabitantsFromHouse(houseItem);
-
-                if (inhabitantsFromHouse.size() > 0) {
-                    GISRecord gisRecord = new GISRecord(getStreetInfo(inhabitantsFromHouse.get(0)));
-                    for (Inhabitant inhabitant : inhabitantsFromHouse) {
-                        gisRecord.add_inhabitant(inhabitant);
-                    }
-                    gisList.add(gisRecord);
-                }
-            }
-        }
-
-        return gisList;
-    }
-
-    // Gets detailed inhabitant objects
-    private ArrayList<Inhabitant> getInhabitantsFromHouse(HouseItem houseItem) {
-        ArrayList<Inhabitant> inhabitants = new ArrayList<Inhabitant>();
-
-        for (int i=0; i< houseItem.get_inhabitantcount(); i++) {
-            Inhabitant itemfromhouse = houseItem.get_itemfromhouse(i);
-            inhabitants.add(itemfromhouse);
-        }
-
-        return inhabitants;
-    }
-
-    private String[] getStreetInfo(Inhabitant inhabitant) {
-
-        String[] streetInfo = new String[6];
-
-        streetInfo[0] = inhabitant.get_region(); // Municipal
-        streetInfo[1] = String.valueOf(inhabitant.get_streetid());
-        streetInfo[2] = inhabitant.get_no();
-        streetInfo[3] = inhabitant.get_letter();
-        streetInfo[4] = ""; // Namefilter 1
-        streetInfo[5] = ""; // Namefilter 2
-
-        return streetInfo;
-    }
 }
 
 
