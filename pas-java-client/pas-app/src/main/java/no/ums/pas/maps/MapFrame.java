@@ -56,6 +56,7 @@ public class MapFrame extends JPanel implements ActionListener {
         PAN(Cursor.HAND_CURSOR),
         ZOOM(Cursor.CROSSHAIR_CURSOR),
         HOUSESELECT(Cursor.DEFAULT_CURSOR),
+        HOUSESELECT_ALERT(Cursor.DEFAULT_CURSOR),
         SENDING_POLY(-1) {
             @Override
             public Cursor getCursor() {
@@ -575,6 +576,10 @@ public class MapFrame extends JPanel implements ActionListener {
 
     public void set_prev_mode() {
         set_mode(m_n_prev_mode);
+    }
+
+    public MapMode get_prev_mode() {
+        return m_n_prev_mode;
     }
 
     public void set_prev_paintmode() {

@@ -3,6 +3,7 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MunicipalStruct;
@@ -181,6 +182,21 @@ public class SendObject extends Object {
 				m_sendproperties = new SendPropertiesTAS(m_toolbar);
 				
 			}
+        case SendProperties.SENDING_TYPE_HOUSESELECT_ALERT_:
+            // Using GIS sending as basis for selecting houses
+            log.debug("SendingType=House select");
+            try {
+                if(m_sendproperties!=null)
+                    tmp = m_sendproperties;
+                if(m_sendproperties==null || !m_sendproperties.getClass().equals(SendPropertiesGIS.class)) { //get_shapestruct().getClass().equals(GISShape.class)) {
+                    m_sendproperties = new SendPropertiesGIS(m_toolbar);
+                }
+                if(tmp!=null)
+                    m_sendproperties.CopyCommons(tmp);
+            } catch(Exception e) {
+            }
+            get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.HOUSESELECT_ALERT, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+
 		}
 		get_toolbar().set_sendingtype();
 		get_sendproperties().set_sendingname(m_toolbar.m_txt_sendname.getText(), "");
@@ -229,7 +245,11 @@ public class SendObject extends Object {
 		//PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ZOOM);
 		//PAS.get_pas().get_mainmenu().set_pan();
 		//PAS.get_pas().kickRepaint();
-		get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.PAN, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+        if (b) {
+            get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.PAN, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+        } else {
+            get_callback().actionPerformed(new ActionEvent(Variables.getMapFrame().get_prev_mode(), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+        }
 		
 		return true;
 	}

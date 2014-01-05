@@ -248,7 +248,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	
 	public synchronized void addAction(String sz_action, Object action) {
 		ActionEvent e = new ActionEvent(action, ActionEvent.ACTION_PERFORMED, sz_action);
-		for(int i=0; i < get_callback().size(); i++) 
+		for(int i=0; i < get_callback().size(); i++)
 			((ActionListener)get_callback().get(i)).actionPerformed(e);
 	}
 	
@@ -950,7 +950,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				else if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
 					set_isdragging(true); //m_b_isdragging = true;
 				}
-				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
+                else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
 				{
 			        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
 			        MapPointLL p = new MapPointLL(ll.getLon(), ll.getLat());
@@ -1047,6 +1047,23 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
                     // TODO: New mode here, HOUSE SELECT
                     addAction("set_selected_house", p);
 				}
+                else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT_ALERT) {
+                    //new or edit object
+                    MapPoint p;
+                    this.check_snap(e);
+                    if(get_mappane().get_mouseoverhouse() != null) {
+                        //log.debug("House found at same location with " + get_mappane().get_mouseoverhouse().get_inhabitantcount() + " inhabitants");
+                        p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get(0).get_lon(), get_mappane().get_mouseoverhouse().get(0).get_lat()));
+                    }
+                    else
+                    {
+                        LonLat ll = get_mappane().getZoomLookup().getLonLat(get_mappane().getMapModel().getTopLeft(), e.getX(), e.getY());
+                        p = new MapPoint(Variables.getNavigation(), new MapPointLL(ll.getLon(), ll.getLat()));
+                    }
+
+                    // TODO: New mode here, HOUSE SELECT
+                    addAction("set_selected_house", p);
+                }
 				else if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE) {
 					MapPoint p;
 					if(get_mappane().get_active_shape() != null) {

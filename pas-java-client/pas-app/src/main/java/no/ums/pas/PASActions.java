@@ -25,6 +25,7 @@ import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -475,33 +476,27 @@ public class PASActions implements ActionListener {
         else if("set_selected_house".equals(e.getActionCommand())) {
             // Add the house to a sending list, or remove from a sending list
 
-            // switch the icon/start with color
-
-            // TODO: Call a method for adding/removing the house
-
             ArrayList<HouseItem> mouseoverhouse = PAS.get_pas().get_mappane().get_mouseoverhouse();
-
-            if(selectedHouses.contains(mouseoverhouse)) {
-                selectedHouses.remove(mouseoverhouse);
-            } else {
-                selectedHouses.add(mouseoverhouse);
+            if (mouseoverhouse != null) {
+                if(selectedHouses.contains(mouseoverhouse)) {
+                    selectedHouses.remove(mouseoverhouse);
+                } else {
+                    selectedHouses.add(mouseoverhouse);
+                }
             }
 
             //TODO: Move this to the proper location
             //Create gis listtest
-            GISList gisList = convertHouseItemsToGisList(selectedHouses);
+            GISList gisList = Utils.convertHouseItemsToGisList(selectedHouses);
             System.out.println(gisList);
 
             //TODO: Move this to the proper location
-            Variables.getSendController().get_activesending().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
             Variables.getSendController().get_activesending().get_sendproperties().typecast_gis().set_gislist(gisList);
             Variables.getSendController().get_activesending().get_sendproperties().set_shapestruct(new GISShape(gisList));
 
-
-
-            //PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent(gislist, ActionEvent.ACTION_PERFORMED, "act_gis_imported"));
-
-
+        }
+        else if("act_clear_selected_houses".equals(e.getActionCommand())) {
+            selectedHouses.clear();
         }
 		else if("act_restart_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().close_parm(false);
@@ -599,53 +594,7 @@ public class PASActions implements ActionListener {
 		PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
 	}
 
-    private GISList convertHouseItemsToGisList(final Set<ArrayList<HouseItem>> setOfHouseItems) {
-        GISList gisList = new GISList();
 
-        for (ArrayList<HouseItem> houseItems : setOfHouseItems) {
-
-            for (HouseItem houseItem : houseItems) {
-
-                ArrayList<Inhabitant> inhabitantsFromHouse = getInhabitantsFromHouse(houseItem);
-
-                if (inhabitantsFromHouse.size() > 0) {
-                    GISRecord gisRecord = new GISRecord(getStreetInfo(inhabitantsFromHouse.get(0)));
-                    for (Inhabitant inhabitant : inhabitantsFromHouse) {
-                        gisRecord.add_inhabitant(inhabitant);
-                    }
-                    gisList.add(gisRecord);
-                }
-            }
-        }
-
-        return gisList;
-    }
-
-    // Gets detailed inhabitant objects
-    private ArrayList<Inhabitant> getInhabitantsFromHouse(HouseItem houseItem) {
-        ArrayList<Inhabitant> inhabitants = new ArrayList<Inhabitant>();
-
-        for (int i=0; i< houseItem.get_inhabitantcount(); i++) {
-            Inhabitant itemfromhouse = houseItem.get_itemfromhouse(i);
-            inhabitants.add(itemfromhouse);
-        }
-
-        return inhabitants;
-    }
-
-    private String[] getStreetInfo(Inhabitant inhabitant) {
-
-        String[] streetInfo = new String[6];
-
-        streetInfo[0] = inhabitant.get_region(); // Municipal
-        streetInfo[1] = String.valueOf(inhabitant.get_streetid());
-        streetInfo[2] = inhabitant.get_no();
-        streetInfo[3] = inhabitant.get_letter();
-        streetInfo[4] = ""; // Namefilter 1
-        streetInfo[5] = ""; // Namefilter 2
-
-        return streetInfo;
-    }
 }
 
 
