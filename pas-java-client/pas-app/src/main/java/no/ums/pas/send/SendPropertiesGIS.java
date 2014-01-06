@@ -54,7 +54,7 @@ public class SendPropertiesGIS extends SendProperties {
 	public void set_gislist(GISList list) {
 		m_gislist = list;
 		m_houses = new Houses(true);
-		m_houses.setJoinHouses(true, 20);
+		m_houses.setJoinHouses(true, 10);
 		m_inhabitants = new TreeSet<Inhabitant>(m_houses.new LonLatComparator());
 		m_inhabitants.clear();
 		for(int i=0; i < list.size(); i++) {
