@@ -67,7 +67,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
     private static final Log log = UmsLog.getLogger(SendOptionToolbar.class);
 
-	public static final int SIZE_TXT			= 260;
+	public static final int SIZE_TXT			= 210;
 	public static final int SIZE_BUTTON_ICON	= 21;
 	public static final int SIZE_BUTTON_SMALL	= 25;
 	public static final int SIZE_BUTTON_MEDIUM	= 35;
