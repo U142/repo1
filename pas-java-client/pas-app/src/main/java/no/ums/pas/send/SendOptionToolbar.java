@@ -1384,7 +1384,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_place_holder,m_gridconst);
 		addSeparator(groupSpacing);
 		inc_xpanels2();
-		add(m_btn_adrtypes_nofax, m_gridconst);
+        add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
@@ -1399,17 +1399,15 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		addSeparator(2);
 		inc_xpanels2();
 		add(m_btn_adrtypes_headofhousehold, m_gridconst);
-
-		
-		m_place_holder = new JLabel("");
+        m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		
+
 		
 		addSeparator(groupSpacing);
 		
 		inc_xpanels2();
-		add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
+        add(m_btn_adrtypes_nofax, m_gridconst);
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
@@ -1436,7 +1434,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_lbl_addresstypes_private, m_gridconst);
 		set_gridconst(4, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		add(m_lbl_addresstypes_company, m_gridconst);
-		set_gridconst(13, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
+		set_gridconst(8, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		add(m_lbl_addresstypes_lba, m_gridconst);
 		init_addresstypes(0); //SendController.SENDTO_ALL);
 		add_spacing(DIR_VERTICAL, 5);
