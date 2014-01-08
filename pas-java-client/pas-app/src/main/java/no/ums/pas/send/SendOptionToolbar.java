@@ -1767,13 +1767,19 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_gis_preview.setVisible(true);
 		}
         else if("act_sendingtype_house_select".equals(e.getActionCommand())) {
-            GISList list = new GISList();
 
-            get_parent().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
-            get_parent().get_sendproperties().typecast_gis().set_gislist(list);
-            get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
+            boolean resetSelection = Variables.getMapFrame().get_prev_mode() != MapFrame.MapMode.HOUSESELECT_ALERT ||
+                    (Variables.getMapFrame().get_prev_mode() == MapFrame.MapMode.HOUSESELECT_ALERT &&
+                    Variables.getMapFrame().get_mode() == MapFrame.MapMode.HOUSESELECT_ALERT);
 
-            PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_clear_selected_houses"));
+            if (resetSelection) {
+                GISList list = new GISList();
+                get_parent().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
+                get_parent().get_sendproperties().typecast_gis().set_gislist(list);
+                get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
+
+                PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_clear_selected_houses"));
+            }
             get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.HOUSESELECT_ALERT, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 
             //PAS.get_pas().kickRepaint();
