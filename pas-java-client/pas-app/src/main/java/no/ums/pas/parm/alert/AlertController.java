@@ -93,6 +93,7 @@ public class AlertController implements ActionListener {
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_CLOSE_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.TXT_SENDINGNAME_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_, false);
+        toolbarPanel.show_buttons(SendOptionToolbar.BTN_SENDINGTYPE_HOUSE_SELECT_ALERT, false);
 		toolbarPanel.set_import_callback(this);
 		//toolbarPanel.show_buttons(SendOptionToolbar.BTN_OPEN_, false);
 	}

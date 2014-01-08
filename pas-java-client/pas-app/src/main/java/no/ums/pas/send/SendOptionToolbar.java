@@ -428,12 +428,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public static final int BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_ = 1 << 18; 
 	public static final int BTN_ADRTYPES_VULNERABLE_	= 1 << 19;
 	public static final int BTN_ADRTYPES_HEADOFHOUSEHOLD_ = 1 << 20;
+    public static final int BTN_SENDINGTYPE_HOUSE_SELECT_ALERT = 1 << 21;
 	
 	public static final int COMPONENTS_ALL_ = BTN_SENDINGTYPE_POLYGON_ | BTN_SENDINGTYPE_ELLIPSE_ | BTN_ADRTYPES_PRIVATE_ |
 												BTN_ADRTYPES_COMPANY_ | BTN_ADRTYPES_NOPHONE_ | BTN_COLORPICKER_ | BTN_FINALIZE_ | 
 												BTN_SEND_ | BTN_CLOSE_ | BTN_OPEN_ | BTN_ACTIVATE_ | BTN_CENTER_ON_MAP_ | TXT_SENDINGNAME_ | 
 												BTN_CELL_BROADCAST_ | BTN_CELL_BROADCAST_VOICE_ | BTN_ADRTYPES_NOFAX_ | 
-												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_ | BTN_ADRTYPES_VULNERABLE_ | BTN_ADRTYPES_HEADOFHOUSEHOLD_;
+												TXT_RECIPIENTTYPES_ | BTN_SENDINGTYPE_MUNICIPAL_ | BTN_ADRTYPES_VULNERABLE_ | BTN_ADRTYPES_HEADOFHOUSEHOLD_ |
+                                                BTN_SENDINGTYPE_HOUSE_SELECT_ALERT;
 	
 	private void hide_buttons() {
 		show_buttonsbyadrtype(PAS.get_pas().get_rightsmanagement().addresstypes());
@@ -580,6 +582,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if((FLAGS & BTN_ADRTYPES_HEADOFHOUSEHOLD_) == BTN_ADRTYPES_HEADOFHOUSEHOLD_) {
 			this.m_btn_adrtypes_headofhousehold.setVisible(b_show);
 		}
+
+        if((FLAGS & BTN_SENDINGTYPE_HOUSE_SELECT_ALERT) == BTN_SENDINGTYPE_HOUSE_SELECT_ALERT) {
+            this.m_radio_sendingtype_house_select .setVisible(b_show);
+        }
 	}
 
 	public boolean adrGroupRepresented(ButtonGroup bg)
