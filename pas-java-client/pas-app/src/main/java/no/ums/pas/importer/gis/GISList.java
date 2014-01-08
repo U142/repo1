@@ -83,14 +83,40 @@ public class GISList extends ArrayList<GISRecord> {
 	public Object clone() {
 		return super.clone();
 	}
-	
+
+    public void recalcBounds() {
+        // Reset before calculating in case of deselect
+        setDefaultBounds();
+
+        for (int i=0; i < this.size(); i++) {
+            GISRecord gisrecord = this.get_gisrecord(i);
+            if (gisrecord.get_inhabitants().size() > 0) {
+                // All should have the same point so just need the first
+                InhabitantBasics inhabitant = gisrecord.get_inhabitant(0);
+                // The lat and lon has to be switched here for some reason
+                if (inhabitant.get_lon() < m_bounds._lbo)
+                    m_bounds._lbo = inhabitant.get_lon();
+                if (inhabitant.get_lon() > m_bounds._rbo)
+                    m_bounds._rbo = inhabitant.get_lon();
+                if (inhabitant.get_lat() < m_bounds._bbo)
+                    m_bounds._bbo = inhabitant.get_lat();
+                if (inhabitant.get_lat() > m_bounds._ubo)
+                    m_bounds._ubo = inhabitant.get_lat();
+            }
+
+        }
+    }
 	
 	public GISList() {
 		super();
-		m_bounds._lbo = 360;
-		m_bounds._rbo = -360;
-		m_bounds._ubo = -360;
-		m_bounds._bbo = 360;
+		setDefaultBounds();
 	}
+
+    private void setDefaultBounds() {
+        m_bounds._lbo = 360;
+        m_bounds._rbo = -360;
+        m_bounds._ubo = -360;
+        m_bounds._bbo = 360;
+    }
 }
 

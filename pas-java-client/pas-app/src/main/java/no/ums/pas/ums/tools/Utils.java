@@ -273,7 +273,7 @@ public final class Utils {
                 }
             }
         }
-
+        gisList.recalcBounds();
         return gisList;
     }
 
