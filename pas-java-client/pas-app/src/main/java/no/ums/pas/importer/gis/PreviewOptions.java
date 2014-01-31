@@ -3,13 +3,11 @@ package no.ums.pas.importer.gis;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import javax.swing.*;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 class PreviewOptions extends DefaultPanel {
@@ -22,13 +20,19 @@ class PreviewOptions extends DefaultPanel {
 	JButton m_btn_fetch;
 	JButton m_btn_finish;
 	boolean m_b_is_alert = false;
-	
+
+    JLabel m_lbl_importOption;
+    ButtonGroup m_group_importOption;
+    JRadioButton m_rb_streetAddress;
+    JRadioButton m_rb_propertyAddress;
+
+
 	PreviewOptions(PreviewFrame parent, boolean bIsAlert) {
 		super();
 		m_b_is_alert = bIsAlert;
 		m_parent = parent;
-		init();
-		setPreferredSize(new Dimension(300, 60));
+        init();
+        setPreferredSize(new Dimension(300,90));
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
@@ -36,6 +40,7 @@ class PreviewOptions extends DefaultPanel {
 			e.setSource(new Boolean(m_check_firstline_columnnames.isSelected()));
 			m_parent.actionPerformed(e);
 		}
+        //next button
 		else if("act_fetch_addresses".equals(e.getActionCommand())) {
 			m_parent.actionPerformed(e);
 		}
@@ -43,7 +48,7 @@ class PreviewOptions extends DefaultPanel {
 			m_parent.actionPerformed(e);
 		}
 		else if("act_goto_next_valid".equals(e.getActionCommand())) {
-			m_btn_fetch.setEnabled(((Boolean)e.getSource()).booleanValue());
+			m_btn_fetch.setEnabled(((Boolean) e.getSource()).booleanValue());
 			if(m_btn_fetch.isEnabled())
 				m_btn_fetch.setToolTipText(null);
 			else
@@ -56,8 +61,20 @@ class PreviewOptions extends DefaultPanel {
 			m_parent.m_panel.setEncoding((String)m_cbx_encoding.getSelectedItem().toString());
 			m_parent.m_gis.set_preview(m_parent);
 			m_parent.m_gis.parse(m_parent.m_gis.get_file(), m_parent.m_gis.get_callback(), "act_gis_import_finished", m_parent.m_gis.getIsAlert());
-			
+
 		}
+        else if("act_import_streetAddress".equals(e.getActionCommand())) {
+            m_parent.m_panel.setM_import_type("Street");
+            m_parent.m_gis.setImportType("Street");
+            m_parent.actionPerformed (new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
+
+        }
+        else if("act_import_propertyAddress".equals(e.getActionCommand())){
+            m_parent.m_panel.setM_import_type("Property");
+            m_parent.m_gis.setImportType("Property");
+            m_parent.actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
+            m_parent.m_panel.setM_resultpanel(m_parent.m_panel.create_property_result_panel());
+        }
 	}
 	public void add_controls() {
 		set_gridconst(0, 0, 1, 1);
@@ -68,10 +85,23 @@ class PreviewOptions extends DefaultPanel {
 		add(m_cbx_encoding, get_gridconst());
 		set_gridconst(1, 0, 1, 1);
 		add(m_btn_fetch, get_gridconst());
-		set_gridconst(0, 2, 2, 1);
-		add(m_lbl_requirements, get_gridconst());
+
 		set_gridconst(3, 0, 1, 1);
 		add(m_btn_finish, get_gridconst());
+
+
+         //Requirements Label
+        set_gridconst(0, 3, 2, 1);
+        add(m_lbl_requirements, get_gridconst());
+
+        set_gridconst(0, 2, 1, 1);
+        add(m_lbl_importOption, get_gridconst());
+        set_gridconst(1, 2, 1, 1);
+        add(m_rb_streetAddress, get_gridconst());
+        set_gridconst(2, 2, 1, 1);
+        add(m_rb_propertyAddress, get_gridconst());
+        set_gridconst(3, 2, 1, 1);
+        m_rb_streetAddress.setSelected(true);
 	}
 	public void init() {
         m_check_firstline_columnnames = new JCheckBox(Localization.l("importpreview_first_row_has_column_names"), true);
@@ -89,6 +119,20 @@ class PreviewOptions extends DefaultPanel {
 		m_btn_finish.addActionListener(this);
 		m_btn_finish.setVisible(m_b_is_alert);
 		m_lbl_requirements = new JLabel(Localization.l("importpreview_please_specify"));
+
+        //Option for either importing the street adress or property address
+        m_lbl_importOption = new JLabel(Localization.l("import_option"));
+        m_group_importOption =  new ButtonGroup();
+        m_rb_streetAddress = new JRadioButton(Localization.l("import_street_address"));
+        m_rb_streetAddress.setActionCommand("act_import_streetAddress");
+        m_rb_propertyAddress = new JRadioButton(Localization.l("import_property_address"));
+        m_rb_propertyAddress.setActionCommand("act_import_propertyAddress");
+        m_rb_streetAddress.addActionListener(this);
+        m_rb_propertyAddress.addActionListener(this);
+        m_group_importOption.add(m_rb_streetAddress);
+        m_group_importOption.add(m_rb_propertyAddress);
 		add_controls();
 	}
+
+
 }

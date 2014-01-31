@@ -67,6 +67,15 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		 n_streetid, sz_quality, n_hasfixed, n_hasmobile, n_vulnerable);
 	}
 
+    public Inhabitant(String sz_kondmid, String sz_adrname, String sz_postaddr, String sz_no, String sz_letter,
+                      String sz_postno, String sz_postarea, String sz_region, String sz_birthday, String sz_number, String sz_mobile,
+                      double f_lon, double f_lat, int n_gnumber, int n_bnumber,int n_fnr,int n_snr, int n_adrtype, int n_deptpk, int n_streetid,
+                      String sz_quality, int n_hasfixed, int n_hasmobile, int n_vulnerable) {
+        init(sz_kondmid, sz_adrname, sz_postaddr, sz_no, sz_letter, sz_postno, sz_postarea,
+                sz_region, sz_birthday, sz_number, sz_mobile, f_lon, f_lat, n_gnumber, n_bnumber,n_fnr,n_snr, n_adrtype, n_deptpk,
+                n_streetid, sz_quality, n_hasfixed, n_hasmobile, n_vulnerable);
+    }
+
 
     public Inhabitant(UAddress a) {
         init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
@@ -145,6 +154,18 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		if(m_n_deptpk > 0)
 			set_useredited();
 	}
+
+    public void init(String sz_kondmid, String sz_adrname, String sz_postaddr, String sz_no, String sz_letter,
+                     String sz_postno, String sz_postarea, String sz_region, String sz_birthday, String sz_number, String sz_mobile,
+                     double f_lon, double f_lat, int n_gnumber, int n_bnumber,int fnr,int snr, int n_adrtype, int n_deptpk, int n_streetid,
+                     String sz_quality, int n_hasfixed, int n_hasmobile, int n_vulnerable) {
+        init(sz_kondmid, sz_adrname, sz_postaddr, sz_no, sz_letter, sz_postno, sz_postarea,
+                sz_region, sz_birthday, sz_number, sz_mobile, f_lon, f_lat, n_gnumber, n_bnumber, n_adrtype, n_deptpk,
+                n_streetid, sz_quality, n_hasfixed, n_hasmobile, n_vulnerable);
+        m_n_fnr = fnr;
+        m_n_snr = snr;
+
+    }
 	
 	protected void format_birthday() {
 		if(m_sz_birthday != null) {

@@ -88,7 +88,13 @@ namespace com.ums.PAS.Address
         public int COL_HOUSENO;
         public int COL_LETTER;
         public int DETAIL_THRESHOLD_LINES;
+        public int COL_APARTMENTID;
+        public int COL_GNR;
+        public int COL_BNR;
+        public int COL_FNR;
+        public int COL_SNR;
     }
+
 
     public class UGisImportResultLine
     {
@@ -102,15 +108,28 @@ namespace com.ums.PAS.Address
             try
             {
                 Int64 n_tmp = 0;
-                n_tmp = Int64.Parse(municipalid);
-                if (n_tmp <= 0)
-                    b_isvalid = false;
-                n_tmp = Int64.Parse(streetid);
-                if (n_tmp <= 0)
-                    b_isvalid = false;
-                n_tmp = Int64.Parse(houseno);
-                if (n_tmp <= 0)
-                    b_isvalid = false;
+                if (propertyField)
+                {
+                    n_tmp = Int64.Parse(municipalid);
+                    if (n_tmp <= 0)
+                        b_isvalid = false;
+                    n_tmp = Int64.Parse(gnr);
+                    if (n_tmp <= 0)
+                        b_isvalid = false;
+                    n_tmp = Int64.Parse(bnr);
+                }
+                else
+                {
+                    n_tmp = Int64.Parse(municipalid);
+                    if (n_tmp <= 0)
+                        b_isvalid = false;
+                    n_tmp = Int64.Parse(streetid);
+                    if (n_tmp <= 0)
+                        b_isvalid = false;
+                    n_tmp = Int64.Parse(houseno);
+                    if (n_tmp <= 0)
+                        b_isvalid = false;
+                }
             }
             catch (Exception)
             {
@@ -122,6 +141,12 @@ namespace com.ums.PAS.Address
         public String streetid;
         public String houseno;
         public String letter;
+        public String apartmentid;
+        public String gnr;
+        public String bnr;
+        public String fnr;
+        public String snr;
+        public bool propertyField = false;
         public String namefilter1;
         public String namefilter2;
         public int n_linenumber;
@@ -129,6 +154,7 @@ namespace com.ums.PAS.Address
         public UAddressList list = new UAddressList(); //list of inhabitants of this address
     }
 
+   
     public class UGisImportList
     {        
         public int DETAIL_THRESHOLD_LINES;
@@ -146,10 +172,42 @@ namespace com.ums.PAS.Address
         public String namefilter2;
     }
 
+    public class UGisImportApartmentList
+    {
+        public int DETAIL_THRESHOLD_LINES;
+        public int SKIP_LINES;
+        public List<UGisImportApartmentLine> list;
+    }
+
+    public class UGisImportApartmentLine:UGisImportLine
+    {
+
+        public String apartmentid;
+
+    }
+
+    public class UGisImportPropertyList
+    {
+        public int DETAIL_THRESHOLD_LINES;
+        public int SKIP_LINES;
+        public List<UGisImportPropertyLine> list;
+    }
+
+    public class UGisImportPropertyLine:UGisImportLine
+    {
+       public String gnr;
+        public String bnr;
+        public String snr;
+        public String fnr;
+ 
+    }
+
+ 
+
     /*
-     * Collect all the lines from UGisSearchParams.FILE here.
-     * All inhabitants under each FILE-line are listed in UGisResultLine.list
-     */
+  * Collect all the lines from UGisSearchParams.FILE here.
+  * All inhabitants under each FILE-line are listed in UGisResultLine.list
+  */
     public class UGisImportResultsByStreetId : IAddressResults
     {
         //public UGisImportResultLine[] list;
@@ -158,6 +216,7 @@ namespace com.ums.PAS.Address
         {
             list.Add(a);
         }
+   
         public void finalize()
         {
         }
@@ -246,6 +305,8 @@ namespace com.ums.PAS.Address
         //public double lat;
         public int gno;
         public int bno;
+        public int fno;
+        public int sno;
         //public int bedrift;
         public Int64 importid;
         public int streetid;

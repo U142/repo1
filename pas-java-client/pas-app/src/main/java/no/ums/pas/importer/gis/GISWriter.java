@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 
 public class GISWriter {
@@ -35,6 +36,7 @@ public class GISWriter {
 			LineData.Line line;
 			
 			String sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2;
+            ArrayList<String> parameters = new ArrayList<String>();
 			for(int i=skip; i < data().get_lines().size(); i++) {
 				line = (LineData.Line)data().get_lines().get(i);
 				try {
@@ -43,35 +45,45 @@ public class GISWriter {
 					sz_mun = "0";
 					//Error.getError().addError("GISWriter","Exception in convert",e,1);
 				}
+                parameters.add(sz_mun);
 				try {
 					sz_street = line.get_row(n_str);
 				} catch(Exception e) {
 					sz_street = "0";
 				}
+                parameters.add(sz_street);
 				try {
 					sz_house = line.get_row(n_hou);
+
 				} catch(Exception e) {
 					sz_house = "0";
 					Error.getError().addError("GISWriter","Exception in convert",e,1);
 				}
+                parameters.add(sz_house);
 				try {
 					sz_letter = line.get_row(n_let); //******* Her feiler den
+
 				} catch(Exception e) {
 					sz_letter = "";
 					//Error.getError().addError("GISWriter","Exception in convert",e,1);
 				}
+                parameters.add(sz_letter);
 				try {
 					sz_namefilter1 = line.get_row(n_namefilter1);
+
 				} catch(Exception e) {
 					sz_namefilter1 = "";
 				}
+                parameters.add(sz_namefilter1);
 				try {
 					sz_namefilter2 =  line.get_row(n_namefilter2);
+
 				} catch(Exception e) {
 					sz_namefilter2 = "";
 				}
+                parameters.add(sz_namefilter2);
 				//if(sz_mun.trim().length()>0 && sz_street.trim().length()>0 && sz_house.trim().length()>0)
-					write_line(out, sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2);
+					write_line(out, parameters);
 				//else
 				//	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
 			}
@@ -84,6 +96,79 @@ public class GISWriter {
 		}
 		return null;
 	}
+    //n_mun, n_gnr, n_bnr, n_fnr,n_snr, n_namefilter1, n_namefilter2, n_skip, m_encoding
+    public File convert(int n_mun, int n_gnr, int n_bnr, int n_fnr,int n_snr, int n_namefilter1, int n_namefilter2, int skip, String encoding) {
+        try {
+
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(get_umsgis_file()), encoding);
+
+            LineData.Line line;
+
+            String sz_mun, sz_gnr, sz_bnr, sz_fnr,sz_snr, sz_namefilter1, sz_namefilter2;
+            ArrayList<String> parameters = new ArrayList<String>();
+            for(int i=skip; i < data().get_lines().size(); i++) {
+                line = (LineData.Line)data().get_lines().get(i);
+                try {
+                    sz_mun = line.get_row(n_mun);
+                } catch(Exception e) {
+                    sz_mun = "0";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_mun);
+                try {
+                    sz_gnr = line.get_row(n_gnr);
+                } catch(Exception e) {
+                    sz_gnr = "0";
+                }
+                parameters.add(sz_gnr);
+                try {
+                    sz_bnr = line.get_row(n_bnr);
+                } catch(Exception e) {
+                    sz_bnr = "0";
+                    Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_bnr);
+                try {
+                    sz_fnr = line.get_row(n_fnr); //******* Her feiler den
+                } catch(Exception e) {
+                    sz_fnr =  "0";;
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_fnr);
+                try {
+                    sz_snr = line.get_row(n_snr); //******* Her feiler den
+                } catch(Exception e) {
+                    sz_snr =  "0";;
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_snr);
+                try {
+                    sz_namefilter1 = line.get_row(n_namefilter1);
+                } catch(Exception e) {
+                    sz_namefilter1 = "";
+                }
+                parameters.add(sz_namefilter1);
+                try {
+                    sz_namefilter2 =  line.get_row(n_namefilter2);
+                } catch(Exception e) {
+                    sz_namefilter2 = "";
+                }
+                parameters.add(sz_namefilter2);
+                //if(sz_mun.trim().length()>0 && sz_street.trim().length()>0 && sz_house.trim().length()>0)
+                write_line(out,  parameters);
+                //else
+                //	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
+            }
+            out.close();
+            return get_umsgis_file();
+        } catch(Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError().addError("GISWriter","Exception in convert",e,1);
+        }
+        return null;
+    }
+
 	private boolean write_line(OutputStreamWriter w, String c1, String c2, String c3, String c4, String c5, String c6) {
 		try {
 			w.write(c1 + "\t" + c2 + "\t" + c3 + "\t" + c4 + "\t" + c5 + "\t" + c6 + "\r\n");
@@ -94,5 +179,22 @@ public class GISWriter {
 		}
 		return false;
 	}
+
+    private boolean write_line(OutputStreamWriter w,ArrayList<String> parameters) {
+
+        StringBuilder string= new StringBuilder();
+        for (String e:parameters) {
+            string.append(e+"\t");
+        }
+        string.append("\r\n");
+        try {
+            w.write(string.toString());
+        } catch(Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError().addError("GISWriter","Exception in write_line",e,1);
+        }
+        return false;
+    }
 	
 }

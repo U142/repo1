@@ -88,6 +88,8 @@ public class InhabitantBasics
 	protected boolean m_b_is_useredited = false;
 	public void set_useredited() { m_b_is_useredited = true; }
 	public boolean is_useredited() { return m_b_is_useredited; }
+    protected int m_n_fnr;
+    protected int m_n_snr;
 
 	public InhabitantBasics()
 	{

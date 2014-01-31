@@ -7,11 +7,9 @@ import no.ums.pas.core.defines.JComponentCellEditor;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.PopupDialog;
 
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -30,20 +28,45 @@ class PreviewList extends DefaultPanel implements ComponentListener {
     private static final Log log = UmsLog.getLogger(PreviewList.class);
 
 	public static final long serialVersionUID = 1;
+
+    /**
+     * This class does some fancy footwork for checking if the options are selected right
+     * todo : Stuff needs to be added here to select property and street address with apartment id
+     */
 	class ComboField extends Object {
 		public static final int FIELDID_EMPTY		= 0;
 		public static final int FIELDID_MUNICIPALID = 1;
 		public static final int FIELDID_STREETID	= 2;
 		public static final int FIELDID_HOUSENO		= 4;
 		public static final int FIELDID_LETTER		= 8;
+        public static final int FIELDID_APARTMENTID = 64;
 		public static final int FIELDID_NAMEFILTER_INCLUSIVE_1 = 16;
 		public static final int FIELDID_NAMEFILTER_INCLUSIVE_2 = 32;
-		public static final int FIELDSUM_NEEDED		= FIELDID_MUNICIPALID | FIELDID_STREETID | FIELDID_HOUSENO | FIELDID_LETTER;
+
+        public static final int FIELDID_GNR	= 128;
+        public static final int FIELDID_BNR		=256 ;
+        public static final int FIELDID_FNR		= 512;
+        public static final int FIELDID_SNR = 1024;
+
+		public static final int FIELDSUM_NEEDED_STREET		= FIELDID_MUNICIPALID | FIELDID_STREETID | FIELDID_HOUSENO | FIELDID_LETTER;
+        public static final int FIELDSUM_NEEDED_STREET_APARTMENT		= FIELDID_MUNICIPALID | FIELDID_STREETID | FIELDID_HOUSENO | FIELDID_LETTER|FIELDID_APARTMENTID;
+        public static final int FIELDSUM_NEEDED_PROPERTY	= FIELDID_MUNICIPALID | FIELDID_GNR | FIELDID_BNR | FIELDID_FNR|FIELDID_SNR;
+
+
 		
-		public final String HEADING_SEARCH_MUNICIPALID [] = new String [] { "KOMMUN" };
+		public final String HEADING_SEARCH_MUNICIPALID [] = new String [] { "KOMMUN","Kommune" };
 		public final String HEADING_SEARCH_STREETID [] = new String [] { "VEJ", "GATENR" };
 		public final String HEADING_SEARCH_HOUSENO [] = new String [] { "HUS" };
 		public final String HEADING_SEARCH_LETTER [] = new String [] { "BOKSTAV", "BOGSTAV" };
+        public final String HEADING_SEARCH_APARTMENT [] = new String [] { "BOLIGNUMMER ", "Leilighetsnummer" };
+        //For property
+        public final String HEADING_SEARCH_GNR [] = new String [] { "GNR" };
+        public final String HEADING_SEARCH_BNR [] = new String [] { "BNR" };
+        public final String HEADING_SEARCH_FNR [] = new String [] { "FNR" };
+        public final String HEADING_SEARCH_SNR [] = new String [] { "SNR" };
+
+
+        //This actually comes in second screen after clicking on next button
 		public final String HEADING_SEARCH_NAMEFILTER_INCLUSIVE_1 [] = new String [] { "FILTER1" };
 		public final String HEADING_SEARCH_NAMEFILTER_INCLUSIVE_2 [] = new String [] { "FILTER2" };
 		
@@ -75,6 +98,21 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 				case FIELDID_NAMEFILTER_INCLUSIVE_2:
 					_sz_search = HEADING_SEARCH_NAMEFILTER_INCLUSIVE_2;
 					break;
+                case FIELDID_GNR :
+                    _sz_search = HEADING_SEARCH_GNR;
+                    break;
+                case FIELDID_BNR :
+                    _sz_search = HEADING_SEARCH_BNR;
+                    break;
+                case FIELDID_FNR :
+                    _sz_search = HEADING_SEARCH_FNR;
+                    break;
+                case FIELDID_SNR :
+                    _sz_search = HEADING_SEARCH_SNR;
+                    break;
+                case FIELDID_APARTMENTID :
+                    _sz_search = HEADING_SEARCH_APARTMENT;
+                    break;
 				default:
 					_sz_search = new String[0];
 					break;
@@ -129,6 +167,7 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 	protected String [] m_sz_cols;
 	private int SHOW_NUM_ROWS_ = 20;
 	private int SELECTED_FIELDS_ = 0;
+
 	protected int sum_fields(ComboAdrid combo) {
 		deselect(combo);
 		SELECTED_FIELDS_ = 0;
@@ -157,8 +196,14 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 			new ComboField(ComboField.FIELDID_STREETID, Localization.l("importpreview_streetid")),
 			new ComboField(ComboField.FIELDID_HOUSENO, Localization.l("importpreview_houseno")),
 			new ComboField(ComboField.FIELDID_LETTER, Localization.l("importpreview_letter")),
+            new ComboField(ComboField.FIELDID_APARTMENTID, Localization.l("importpreview_namefilter2")),
+            new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1, Localization.l("importpreview_namefilter1")),
 			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1, Localization.l("importpreview_namefilter1")),
-			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2, Localization.l("importpreview_namefilter2"))
+			new ComboField(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2, Localization.l("importpreview_namefilter2")),
+            new ComboField(ComboField.FIELDID_GNR, Localization.l("importpreview_gnr")),
+            new ComboField(ComboField.FIELDID_BNR, Localization.l("importpreview_bnr")),
+            new ComboField(ComboField.FIELDID_FNR, Localization.l("importpreview_fnr")),
+            new ComboField(ComboField.FIELDID_SNR, Localization.l("importpreview_snr")),
 	};
 	
 	PreviewList(PreviewPanel parent, GISFile gis, DefaultTableCellRenderer renderer) {
@@ -172,6 +217,7 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 		init();
 		addComponentListener(this);
 		setSize(400, 300);
+
 	}
 	PreviewList(PreviewPanel parent, DefaultTableCellRenderer renderer) {
 		super();
@@ -206,6 +252,31 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 		get_previewpanel().revalidate();
 		get_previewpanel().get_table().revalidate();
 	}
+
+    /**
+     * Checks if all the mandatory fields are imported for various import type
+     * @param calculatedFieldSum
+     * @return
+     */
+    public boolean isValidFieldSum(int calculatedFieldSum) {
+        if("Street".equalsIgnoreCase(m_parent.getM_import_type())) {
+            if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_STREET) == ComboField.FIELDSUM_NEEDED_STREET) ||
+                    ((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_STREET_APARTMENT) ==
+                            ComboField.FIELDSUM_NEEDED_STREET_APARTMENT)) {
+                if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_STREET_APARTMENT) ==
+                ComboField.FIELDSUM_NEEDED_STREET_APARTMENT)) {
+                    m_parent.setM_import_type("StreetApartment");
+                }
+                return true;
+            }
+        }
+        else if("Property".equalsIgnoreCase(m_parent.getM_import_type())) {
+            if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_PROPERTY) == ComboField.FIELDSUM_NEEDED_PROPERTY)) {
+                return true;
+            }
+        }
+        return false;
+    }
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			m_b_firstline_heading = ((Boolean)e.getSource()).booleanValue();
@@ -214,9 +285,10 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 		}
 		else if("act_set_fieldid".equals(e.getActionCommand())) {
 			ComboField field = (ComboField)((ComboAdrid)e.getSource()).getSelectedItem();
-			int n = sum_fields((ComboAdrid)e.getSource());
+			int header_sum = sum_fields((ComboAdrid)e.getSource());
 			boolean b_goto_next;
-			if((n & ComboField.FIELDSUM_NEEDED) == ComboField.FIELDSUM_NEEDED)
+            //If the imported file contains all the necessary headers move on to the next step
+			if(isValidFieldSum(header_sum))
 				b_goto_next = true;
 			else
 				b_goto_next = false;
@@ -244,6 +316,10 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 		setVisible(true);
 		set_columnnames();
 	}
+
+    /**
+     * Auto sets the column names
+     */
 	private void set_columnnames() {
 		if(isFirstlineHeading()) {
 			try {
@@ -273,18 +349,20 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 				return true;
 		return determine_cols_by_dataguess();
 	}
+    //This picks up each column and sends it to calculate the column selected count
 	private boolean determine_cols_by_heading() {
 		if(isFirstlineHeading()) {
 			//0	xKOMMUNKODE	xVEJKODE	xADRESSE	xHUSNUMMER	xBOGSTAVSAL	xPOSTNUMMER	STATIONNR	LAVAFGNR
 			//adressenr	KOMMUNENR	GATENR	GATENAVN	HUSNR	BOKSTAV	
 			LineData.Line data = get_gis().get_parser().get_linedata().get(0);
-			String sz_temp;
+			String sz_temp= new String();
 			for(int i=0; i < data.get_fields().size(); i++) {
 				try {
 					sz_temp = data.get_fields().get(i).toString();
 					m_field_combos[i].search_and_select(sz_temp);
 				}catch(Exception e) {
 					log.debug(e.getMessage());
+                    log.debug(sz_temp);
 					Error.getError().addError("PreviewList","Exception in determine_cols_by_heading",e,1);
 				}
 			}

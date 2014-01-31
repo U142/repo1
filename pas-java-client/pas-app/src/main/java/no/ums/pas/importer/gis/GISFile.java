@@ -27,7 +27,14 @@ public class GISFile implements ActionListener {
 	public File get_file() { return m_gisfile; }
 	public URL get_url() { return m_gisurl; }
 	private String encoding;
+
+    public void setImportType(String importType) {
+        this.importType = importType;
+    }
+
+    private String importType;
 	public void set_encoding(String encoding) { this.encoding = encoding; }
+
 	
 	public GISFile() {
 	}

@@ -39,8 +39,8 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public StatisticsPanel get_statisticspanel() { return m_statisticspanel; }
 	public String encoding = "ISO-8859-15";
 	public GISFile m_gis;
-	
-	public PreviewFrame(GISFile gis) {
+
+    public PreviewFrame(GISFile gis) {
 		super(PAS.get_pas(), Localization.l("common_preview"), true);
 		try {
 			setAlwaysOnTop(true);
@@ -154,28 +154,25 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			m_panel.get_previewlist().actionPerformed(e);
+            if(is_valid_toPerform_action())   {
+                enableControls(false);
+            }
 		}
-		else if("act_fetch_addresses".equals(e.getActionCommand())) { //get event from PreviewOptions
-			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
-				m_panel.actionPerformed(e);
+		else if("act_fetch_addresses".equals(e.getActionCommand())) {
+		//get event from PreviewOptions
+            if(is_valid_toPerform_action())   {
+            m_panel.actionPerformed(e);
 				enableControls(false);
-			}
-			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
-		}
+            }
+            else
+            JOptionPane.showMessageDialog(PopupDialog.get_frame(),
+                    Localization.l("importpreview_please_specify"), Localization.l("common_warning"),
+                    JOptionPane.WARNING_MESSAGE);
+
+        }
 		else if("act_gis_finish".equals(e.getActionCommand())) {
-			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
-				m_panel.actionPerformed(e);
-				this.setVisible(false);
-			}
-			else
-				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE); 
+            m_panel.actionPerformed(e);
+            this.setVisible(false);
 		}
 		else if("act_set_statistics_view".equals(e.getActionCommand())) {
 			if(m_options!=null) {
@@ -187,6 +184,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.doLayout();
 			resize();
 			repaint();
+
 		}
 		else if("act_set_options_view".equals(e.getActionCommand())) {
 			if(m_statisticspanel!=null)
@@ -213,8 +211,57 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.setVisible(false);
 			enableControls(true);
 		}
+        else if( "act_import_streetAddress".equals(e.getActionCommand())||
+                "act_import_propertyAddress".equals(e.getActionCommand())){
+            if(is_valid_toPerform_action())   {
+                m_panel.actionPerformed(e);
+                enableControls(false);
+            }
+            else
+                JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"),
+                        Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+
+
+        }
 	}
-	protected void enableControls(final boolean b)
+
+    private boolean is_valid_toPerform_action() {
+        if("Street".equals(get_previewpanel().getM_import_type()))
+        {
+            if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
+              return true;
+            }
+            else
+               return false;
+        }
+        else if("StreetApartment".equals(get_previewpanel().getM_import_type()))
+        {
+            if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) != -1) {
+                return true;
+            }
+            else
+                return false;
+        }
+        else if("Property".equals(get_previewpanel().getM_import_type())){
+            if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_GNR) != -1 &&
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_BNR) != -1 ) {
+                return true;
+            }
+            else
+                return false;
+
+        }
+        return false;
+    }
+
+    protected void enableControls(final boolean b)
 	{
 		SwingUtilities.invokeLater(new Runnable() 
 		{

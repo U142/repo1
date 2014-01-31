@@ -37,6 +37,24 @@ public class GisImportFile
                     gisline.houseno = arr[m_params.COL_HOUSENO];
                 if (m_params.COL_LETTER < arr.Length)
                     gisline.letter = arr[m_params.COL_LETTER];
+                else
+                    gisline.letter = "";
+                if (m_params.COL_APARTMENTID < arr.Length)
+                    gisline.apartmentid = arr[m_params.COL_APARTMENTID];
+                else
+                    gisline.apartmentid = "";
+                if (m_params.COL_GNR < arr.Length)
+                    gisline.gnr = arr[m_params.COL_GNR];
+       
+                if (m_params.COL_BNR < arr.Length)
+                    gisline.bnr = arr[m_params.COL_BNR];
+          
+                if (m_params.COL_FNR < arr.Length)
+                    gisline.fnr = arr[m_params.COL_FNR];
+       
+                if (m_params.COL_SNR < arr.Length)
+                    gisline.snr = arr[m_params.COL_SNR];
+      
                 if (m_params.COL_NAMEFILTER1 < arr.Length && m_params.COL_NAMEFILTER1 >= 0)
                     gisline.namefilter1 = arr[m_params.COL_NAMEFILTER1];
                 else
