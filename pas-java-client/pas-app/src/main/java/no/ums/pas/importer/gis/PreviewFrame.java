@@ -5,6 +5,7 @@ package no.ums.pas.importer.gis;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
@@ -130,8 +131,6 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		setVisible(true);
 		addComponentListener(this);
 		resize();
-        m_panel.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
-       // m_callbackframe.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
 
 	}
 	public void init_common() {
@@ -154,7 +153,6 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void actionPerformed(ActionEvent e) {
-        //Control frame
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			m_panel.get_previewlist().actionPerformed(e);
             if(is_valid_toPerform_action())   {
@@ -197,10 +195,6 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.doLayout();
 			resize();
 			repaint();
-            if(m_panel!= null && ! is_valid_toPerform_action())   {
-              //  m_panel.actionPerformed(e);
-                enableControls(false);
-            }
 		}
 		else if("act_update_statistics".equals(e.getActionCommand())) {
 			if(get_statisticspanel()!=null) {
@@ -215,10 +209,16 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			}
 		}
 		else if("act_finish".equals(e.getActionCommand())) {
+			//to allow to import more files
+			if(JOptionPane.showConfirmDialog(this, Localization.l("import_more_files_are_you_sure"), Localization.l("import_more_files"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+			{
+				SendObject currentSendObject = PAS.get_pas().get_sendcontroller().get_activesending();
+				currentSendObject.set_import_more_flag(true);
+				new ImportPolygon(currentSendObject.get_toolbar(), "act_polygon_imported", false, PAS.get_pas());			
+			}
 			this.setVisible(false);
 			enableControls(true);
 		}
-
         else if( "act_import_streetAddress".equals(e.getActionCommand())||
                 "act_import_propertyAddress".equals(e.getActionCommand())){
             if(is_valid_toPerform_action())   {
@@ -269,7 +269,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
         return false;
     }
 
-    public void enableControls(final boolean b)
+    protected void enableControls(final boolean b)
 	{
 		SwingUtilities.invokeLater(new Runnable() 
 		{
