@@ -5,6 +5,7 @@ package no.ums.pas.importer.gis;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
