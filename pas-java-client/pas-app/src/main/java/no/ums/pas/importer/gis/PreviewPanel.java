@@ -14,7 +14,7 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.Dimension;
@@ -368,41 +368,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         }
 
     }
-    public boolean is_valid_toPerform_action() {
-        if("Street".equals(getM_import_type()))
-        {
-            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-                   get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
-                return true;
-            }
-            else
-                return false;
-        }
-        else if("StreetApartment".equals(getM_import_type()))
-        {
-            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) != -1) {
-                return true;
-            }
-            else
-                return false;
-        }
-        else if("Property".equals(getM_import_type())){
-            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_GNR) != -1 &&
-                   get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_BNR) != -1 ) {
-                return true;
-            }
-            else
-                return false;
 
-        }
-        return false;
-    }
     public File create_file(){
         int n_col_municipal = get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID);
         int n_col_streetid	= get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID);
@@ -569,15 +535,51 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 
     public void stateChanged(ChangeEvent e) {
         JTabbedPane pane = (JTabbedPane)e.getSource();
-        if(pane.getSelectedComponent().equals(m_resultpanel)) {
-            //activate statistics
+        if(pane.getSelectedComponent().equals(m_resultpanel)) {                                    //activate statistics
             m_callbackframe.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_statistics_view"));
         } else if(pane.getSelectedComponent().equals(m_previewlist)) {
-            //activate options
+            //activate options ---
+            if(!is_valid_toPerform_action()){
+
+            }
             m_callbackframe.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
         }
     }
+    private boolean is_valid_toPerform_action() {
+        if("Street".equals(getM_import_type()))
+        {
+            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+                   get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+                   get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
+                return true;
+            }
+            else
+                return false;
+        }
+        else if("StreetApartment".equals(getM_import_type()))
+        {
+            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) != -1) {
+                return true;
+            }
+            else
+                return false;
+        }
+        else if("Property".equals(getM_import_type())){
+            if(get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_GNR) != -1 &&
+                    get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_BNR) != -1 ) {
+                return true;
+            }
+            else
+                return false;
 
+        }
+        return false;
+    }
     public void componentResized(ComponentEvent e) {
         m_tab.setPreferredSize(new Dimension(getWidth(), getHeight()-200));
         if(m_previewlist!=null) {

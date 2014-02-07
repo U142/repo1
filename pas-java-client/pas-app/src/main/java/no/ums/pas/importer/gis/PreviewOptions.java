@@ -26,8 +26,17 @@ class PreviewOptions extends DefaultPanel {
     JRadioButton m_rb_streetAddress;
     JRadioButton m_rb_propertyAddress;
 
+    String importType="Street";
 
-	PreviewOptions(PreviewFrame parent, boolean bIsAlert) {
+    public String getImportType() {
+        return importType;
+    }
+
+    public void setImportType(String importType) {
+        this.importType = importType;
+    }
+
+    PreviewOptions(PreviewFrame parent, boolean bIsAlert) {
 		super();
 		m_b_is_alert = bIsAlert;
 		m_parent = parent;
@@ -65,13 +74,13 @@ class PreviewOptions extends DefaultPanel {
 		}
         else if("act_import_streetAddress".equals(e.getActionCommand())) {
             m_parent.m_panel.setM_import_type("Street");
-            m_parent.m_gis.setImportType("Street");
+            setImportType("Street");
             m_parent.actionPerformed (new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
 
         }
         else if("act_import_propertyAddress".equals(e.getActionCommand())){
             m_parent.m_panel.setM_import_type("Property");
-            m_parent.m_gis.setImportType("Property");
+            setImportType("Property");
             m_parent.actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
             m_parent.m_panel.setM_resultpanel(m_parent.m_panel.create_property_result_panel());
         }

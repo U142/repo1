@@ -130,6 +130,8 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		setVisible(true);
 		addComponentListener(this);
 		resize();
+        m_panel.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
+       // m_callbackframe.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
 
 	}
 	public void init_common() {
@@ -152,6 +154,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void actionPerformed(ActionEvent e) {
+        //Control frame
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			m_panel.get_previewlist().actionPerformed(e);
             if(is_valid_toPerform_action())   {
@@ -194,6 +197,10 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.doLayout();
 			resize();
 			repaint();
+            if(m_panel!= null && ! is_valid_toPerform_action())   {
+              //  m_panel.actionPerformed(e);
+                enableControls(false);
+            }
 		}
 		else if("act_update_statistics".equals(e.getActionCommand())) {
 			if(get_statisticspanel()!=null) {
@@ -211,6 +218,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.setVisible(false);
 			enableControls(true);
 		}
+
         else if( "act_import_streetAddress".equals(e.getActionCommand())||
                 "act_import_propertyAddress".equals(e.getActionCommand())){
             if(is_valid_toPerform_action())   {
@@ -261,7 +269,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
         return false;
     }
 
-    protected void enableControls(final boolean b)
+    public void enableControls(final boolean b)
 	{
 		SwingUtilities.invokeLater(new Runnable() 
 		{
