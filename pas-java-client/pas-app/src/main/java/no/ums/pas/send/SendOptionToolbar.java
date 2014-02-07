@@ -1682,8 +1682,32 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				public void run()
 				{
 					get_parent().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
-					get_parent().get_sendproperties().typecast_gis().set_gislist(list);
-					get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
+
+					SendObject activeSendObject = get_parent().get_sendproperties().get_sendobject();
+					boolean m_import_more_flag = activeSendObject.get_import_more_flag();
+					if(m_import_more_flag) {
+						activeSendObject.set_import_more_flag(false);
+						GISList prevGISList = activeSendObject.get_sendproperties().typecast_gis().get_gislist();
+						if(prevGISList!=null){
+							prevGISList.addAll(list);
+						}
+						else
+						{
+							log.debug("SendOptionToolbar: new gis list is null");
+							prevGISList = list;
+						}
+						get_parent().get_sendproperties().typecast_gis().set_gislist(prevGISList);
+						get_parent().get_sendproperties().set_shapestruct(new GISShape(prevGISList));
+						log.debug("SendOptionToolbar: new gis list size=" + prevGISList.size() + " lines");
+					}
+					else
+					{
+						get_parent().get_sendproperties().typecast_gis().set_gislist(list);
+						get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
+					}
+					//get_parent().get_sendproperties().typecast_gis().set_gislist(list);
+					//get_parent().get_sendproperties().set_shapestruct(new GISShape(list));
+
 					try {
 						get_parent().get_sendproperties().goto_area();
 					} catch(Exception err) {
