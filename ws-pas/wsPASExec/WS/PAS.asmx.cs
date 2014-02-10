@@ -321,6 +321,52 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public UGisImportResultsByStreetId GetGisByApartmentIdV3(ULOGONINFO logon, UGisImportApartmentList search)
+        {
+            try
+            {
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
+                UGisImportLookup lookup = new UGisImportLookup(ref logon, percentdelegate, ProgressJobType.GEMINI_IMPORT_STREETID);
+                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)lookup.Find(search);
+
+                return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID);
+            }
+
+        }
+
+        [WebMethod]
+        public UGisImportResultsByStreetId GetGisByPropertyIdV3(ULOGONINFO logon, UGisImportPropertyList search)
+        {
+            try
+            {
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
+                UGisImportLookup lookup = new UGisImportLookup(ref logon, percentdelegate, ProgressJobType.GEMINI_IMPORT_STREETID);
+                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)lookup.Find(search);
+
+                return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID);
+            }
+
+        }
+
+        [WebMethod]
         public PercentResult GetProgress(ULOGONINFO l, ProgressJobType jobType)
         {
             try

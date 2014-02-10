@@ -70,6 +70,10 @@ public class SendObject extends Object {
 		}
 	}
 	
+	private boolean m_import_more_flag;
+	public boolean get_import_more_flag() { return m_import_more_flag; }
+	public void set_import_more_flag(boolean m_import_more_flag) { this.m_import_more_flag = m_import_more_flag; }
+
 	public SendObject(String sz_name, int n_type, int n_send_id, ActionListener callback, Navigation nav) { //SendController controller) {
 		super();
 		

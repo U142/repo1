@@ -796,6 +796,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		
 		public TableList(String [] sz_columns, int [] n_width)
 		{
+            log.info(sz_columns.length);
 			m_n_columns = sz_columns.length;
 			m_data = new ArrayList[m_n_columns];
 			for(int i=0; i < m_n_columns; i++)
