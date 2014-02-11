@@ -3,7 +3,6 @@ package no.ums.pas.core.ws;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
-import no.ums.pas.PasApplication;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.importer.gis.GISList;
@@ -12,16 +11,13 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.ArrayOfUGisImportApartmentLine;
 import no.ums.ws.pas.ArrayOfUGisImportLine;
 import no.ums.ws.pas.ArrayOfUGisImportPropertyLine;
-import no.ums.ws.pas.ArrayOfUGisImportResultLine;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UGisImportApartmentLine;
 import no.ums.ws.pas.UGisImportApartmentList;
 import no.ums.ws.pas.UGisImportLine;
 import no.ums.ws.pas.UGisImportList;
-import no.ums.ws.pas.UGisImportParamsByStreetId;
 import no.ums.ws.pas.UGisImportPropertyLine;
 import no.ums.ws.pas.UGisImportPropertyList;
-import no.ums.ws.pas.UGisImportResultLine;
 import no.ums.ws.pas.UGisImportResultsByStreetId;
 
 import javax.xml.namespace.QName;
@@ -34,7 +30,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Work to be done for mocking data
