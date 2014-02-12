@@ -38,7 +38,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public PreviewPanel get_previewpanel() { return m_panel; }
 	private StatisticsPanel m_statisticspanel;
 	public StatisticsPanel get_statisticspanel() { return m_statisticspanel; }
-	public String encoding = "ISO-8859-15";
+	public String encoding = Localization.l("importpreview_encoding_iso_8859_15");
 	public GISFile m_gis;
 
     public PreviewFrame(GISFile gis) {
