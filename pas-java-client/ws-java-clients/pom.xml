@@ -252,7 +252,7 @@
 		<profile>
             <id>orange_qa</id>
             <properties>
-                <wsdl.base>http://192.168.5.21/pas/ws_pas/WS</wsdl.base>
+                <wsdl.base>http://192.168.5.21/pas/ws_pas_qa/WS</wsdl.base>
             </properties>
         </profile>
 		<profile>
