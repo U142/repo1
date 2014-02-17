@@ -36,9 +36,10 @@ public class GISWriter {
 			LineData.Line line;
 			
 			String sz_mun, sz_street, sz_house, sz_letter, sz_namefilter1, sz_namefilter2;
-            ArrayList<String> parameters = new ArrayList<String>();
+			ArrayList<String> parameters;
 			for(int i=skip; i < data().get_lines().size(); i++) {
 				line = (LineData.Line)data().get_lines().get(i);
+				parameters = new ArrayList<String>();
 				try {
 					sz_mun = line.get_row(n_mun);
 				} catch(Exception e) {
@@ -105,9 +106,10 @@ public class GISWriter {
             LineData.Line line;
 
             String sz_mun, sz_gnr, sz_bnr, sz_fnr,sz_snr, sz_namefilter1, sz_namefilter2;
-            ArrayList<String> parameters = new ArrayList<String>();
+            ArrayList<String> parameters;
             for(int i=skip; i < data().get_lines().size(); i++) {
                 line = (LineData.Line)data().get_lines().get(i);
+                parameters = new ArrayList<String>();
                 try {
                     sz_mun = line.get_row(n_mun);
                 } catch(Exception e) {
