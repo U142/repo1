@@ -49,7 +49,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
     private SendObject m_sendobject;
     private ActionListener m_callbackframe;
     private GISFile m_gis;
-    private String m_encoding = "ISO-8859-15";
+    private String m_encoding = Localization.l("importpreview_encoding_iso_8859_15");
     public void setEncoding(String encoding) { m_encoding = encoding; }
 
     //Import Type
@@ -139,11 +139,11 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
             addComponentListener(this);
             m_tab = new JTabbedPane();
             if(m_loader==null)
-                m_loader = new LoadingPanel("GIS Import", new Dimension(100, 40), true);
+                m_loader = new LoadingPanel(Localization.l("importpreview_loading_content"), new Dimension(100, 40), true);
             init();
 
         } else {
-            m_loader = new LoadingPanel("GIS Import", new Dimension(100, 40), true);
+            m_loader = new LoadingPanel(Localization.l("importpreview_loading_content"), new Dimension(100, 40), true);
             so.get_toolbar().showLoader(m_loader);
         }
     }
@@ -157,7 +157,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         super();
         m_callbackframe = callbackframe;
         m_previewlist = new PreviewList(this, gis, null);
-        m_loader = new LoadingPanel("GIS Import", new Dimension(100, 40), true);
+        m_loader = new LoadingPanel(Localization.l("importpreview_loading_content"), new Dimension(100, 40), true);
         m_gis = gis;
         if(isProperty())   {
             createPropertyResultPanel(gis);

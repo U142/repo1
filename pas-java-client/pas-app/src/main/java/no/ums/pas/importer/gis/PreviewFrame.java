@@ -38,7 +38,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public PreviewPanel get_previewpanel() { return m_panel; }
 	private StatisticsPanel m_statisticspanel;
 	public StatisticsPanel get_statisticspanel() { return m_statisticspanel; }
-	public String encoding = "ISO-8859-15";
+	public String encoding = Localization.l("importpreview_encoding_iso_8859_15");
 	public GISFile m_gis;
 
     public PreviewFrame(GISFile gis) {
@@ -155,9 +155,6 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			m_panel.get_previewlist().actionPerformed(e);
-            if(is_valid_toPerform_action())   {
-                enableControls(false);
-            }
 		}
 		else if("act_fetch_addresses".equals(e.getActionCommand())) {
 		//get event from PreviewOptions
