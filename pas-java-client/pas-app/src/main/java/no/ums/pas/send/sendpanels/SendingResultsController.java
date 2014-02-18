@@ -1,17 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Component;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
-import com.sun.java.swing.plaf.windows.resources.windows;
-
-import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert.SnapAlertResults;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.send.sendpanels.SendingResultsView.ISendingResultsUpdate;
 
 public class SendingResultsController implements ISendingResultsUpdate {

@@ -119,7 +119,7 @@ class PreviewOptions extends DefaultPanel {
 		m_check_firstline_columnnames.setActionCommand("act_first_row_has_columnnames");
         m_btn_fetch = new JButton((m_b_is_alert ? Localization.l("common_preview") : Localization.l("common_wizard_next")));
 		m_lbl_encoding = new JLabel(Localization.l("importpreview_encoding"));
-		m_cbx_encoding = new JComboBox<String>(new String[] {
+		m_cbx_encoding = new JComboBox(new String[] {
 				Localization.l("importpreview_encoding_iso_8859_15"),
 				Localization.l("importpreview_encoding_utf_8"),
 				Localization.l("importpreview_encoding_iso_8859_2"),
