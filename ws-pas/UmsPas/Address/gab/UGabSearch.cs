@@ -296,21 +296,23 @@ namespace com.ums.PAS.Address.gab
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("ums:ums"));
                 verb = "GET";
             }
-            else if (m_params.sz_country.Equals("BE"))
+            /*else if (m_params.sz_country.Equals("BE"))
             {
                 AddressSearchBE search = new AddressSearchBE();
-                UGabResult allAdd = search.houseExist(m_params.sz_postno, m_params.sz_postarea, m_params.sz_no);
+                UGabResult allAdd = search.houseExist(m_params.sz_postno, m_params.sz_postarea, m_params.sz_address, m_params.sz_no);
                 return allAdd;
-            }
+            }*/
             else
             {
-                sz_server = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer/findAddressCandidates";
-                sz_params = String.Format("Address={0}+{1}&Postcode={2}&City={3}&Country={4}&outFields=*&outSR=4326&searchExtent=&f=pjson",
+                //sz_server = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer/findAddressCandidates";
+                sz_server = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
+                sz_params = String.Format("Address={0}+{1}&Postal={2}&City={3}&Country={4}&Subregion={5}&outFields=*&outSR=4326&searchExtent=&f=pjson",
                     m_params.sz_address,
                     m_params.sz_no,
                     m_params.sz_postno,
                     m_params.sz_postarea,
-                    m_params.sz_country);
+                    m_params.sz_country,
+                    m_params.sz_region);
             }
             /*} else {
                     sz_server = "http://api.fleximap.com/servlet/FlexiMap";
@@ -944,7 +946,24 @@ namespace com.ums.PAS.Address.gab
                             result.name = token.SelectToken("address").ToString();
                         }
 
-                        list.addLine(ref result);
+                        string adrType = attrib.SelectToken("Addr_type").Value<String>();
+                        switch (adrType.ToLower())
+                        {
+                            case "streetaddress":
+                                result.type = GABTYPE.House;
+                                list.addLine(ref result);
+                                break;
+                            case "streetname":
+                                result.type = GABTYPE.Street;
+                                list.addLine(ref result);
+                                break;
+                            case "postalloc":
+                                result.type = GABTYPE.Post;
+                                list.addLine(ref result);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
                 catch

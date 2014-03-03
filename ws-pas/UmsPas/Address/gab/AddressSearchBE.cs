@@ -268,7 +268,7 @@ namespace com.ums.PAS.Address.gab
         /// <param name="streetname"></param>
         /// <param name="houseno"></param>
         /// <returns></returns>
-        public UGabResult houseExist(string zip, string streetname, string houseno)
+        public UGabResult houseExist(string zip, string city, string streetname, string houseno)
         {
             dtrix adrSearch = new dtrix();
             adrSearch.login = login;
@@ -280,6 +280,7 @@ namespace com.ums.PAS.Address.gab
             searchParams.Add(new dtrixP() { name = "breakwithattributes", Value = "1" });
             searchParams.Add(new dtrixP() { name = "interactive", Value = "1" });
             searchParams.Add(new dtrixP() { name = "streetname", Value = streetname });
+            searchParams.Add(new dtrixP() { name = "city", Value = city });
             searchParams.Add(new dtrixP() { name = "house_number", Value = houseno });
 
             adrSearch.p = searchParams.ToArray();

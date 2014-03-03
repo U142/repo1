@@ -83,6 +83,10 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		{
 			sz_language = "DK";
 		}
+        else if(country.n_cc==32)
+        {
+            sz_language = "BE";
+        }
 		
 		ObjectFactory factory = new ObjectFactory();
 		//GabSearch searcher = factory.createGabSearch();
