@@ -162,11 +162,18 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
             m_panel.actionPerformed(e);
 				enableControls(false);
             }
-            else
-            JOptionPane.showMessageDialog(PopupDialog.get_frame(),
-                    Localization.l("importpreview_please_specify"), Localization.l("common_warning"),
-                    JOptionPane.WARNING_MESSAGE);
-
+            else { 
+	            if("Property".equals(get_previewpanel().getM_import_type())){
+	            	JOptionPane.showMessageDialog(PopupDialog.get_frame(),
+	                        Localization.l("importpreview_please_specify_property"), Localization.l("common_warning"),
+	                        JOptionPane.WARNING_MESSAGE);
+	            }
+	            else {
+	            	JOptionPane.showMessageDialog(PopupDialog.get_frame(),
+	                        Localization.l("importpreview_please_specify"), Localization.l("common_warning"),
+	                        JOptionPane.WARNING_MESSAGE);
+	            }
+            }
         }
 		else if("act_gis_finish".equals(e.getActionCommand())) {
             m_panel.actionPerformed(e);
@@ -216,27 +223,29 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			this.setVisible(false);
 			enableControls(true);
 		}
-        else if( "act_import_streetAddress".equals(e.getActionCommand())||
+		else if( "act_import_streetAddress".equals(e.getActionCommand())||
                 "act_import_propertyAddress".equals(e.getActionCommand())){
-            if(is_valid_toPerform_action())   {
-                m_panel.actionPerformed(e);
-                enableControls(false);
-            }
-            else
-                JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"),
-                        Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-
-
+        	m_panel.get_previewlist().actionPerformed(e);//pass import type change event to previewlist
+//        	if(is_valid_toPerform_action())   {
+//                m_panel.actionPerformed(e);
+//                enableControls(false);
+//            }
+//            else
+//                JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"),
+//                        Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
         }
+        
 	}
 
     private boolean is_valid_toPerform_action() {
         if("Street".equals(get_previewpanel().getM_import_type()))
         {
             if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 
+//                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+//                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1
+                    //as per new specification only municipal id and street id are mandatory
+            		) {
               return true;
             }
             else
@@ -245,9 +254,12 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
         else if("StreetApartment".equals(get_previewpanel().getM_import_type()))
         {
             if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) != -1) {
+                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 
+                    //get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+                    //get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) != -1
+                    //as per new specification only municipal id and street id are mandatory
+            		)
+                    {
                 return true;
             }
             else

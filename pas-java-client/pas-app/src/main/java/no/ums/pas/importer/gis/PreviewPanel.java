@@ -229,13 +229,13 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                     sz_sitename = "http://vb4utv/";
                     Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
                 }
-
+                
                 File f_post = create_file();
                 WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader, m_encoding,getM_import_type());
 
                 GisColumnsetStreetid colset ;
                 if(isProperty()){
-                    colset = gis.newGisColumnsetPropertyId(0, 1, 2, 3, 4, 5,6, n_skiplines, sz_separator, f_post);
+                    colset = gis.newGisColumnsetPropertyId(0, 1, 2, 3, 4, 5,6,7, n_skiplines, sz_separator, f_post);
                 }
                 else{
                     colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5,6, n_skiplines, sz_separator, f_post);
@@ -299,7 +299,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                             {    //Try here to find why it is stuck
                                 get_resultpanel().fill((GISList)e2.getSource(),getM_import_type(), dofill);
                                 if(get_previewlist()!=null)
-                                    get_previewlist().get_gis().get_callback().actionPerformed(e2); // Denne mÃ¥ jeg fÃ¥ med meg ned i else'en
+                                    get_previewlist().get_gis().get_callback().actionPerformed(e2); // Denne må jeg få med meg ned i else'en
                                 m_tab.setSelectedComponent(get_resultpanel());
                                 if(m_sendobject!=null)
                                 {
@@ -329,7 +329,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
             {
                 log.warn(err.getMessage(), err);
             }
-			/*else { // Dette vil bli kjÃ¸rt ved autofetch_addresses
+			/*else { // Dette vil bli kjørt ved autofetch_addresses
 				//m_sendobject.get_toolbar().remove(m_loader);
 				if(m_loader!=null)
 				{
@@ -346,7 +346,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 
         }
         else if("act_set_fieldid".equals(e.getActionCommand())) { //callback from previewlist. send namefilter columns to results
-            ComboField field = (ComboField)((ComboAdrid)e.getSource()).getSelectedItem();
+        	ComboField field = (ComboField)((ComboAdrid)e.getSource()).getSelectedItem();
             if(field.get_id()==PreviewList.ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1 || field.get_id()==PreviewList.ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2) {
                 get_resultpanel().actionPerformed(e);
             }
@@ -357,7 +357,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                     "GIS Import results");
             get_resultpanel().fill((GISList)e.getSource(),getM_import_type(), true);
             get_resultpanel().componentResized(null);
-            //get_previewlist().get_gis().get_callback().actionPerformed(e); // Denne mÃ¥ jeg fÃ¥ med meg ned i else'en
+            //get_previewlist().get_gis().get_callback().actionPerformed(e); // Denne må jeg få med meg ned i else'en
             m_tab.setSelectedComponent(get_resultpanel());
         }
         else if("act_update_statistics".equals(e.getActionCommand())) {
@@ -402,7 +402,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
             {
                 f_post = create_umsgisfile(filename,
                         get_previewlist().get_gis().get_parser().get_linedata(),
-                        n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
+                        n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter,n_col_apartment, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
             }
             else if("StreetApartment".equalsIgnoreCase(getM_import_type())){
                 f_post= create_umsgisapartmentfile(filename,
@@ -413,7 +413,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
             {
                 f_post = create_umsgisfile(filename,
                         get_previewlist().get_gis().get_parser().get_linedata(),
-                        n_col_municipal, n_col_gnr, n_col_bnr, n_col_fnr,n_col_snr, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
+                        n_col_municipal, n_col_gnr, n_col_bnr, n_col_fnr,n_col_snr,n_col_apartment, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
             }
 
         } catch(Exception err) {
@@ -451,7 +451,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         return list;
     }
 
-    public File create_umsgisfile(String filename, LineData linedata, int n_mun, int n_str, int n_hou, int n_let, int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
+    public File create_umsgisfile(String filename, LineData linedata, int n_mun, int n_str, int n_hou, int n_let,int n_apartment, int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
         log.debug(filename);
         File f_ums;
         try {
@@ -463,7 +463,8 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         }
         try {
             GISWriter writer = new GISWriter(linedata, f_ums);
-            return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip, m_encoding);
+            //return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip, m_encoding);
+            return writer.convert(n_mun, n_str, n_hou, n_let, n_apartment, n_skip, m_encoding);
         } catch(Exception e) {
             log.debug(e.getMessage());
             log.warn(e.getMessage(), e);
@@ -492,7 +493,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         return null;
     }
     public File create_umsgisfile(String filename, LineData linedata, int n_mun, int n_gnr, int n_bnr, int n_fnr,
-                                  int n_snr ,int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
+                                  int n_snr ,int n_apartment ,int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
         log.debug(filename);
         File f_ums;
         try {
@@ -504,7 +505,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
         }
         try {
             GISWriter writer = new GISWriter(linedata, f_ums);
-            return writer.convert(n_mun, n_gnr, n_bnr, n_fnr,n_snr, n_namefilter1, n_namefilter2, n_skip, m_encoding);
+            return writer.convert(n_mun, n_gnr, n_bnr, n_fnr,n_snr,n_apartment, n_namefilter1, n_namefilter2, n_skip, m_encoding);
         } catch(Exception e) {
             log.debug(e.getMessage());
             log.warn(e.getMessage(), e);

@@ -92,12 +92,13 @@ public class WSGisImport extends WSThread
         {
         }
 
-        public GisColumnsetPropertyid(int municipal, int gnr, int bnr, int fnr, int snr, int namefilter1, int namefilter2, int skiplines, String sep, File f) {
+        public GisColumnsetPropertyid(int municipal, int gnr, int bnr, int fnr, int snr,int apartmentID, int namefilter1, int namefilter2, int skiplines, String sep, File f) {
             COL_MUNICIPAL=municipal;
             COL_GNR=gnr;
             COL_BNR=bnr;
             COL_FNR = fnr;
             COL_SNR = snr;
+            COL_APARTMENTID = apartmentID;
             COL_NAMEFILTER1 = namefilter1;
             COL_NAMEFILTER2 = namefilter2;
             SKIPLINES = skiplines;
@@ -126,9 +127,9 @@ public class WSGisImport extends WSThread
     {
         return new WSGisImport.GisColumnsetStreetid(municipal, streetid, houseno, letter, apartmentId,namefilter1, namefilter2, skiplines, sep, f);
     }
-    public GisColumnsetPropertyid newGisColumnsetPropertyId(int municipal, int gnr, int bnr, int fnr, int snr,int namefilter1, int namefilter2, int skiplines, String sep, File f)
+    public GisColumnsetPropertyid newGisColumnsetPropertyId(int municipal, int gnr, int bnr, int fnr, int snr,int apartmentId,int namefilter1, int namefilter2, int skiplines, String sep, File f)
     {
-        return new WSGisImport.GisColumnsetPropertyid(municipal, gnr,bnr,fnr,snr, namefilter1, namefilter2, skiplines, sep, f);
+        return new WSGisImport.GisColumnsetPropertyid(municipal, gnr,bnr,fnr,snr,apartmentId, namefilter1, namefilter2, skiplines, sep, f);
     }
     protected GisColumnsetStreetid m_colset;
     protected GISList m_gislist;
@@ -206,11 +207,11 @@ public class WSGisImport extends WSThread
                     UGisImportLine resline = new UGisImportLine();
                     if(ting.length>0)
                     {
-                        resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]);
+                    	resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]);
                         resline.setStreetid(ting[m_colset.COL_STREETID]);
                         resline.setHouseno(ting[m_colset.COL_HOUSENO]);
                         resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
-
+                        resline.setApartmentid(ting.length-1>=m_colset.COL_APARTMENTID?ting[m_colset.COL_APARTMENTID]:"");
                         resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
                         resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
                         importlines.getUGisImportLine().add(resline);
@@ -252,7 +253,7 @@ public class WSGisImport extends WSThread
                 search.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
                 search.setSKIPLINES(0); //editor has already made a new file
                 while((temp = br.readLine()) != null) {
-                    String[] ting = temp.split(m_colset.SEPARATOR);
+                	String[] ting = temp.split(m_colset.SEPARATOR);
                     UGisImportPropertyLine resline = new UGisImportPropertyLine();
                     if(ting.length>0)
                     {
@@ -261,6 +262,7 @@ public class WSGisImport extends WSThread
                         resline.setBnr(ting[m_colset.COL_BNR]);
                         resline.setFnr(ting[m_colset.COL_FNR]);
                         resline.setSnr(ting[m_colset.COL_SNR]);
+                        resline.setApartmentid(ting.length-1>=m_colset.COL_APARTMENTID?ting[m_colset.COL_APARTMENTID]:"");
                         resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
                         resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
                         importlines.getUGisImportPropertyLine().add(resline);

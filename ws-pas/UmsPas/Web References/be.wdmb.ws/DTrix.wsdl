@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="www.d-trix.com/ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="www.d-trix.com/ws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">D-Trix Services</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="www.d-trix.com/ws">
+      <s:element name="run">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="runResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="runResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendNewPassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendNewPasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendNewPasswordResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="runJSON">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="runJSONResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="runJSONResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="runSoapIn">
+    <wsdl:part name="parameters" element="tns:run" />
+  </wsdl:message>
+  <wsdl:message name="runSoapOut">
+    <wsdl:part name="parameters" element="tns:runResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendNewPasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:SendNewPassword" />
+  </wsdl:message>
+  <wsdl:message name="SendNewPasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:SendNewPasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="runJSONSoapIn">
+    <wsdl:part name="parameters" element="tns:runJSON" />
+  </wsdl:message>
+  <wsdl:message name="runJSONSoapOut">
+    <wsdl:part name="parameters" element="tns:runJSONResponse" />
+  </wsdl:message>
+  <wsdl:portType name="DTrixSoap">
+    <wsdl:operation name="run">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">service</wsdl:documentation>
+      <wsdl:input message="tns:runSoapIn" />
+      <wsdl:output message="tns:runSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendNewPassword">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">service</wsdl:documentation>
+      <wsdl:input message="tns:SendNewPasswordSoapIn" />
+      <wsdl:output message="tns:SendNewPasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="runJSON">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">service</wsdl:documentation>
+      <wsdl:input message="tns:runJSONSoapIn" />
+      <wsdl:output message="tns:runJSONSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DTrixSoap" type="tns:DTrixSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="run">
+      <soap:operation soapAction="www.d-trix.com/ws/run" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendNewPassword">
+      <soap:operation soapAction="www.d-trix.com/ws/SendNewPassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runJSON">
+      <soap:operation soapAction="www.d-trix.com/ws/runJSON" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DTrixSoap12" type="tns:DTrixSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="run">
+      <soap12:operation soapAction="www.d-trix.com/ws/run" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendNewPassword">
+      <soap12:operation soapAction="www.d-trix.com/ws/SendNewPassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runJSON">
+      <soap12:operation soapAction="www.d-trix.com/ws/runJSON" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DTrix">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">D-Trix Services</wsdl:documentation>
+    <wsdl:port name="DTrixSoap" binding="tns:DTrixSoap">
+      <soap:address location="https://ws.wdmb.be/ws/DTrix.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DTrixSoap12" binding="tns:DTrixSoap12">
+      <soap12:address location="https://ws.wdmb.be/ws/DTrix.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

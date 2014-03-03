@@ -46,7 +46,6 @@ class PreviewOptions extends DefaultPanel {
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
 			//m_gis.actionPerformed(new ActionEvent(new Boolean(m_check_firstline_columnnames.isSelected()), ActionEvent.ACTION_PERFORMED, "act_first_row_has_columnnames"));
-			System.out.println("act_first_row_has_columnnames checkbox is clicked isSelected= " + m_check_firstline_columnnames.isSelected());
 			e.setSource(new Boolean(m_check_firstline_columnnames.isSelected()));
 			m_parent.actionPerformed(e);
 		}
@@ -62,7 +61,12 @@ class PreviewOptions extends DefaultPanel {
 			if(m_btn_fetch.isEnabled())
 				m_btn_fetch.setToolTipText(null);
 			else
-				m_btn_fetch.setToolTipText(Localization.l("importpreview_please_specify"));
+			{
+				if("Street".equals(this.getImportType()))
+						m_btn_fetch.setToolTipText(Localization.l("importpreview_please_specify"));
+				else if("Property".equals(this.getImportType()))
+						m_btn_fetch.setToolTipText(Localization.l("importpreview_please_specify_property"));
+			}
 		}
 		else if("act_change_encoding".equals(e.getActionCommand())) {
 			m_parent.m_gis.set_encoding((String)m_cbx_encoding.getSelectedItem().toString());
@@ -74,16 +78,19 @@ class PreviewOptions extends DefaultPanel {
 
 		}
         else if("act_import_streetAddress".equals(e.getActionCommand())) {
-            m_parent.m_panel.setM_import_type("Street");
+            m_lbl_requirements.setText(Localization.l("importpreview_please_specify"));
+        	m_parent.m_panel.setM_import_type("Street");
             setImportType("Street");
             m_parent.actionPerformed (new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
-
+            m_parent.actionPerformed (new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_import_streetAddress"));//pass this event to parent frame
         }
         else if("act_import_propertyAddress".equals(e.getActionCommand())){
-            m_parent.m_panel.setM_import_type("Property");
+        	m_lbl_requirements.setText(Localization.l("importpreview_please_specify_property"));
+        	m_parent.m_panel.setM_import_type("Property");
             setImportType("Property");
             m_parent.actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
             m_parent.m_panel.setM_resultpanel(m_parent.m_panel.create_property_result_panel());
+            m_parent.actionPerformed (new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_import_propertyAddress"));//pass this event to parent frame
         }
 	}
 	public void add_controls() {

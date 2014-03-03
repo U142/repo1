@@ -296,6 +296,12 @@ namespace com.ums.PAS.Address.gab
                 authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("ums:ums"));
                 verb = "GET";
             }
+            else if (m_params.sz_country.Equals("BE"))
+            {
+                AddressSearchBE search = new AddressSearchBE();
+                UGabResult allAdd = search.houseExist(m_params.sz_postno, m_params.sz_postarea, m_params.sz_no);
+                return allAdd;
+            }
             else
             {
                 sz_server = "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer/findAddressCandidates";

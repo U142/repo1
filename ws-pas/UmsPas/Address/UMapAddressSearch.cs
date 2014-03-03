@@ -260,6 +260,7 @@ namespace com.ums.PAS.Address
                     namefilter1 = import.namefilter1,
                     namefilter2 = import.namefilter2,
                     streetid = import.streetid,
+                    apartmentid = import.apartmentid,
                     n_linenumber = line
                 };
                 tmp.finalize();
@@ -309,6 +310,7 @@ namespace com.ums.PAS.Address
                     namefilter1 = import.namefilter1,
                     namefilter2 = import.namefilter2,
                     snr = import.snr,
+                    apartmentid = import.apartmentid,
                     n_linenumber = line,
                     propertyField=true
                 };

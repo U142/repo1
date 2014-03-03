@@ -28,6 +28,7 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 		if(dlg == null) {
 			dlg = new AddressSearchDlg(this, Variables.getMapFrame());
 		}
+        //set default country
 		int defaultCC = 47;
 		try
 		{
@@ -41,6 +42,7 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 		countries.add(dlg.newAddressSearchCountry(47, Localization.l("common_cc_country_47")));
 		countries.add(dlg.newAddressSearchCountry(46, Localization.l("common_cc_country_46")));
 		countries.add(dlg.newAddressSearchCountry(45, Localization.l("common_cc_country_45")));
+        countries.add(dlg.newAddressSearchCountry(32, Localization.l("common_cc_country_32")));
 		dlg.setCountries(countries, defaultCC);
 		dlg.setVisible(true);
 	}

@@ -170,6 +170,7 @@ namespace com.ums.PAS.Address
         public String letter;
         public String namefilter1;
         public String namefilter2;
+        public String apartmentid;
     }
 
     public class UGisImportApartmentList
@@ -182,7 +183,7 @@ namespace com.ums.PAS.Address
     public class UGisImportApartmentLine:UGisImportLine
     {
 
-        public String apartmentid;
+        //public String apartmentid;
 
     }
 
@@ -195,11 +196,10 @@ namespace com.ums.PAS.Address
 
     public class UGisImportPropertyLine:UGisImportLine
     {
-       public String gnr;
+        public String gnr;
         public String bnr;
         public String snr;
         public String fnr;
- 
     }
 
  

@@ -19,6 +19,15 @@ namespace com.ums.PAS.Address.gab
         Region,
     };
 
+    public enum ADRSEARCHRESULT
+    {
+        HOUSENO_EXIST,
+        HOUSENO_NOT_FOUND,
+        STREET_NOT_FOUND,
+        UNKOWN,
+        EXCEPTION
+    }
+
 
     /* search results from Ugland 
      The result may be of types
@@ -33,6 +42,7 @@ namespace com.ums.PAS.Address.gab
         public double lon, lat;
         public GABTYPE type;
         public UBoundingRect rect;
+        public ADRSEARCHRESULT Result;
         public int scope;
         public int municipalid;
         public int streetid;
