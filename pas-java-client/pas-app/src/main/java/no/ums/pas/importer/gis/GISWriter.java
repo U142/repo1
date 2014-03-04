@@ -203,7 +203,7 @@ public class GISWriter {
 						sz_house =  "0";
 				} catch(Exception e) {
 					sz_house = "0";
-					Error.getError().addError("GISWriter","Exception in convert",e,1);
+					//Error.getError().addError("GISWriter","Exception in convert",e,1);
 				}
                 parameters.add(sz_house);
 				try {

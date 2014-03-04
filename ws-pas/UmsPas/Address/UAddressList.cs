@@ -126,9 +126,9 @@ namespace com.ums.PAS.Address
                     n_tmp = Int64.Parse(streetid);
                     if (n_tmp <= 0)
                         b_isvalid = false;
-                    n_tmp = Int64.Parse(houseno);
+                    /*n_tmp = Int64.Parse(houseno); // houseno is longer mandatory for street imports
                     if (n_tmp <= 0)
-                        b_isvalid = false;
+                        b_isvalid = false;*/
                 }
             }
             catch (Exception)

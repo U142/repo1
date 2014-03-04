@@ -40,6 +40,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public StatisticsPanel get_statisticspanel() { return m_statisticspanel; }
 	public String encoding = Localization.l("importpreview_encoding_iso_8859_15");
 	public GISFile m_gis;
+	private String importErrorMessage;
 
     public PreviewFrame(GISFile gis) {
 		super(PAS.get_pas(), Localization.l("common_preview"), true);
@@ -167,10 +168,13 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	            	JOptionPane.showMessageDialog(PopupDialog.get_frame(),
 	                        Localization.l("importpreview_please_specify_property"), Localization.l("common_warning"),
 	                        JOptionPane.WARNING_MESSAGE);
-	            }
-	            else {
+	            } else {
+	            	//just in case, for street import type if no error message is set then set the default error message
+	            	if(importErrorMessage==null)
+	            		importErrorMessage = Localization.l("importpreview_please_specify");
+	            	
 	            	JOptionPane.showMessageDialog(PopupDialog.get_frame(),
-	                        Localization.l("importpreview_please_specify"), Localization.l("common_warning"),
+	                        importErrorMessage, Localization.l("common_warning"),
 	                        JOptionPane.WARNING_MESSAGE);
 	            }
             }
@@ -246,7 +250,15 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 //                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1
                     //as per new specification only municipal id and street id are mandatory
             		) {
-              return true;
+            	if((get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1 || 
+            			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) !=-1) && 
+            			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) == -1)
+            	{
+            		importErrorMessage = Localization.l("importpreview_please_specify_apartment");
+            		return false;
+            	}
+            	else
+            		return true;
             }
             else
                return false;
