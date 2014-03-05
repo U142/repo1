@@ -602,7 +602,15 @@ namespace com.ums.PAS.Database
                                                                                         "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0"))
+                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
+                                {
+                                    szSQL += " AND FNR=" + p[i].apartmentid.Trim();
+                                }
+                                if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
+                                {
+                                    szSQL += " AND SNR=" + p[i].apartmentid.Trim();
+                                }
+                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND sz_apartmentid='" + p[i].apartmentid.Trim() + "'";
                                 }
@@ -618,16 +626,15 @@ namespace com.ums.PAS.Database
                                                                                         "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-
-                                if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // use house no if selected
+                                if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND HUSNR=" + p[i].houseno;
                                 }
-                                if (p[i].letter != null && p[i].letter.Trim().Length > 0 && !p[i].letter.Trim().Equals("0"))
+                                if (p[i].letter != null && p[i].letter.Trim().Length > 0 && !p[i].letter.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
                                 }
-                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0"))
+                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND sz_apartmentid='" + p[i].apartmentid.Trim() + "'";
                                 }
@@ -648,7 +655,15 @@ namespace com.ums.PAS.Database
                                                              "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0"))
+                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
+                                {
+                                    szSQL += " AND FNR=" + p[i].apartmentid.Trim();
+                                }
+                                if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
+                                {
+                                    szSQL += " AND SNR=" + p[i].apartmentid.Trim();
+                                }
+                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND sz_apartmentid='" + p[i].apartmentid.Trim() + "'";
                                 }
@@ -667,15 +682,15 @@ namespace com.ums.PAS.Database
 
                                      p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-                                if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // use house no if selected
+                                if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND HUSNR=" + p[i].houseno;
                                 }
-                                if (p[i].letter != null && p[i].letter.Trim().Length > 0 && !p[i].letter.Trim().Equals("0"))
+                                if (p[i].letter != null && p[i].letter.Trim().Length > 0 && !p[i].letter.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
                                 }
-                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0"))
+                                if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
                                     szSQL += " AND sz_apartmentid='" + p[i].apartmentid.Trim() + "'";
                                 }
