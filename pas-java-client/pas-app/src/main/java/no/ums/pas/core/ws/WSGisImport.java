@@ -209,7 +209,7 @@ public class WSGisImport extends WSThread
                     {
                     	resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]);
                         resline.setStreetid(ting[m_colset.COL_STREETID]);
-                        resline.setHouseno(ting[m_colset.COL_HOUSENO]);
+                        resline.setHouseno(ting.length-1>=m_colset.COL_HOUSENO?ting[m_colset.COL_HOUSENO]:"");
                         resline.setLetter(ting.length-1>=m_colset.COL_LETTER?ting[m_colset.COL_LETTER]:"");
                         resline.setApartmentid(ting.length-1>=m_colset.COL_APARTMENTID?ting[m_colset.COL_APARTMENTID]:"");
                         resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
@@ -260,8 +260,8 @@ public class WSGisImport extends WSThread
                         resline.setMunicipalid(ting[m_colset.COL_MUNICIPAL]);
                         resline.setGnr(ting[m_colset.COL_GNR]);
                         resline.setBnr(ting[m_colset.COL_BNR]);
-                        resline.setFnr(ting[m_colset.COL_FNR]);
-                        resline.setSnr(ting[m_colset.COL_SNR]);
+                        resline.setFnr(ting.length-1>=m_colset.COL_FNR?ting[m_colset.COL_FNR]:"");
+                        resline.setSnr(ting.length-1>=m_colset.COL_SNR?ting[m_colset.COL_SNR]:"");
                         resline.setApartmentid(ting.length-1>=m_colset.COL_APARTMENTID?ting[m_colset.COL_APARTMENTID]:"");
                         resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
                         resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");

@@ -168,7 +168,8 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	            	JOptionPane.showMessageDialog(PopupDialog.get_frame(),
 	                        Localization.l("importpreview_please_specify_property"), Localization.l("common_warning"),
 	                        JOptionPane.WARNING_MESSAGE);
-	            } else {
+	            }
+	            else {
 	            	//just in case, for street import type if no error message is set then set the default error message
 	            	if(importErrorMessage==null)
 	            		importErrorMessage = Localization.l("importpreview_please_specify");

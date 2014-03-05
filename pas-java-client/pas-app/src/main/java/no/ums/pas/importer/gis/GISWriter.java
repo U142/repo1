@@ -200,16 +200,14 @@ public class GISWriter {
 				try {
 					sz_house = line.get_row(n_hou);
 					if("".equals(sz_house)||sz_house==null||sz_house.length()==0)
-						sz_house =  "0";
+						sz_house =  "";
 				} catch(Exception e) {
-					sz_house = "0";
+					sz_house = "";
 					//Error.getError().addError("GISWriter","Exception in convert",e,1);
 				}
                 parameters.add(sz_house);
 				try {
 					sz_letter = line.get_row(n_let); //******* Her feiler den
-					if("".equals(sz_letter)||sz_letter==null||sz_letter.length()==0)
-						sz_letter =  "";
 				} catch(Exception e) {
 					sz_letter = "";
 					//Error.getError().addError("GISWriter","Exception in convert",e,1);
@@ -217,10 +215,8 @@ public class GISWriter {
                 parameters.add(sz_letter);
                 try {
                 	sz_apartment = line.get_row(n_apartment); //******* Her feiler den
-                	if("".equals(sz_apartment)||sz_apartment==null||sz_apartment.length()==0)
-                		sz_apartment =  "0";
                 } catch(Exception e) {
-                	sz_apartment =  "0";
+                	sz_apartment =  "";
                     //Error.getError().addError("GISWriter","Exception in convert",e,1);
                 }
                 parameters.add(sz_apartment);
@@ -277,22 +273,26 @@ public class GISWriter {
                 parameters.add(sz_bnr);
                 try {
                     sz_fnr = line.get_row(n_fnr); //******* Her feiler den
-                    if("".equals(sz_fnr)||sz_fnr==null||sz_fnr.length()==0)
-                		sz_apartment =  "0";
                 } catch(Exception e) {
-                    sz_fnr =  "0";
+                    sz_fnr =  "";
                     //Error.getError().addError("GISWriter","Exception in convert",e,1);
                 }
                 parameters.add(sz_fnr);
                 try {
                     sz_snr = line.get_row(n_snr); //******* Her feiler den
-                    if("".equals(sz_snr)||sz_snr==null||sz_snr.length()==0)
-                		sz_apartment =  "0";
                 } catch(Exception e) {
-                    sz_snr =  "0";;
+                    sz_snr =  "";
                     //Error.getError().addError("GISWriter","Exception in convert",e,1);
                 }
                 parameters.add(sz_snr);
+                
+                try {
+                	sz_apartment = line.get_row(n_apartment); //******* Her feiler den
+                } catch(Exception e) {
+                	sz_apartment =  "";;
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_apartment);
                 
                 try {
                 	sz_apartment = line.get_row(n_apartment); //******* Her feiler den

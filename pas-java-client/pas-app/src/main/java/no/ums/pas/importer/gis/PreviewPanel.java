@@ -299,7 +299,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                             {    //Try here to find why it is stuck
                                 get_resultpanel().fill((GISList)e2.getSource(),getM_import_type(), dofill);
                                 if(get_previewlist()!=null)
-                                    get_previewlist().get_gis().get_callback().actionPerformed(e2);
+                                    get_previewlist().get_gis().get_callback().actionPerformed(e2); // Denne må jeg få med meg ned i else'en
                                 m_tab.setSelectedComponent(get_resultpanel());
                                 if(m_sendobject!=null)
                                 {
@@ -329,7 +329,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
             {
                 log.warn(err.getMessage(), err);
             }
-			/*else { // Will run at autofetch_addresses
+			/*else { // Dette vil bli kjørt ved autofetch_addresses
 				//m_sendobject.get_toolbar().remove(m_loader);
 				if(m_loader!=null)
 				{
@@ -357,6 +357,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                     "GIS Import results");
             get_resultpanel().fill((GISList)e.getSource(),getM_import_type(), true);
             get_resultpanel().componentResized(null);
+            //get_previewlist().get_gis().get_callback().actionPerformed(e); // Denne må jeg få med meg ned i else'en
             m_tab.setSelectedComponent(get_resultpanel());
         }
         else if("act_update_statistics".equals(e.getActionCommand())) {

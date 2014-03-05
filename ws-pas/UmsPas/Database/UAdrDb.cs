@@ -595,20 +595,20 @@ namespace com.ums.PAS.Database
                             {
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3}, f_hasdisabled=0 " +
-                                                                                        "FROM ADR_KONSUM WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
+                                                                                        "FROM ADR_INTEGRATION WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3}, isnull(f_hasdisabled,0) f_hasdisabled " +
-                                                                                        "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
+                                                                                        "FROM ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
                                 {
-                                    szSQL += " AND FNR=" + p[i].apartmentid.Trim();
+                                    szSQL += " AND FNR=" + p[i].fnr.Trim();
                                 }
                                 if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
                                 {
-                                    szSQL += " AND SNR=" + p[i].apartmentid.Trim();
+                                    szSQL += " AND SNR=" + p[i].snr.Trim();
                                 }
                                 if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
@@ -619,11 +619,11 @@ namespace com.ums.PAS.Database
                             {
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={2}, f_hasdisabled=0 " +
-                                                                                        "FROM ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3", // IN (0,1)",
+                                                                                        "FROM ADR_INTEGRATION WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={2}, isnull(f_hasdisabled,0) f_hasdisabled " +
-                                                                                        "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}", //BEDRIFT IN (0,1)
+                                                                                        "FROM ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // ignore if empty or 0
@@ -647,21 +647,21 @@ namespace com.ums.PAS.Database
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3}, f_hasdisabled=0 FROM " +
-                                                             "ADR_KONSUM WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
+                                                             "ADR_INTEGRATION WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3}, f_hasdisabled=0 FROM " +
-                                                             "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
+                                                             "ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
                                 {
-                                    szSQL += " AND FNR=" + p[i].apartmentid.Trim();
+                                    szSQL += " AND FNR=" + p[i].fnr.Trim();
                                 }
                                 if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
                                 {
-                                    szSQL += " AND SNR=" + p[i].apartmentid.Trim();
+                                    szSQL += " AND SNR=" + p[i].snr.Trim();
                                 }
                                 if (p[i].apartmentid != null && p[i].apartmentid.Trim().Length > 0 && !p[i].apartmentid.Trim().Equals("0")) // ignore if empty or 0
                                 {
@@ -673,12 +673,12 @@ namespace com.ums.PAS.Database
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={2}, f_hasdisabled=0 FROM " +
-                                                             "ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1)",
+                                                             "ADR_INTEGRATION WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1)",
                                                              p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={2}, isnull(f_hasdisabled,0) f_hasdisabled FROM " +
-                                                             "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}",
+                                                             "ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}",
 
                                      p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
