@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class GISWriter {
@@ -322,6 +324,161 @@ public class GISWriter {
                 //	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
             }
             out.close();
+            return get_umsgis_file();
+        } catch(Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError().addError("GISWriter","Exception in convert",e,1);
+        }
+        return null;
+    }
+    
+    //for street address import
+    public File convert(int n_mun, int n_str, int n_hou, int n_let, int n_apartment, int skip, String encoding) {
+		try {
+			
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(get_umsgis_file()), encoding);
+			
+			LineData.Line line;
+			
+			String sz_mun, sz_street, sz_house, sz_letter, sz_apartment;
+			ArrayList<String> parameters;
+			Set<String> uniqueParameters = new HashSet<String>();
+			for(int i=skip; i < data().get_lines().size(); i++) {
+				line = (LineData.Line)data().get_lines().get(i);
+				parameters = new ArrayList<String>();
+				try {
+					sz_mun = line.get_row(n_mun);
+				} catch(Exception e) {
+					sz_mun = "0";
+					//Error.getError().addError("GISWriter","Exception in convert",e,1);
+				}
+                parameters.add(sz_mun);
+				try {
+					sz_street = line.get_row(n_str);
+				} catch(Exception e) {
+					sz_street = "0";
+				}
+                parameters.add(sz_street);
+				try {
+					sz_house = line.get_row(n_hou);
+				} catch(Exception e) {
+					sz_house = "";
+					//Error.getError().addError("GISWriter","Exception in convert",e,1);
+				}
+                parameters.add(sz_house);
+				try {
+					sz_letter = line.get_row(n_let); //******* Her feiler den
+				} catch(Exception e) {
+					sz_letter = "";
+					//Error.getError().addError("GISWriter","Exception in convert",e,1);
+				}
+                parameters.add(sz_letter);
+                try {
+                	sz_apartment = line.get_row(n_apartment); //******* Her feiler den
+                } catch(Exception e) {
+                	sz_apartment =  "";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_apartment);
+                
+                if(uniqueParameters.add(parameters.toString()))
+				//if(sz_mun.trim().length()>0 && sz_street.trim().length()>0 && sz_house.trim().length()>0)
+					write_line(out, parameters);
+				//else
+				//	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
+			}
+			out.close();
+			uniqueParameters.clear();
+			return get_umsgis_file();
+		} catch(Exception e) {
+			log.debug(e.getMessage());
+			log.warn(e.getMessage(), e);
+			Error.getError().addError("GISWriter","Exception in convert",e,1);
+		}
+		return null;
+	}
+    
+  //n_mun, n_gnr, n_bnr, n_fnr,n_snr,n_apartment, n_namefilter1, n_namefilter2, n_skip, m_encoding
+    //for property import
+    public File convert(int n_mun, int n_gnr, int n_bnr, int n_fnr,int n_snr,int n_apartment, int n_namefilter1, int n_namefilter2, int skip, String encoding) {
+        try {
+
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(get_umsgis_file()), encoding);
+
+            LineData.Line line;
+
+            String sz_mun, sz_gnr, sz_bnr, sz_fnr,sz_snr, sz_namefilter1, sz_namefilter2;
+            String sz_apartment;
+            ArrayList<String> parameters;
+            Set<String> uniqueParameters = new HashSet<String>();
+            for(int i=skip; i < data().get_lines().size(); i++) {
+                line = (LineData.Line)data().get_lines().get(i);
+                parameters = new ArrayList<String>();
+                try {
+                    sz_mun = line.get_row(n_mun);
+                } catch(Exception e) {
+                    sz_mun = "0";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_mun);
+                try {
+                    sz_gnr = line.get_row(n_gnr);
+                } catch(Exception e) {
+                    sz_gnr = "0";
+                }
+                parameters.add(sz_gnr);
+                try {
+                    sz_bnr = line.get_row(n_bnr);
+                } catch(Exception e) {
+                    sz_bnr = "0";
+                    Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_bnr);
+                try {
+                    sz_fnr = line.get_row(n_fnr); //******* Her feiler den
+                } catch(Exception e) {
+                    sz_fnr =  "";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_fnr);
+                try {
+                    sz_snr = line.get_row(n_snr); //******* Her feiler den
+                } catch(Exception e) {
+                    sz_snr =  "";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_snr);
+                
+                try {
+                	sz_apartment = line.get_row(n_apartment); //******* Her feiler den
+                } catch(Exception e) {
+                	sz_apartment =  "";
+                    //Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_apartment);
+                
+                try {
+                    sz_namefilter1 = line.get_row(n_namefilter1);
+                } catch(Exception e) {
+                    sz_namefilter1 = "";
+                }
+                parameters.add(sz_namefilter1);
+                try {
+                    sz_namefilter2 =  line.get_row(n_namefilter2);
+                } catch(Exception e) {
+                    sz_namefilter2 = "";
+                }
+                parameters.add(sz_namefilter2);
+                //if(sz_mun.trim().length()>0 && sz_street.trim().length()>0 && sz_house.trim().length()>0)
+                if(uniqueParameters.add(parameters.toString())){
+                	write_line(out,  parameters);
+                }
+                //else
+                //	Error.getError().addError("Error reading line", "Line number " + i + " does not contain enough data (" + line.toString() + ")", 0, 1);
+            }
+            out.close();
+            uniqueParameters.clear();
             return get_umsgis_file();
         } catch(Exception e) {
             log.debug(e.getMessage());
