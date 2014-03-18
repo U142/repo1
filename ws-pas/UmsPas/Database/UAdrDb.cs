@@ -602,11 +602,11 @@ namespace com.ums.PAS.Database
                                                                                         "FROM ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
+                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0 && !p[i].fnr.Trim().Equals("0")) // ignore if fnr is empty or 0
                                 {
                                     szSQL += " AND FNR=" + p[i].fnr.Trim();
                                 }
-                                if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
+                                if (p[i].snr != null && p[i].snr.Trim().Length > 0 && !p[i].snr.Trim().Equals("0")) // ignore if snr is empty or 0
                                 {
                                     szSQL += " AND SNR=" + p[i].snr.Trim();
                                 }
@@ -655,11 +655,11 @@ namespace com.ums.PAS.Database
                                                              "ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
-                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0) // ignore if fnr is empty
+                                if (p[i].fnr != null && p[i].fnr.Trim().Length > 0 && !p[i].fnr.Trim().Equals("0")) // ignore if fnr is empty or 0
                                 {
                                     szSQL += " AND FNR=" + p[i].fnr.Trim();
                                 }
-                                if (p[i].snr != null && p[i].snr.Trim().Length > 0) // ignore if snr is empty
+                                if (p[i].snr != null && p[i].snr.Trim().Length > 0 && !p[i].snr.Trim().Equals("0")) // ignore if snr is empty or 0
                                 {
                                     szSQL += " AND SNR=" + p[i].snr.Trim();
                                 }
