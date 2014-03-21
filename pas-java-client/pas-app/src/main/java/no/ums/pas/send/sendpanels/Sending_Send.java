@@ -55,9 +55,14 @@ public class Sending_Send extends DefaultPanel {
     {
         m_btn_sendtest = new JButton(Localization.l("main_sending_send_test"));
     }
+    
+    protected JButton m_btn_sendtest_voice = new JButton(Localization.l("main_sending_send_test_voice"));
+    protected JButton m_btn_sendtest_sms = new JButton(Localization.l("main_sending_send_test_sms"));
 
     protected StdTextArea m_txt_sendtest = new StdTextArea("", false, 75);
 	protected SendWindow get_parent() { return parent; }
+	
+	private String sendTestType="";
 	
 	public int get_refno() { return m_n_refno; }
 	//JButton btn_send;
@@ -97,6 +102,16 @@ public class Sending_Send extends DefaultPanel {
 		m_btn_sendtest.addActionListener(this);
 		m_btn_sendtest.setPreferredSize(new Dimension(70, 17));
         m_btn_sendtest.setToolTipText(Localization.l("main_sending_send_test_tooltip"));
+        
+        m_btn_sendtest_voice.setActionCommand("act_send_test");
+        m_btn_sendtest_voice.addActionListener(this);
+        m_btn_sendtest_voice.setPreferredSize(new Dimension(112, 17));
+        m_btn_sendtest_voice.setToolTipText(Localization.l("main_sending_send_test_tooltip"));
+        m_btn_sendtest_sms.setActionCommand("act_send_test");
+        m_btn_sendtest_sms.addActionListener(this);
+        m_btn_sendtest_sms.setPreferredSize(new Dimension(112, 17));
+        m_btn_sendtest_sms.setToolTipText(Localization.l("main_sending_send_test_tooltip"));
+        
 		add_controls();
 	}
 	public void add_controls() {
@@ -107,8 +122,13 @@ public class Sending_Send extends DefaultPanel {
 		
 		set_gridconst(1, inc_panels(), 2, 1, GridBagConstraints.WEST);
 		add(m_txt_sendtest, m_gridconst);
+//		set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.WEST);
+//		add(m_btn_sendtest, m_gridconst);
+		
 		set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.WEST);
-		add(m_btn_sendtest, m_gridconst);
+		add(m_btn_sendtest_voice, m_gridconst);
+		set_gridconst(4, get_panel(), 1, 1, GridBagConstraints.WEST);
+		add(m_btn_sendtest_sms, m_gridconst);
 
 		//set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.CENTER);
 		//add(m_lbl_refno, m_gridconst);
@@ -142,7 +162,8 @@ public class Sending_Send extends DefaultPanel {
 		m_lbl_adrfile.setIcon(m_icon_indicator[n_status]);
 	}
 	public void init() {
-		
+		m_btn_sendtest_voice.setEnabled(parent.hasVoice(parent.m_sendobject.get_toolbar().get_addresstypes()));
+		m_btn_sendtest_sms.setEnabled(parent.hasSMS(parent.m_sendobject.get_toolbar().get_addresstypes()));
 	}
 	public void create_upload_indicators() {
 		m_txt_wav_upload = new StdTextLabel[parent.get_files().length];
@@ -274,6 +295,11 @@ public class Sending_Send extends DefaultPanel {
 				parent.get_btn_next().setEnabled(true);
 		} else if("act_send_test".equals(e.getActionCommand())) {
 			boolean b_continue = true;
+			
+			if(e.getSource().equals(m_btn_sendtest_voice))
+				sendTestType="voice";
+			else if(e.getSource().equals(m_btn_sendtest_sms))
+				sendTestType="sms";
 			
 			String sz_number = m_txt_sendtest.getText();
 			if(sz_number.length() < 8) {
@@ -452,6 +478,6 @@ public class Sending_Send extends DefaultPanel {
 	}
 	private boolean send_testadrfile(ArrayList<String> arr_numbers) {
 		parent.set_values();
-		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers);
+		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers,sendTestType);
 	}
 }

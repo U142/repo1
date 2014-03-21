@@ -98,6 +98,14 @@ public abstract class SendProperties extends Object {
 	private int m_n_duration; // centric
 	private int m_n_channel; // centric
 	
+	private String sendTestType = null;
+	public String getSendTestType() {
+		return sendTestType;
+	}
+	public void setSendTestType(String sendTestType) {
+		this.sendTestType = sendTestType;
+	}
+	
 	public void addResendStatus(StatusCode sz_code) {
         m_arr_resend_status.add(sz_code);
 	}
@@ -379,6 +387,7 @@ public abstract class SendProperties extends Object {
 		s.setLogoninfo(logon);
 		s.setMapbounds(bounds);
 		s.setNAddresstypes(get_addresstypes());
+		
 		if(((get_addresstypes() & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
 				(get_addresstypes() & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
 				(get_addresstypes() & SendController.SENDTO_FIXED_COMPANY) > 0 ||
@@ -414,6 +423,7 @@ public abstract class SendProperties extends Object {
 			s.setOadc(sn);
 			s.setNSendChannels(get_sendchannels());
 		}
+		
 		s.setNScheddate(get_sched().get_scheddate());
 		s.setNSchedtime(get_sched().get_schedtime());
 		s.setNValidity(get_validity());
@@ -524,18 +534,27 @@ public abstract class SendProperties extends Object {
 		set_refno(l_refno);
 		return this.send();
 	}
-	public boolean send_test(int l_refno, ArrayList<String> arr_numberlist) {
+	public boolean send_test(int l_refno, ArrayList<String> arr_numberlist,String sendTestType) {
 		set_refno(l_refno);
+		setSendTestType(sendTestType);
 		return this.send_test(arr_numberlist);
 	}
 	protected boolean send_test(ArrayList<String> arr_numberlist) {
-
 		try
 		{
 			UTESTSENDING sending = new UTESTSENDING();
 			ULOGONINFO logon = new ULOGONINFO();
 			UMapBounds bounds = new UMapBounds();
+			
 			populate_common(sending, logon, bounds);
+			//0 for both
+			//1 for voice
+			//2 for sms
+			if("voice".equals(sendTestType)) 
+				sending.setNSendChannels(1);
+			else if("sms".equals(sendTestType)) 
+				sending.setNSendChannels(2);
+			
 			sending.setBResend(false);
 			sending.setNResendRefno(0);
 			sending.setNScheddate(0);
