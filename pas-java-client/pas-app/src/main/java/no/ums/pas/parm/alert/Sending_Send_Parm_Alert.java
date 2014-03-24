@@ -273,7 +273,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 	}
 	private boolean send_testadrfile(ArrayList<String> arr_numbers) {
 		parent.set_values();
-		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers);
+		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers,"");
 	}
 	public JCheckBox get_chk_execute_remote() {
 		return m_chk_execute_remote;
