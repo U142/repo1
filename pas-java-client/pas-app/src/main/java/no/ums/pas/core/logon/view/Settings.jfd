@@ -1,1673 +1,1742 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_29" class="java.beans.XMLDecoder"> 
- <object class="com.jformdesigner.model.FormModel"> 
-  <void method="setProperty"> 
-   <string>i18n.bundlePackage</string> 
-   <string>no.ums.pas.localization</string> 
-  </void> 
-  <void method="setProperty"> 
-   <string>i18n.bundleName</string> 
-   <string>lang</string> 
-  </void> 
-  <void property="contentType"> 
-   <string>form/swing</string> 
-  </void> 
-  <void property="root"> 
-   <object class="com.jformdesigner.model.FormRoot"> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormWindow"> 
-      <string>javax.swing.JFrame</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>org.jdesktop.layout.GroupLayout</class> 
-       <void method="setProperty"> 
-        <string>$horizontalGroup</string> 
-        <string>par l {seq {space ::439:x, comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p, space :::p}, seq l {space :::p, comp tabbedPane1:::p:637:p, space :::x}}</string> 
-       </void> 
-       <void method="setProperty"> 
-        <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::p, comp tabbedPane1::::434:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
-       </void> 
-      </object> 
-      <void method="setProperty"> 
-       <string>title</string> 
-       <object class="com.jformdesigner.model.FormMessage"> 
-        <null/> 
-        <string>mainmenu_settings</string> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JButton</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>common_cancel</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>btnCancel</string> 
-        </void> 
-        <void method="addEvent"> 
-         <object class="com.jformdesigner.model.FormEvent"> 
-          <string>java.awt.event.ActionListener</string> 
-          <string>actionPerformed</string> 
-          <string>btnCancelActionPerformed</string> 
-          <boolean>true</boolean> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JButton</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>common_save</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>btnSave</string> 
-        </void> 
-        <void method="auxiliary"> 
-         <void method="setProperty"> 
-          <string>JavaCodeGenerator.variableGetter</string> 
-          <boolean>true</boolean> 
-         </void> 
-        </void> 
-        <void method="addEvent"> 
-         <object class="com.jformdesigner.model.FormEvent"> 
-          <string>java.awt.event.ActionListener</string> 
-          <string>actionPerformed</string> 
-          <string>btnSaveActionPerformed</string> 
-          <boolean>true</boolean> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JTabbedPane</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>javax.swing.JTabbedPane</class> 
-        </object> 
-        <void property="name"> 
-         <string>tabbedPane1</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l:::p {comp lblCompany:::::x:1, comp lblUser::l:p:115:p:1}, space u:::p, par l {comp txtCompany:3:l::0:x, comp txtUser:3:l:p:116:p}, space :p:293:p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::346:x}}</string> 
-           </void> 
-          </object> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
-          <void property="name"> 
-           <string>userinfo</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>logon_userid</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblUser</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>logon_company</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblCompany</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtUser</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.KeyListener</string> 
-              <string>keyPressed</string> 
-              <string>txtUserKeyPressed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtCompany</string> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>main_pas_settings_user_heading</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::359:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::366:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::192:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::254:x}, space :::p}}</string> 
-           </void> 
-          </object> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
-          <void property="name"> 
-           <string>mapsettings</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_mapsite_default</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupMapSite</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioMapDefault</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>radioMapDefaultActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_mapsite_wms</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupMapSite</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioMapWms</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>radioMapWmsActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtMapWms</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.KeyListener</string> 
-              <string>keyReleased</string> 
-              <string>txtMapWmsKeyReleased</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>common_open</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>btnMapWmsOpen</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>btnMapWmsOpenActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_mapsite_wms_username</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblMapWmsUser</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_mapsite_wms_password</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblMapWmsPassword</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtMapWmsUser</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JPasswordField</string> 
-            <void property="name"> 
-             <string>txtMapWmsPassword</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JComboBox</string> 
-            <void property="name"> 
-             <string>comboMapWmsImg</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JScrollPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JScrollPane</class> 
-            </object> 
-            <void property="name"> 
-             <string>scrollWMS</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.core.logon.WmsLayerTree</string> 
-              <void property="name"> 
-               <string>treeWMS</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>javax.swing.event.TreeSelectionListener</string> 
-                <string>valueChanged</string> 
-                <string>treeWMSValueChanged</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>icon</string> 
-             <object class="com.jformdesigner.model.SwingIcon"> 
-              <int>0</int> 
-              <string>/no/ums/pas/icons/arrow_up_32.png</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>btnMoveUp</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>btnMoveUpActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>icon</string> 
-             <object class="com.jformdesigner.model.SwingIcon"> 
-              <int>0</int> 
-              <string>/no/ums/pas/icons/arrow_down_32.png</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>btnMoveDown</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>btnMoveDownActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>main_pas_settings_map_heading</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::288:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::86:x}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::320:x}}</string> 
-           </void> 
-          </object> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
-          <void property="name"> 
-           <string>navigation</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_pan_by_click</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupPan</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioNavPanByClick</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_pan_by_drag</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupPan</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioNavPanByDrag</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_zoom_from_center</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupZoom</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>actionCommand</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_zoom_from_center</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioNavZoomFromCenter</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JRadioButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_zoom_from_corner</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>$buttonGroup</string> 
-             <object class="com.jformdesigner.model.FormReference"> 
-              <string>btnGroupZoom</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>radioNavZoomFromCorner</string> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>main_pas_settings_navigation_heading</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::225:x:1, comp lblMailAddress::l::225:x:1, comp lblMailDisplayname::l::225:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer::::161:x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::305:x}}</string> 
-           </void> 
-          </object> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
-          <void property="name"> 
-           <string>panel4</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_email_displayname</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblMailDisplayname</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_email_address</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblMailAddress</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JLabel</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>main_pas_settings_email_server</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>lblMailServer</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtMailDisplayname</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.KeyListener</string> 
-              <string>keyReleased</string> 
-              <string>txtMailDisplaynameKeyReleased</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtMailAddress</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.KeyListener</string> 
-              <string>keyReleased</string> 
-              <string>txtMailAddressKeyReleased</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextField</string> 
-            <void property="name"> 
-             <string>txtMailServer</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.KeyListener</string> 
-              <string>keyReleased</string> 
-              <string>txtMailServerKeyReleased</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>main_pas_settings_email_heading</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:614:x:1}}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::66:x}}</string> 
-           </void> 
-          </object> 
-          <void property="name"> 
-           <string>pnlDiverse</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>org.jdesktop.layout.GroupLayout</class> 
-             <void method="setProperty"> 
-              <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:272:p, space ::320:x}}</string> 
-             </void> 
-             <void method="setProperty"> 
-              <string>$verticalGroup</string> 
-              <string>par l {seq l {comp chkAutoStartParm:::p::p, space :::x}}</string> 
-             </void> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object class="javax.swing.border.TitledBorder"> 
-              <string>Auto startup</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>autostartup</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JCheckBox</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>mainmenu_parm</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>chkAutoStartParm</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>org.jdesktop.layout.GroupLayout</class> 
-             <void method="setProperty"> 
-              <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::243:x}}</string> 
-             </void> 
-             <void method="setProperty"> 
-              <string>$verticalGroup</string> 
-              <string>par l {seq l {par b {comp lblLbaUpdate::b:p::p, comp comboLbaUpdate::b:p::p}, space :::x}}</string> 
-             </void> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object class="javax.swing.border.TitledBorder"> 
-              <string>LBA</string> 
-             </object> 
-            </void> 
-            <void method="auxiliary"> 
-             <void method="setProperty"> 
-              <string>JavaCodeGenerator.variableGetter</string> 
-              <boolean>true</boolean> 
-             </void> 
-            </void> 
-            <void property="name"> 
-             <string>pnlLBA</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JLabel</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_pas_settings_auto_lba_update</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>lblLbaUpdate</string> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JComboBox</string> 
-              <void property="name"> 
-               <string>comboLbaUpdate</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ItemListener</string> 
-                <string>itemStateChanged</string> 
-                <string>comboLbaUpdateItemStateChanged</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>org.jdesktop.layout.GroupLayout</class> 
-             <void method="setProperty"> 
-              <string>$horizontalGroup</string> 
-              <string>par l {seq l::p {space :::p, par l:::p {seq l {par l {seq {comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p}, comp lblPrivateAdrTypes:::p:132:p:1}, space :::p, par l {seq l {comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p, space s:::p, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p, space :p:8:p, comp toggleHeadOfHousehold:::p::p}, comp lblCompanyAdrtypes::l:p:137:p:1}, space s:::p, par l {comp lblLbaText::l:p:111:p:2, comp toggleLba:8:l:p:47:p:1}}, seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}}, space :p::p}}</string> 
-             </void> 
-             <void method="setProperty"> 
-              <string>$verticalGroup</string> 
-              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable:::::x, comp toggleBlocklist:::::x:1, comp toggleCompanyMobile::t:::x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba:::::x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string> 
-             </void> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object class="javax.swing.border.TitledBorder"> 
-              <string>i18nKey=main_pas_settings_misc_auto_channel_select</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>panel2</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/phone_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_fixed_private_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>togglePrivateFixed</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/mobile_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_mobile_private_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>togglePrivateMobile</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/phone_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_fixed_company_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleCompanyFixed</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/mobile_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_mobile_company_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleCompanyMobile</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/lba_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_lba_text_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleLba</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleLbaActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/flag_red_24.gif</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>rolloverEnabled</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_company_blocklist_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleBlocklist</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleBlocklistActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JLabel</string> 
-              <void method="setProperty"> 
-               <string>verticalAlignment</string> 
-               <int>1</int> 
-              </void> 
-              <void property="name"> 
-               <string>lblPrivateAdrTypes</string> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JLabel</string> 
-              <void method="setProperty"> 
-               <string>verticalAlignment</string> 
-               <int>1</int> 
-              </void> 
-              <void property="name"> 
-               <string>lblCompanyAdrtypes</string> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JLabel</string> 
-              <void property="name"> 
-               <string>lblLbaText</string> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JToggleButton</string> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>btnGroupAutoShape</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/send_polygon_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>selected</string> 
-               <boolean>true</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_type_polygon</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>togglePolygon</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>togglePolygonActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JToggleButton</string> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>btnGroupAutoShape</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/send_ellipse_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_type_ellipse</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleEllipse</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleEllipseActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JToggleButton</string> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>btnGroupAutoShape</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/folder2_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>mainmenu_file_import</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleImport</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleImportActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/bandaid_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>main_sending_adr_btn_vulnerable_citizens_tooltip</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleVulnerable</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleVulnerableActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>no.ums.pas.send.ToggleAddresstype</string> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
-                <string>/no/ums/pas/icons/HeadOfHousehold_24.png</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>toggleHeadOfHousehold.toolTipText</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleHeadOfHousehold</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleHeadOfHouseholdActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>main_pas_settings_misc_heading</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void property="name"> 
-       <string>this</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>0</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>size</string> 
-       <object class="java.awt.Dimension"> 
-        <int>670</int> 
-        <int>520</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>btnGroupMapSite</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>415</int> 
-        <int>915</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>btnGroupPan</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>270</int> 
-        <int>920</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>btnGroupZoom</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>570</int> 
-        <int>910</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>no.ums.pas.core.logon.view.SettingsModel</string> 
-      <void method="auxiliary"> 
-       <void method="setProperty"> 
-        <string>JavaCodeGenerator.variableModifiers</string> 
-        <int>1</int> 
-       </void> 
-      </void> 
-      <void property="name"> 
-       <string>settingsModel1</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>145</int> 
-        <int>935</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>org.jdesktop.beansbinding.converters.StringToInt</string> 
-      <void property="name"> 
-       <string>stringToInt1</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>927</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>btnGroupAutoShape</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>989</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="addBindingGroup"> 
-     <object class="com.jformdesigner.model.FormBindingGroup"> 
-      <class>org.jdesktop.beansbinding.BindingGroup</class> 
-      <void method="setProperty"> 
-       <string>name</string> 
-       <string>bindingGroup</string> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>username</string> 
-        <string>txtUser</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>companyid</string> 
-        <string>txtCompany</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>lbaupdate</string> 
-        <string>comboLbaUpdate</string> 
-        <string>selectedItem</string> 
-        <void method="setProperty"> 
-         <string>converter</string> 
-         <object class="com.jformdesigner.model.FormReference"> 
-          <string>stringToInt1</string> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>autoStartParm</string> 
-        <string>chkAutoStartParm</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>mapSiteDefault</string> 
-        <string>radioMapDefault</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>mapSiteWms</string> 
-        <string>radioMapWms</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>wmsUrl</string> 
-        <string>txtMapWms</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>wmsUsername</string> 
-        <string>txtMapWmsUser</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>wmsPassword</string> 
-        <string>txtMapWmsPassword</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>panByClick</string> 
-        <string>radioNavPanByClick</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>panByDrag</string> 
-        <string>radioNavPanByDrag</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>zoomFromCenter</string> 
-        <string>radioNavZoomFromCenter</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>zoomFromCorner</string> 
-        <string>radioNavZoomFromCorner</string> 
-        <string>selected</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>emailDisplayName</string> 
-        <string>txtMailDisplayname</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>emailAddress</string> 
-        <string>txtMailAddress</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>emailServer</string> 
-        <string>txtMailServer</string> 
-        <string>text</string> 
-       </object> 
-      </void> 
-      <void method="addBinding"> 
-       <object class="com.jformdesigner.model.FormBinding"> 
-        <string>settingsModel1</string> 
-        <string>wmsImageFormat</string> 
-        <string>comboMapWmsImg</string> 
-        <string>selectedItem</string> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-   </object> 
-  </void> 
- </object> 
-</java> 
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_45" class="java.beans.XMLDecoder">
+ <object class="com.jformdesigner.model.FormModel">
+  <void method="setProperty">
+   <string>i18n.bundlePackage</string>
+   <string>no.ums.pas.localization</string>
+  </void>
+  <void method="setProperty">
+   <string>i18n.bundleName</string>
+   <string>lang</string>
+  </void>
+  <void property="contentType">
+   <string>form/swing</string>
+  </void>
+  <void property="root">
+   <object class="com.jformdesigner.model.FormRoot">
+    <void method="add">
+     <object class="com.jformdesigner.model.FormWindow">
+      <string>javax.swing.JFrame</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>org.jdesktop.layout.GroupLayout</class>
+       <void method="setProperty">
+        <string>$horizontalGroup</string>
+        <string>par l {seq {space :::p, par l {seq {space :0:0:x, comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p}, seq l {comp tabbedPane1:::p:637:p, space :0:0:x}}, space :::p}}</string>
+       </void>
+       <void method="setProperty">
+        <string>$verticalGroup</string>
+        <string>par l {seq t {space :::p, comp tabbedPane1:::::x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string>
+       </void>
+      </object>
+      <void method="setProperty">
+       <string>title</string>
+       <object class="com.jformdesigner.model.FormMessage">
+        <null/>
+        <string>mainmenu_settings</string>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JButton</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>common_cancel</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>btnCancel</string>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.ActionListener</string>
+          <string>actionPerformed</string>
+          <string>btnCancelActionPerformed</string>
+          <boolean>true</boolean>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JButton</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>common_save</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>btnSave</string>
+        </void>
+        <void method="auxiliary">
+         <void method="setProperty">
+          <string>JavaCodeGenerator.variableGetter</string>
+          <boolean>true</boolean>
+         </void>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.ActionListener</string>
+          <string>actionPerformed</string>
+          <string>btnSaveActionPerformed</string>
+          <boolean>true</boolean>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JTabbedPane</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>javax.swing.JTabbedPane</class>
+        </object>
+        <void property="name">
+         <string>tabbedPane1</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq l {space :::p, par l:::p {comp lblCompany:::::x:1, comp lblUser::l:p:115:p:1}, space u:::p, par l {comp txtCompany:3:l::0:x, comp txtUser:3:l:p:116:p}, space :p:293:p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::348:x}}</string>
+           </void>
+          </object>
+          <void method="setProperty">
+           <string>border</string>
+           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+          </void>
+          <void property="name">
+           <string>userinfo</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>logon_userid</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblUser</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>logon_company</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblCompany</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtUser</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.KeyListener</string>
+              <string>keyPressed</string>
+              <string>txtUserKeyPressed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtCompany</string>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>main_pas_settings_user_heading</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq t {space :::p, par t {seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::364:x}, seq l {comp scrollWMS:::p:507:p, space s:::p, par l {comp btnMoveDown:5:::43:x:1, comp btnMoveUp:5:l::43:x:1}}, seq l {comp txtMapWms:::p:463:p, space :::p, comp btnMapWmsOpen:::p:106:p}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::104:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}}}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::193:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::255:x}, space :::p}}</string>
+           </void>
+          </object>
+          <void method="setProperty">
+           <string>border</string>
+           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+          </void>
+          <void property="name">
+           <string>mapsettings</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_mapsite_default</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupMapSite</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioMapDefault</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>radioMapDefaultActionPerformed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_mapsite_wms</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupMapSite</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioMapWms</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>radioMapWmsActionPerformed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtMapWms</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.KeyListener</string>
+              <string>keyReleased</string>
+              <string>txtMapWmsKeyReleased</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>common_open</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>btnMapWmsOpen</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>btnMapWmsOpenActionPerformed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_mapsite_wms_username</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblMapWmsUser</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_mapsite_wms_password</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblMapWmsPassword</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtMapWmsUser</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JPasswordField</string>
+            <void property="name">
+             <string>txtMapWmsPassword</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JComboBox</string>
+            <void property="name">
+             <string>comboMapWmsImg</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JScrollPane</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>javax.swing.JScrollPane</class>
+            </object>
+            <void property="name">
+             <string>scrollWMS</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.core.logon.WmsLayerTree</string>
+              <void property="name">
+               <string>treeWMS</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>javax.swing.event.TreeSelectionListener</string>
+                <string>valueChanged</string>
+                <string>treeWMSValueChanged</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>icon</string>
+             <object class="com.jformdesigner.model.SwingIcon">
+              <int>0</int>
+              <string>/no/ums/pas/icons/arrow_up_32.png</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>btnMoveUp</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>btnMoveUpActionPerformed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>icon</string>
+             <object class="com.jformdesigner.model.SwingIcon">
+              <int>0</int>
+              <string>/no/ums/pas/icons/arrow_down_32.png</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>btnMoveDown</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>btnMoveDownActionPerformed</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>main_pas_settings_map_heading</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq {space :::p, par l {comp radioNavPanByClick::l:p:248:p:1, comp radioNavZoomFromCenter::t::293:x:1}, space :::p, par l:::p {comp radioNavPanByDrag:::::x:1, comp radioNavZoomFromCorner::l::241:x:1}, space ::92:x}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::313:x}}</string>
+           </void>
+          </object>
+          <void method="setProperty">
+           <string>border</string>
+           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+          </void>
+          <void property="name">
+           <string>navigation</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_pan_by_click</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupPan</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioNavPanByClick</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_pan_by_drag</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupPan</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioNavPanByDrag</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_zoom_from_center</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupZoom</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>actionCommand</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_zoom_from_center</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioNavZoomFromCenter</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JRadioButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_zoom_from_corner</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>$buttonGroup</string>
+             <object class="com.jformdesigner.model.FormReference">
+              <string>btnGroupZoom</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>radioNavZoomFromCorner</string>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>main_pas_settings_navigation_heading</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq l {space :::p, par l {comp lblMailServer::t::235:x:1, comp lblMailAddress::l::235:x:1, comp lblMailDisplayname::l::235:x:1}, space :::p, par l:::p {comp txtMailDisplayname::l:p:161:p, par l:l {comp txtMailServer:::::x, comp txtMailAddress::l:::x}}, space :p:222:p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::307:x}}</string>
+           </void>
+          </object>
+          <void method="setProperty">
+           <string>border</string>
+           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+          </void>
+          <void property="name">
+           <string>panel4</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_email_displayname</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblMailDisplayname</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_email_address</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblMailAddress</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JLabel</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>main_pas_settings_email_server</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>lblMailServer</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtMailDisplayname</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.KeyListener</string>
+              <string>keyReleased</string>
+              <string>txtMailDisplaynameKeyReleased</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtMailAddress</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.KeyListener</string>
+              <string>keyReleased</string>
+              <string>txtMailAddressKeyReleased</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JTextField</string>
+            <void property="name">
+             <string>txtMailServer</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.KeyListener</string>
+              <string>keyReleased</string>
+              <string>txtMailServerKeyReleased</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>main_pas_settings_email_heading</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:614:x:1}}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :::p, comp autostartup:::p:53:p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::67:x}}</string>
+           </void>
+          </object>
+          <void property="name">
+           <string>pnlDiverse</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JPanel</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>org.jdesktop.layout.GroupLayout</class>
+             <void method="setProperty">
+              <string>$horizontalGroup</string>
+              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:195:p, space s:::p, comp lblAutoGroupDepts:::p::p, space :4:4:p, comp comboAutoGroupDepts:::p::p, space ::69:x}}</string>
+             </void>
+             <void method="setProperty">
+              <string>$verticalGroup</string>
+              <string>par l {seq {par l {comp chkAutoStartParm:::p::p, comp lblAutoGroupDepts:::p::p, seq l {space :1:1:p, comp comboAutoGroupDepts:::p::p}}, space :::x}}</string>
+             </void>
+            </object>
+            <void method="setProperty">
+             <string>border</string>
+             <object class="javax.swing.border.TitledBorder">
+              <string>Auto startup</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>autostartup</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JCheckBox</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>mainmenu_parm</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>chkAutoStartParm</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JLabel</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_pas_settings_auto_dept_category</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>preferredSize</string>
+               <object class="java.awt.Dimension">
+                <int>180</int>
+                <int>23</int>
+               </object>
+              </void>
+              <void property="name">
+               <string>lblAutoGroupDepts</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JComboBox</string>
+              <void method="setProperty">
+               <string>preferredSize</string>
+               <object class="java.awt.Dimension">
+                <int>130</int>
+                <int>20</int>
+               </object>
+              </void>
+              <void property="name">
+               <string>comboAutoGroupDepts</string>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JPanel</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>org.jdesktop.layout.GroupLayout</class>
+             <void method="setProperty">
+              <string>$horizontalGroup</string>
+              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::251:x}}</string>
+             </void>
+             <void method="setProperty">
+              <string>$verticalGroup</string>
+              <string>par l {seq l {par b {comp lblLbaUpdate::b:p::p, comp comboLbaUpdate::b:p::p}, space :::x}}</string>
+             </void>
+            </object>
+            <void method="setProperty">
+             <string>border</string>
+             <object class="javax.swing.border.TitledBorder">
+              <string>LBA</string>
+             </object>
+            </void>
+            <void method="auxiliary">
+             <void method="setProperty">
+              <string>JavaCodeGenerator.variableGetter</string>
+              <boolean>true</boolean>
+             </void>
+            </void>
+            <void property="name">
+             <string>pnlLBA</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JLabel</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_pas_settings_auto_lba_update</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>lblLbaUpdate</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JComboBox</string>
+              <void property="name">
+               <string>comboLbaUpdate</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ItemListener</string>
+                <string>itemStateChanged</string>
+                <string>comboLbaUpdateItemStateChanged</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JPanel</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>org.jdesktop.layout.GroupLayout</class>
+             <void method="setProperty">
+              <string>$horizontalGroup</string>
+              <string>par l {seq l {space :::p, par l:::p {seq l {par l {seq {comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p}, comp lblPrivateAdrTypes:::p:132:p:1}, space :::p, par l {seq l {comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p, space s:::p, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p, space :p:8:p, comp toggleHeadOfHousehold:::p::p}, comp lblCompanyAdrtypes::l:p:137:p:1}, space s:::p, par l {comp lblLbaText::l:p:111:p:2, comp toggleLba:8:l:p:47:p:1}}, seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}}, space :p::p}}</string>
+             </void>
+             <void method="setProperty">
+              <string>$verticalGroup</string>
+              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable:::::x, comp toggleBlocklist:::::x:1, comp toggleCompanyMobile::t:::x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba:::::x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string>
+             </void>
+            </object>
+            <void method="setProperty">
+             <string>border</string>
+             <object class="javax.swing.border.TitledBorder">
+              <string>i18nKey=main_pas_settings_misc_auto_channel_select</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>panel2</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/phone_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_fixed_private_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>togglePrivateFixed</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/mobile_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_mobile_private_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>togglePrivateMobile</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/phone_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_fixed_company_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleCompanyFixed</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/mobile_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_mobile_company_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleCompanyMobile</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/lba_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_lba_text_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleLba</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleLbaActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/flag_red_24.gif</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>rolloverEnabled</string>
+               <boolean>false</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_company_blocklist_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleBlocklist</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleBlocklistActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JLabel</string>
+              <void method="setProperty">
+               <string>verticalAlignment</string>
+               <int>1</int>
+              </void>
+              <void property="name">
+               <string>lblPrivateAdrTypes</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JLabel</string>
+              <void method="setProperty">
+               <string>verticalAlignment</string>
+               <int>1</int>
+              </void>
+              <void property="name">
+               <string>lblCompanyAdrtypes</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JLabel</string>
+              <void property="name">
+               <string>lblLbaText</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JToggleButton</string>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>btnGroupAutoShape</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/send_polygon_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>selected</string>
+               <boolean>true</boolean>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_type_polygon</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>togglePolygon</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>togglePolygonActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JToggleButton</string>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>btnGroupAutoShape</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/send_ellipse_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_type_ellipse</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleEllipse</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleEllipseActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JToggleButton</string>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>btnGroupAutoShape</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/folder2_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>mainmenu_file_import</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleImport</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleImportActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/bandaid_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_btn_vulnerable_citizens_tooltip</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleVulnerable</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleVulnerableActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>no.ums.pas.send.ToggleAddresstype</string>
+              <void method="setProperty">
+               <string>icon</string>
+               <object class="com.jformdesigner.model.SwingIcon">
+                <int>0</int>
+                <string>/no/ums/pas/icons/HeadOfHousehold_24.png</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>toggleHeadOfHousehold.toolTipText</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>toggleHeadOfHousehold</string>
+              </void>
+              <void method="auxiliary">
+               <void method="setProperty">
+                <string>JavaCodeGenerator.variableGetter</string>
+                <boolean>true</boolean>
+               </void>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>toggleHeadOfHouseholdActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>main_pas_settings_misc_heading</string>
+           </object>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="name">
+       <string>this</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>0</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>size</string>
+       <object class="java.awt.Dimension">
+        <int>670</int>
+        <int>520</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>btnGroupMapSite</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>415</int>
+        <int>915</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>btnGroupPan</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>270</int>
+        <int>920</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>btnGroupZoom</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>570</int>
+        <int>910</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>no.ums.pas.core.logon.view.SettingsModel</string>
+      <void method="auxiliary">
+       <void method="setProperty">
+        <string>JavaCodeGenerator.variableModifiers</string>
+        <int>1</int>
+       </void>
+      </void>
+      <void property="name">
+       <string>settingsModel1</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>145</int>
+        <int>935</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>org.jdesktop.beansbinding.converters.StringToInt</string>
+      <void property="name">
+       <string>stringToInt1</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>927</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>btnGroupAutoShape</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>989</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>no.ums.pas.core.logon.IntegerToObject</string>
+      <void property="name">
+       <string>integerToObject1</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>1041</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="addBindingGroup">
+     <object class="com.jformdesigner.model.FormBindingGroup">
+      <class>org.jdesktop.beansbinding.BindingGroup</class>
+      <void method="setProperty">
+       <string>name</string>
+       <string>bindingGroup</string>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>username</string>
+        <string>txtUser</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>companyid</string>
+        <string>txtCompany</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>lbaupdate</string>
+        <string>comboLbaUpdate</string>
+        <string>selectedItem</string>
+        <void method="setProperty">
+         <string>converter</string>
+         <object class="com.jformdesigner.model.FormReference">
+          <string>stringToInt1</string>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>autoStartParm</string>
+        <string>chkAutoStartParm</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>mapSiteDefault</string>
+        <string>radioMapDefault</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>mapSiteWms</string>
+        <string>radioMapWms</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>wmsUrl</string>
+        <string>txtMapWms</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>wmsUsername</string>
+        <string>txtMapWmsUser</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>wmsPassword</string>
+        <string>txtMapWmsPassword</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>panByClick</string>
+        <string>radioNavPanByClick</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>panByDrag</string>
+        <string>radioNavPanByDrag</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>zoomFromCenter</string>
+        <string>radioNavZoomFromCenter</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>zoomFromCorner</string>
+        <string>radioNavZoomFromCorner</string>
+        <string>selected</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>emailDisplayName</string>
+        <string>txtMailDisplayname</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>emailAddress</string>
+        <string>txtMailAddress</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>emailServer</string>
+        <string>txtMailServer</string>
+        <string>text</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>wmsImageFormat</string>
+        <string>comboMapWmsImg</string>
+        <string>selectedItem</string>
+       </object>
+      </void>
+      <void method="addBinding">
+       <object class="com.jformdesigner.model.FormBinding">
+        <string>settingsModel1</string>
+        <string>deptCategory</string>
+        <string>comboAutoGroupDepts</string>
+        <string>selectedItem</string>
+        <void method="setProperty">
+         <string>converter</string>
+         <object class="com.jformdesigner.model.FormReference">
+          <string>integerToObject1</string>
+         </object>
+        </void>
+       </object>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

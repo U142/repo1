@@ -6,6 +6,8 @@ package no.ums.pas.core.logon.view;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.DeptCategory;
 import no.ums.pas.core.logon.WmsLayerTree;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendController;
@@ -70,6 +72,14 @@ public class Settings extends JFrame {
 		comboLbaUpdate.addItem(new Integer(30));
 		comboLbaUpdate.addItem(new Integer(40));
 		comboLbaUpdate.addItem(new Integer(50));
+		
+		DeptCategory catg1 = new DeptCategory(0, "None");
+		DeptCategory catg2 = new DeptCategory(1, "Alphabetically");
+		DeptCategory catg3 = new DeptCategory(2, "GAS Categories");
+		comboAutoGroupDepts.addItem(catg1);
+		comboAutoGroupDepts.addItem(catg2);
+//		comboAutoGroupDepts.addItem(catg3);
+
 
 		sot.setCallback(new ActionListener() {
 			@Override
@@ -115,6 +125,15 @@ public class Settings extends JFrame {
 		}
 	}
 	
+	public void populateDeptCategory(int deptCategory)
+	{
+	  	for(int i=0;i<getComboAutoGroupDepts().getItemCount();i++)
+	   	{
+	   		int curentDeptCatgValue = ((DeptCategory)getComboAutoGroupDepts().getItemAt(i)).getValue();
+	   		if(curentDeptCatgValue == deptCategory)
+	   			getComboAutoGroupDepts().setSelectedIndex(i);
+	   	}
+	}
 	
 	protected void updateAutoChannelButtons(int adrtypes)
 	{
@@ -309,6 +328,11 @@ public class Settings extends JFrame {
 		onValidate(txtMailServer);
 	}
 
+	public JComboBox getComboAutoGroupDepts() {
+		return comboAutoGroupDepts;
+	}
+
+
 	private void toggleLbaActionPerformed(ActionEvent e) {
 		toggleLba.toggleSelection();
 		if(toggleLba.isSelected()) 
@@ -423,846 +447,871 @@ public class Settings extends JFrame {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
-        btnCancel = new JButton();
-        btnSave = new JButton();
-        tabbedPane1 = new JTabbedPane();
-        userinfo = new JPanel();
-        lblUser = new JLabel();
-        lblCompany = new JLabel();
-        txtUser = new JTextField();
-        txtCompany = new JTextField();
-        mapsettings = new JPanel();
-        radioMapDefault = new JRadioButton();
-        radioMapWms = new JRadioButton();
-        txtMapWms = new JTextField();
-        btnMapWmsOpen = new JButton();
-        lblMapWmsUser = new JLabel();
-        lblMapWmsPassword = new JLabel();
-        txtMapWmsUser = new JTextField();
-        txtMapWmsPassword = new JPasswordField();
-        comboMapWmsImg = new JComboBox();
-        scrollWMS = new JScrollPane();
-        treeWMS = new WmsLayerTree();
-        btnMoveUp = new JButton();
-        btnMoveDown = new JButton();
-        navigation = new JPanel();
-        radioNavPanByClick = new JRadioButton();
-        radioNavPanByDrag = new JRadioButton();
-        radioNavZoomFromCenter = new JRadioButton();
-        radioNavZoomFromCorner = new JRadioButton();
-        panel4 = new JPanel();
-        lblMailDisplayname = new JLabel();
-        lblMailAddress = new JLabel();
-        lblMailServer = new JLabel();
-        txtMailDisplayname = new JTextField();
-        txtMailAddress = new JTextField();
-        txtMailServer = new JTextField();
-        pnlDiverse = new JPanel();
-        autostartup = new JPanel();
-        chkAutoStartParm = new JCheckBox();
-        pnlLBA = new JPanel();
-        lblLbaUpdate = new JLabel();
-        comboLbaUpdate = new JComboBox();
-        panel2 = new JPanel();
-        togglePrivateFixed = new ToggleAddresstype();
-        togglePrivateMobile = new ToggleAddresstype();
-        toggleCompanyFixed = new ToggleAddresstype();
-        toggleCompanyMobile = new ToggleAddresstype();
-        toggleLba = new ToggleAddresstype();
-        toggleBlocklist = new ToggleAddresstype();
-        lblPrivateAdrTypes = new JLabel();
-        lblCompanyAdrtypes = new JLabel();
-        lblLbaText = new JLabel();
-        togglePolygon = new JToggleButton();
-        toggleEllipse = new JToggleButton();
-        toggleImport = new JToggleButton();
-        toggleVulnerable = new ToggleAddresstype();
-        toggleHeadOfHousehold = new ToggleAddresstype();
-        settingsModel1 = new SettingsModel();
-        stringToInt1 = new StringToInt();
-
-        //======== this ========
-        setTitle(bundle.getString("mainmenu_settings"));
-        Container contentPane = getContentPane();
-
-        //---- btnCancel ----
-        btnCancel.setText(bundle.getString("common_cancel"));
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnCancelActionPerformed(e);
-            }
-        });
-
-        //---- btnSave ----
-        btnSave.setText(bundle.getString("common_save"));
-        btnSave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnSaveActionPerformed(e);
-            }
-        });
-
-        //======== tabbedPane1 ========
-        {
-
-            //======== userinfo ========
-            {
-                userinfo.setBorder(null);
-
-                //---- lblUser ----
-                lblUser.setText(bundle.getString("logon_userid"));
-
-                //---- lblCompany ----
-                lblCompany.setText(bundle.getString("logon_company"));
-
-                //---- txtUser ----
-                txtUser.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        txtUserKeyPressed(e);
-                    }
-                });
-
-                GroupLayout userinfoLayout = new GroupLayout(userinfo);
-                userinfo.setLayout(userinfoLayout);
-                userinfoLayout.setHorizontalGroup(
-                    userinfoLayout.createParallelGroup()
-                        .addGroup(userinfoLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblCompany, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblUser, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(userinfoLayout.createParallelGroup()
-                                .addComponent(txtCompany, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-                                .addComponent(txtUser, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))
-                            .addGap(293, 293, 293))
-                );
-                userinfoLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {txtCompany, txtUser});
-                userinfoLayout.setVerticalGroup(
-                    userinfoLayout.createParallelGroup()
-                        .addGroup(userinfoLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblUser)
-                                .addComponent(txtUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblCompany)
-                                .addComponent(txtCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(346, Short.MAX_VALUE))
-                );
-            }
-            tabbedPane1.addTab(bundle.getString("main_pas_settings_user_heading"), userinfo);
-
-
-            //======== mapsettings ========
-            {
-                mapsettings.setBorder(null);
-
-                //---- radioMapDefault ----
-                radioMapDefault.setText(bundle.getString("main_pas_settings_mapsite_default"));
-                radioMapDefault.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        radioMapDefaultActionPerformed(e);
-                    }
-                });
-
-                //---- radioMapWms ----
-                radioMapWms.setText(bundle.getString("main_pas_settings_mapsite_wms"));
-                radioMapWms.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        radioMapWmsActionPerformed(e);
-                    }
-                });
-
-                //---- txtMapWms ----
-                txtMapWms.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                        txtMapWmsKeyReleased(e);
-                    }
-                });
-
-                //---- btnMapWmsOpen ----
-                btnMapWmsOpen.setText(bundle.getString("common_open"));
-                btnMapWmsOpen.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        btnMapWmsOpenActionPerformed(e);
-                    }
-                });
-
-                //---- lblMapWmsUser ----
-                lblMapWmsUser.setText(bundle.getString("main_pas_settings_mapsite_wms_username"));
-
-                //---- lblMapWmsPassword ----
-                lblMapWmsPassword.setText(bundle.getString("main_pas_settings_mapsite_wms_password"));
-
-                //======== scrollWMS ========
-                {
-
-                    //---- treeWMS ----
-                    treeWMS.addTreeSelectionListener(new TreeSelectionListener() {
-                        @Override
-                        public void valueChanged(TreeSelectionEvent e) {
-                            treeWMSValueChanged(e);
-                        }
-                    });
-                    scrollWMS.setViewportView(treeWMS);
-                }
-
-                //---- btnMoveUp ----
-                btnMoveUp.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_up_32.png")));
-                btnMoveUp.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        btnMoveUpActionPerformed(e);
-                    }
-                });
-
-                //---- btnMoveDown ----
-                btnMoveDown.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_down_32.png")));
-                btnMoveDown.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        btnMoveDownActionPerformed(e);
-                    }
-                });
-
-                GroupLayout mapsettingsLayout = new GroupLayout(mapsettings);
-                mapsettings.setLayout(mapsettingsLayout);
-                mapsettingsLayout.setHorizontalGroup(
-                    mapsettingsLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, mapsettingsLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-                                    .addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 463, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnMapWmsOpen, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-                                    .addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE))
-                                .addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-                                    .addGroup(mapsettingsLayout.createParallelGroup()
-                                        .addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(comboMapWmsImg, GroupLayout.Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblMapWmsPassword, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtMapWmsPassword)
-                                        .addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 366, Short.MAX_VALUE))
-                                .addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-                                    .addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 507, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addGroup(mapsettingsLayout.createParallelGroup()
-                                        .addComponent(btnMoveDown, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                                        .addComponent(btnMoveUp, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))))
-                            .addContainerGap())
-                );
-                mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
-                mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnMoveDown, btnMoveUp});
-                mapsettingsLayout.setVerticalGroup(
-                    mapsettingsLayout.createParallelGroup()
-                        .addGroup(mapsettingsLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(radioMapDefault)
-                                .addComponent(radioMapWms))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnMapWmsOpen))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblMapWmsUser)
-                                .addComponent(txtMapWmsUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblMapWmsPassword)
-                                .addComponent(txtMapWmsPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addGroup(mapsettingsLayout.createSequentialGroup()
-                                    .addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
-                                    .addComponent(btnMoveDown, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
-                            .addContainerGap())
-                );
-                mapsettingsLayout.linkSize(SwingConstants.VERTICAL, new Component[] {btnMoveDown, btnMoveUp});
-            }
-            tabbedPane1.addTab(bundle.getString("main_pas_settings_map_heading"), mapsettings);
-
-
-            //======== navigation ========
-            {
-                navigation.setBorder(null);
-
-                //---- radioNavPanByClick ----
-                radioNavPanByClick.setText(bundle.getString("main_pas_settings_pan_by_click"));
-
-                //---- radioNavPanByDrag ----
-                radioNavPanByDrag.setText(bundle.getString("main_pas_settings_pan_by_drag"));
-
-                //---- radioNavZoomFromCenter ----
-                radioNavZoomFromCenter.setText(bundle.getString("main_pas_settings_zoom_from_center"));
-                radioNavZoomFromCenter.setActionCommand(bundle.getString("main_pas_settings_zoom_from_center"));
-
-                //---- radioNavZoomFromCorner ----
-                radioNavZoomFromCorner.setText(bundle.getString("main_pas_settings_zoom_from_corner"));
-
-                GroupLayout navigationLayout = new GroupLayout(navigation);
-                navigation.setLayout(navigationLayout);
-                navigationLayout.setHorizontalGroup(
-                    navigationLayout.createParallelGroup()
-                        .addGroup(navigationLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(navigationLayout.createParallelGroup()
-                                .addComponent(radioNavPanByClick, GroupLayout.PREFERRED_SIZE, 248, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(radioNavZoomFromCenter, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(radioNavPanByDrag, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(radioNavZoomFromCorner, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-                            .addContainerGap(86, Short.MAX_VALUE))
-                );
-                navigationLayout.setVerticalGroup(
-                    navigationLayout.createParallelGroup()
-                        .addGroup(navigationLayout.createSequentialGroup()
-                            .addGap(17, 17, 17)
-                            .addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(radioNavPanByClick)
-                                .addComponent(radioNavPanByDrag))
-                            .addGap(29, 29, 29)
-                            .addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(radioNavZoomFromCenter)
-                                .addComponent(radioNavZoomFromCorner))
-                            .addContainerGap(320, Short.MAX_VALUE))
-                );
-            }
-            tabbedPane1.addTab(bundle.getString("main_pas_settings_navigation_heading"), navigation);
-
-
-            //======== panel4 ========
-            {
-                panel4.setBorder(null);
-
-                //---- lblMailDisplayname ----
-                lblMailDisplayname.setText(bundle.getString("main_pas_settings_email_displayname"));
-
-                //---- lblMailAddress ----
-                lblMailAddress.setText(bundle.getString("main_pas_settings_email_address"));
-
-                //---- lblMailServer ----
-                lblMailServer.setText(bundle.getString("main_pas_settings_email_server"));
-
-                //---- txtMailDisplayname ----
-                txtMailDisplayname.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                        txtMailDisplaynameKeyReleased(e);
-                    }
-                });
-
-                //---- txtMailAddress ----
-                txtMailAddress.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                        txtMailAddressKeyReleased(e);
-                    }
-                });
-
-                //---- txtMailServer ----
-                txtMailServer.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                        txtMailServerKeyReleased(e);
-                    }
-                });
-
-                GroupLayout panel4Layout = new GroupLayout(panel4);
-                panel4.setLayout(panel4Layout);
-                panel4Layout.setHorizontalGroup(
-                    panel4Layout.createParallelGroup()
-                        .addGroup(panel4Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel4Layout.createParallelGroup()
-                                .addComponent(lblMailServer, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                                .addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                                .addComponent(lblMailDisplayname, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
-                                .addGroup(panel4Layout.createParallelGroup()
-                                    .addComponent(txtMailServer, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                    .addComponent(txtMailAddress)))
-                            .addGap(222, 222, 222))
-                );
-                panel4Layout.setVerticalGroup(
-                    panel4Layout.createParallelGroup()
-                        .addGroup(panel4Layout.createSequentialGroup()
-                            .addGap(26, 26, 26)
-                            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblMailDisplayname))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMailAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblMailAddress))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblMailServer))
-                            .addContainerGap(305, Short.MAX_VALUE))
-                );
-            }
-            tabbedPane1.addTab(bundle.getString("main_pas_settings_email_heading"), panel4);
-
-
-            //======== pnlDiverse ========
-            {
-
-                //======== autostartup ========
-                {
-                    autostartup.setBorder(new TitledBorder("Auto startup"));
-
-                    //---- chkAutoStartParm ----
-                    chkAutoStartParm.setText(bundle.getString("mainmenu_parm"));
-
-                    GroupLayout autostartupLayout = new GroupLayout(autostartup);
-                    autostartup.setLayout(autostartupLayout);
-                    autostartupLayout.setHorizontalGroup(
-                        autostartupLayout.createParallelGroup()
-                            .addGroup(autostartupLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(chkAutoStartParm, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(320, Short.MAX_VALUE))
-                    );
-                    autostartupLayout.setVerticalGroup(
-                        autostartupLayout.createParallelGroup()
-                            .addGroup(autostartupLayout.createSequentialGroup()
-                                .addComponent(chkAutoStartParm)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    );
-                }
-
-                //======== pnlLBA ========
-                {
-                    pnlLBA.setBorder(new TitledBorder("LBA"));
-
-                    //---- lblLbaUpdate ----
-                    lblLbaUpdate.setText(bundle.getString("main_pas_settings_auto_lba_update"));
-
-                    //---- comboLbaUpdate ----
-                    comboLbaUpdate.addItemListener(new ItemListener() {
-                        @Override
-                        public void itemStateChanged(ItemEvent e) {
-                            comboLbaUpdateItemStateChanged(e);
-                        }
-                    });
-
-                    GroupLayout pnlLBALayout = new GroupLayout(pnlLBA);
-                    pnlLBA.setLayout(pnlLBALayout);
-                    pnlLBALayout.setHorizontalGroup(
-                        pnlLBALayout.createParallelGroup()
-                            .addGroup(pnlLBALayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(243, Short.MAX_VALUE))
-                    );
-                    pnlLBALayout.setVerticalGroup(
-                        pnlLBALayout.createParallelGroup()
-                            .addGroup(pnlLBALayout.createSequentialGroup()
-                                .addGroup(pnlLBALayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblLbaUpdate)
-                                    .addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    );
-                }
-
-                //======== panel2 ========
-                {
-                    panel2.setBorder(new TitledBorder(bundle.getString("main_pas_settings_misc_auto_channel_select")));
-
-                    //---- togglePrivateFixed ----
-                    togglePrivateFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
-                    togglePrivateFixed.setRolloverEnabled(false);
-                    togglePrivateFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_private_tooltip"));
-
-                    //---- togglePrivateMobile ----
-                    togglePrivateMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
-                    togglePrivateMobile.setRolloverEnabled(false);
-                    togglePrivateMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_private_tooltip"));
-
-                    //---- toggleCompanyFixed ----
-                    toggleCompanyFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
-                    toggleCompanyFixed.setRolloverEnabled(false);
-                    toggleCompanyFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_company_tooltip"));
-
-                    //---- toggleCompanyMobile ----
-                    toggleCompanyMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
-                    toggleCompanyMobile.setRolloverEnabled(false);
-                    toggleCompanyMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_company_tooltip"));
-
-                    //---- toggleLba ----
-                    toggleLba.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/lba_24.png")));
-                    toggleLba.setRolloverEnabled(false);
-                    toggleLba.setToolTipText(bundle.getString("main_sending_adr_btn_lba_text_tooltip"));
-                    toggleLba.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleLbaActionPerformed(e);
-                        }
-                    });
-
-                    //---- toggleBlocklist ----
-                    toggleBlocklist.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/flag_red_24.gif")));
-                    toggleBlocklist.setRolloverEnabled(false);
-                    toggleBlocklist.setToolTipText(bundle.getString("main_sending_adr_btn_company_blocklist_tooltip"));
-                    toggleBlocklist.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleBlocklistActionPerformed(e);
-                        }
-                    });
-
-                    //---- lblPrivateAdrTypes ----
-                    lblPrivateAdrTypes.setVerticalAlignment(SwingConstants.TOP);
-
-                    //---- lblCompanyAdrtypes ----
-                    lblCompanyAdrtypes.setVerticalAlignment(SwingConstants.TOP);
-
-                    //---- togglePolygon ----
-                    togglePolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
-                    togglePolygon.setSelected(true);
-                    togglePolygon.setToolTipText(bundle.getString("main_sending_type_polygon"));
-                    togglePolygon.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            togglePolygonActionPerformed(e);
-                        }
-                    });
-
-                    //---- toggleEllipse ----
-                    toggleEllipse.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_ellipse_24.png")));
-                    toggleEllipse.setToolTipText(bundle.getString("main_sending_type_ellipse"));
-                    toggleEllipse.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleEllipseActionPerformed(e);
-                        }
-                    });
-
-                    //---- toggleImport ----
-                    toggleImport.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/folder2_24.png")));
-                    toggleImport.setToolTipText(bundle.getString("mainmenu_file_import"));
-                    toggleImport.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleImportActionPerformed(e);
-                        }
-                    });
-
-                    //---- toggleVulnerable ----
-                    toggleVulnerable.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/bandaid_24.png")));
-                    toggleVulnerable.setToolTipText(bundle.getString("main_sending_adr_btn_vulnerable_citizens_tooltip"));
-                    toggleVulnerable.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleVulnerableActionPerformed(e);
-                        }
-                    });
-
-                    //---- toggleHeadOfHousehold ----
-                    toggleHeadOfHousehold.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/HeadOfHousehold_24.png")));
-                    toggleHeadOfHousehold.setToolTipText(bundle.getString("toggleHeadOfHousehold.toolTipText"));
-                    toggleHeadOfHousehold.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            toggleHeadOfHouseholdActionPerformed(e);
-                        }
-                    });
-
-                    GroupLayout panel2Layout = new GroupLayout(panel2);
-                    panel2.setLayout(panel2Layout);
-                    panel2Layout.setHorizontalGroup(
-                        panel2Layout.createParallelGroup()
-                            .addGroup(panel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(panel2Layout.createSequentialGroup()
-                                        .addGroup(panel2Layout.createParallelGroup()
-                                            .addGroup(panel2Layout.createSequentialGroup()
-                                                .addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(lblPrivateAdrTypes, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(panel2Layout.createParallelGroup()
-                                            .addGroup(panel2Layout.createSequentialGroup()
-                                                .addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(toggleVulnerable, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(toggleHeadOfHousehold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(panel2Layout.createParallelGroup()
-                                            .addComponent(lblLbaText, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(panel2Layout.createSequentialGroup()
-                                        .addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap())
-                    );
-                    panel2Layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {toggleBlocklist, toggleCompanyFixed, toggleCompanyMobile, toggleLba, togglePrivateFixed, togglePrivateMobile, toggleVulnerable});
-                    panel2Layout.setVerticalGroup(
-                        panel2Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                    .addComponent(togglePolygon)
-                                    .addComponent(toggleEllipse)
-                                    .addComponent(toggleImport))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panel2Layout.createParallelGroup()
-                                    .addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(toggleCompanyMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(togglePrivateFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(togglePrivateMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(toggleCompanyFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(toggleHeadOfHousehold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(toggleLba, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panel2Layout.createParallelGroup()
-                                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                                        .addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
-                                .addContainerGap())
-                    );
-                }
-
-                GroupLayout pnlDiverseLayout = new GroupLayout(pnlDiverse);
-                pnlDiverse.setLayout(pnlDiverseLayout);
-                pnlDiverseLayout.setHorizontalGroup(
-                    pnlDiverseLayout.createParallelGroup()
-                        .addGroup(pnlDiverseLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(pnlDiverseLayout.createParallelGroup()
-                                .addComponent(pnlLBA, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(panel2, 0, 614, Short.MAX_VALUE)))
-                            .addContainerGap())
-                );
-                pnlDiverseLayout.setVerticalGroup(
-                    pnlDiverseLayout.createParallelGroup()
-                        .addGroup(pnlDiverseLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(autostartup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(66, Short.MAX_VALUE))
-                );
-            }
-            tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
-
-        }
-
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(439, Short.MAX_VALUE)
-                    .addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(tabbedPane1, GroupLayout.PREFERRED_SIZE, 637, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        contentPaneLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnCancel, btnSave});
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnSave)
-                        .addComponent(btnCancel))
-                    .addContainerGap())
-        );
-        pack();
-        setLocationRelativeTo(getOwner());
-
-        //---- btnGroupMapSite ----
-        ButtonGroup btnGroupMapSite = new ButtonGroup();
-        btnGroupMapSite.add(radioMapDefault);
-        btnGroupMapSite.add(radioMapWms);
-
-        //---- btnGroupPan ----
-        ButtonGroup btnGroupPan = new ButtonGroup();
-        btnGroupPan.add(radioNavPanByClick);
-        btnGroupPan.add(radioNavPanByDrag);
-
-        //---- btnGroupZoom ----
-        ButtonGroup btnGroupZoom = new ButtonGroup();
-        btnGroupZoom.add(radioNavZoomFromCenter);
-        btnGroupZoom.add(radioNavZoomFromCorner);
-
-        //---- btnGroupAutoShape ----
-        ButtonGroup btnGroupAutoShape = new ButtonGroup();
-        btnGroupAutoShape.add(togglePolygon);
-        btnGroupAutoShape.add(toggleEllipse);
-        btnGroupAutoShape.add(toggleImport);
-
-        //---- bindings ----
-        bindingGroup = new BindingGroup();
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("username"),
-            txtUser, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("companyid"),
-            txtCompany, BeanProperty.create("text")));
-        {
-            Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-                settingsModel1, BeanProperty.create("lbaupdate"),
-                comboLbaUpdate, BeanProperty.create("selectedItem"));
-            binding.setConverter(stringToInt1);
-            bindingGroup.addBinding(binding);
-        }
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("autoStartParm"),
-            chkAutoStartParm, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("mapSiteDefault"),
-            radioMapDefault, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("mapSiteWms"),
-            radioMapWms, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("wmsUrl"),
-            txtMapWms, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("wmsUsername"),
-            txtMapWmsUser, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("wmsPassword"),
-            txtMapWmsPassword, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("panByClick"),
-            radioNavPanByClick, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("panByDrag"),
-            radioNavPanByDrag, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("zoomFromCenter"),
-            radioNavZoomFromCenter, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("zoomFromCorner"),
-            radioNavZoomFromCorner, BeanProperty.create("selected")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("emailDisplayName"),
-            txtMailDisplayname, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("emailAddress"),
-            txtMailAddress, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("emailServer"),
-            txtMailServer, BeanProperty.create("text")));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            settingsModel1, BeanProperty.create("wmsImageFormat"),
-            comboMapWmsImg, BeanProperty.create("selectedItem")));
-        bindingGroup.bind();
+		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
+		btnCancel = new JButton();
+		btnSave = new JButton();
+		tabbedPane1 = new JTabbedPane();
+		userinfo = new JPanel();
+		lblUser = new JLabel();
+		lblCompany = new JLabel();
+		txtUser = new JTextField();
+		txtCompany = new JTextField();
+		mapsettings = new JPanel();
+		radioMapDefault = new JRadioButton();
+		radioMapWms = new JRadioButton();
+		txtMapWms = new JTextField();
+		btnMapWmsOpen = new JButton();
+		lblMapWmsUser = new JLabel();
+		lblMapWmsPassword = new JLabel();
+		txtMapWmsUser = new JTextField();
+		txtMapWmsPassword = new JPasswordField();
+		comboMapWmsImg = new JComboBox();
+		scrollWMS = new JScrollPane();
+		treeWMS = new WmsLayerTree();
+		btnMoveUp = new JButton();
+		btnMoveDown = new JButton();
+		navigation = new JPanel();
+		radioNavPanByClick = new JRadioButton();
+		radioNavPanByDrag = new JRadioButton();
+		radioNavZoomFromCenter = new JRadioButton();
+		radioNavZoomFromCorner = new JRadioButton();
+		panel4 = new JPanel();
+		lblMailDisplayname = new JLabel();
+		lblMailAddress = new JLabel();
+		lblMailServer = new JLabel();
+		txtMailDisplayname = new JTextField();
+		txtMailAddress = new JTextField();
+		txtMailServer = new JTextField();
+		pnlDiverse = new JPanel();
+		autostartup = new JPanel();
+		chkAutoStartParm = new JCheckBox();
+		lblAutoGroupDepts = new JLabel();
+		comboAutoGroupDepts = new JComboBox();
+		pnlLBA = new JPanel();
+		lblLbaUpdate = new JLabel();
+		comboLbaUpdate = new JComboBox();
+		panel2 = new JPanel();
+		togglePrivateFixed = new ToggleAddresstype();
+		togglePrivateMobile = new ToggleAddresstype();
+		toggleCompanyFixed = new ToggleAddresstype();
+		toggleCompanyMobile = new ToggleAddresstype();
+		toggleLba = new ToggleAddresstype();
+		toggleBlocklist = new ToggleAddresstype();
+		lblPrivateAdrTypes = new JLabel();
+		lblCompanyAdrtypes = new JLabel();
+		lblLbaText = new JLabel();
+		togglePolygon = new JToggleButton();
+		toggleEllipse = new JToggleButton();
+		toggleImport = new JToggleButton();
+		toggleVulnerable = new ToggleAddresstype();
+		toggleHeadOfHousehold = new ToggleAddresstype();
+		settingsModel1 = new SettingsModel();
+		stringToInt1 = new StringToInt();
+		integerToObject1 = new IntegerToObject();
+
+		//======== this ========
+		setTitle(bundle.getString("mainmenu_settings"));
+		Container contentPane = getContentPane();
+
+		//---- btnCancel ----
+		btnCancel.setText(bundle.getString("common_cancel"));
+		btnCancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnCancelActionPerformed(e);
+			}
+		});
+
+		//---- btnSave ----
+		btnSave.setText(bundle.getString("common_save"));
+		btnSave.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnSaveActionPerformed(e);
+			}
+		});
+
+		//======== tabbedPane1 ========
+		{
+
+			//======== userinfo ========
+			{
+				userinfo.setBorder(null);
+
+				//---- lblUser ----
+				lblUser.setText(bundle.getString("logon_userid"));
+
+				//---- lblCompany ----
+				lblCompany.setText(bundle.getString("logon_company"));
+
+				//---- txtUser ----
+				txtUser.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						txtUserKeyPressed(e);
+					}
+				});
+
+				GroupLayout userinfoLayout = new GroupLayout(userinfo);
+				userinfo.setLayout(userinfoLayout);
+				userinfoLayout.setHorizontalGroup(
+					userinfoLayout.createParallelGroup()
+						.addGroup(userinfoLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+								.addComponent(lblCompany, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(lblUser, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+							.addGroup(userinfoLayout.createParallelGroup()
+								.addComponent(txtCompany, GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+								.addComponent(txtUser, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))
+							.addGap(293, 293, 293))
+				);
+				userinfoLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {txtCompany, txtUser});
+				userinfoLayout.setVerticalGroup(
+					userinfoLayout.createParallelGroup()
+						.addGroup(userinfoLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(lblUser)
+								.addComponent(txtUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(lblCompany)
+								.addComponent(txtCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addContainerGap(348, Short.MAX_VALUE))
+				);
+			}
+			tabbedPane1.addTab(bundle.getString("main_pas_settings_user_heading"), userinfo);
+
+			//======== mapsettings ========
+			{
+				mapsettings.setBorder(null);
+
+				//---- radioMapDefault ----
+				radioMapDefault.setText(bundle.getString("main_pas_settings_mapsite_default"));
+				radioMapDefault.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						radioMapDefaultActionPerformed(e);
+					}
+				});
+
+				//---- radioMapWms ----
+				radioMapWms.setText(bundle.getString("main_pas_settings_mapsite_wms"));
+				radioMapWms.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						radioMapWmsActionPerformed(e);
+					}
+				});
+
+				//---- txtMapWms ----
+				txtMapWms.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						txtMapWmsKeyReleased(e);
+					}
+				});
+
+				//---- btnMapWmsOpen ----
+				btnMapWmsOpen.setText(bundle.getString("common_open"));
+				btnMapWmsOpen.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						btnMapWmsOpenActionPerformed(e);
+					}
+				});
+
+				//---- lblMapWmsUser ----
+				lblMapWmsUser.setText(bundle.getString("main_pas_settings_mapsite_wms_username"));
+
+				//---- lblMapWmsPassword ----
+				lblMapWmsPassword.setText(bundle.getString("main_pas_settings_mapsite_wms_password"));
+
+				//======== scrollWMS ========
+				{
+
+					//---- treeWMS ----
+					treeWMS.addTreeSelectionListener(new TreeSelectionListener() {
+						@Override
+						public void valueChanged(TreeSelectionEvent e) {
+							treeWMSValueChanged(e);
+						}
+					});
+					scrollWMS.setViewportView(treeWMS);
+				}
+
+				//---- btnMoveUp ----
+				btnMoveUp.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_up_32.png")));
+				btnMoveUp.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						btnMoveUpActionPerformed(e);
+					}
+				});
+
+				//---- btnMoveDown ----
+				btnMoveDown.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_down_32.png")));
+				btnMoveDown.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						btnMoveDownActionPerformed(e);
+					}
+				});
+
+				GroupLayout mapsettingsLayout = new GroupLayout(mapsettings);
+				mapsettings.setLayout(mapsettingsLayout);
+				mapsettingsLayout.setHorizontalGroup(
+					mapsettingsLayout.createParallelGroup()
+						.addGroup(GroupLayout.Alignment.TRAILING, mapsettingsLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
+									.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+									.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
+									.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 507, GroupLayout.PREFERRED_SIZE)
+									.addGap(18, 18, 18)
+									.addGroup(mapsettingsLayout.createParallelGroup()
+										.addComponent(btnMoveDown, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+										.addComponent(btnMoveUp, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)))
+								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
+									.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 463, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+									.addComponent(btnMapWmsOpen, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
+									.addGroup(mapsettingsLayout.createParallelGroup()
+										.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+										.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+											.addComponent(comboMapWmsImg, GroupLayout.Alignment.LEADING)
+											.addComponent(lblMapWmsPassword, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)))
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+									.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+										.addComponent(txtMapWmsPassword)
+										.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))))
+							.addContainerGap())
+				);
+				mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
+				mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnMoveDown, btnMoveUp});
+				mapsettingsLayout.setVerticalGroup(
+					mapsettingsLayout.createParallelGroup()
+						.addGroup(mapsettingsLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(radioMapDefault)
+								.addComponent(radioMapWms))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnMapWmsOpen))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(lblMapWmsUser)
+								.addComponent(txtMapWmsUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(lblMapWmsPassword)
+								.addComponent(txtMapWmsPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addGroup(mapsettingsLayout.createSequentialGroup()
+									.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+									.addComponent(btnMoveDown, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+								.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
+							.addContainerGap())
+				);
+				mapsettingsLayout.linkSize(SwingConstants.VERTICAL, new Component[] {btnMoveDown, btnMoveUp});
+			}
+			tabbedPane1.addTab(bundle.getString("main_pas_settings_map_heading"), mapsettings);
+
+			//======== navigation ========
+			{
+				navigation.setBorder(null);
+
+				//---- radioNavPanByClick ----
+				radioNavPanByClick.setText(bundle.getString("main_pas_settings_pan_by_click"));
+
+				//---- radioNavPanByDrag ----
+				radioNavPanByDrag.setText(bundle.getString("main_pas_settings_pan_by_drag"));
+
+				//---- radioNavZoomFromCenter ----
+				radioNavZoomFromCenter.setText(bundle.getString("main_pas_settings_zoom_from_center"));
+				radioNavZoomFromCenter.setActionCommand(bundle.getString("main_pas_settings_zoom_from_center"));
+
+				//---- radioNavZoomFromCorner ----
+				radioNavZoomFromCorner.setText(bundle.getString("main_pas_settings_zoom_from_corner"));
+
+				GroupLayout navigationLayout = new GroupLayout(navigation);
+				navigation.setLayout(navigationLayout);
+				navigationLayout.setHorizontalGroup(
+					navigationLayout.createParallelGroup()
+						.addGroup(navigationLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(navigationLayout.createParallelGroup()
+								.addComponent(radioNavPanByClick, GroupLayout.PREFERRED_SIZE, 248, GroupLayout.PREFERRED_SIZE)
+								.addComponent(radioNavZoomFromCenter, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+								.addComponent(radioNavPanByDrag, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(radioNavZoomFromCorner, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+							.addContainerGap(92, Short.MAX_VALUE))
+				);
+				navigationLayout.setVerticalGroup(
+					navigationLayout.createParallelGroup()
+						.addGroup(navigationLayout.createSequentialGroup()
+							.addGap(17, 17, 17)
+							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(radioNavPanByClick)
+								.addComponent(radioNavPanByDrag))
+							.addGap(29, 29, 29)
+							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(radioNavZoomFromCenter)
+								.addComponent(radioNavZoomFromCorner))
+							.addContainerGap(313, Short.MAX_VALUE))
+				);
+			}
+			tabbedPane1.addTab(bundle.getString("main_pas_settings_navigation_heading"), navigation);
+
+			//======== panel4 ========
+			{
+				panel4.setBorder(null);
+
+				//---- lblMailDisplayname ----
+				lblMailDisplayname.setText(bundle.getString("main_pas_settings_email_displayname"));
+
+				//---- lblMailAddress ----
+				lblMailAddress.setText(bundle.getString("main_pas_settings_email_address"));
+
+				//---- lblMailServer ----
+				lblMailServer.setText(bundle.getString("main_pas_settings_email_server"));
+
+				//---- txtMailDisplayname ----
+				txtMailDisplayname.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						txtMailDisplaynameKeyReleased(e);
+					}
+				});
+
+				//---- txtMailAddress ----
+				txtMailAddress.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						txtMailAddressKeyReleased(e);
+					}
+				});
+
+				//---- txtMailServer ----
+				txtMailServer.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						txtMailServerKeyReleased(e);
+					}
+				});
+
+				GroupLayout panel4Layout = new GroupLayout(panel4);
+				panel4.setLayout(panel4Layout);
+				panel4Layout.setHorizontalGroup(
+					panel4Layout.createParallelGroup()
+						.addGroup(panel4Layout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(panel4Layout.createParallelGroup()
+								.addComponent(lblMailServer, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+								.addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+								.addComponent(lblMailDisplayname, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+								.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
+								.addGroup(panel4Layout.createParallelGroup()
+									.addComponent(txtMailServer)
+									.addComponent(txtMailAddress)))
+							.addGap(222, 222, 222))
+				);
+				panel4Layout.setVerticalGroup(
+					panel4Layout.createParallelGroup()
+						.addGroup(panel4Layout.createSequentialGroup()
+							.addGap(26, 26, 26)
+							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblMailDisplayname))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(txtMailAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblMailAddress))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblMailServer))
+							.addContainerGap(307, Short.MAX_VALUE))
+				);
+			}
+			tabbedPane1.addTab(bundle.getString("main_pas_settings_email_heading"), panel4);
+
+			//======== pnlDiverse ========
+			{
+
+				//======== autostartup ========
+				{
+					autostartup.setBorder(new TitledBorder("Auto startup"));
+
+					//---- chkAutoStartParm ----
+					chkAutoStartParm.setText(bundle.getString("mainmenu_parm"));
+
+					//---- lblAutoGroupDepts ----
+					lblAutoGroupDepts.setText(bundle.getString("main_pas_settings_auto_dept_category"));
+					lblAutoGroupDepts.setPreferredSize(new Dimension(180, 23));
+
+					//---- comboAutoGroupDepts ----
+					comboAutoGroupDepts.setPreferredSize(new Dimension(130, 20));
+
+					GroupLayout autostartupLayout = new GroupLayout(autostartup);
+					autostartup.setLayout(autostartupLayout);
+					autostartupLayout.setHorizontalGroup(
+						autostartupLayout.createParallelGroup()
+							.addGroup(autostartupLayout.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(chkAutoStartParm, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)
+								.addGap(18, 18, 18)
+								.addComponent(lblAutoGroupDepts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGap(4, 4, 4)
+								.addComponent(comboAutoGroupDepts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(69, Short.MAX_VALUE))
+					);
+					autostartupLayout.setVerticalGroup(
+						autostartupLayout.createParallelGroup()
+							.addGroup(autostartupLayout.createSequentialGroup()
+								.addGroup(autostartupLayout.createParallelGroup()
+									.addComponent(chkAutoStartParm)
+									.addComponent(lblAutoGroupDepts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGroup(autostartupLayout.createSequentialGroup()
+										.addGap(1, 1, 1)
+										.addComponent(comboAutoGroupDepts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					);
+				}
+
+				//======== pnlLBA ========
+				{
+					pnlLBA.setBorder(new TitledBorder("LBA"));
+
+					//---- lblLbaUpdate ----
+					lblLbaUpdate.setText(bundle.getString("main_pas_settings_auto_lba_update"));
+
+					//---- comboLbaUpdate ----
+					comboLbaUpdate.addItemListener(new ItemListener() {
+						@Override
+						public void itemStateChanged(ItemEvent e) {
+							comboLbaUpdateItemStateChanged(e);
+						}
+					});
+
+					GroupLayout pnlLBALayout = new GroupLayout(pnlLBA);
+					pnlLBA.setLayout(pnlLBALayout);
+					pnlLBALayout.setHorizontalGroup(
+						pnlLBALayout.createParallelGroup()
+							.addGroup(pnlLBALayout.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(251, Short.MAX_VALUE))
+					);
+					pnlLBALayout.setVerticalGroup(
+						pnlLBALayout.createParallelGroup()
+							.addGroup(pnlLBALayout.createSequentialGroup()
+								.addGroup(pnlLBALayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+									.addComponent(lblLbaUpdate)
+									.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					);
+				}
+
+				//======== panel2 ========
+				{
+					panel2.setBorder(new TitledBorder(bundle.getString("main_pas_settings_misc_auto_channel_select")));
+
+					//---- togglePrivateFixed ----
+					togglePrivateFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
+					togglePrivateFixed.setRolloverEnabled(false);
+					togglePrivateFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_private_tooltip"));
+
+					//---- togglePrivateMobile ----
+					togglePrivateMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
+					togglePrivateMobile.setRolloverEnabled(false);
+					togglePrivateMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_private_tooltip"));
+
+					//---- toggleCompanyFixed ----
+					toggleCompanyFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
+					toggleCompanyFixed.setRolloverEnabled(false);
+					toggleCompanyFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_company_tooltip"));
+
+					//---- toggleCompanyMobile ----
+					toggleCompanyMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
+					toggleCompanyMobile.setRolloverEnabled(false);
+					toggleCompanyMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_company_tooltip"));
+
+					//---- toggleLba ----
+					toggleLba.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/lba_24.png")));
+					toggleLba.setRolloverEnabled(false);
+					toggleLba.setToolTipText(bundle.getString("main_sending_adr_btn_lba_text_tooltip"));
+					toggleLba.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleLbaActionPerformed(e);
+						}
+					});
+
+					//---- toggleBlocklist ----
+					toggleBlocklist.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/flag_red_24.gif")));
+					toggleBlocklist.setRolloverEnabled(false);
+					toggleBlocklist.setToolTipText(bundle.getString("main_sending_adr_btn_company_blocklist_tooltip"));
+					toggleBlocklist.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleBlocklistActionPerformed(e);
+						}
+					});
+
+					//---- lblPrivateAdrTypes ----
+					lblPrivateAdrTypes.setVerticalAlignment(SwingConstants.TOP);
+
+					//---- lblCompanyAdrtypes ----
+					lblCompanyAdrtypes.setVerticalAlignment(SwingConstants.TOP);
+
+					//---- togglePolygon ----
+					togglePolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
+					togglePolygon.setSelected(true);
+					togglePolygon.setToolTipText(bundle.getString("main_sending_type_polygon"));
+					togglePolygon.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							togglePolygonActionPerformed(e);
+						}
+					});
+
+					//---- toggleEllipse ----
+					toggleEllipse.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_ellipse_24.png")));
+					toggleEllipse.setToolTipText(bundle.getString("main_sending_type_ellipse"));
+					toggleEllipse.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleEllipseActionPerformed(e);
+						}
+					});
+
+					//---- toggleImport ----
+					toggleImport.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/folder2_24.png")));
+					toggleImport.setToolTipText(bundle.getString("mainmenu_file_import"));
+					toggleImport.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleImportActionPerformed(e);
+						}
+					});
+
+					//---- toggleVulnerable ----
+					toggleVulnerable.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/bandaid_24.png")));
+					toggleVulnerable.setToolTipText(bundle.getString("main_sending_adr_btn_vulnerable_citizens_tooltip"));
+					toggleVulnerable.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleVulnerableActionPerformed(e);
+						}
+					});
+
+					//---- toggleHeadOfHousehold ----
+					toggleHeadOfHousehold.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/HeadOfHousehold_24.png")));
+					toggleHeadOfHousehold.setToolTipText(bundle.getString("toggleHeadOfHousehold.toolTipText"));
+					toggleHeadOfHousehold.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleHeadOfHouseholdActionPerformed(e);
+						}
+					});
+
+					GroupLayout panel2Layout = new GroupLayout(panel2);
+					panel2.setLayout(panel2Layout);
+					panel2Layout.setHorizontalGroup(
+						panel2Layout.createParallelGroup()
+							.addGroup(panel2Layout.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+									.addGroup(panel2Layout.createSequentialGroup()
+										.addGroup(panel2Layout.createParallelGroup()
+											.addGroup(panel2Layout.createSequentialGroup()
+												.addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblPrivateAdrTypes, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(panel2Layout.createParallelGroup()
+											.addGroup(panel2Layout.createSequentialGroup()
+												.addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+												.addGap(18, 18, 18)
+												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(toggleVulnerable, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(8, 8, 8)
+												.addComponent(toggleHeadOfHousehold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
+										.addGap(18, 18, 18)
+										.addGroup(panel2Layout.createParallelGroup()
+											.addComponent(lblLbaText, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+											.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)))
+									.addGroup(panel2Layout.createSequentialGroup()
+										.addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)))
+								.addContainerGap())
+					);
+					panel2Layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {toggleBlocklist, toggleCompanyFixed, toggleCompanyMobile, toggleLba, togglePrivateFixed, togglePrivateMobile, toggleVulnerable});
+					panel2Layout.setVerticalGroup(
+						panel2Layout.createParallelGroup()
+							.addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(togglePolygon)
+									.addComponent(toggleEllipse)
+									.addComponent(toggleImport))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(panel2Layout.createParallelGroup()
+									.addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(toggleCompanyMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(togglePrivateFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(togglePrivateMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(toggleCompanyFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(toggleHeadOfHousehold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(toggleLba, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(panel2Layout.createParallelGroup()
+									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+										.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+										.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
+								.addContainerGap())
+					);
+				}
+
+				GroupLayout pnlDiverseLayout = new GroupLayout(pnlDiverse);
+				pnlDiverse.setLayout(pnlDiverseLayout);
+				pnlDiverseLayout.setHorizontalGroup(
+					pnlDiverseLayout.createParallelGroup()
+						.addGroup(pnlDiverseLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(pnlDiverseLayout.createParallelGroup()
+								.addComponent(pnlLBA, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+									.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(panel2, 0, 614, Short.MAX_VALUE)))
+							.addContainerGap())
+				);
+				pnlDiverseLayout.setVerticalGroup(
+					pnlDiverseLayout.createParallelGroup()
+						.addGroup(pnlDiverseLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(autostartup, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+							.addGap(18, 18, 18)
+							.addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18, 18, 18)
+							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(67, Short.MAX_VALUE))
+				);
+			}
+			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
+		}
+
+		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+		contentPane.setLayout(contentPaneLayout);
+		contentPaneLayout.setHorizontalGroup(
+			contentPaneLayout.createParallelGroup()
+				.addGroup(contentPaneLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(contentPaneLayout.createParallelGroup()
+						.addGroup(contentPaneLayout.createSequentialGroup()
+							.addGap(0, 0, Short.MAX_VALUE)
+							.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
+						.addGroup(contentPaneLayout.createSequentialGroup()
+							.addComponent(tabbedPane1, GroupLayout.PREFERRED_SIZE, 637, GroupLayout.PREFERRED_SIZE)
+							.addGap(0, 0, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		contentPaneLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnCancel, btnSave});
+		contentPaneLayout.setVerticalGroup(
+			contentPaneLayout.createParallelGroup()
+				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(tabbedPane1)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(btnSave)
+						.addComponent(btnCancel))
+					.addContainerGap())
+		);
+		pack();
+		setLocationRelativeTo(getOwner());
+
+		//---- btnGroupMapSite ----
+		ButtonGroup btnGroupMapSite = new ButtonGroup();
+		btnGroupMapSite.add(radioMapDefault);
+		btnGroupMapSite.add(radioMapWms);
+
+		//---- btnGroupPan ----
+		ButtonGroup btnGroupPan = new ButtonGroup();
+		btnGroupPan.add(radioNavPanByClick);
+		btnGroupPan.add(radioNavPanByDrag);
+
+		//---- btnGroupZoom ----
+		ButtonGroup btnGroupZoom = new ButtonGroup();
+		btnGroupZoom.add(radioNavZoomFromCenter);
+		btnGroupZoom.add(radioNavZoomFromCorner);
+
+		//---- btnGroupAutoShape ----
+		ButtonGroup btnGroupAutoShape = new ButtonGroup();
+		btnGroupAutoShape.add(togglePolygon);
+		btnGroupAutoShape.add(toggleEllipse);
+		btnGroupAutoShape.add(toggleImport);
+
+		//---- bindings ----
+		bindingGroup = new BindingGroup();
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("username"),
+			txtUser, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("companyid"),
+			txtCompany, BeanProperty.create("text")));
+		{
+			Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+				settingsModel1, BeanProperty.create("lbaupdate"),
+				comboLbaUpdate, BeanProperty.create("selectedItem"));
+			binding.setConverter(stringToInt1);
+			bindingGroup.addBinding(binding);
+		}
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("autoStartParm"),
+			chkAutoStartParm, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("mapSiteDefault"),
+			radioMapDefault, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("mapSiteWms"),
+			radioMapWms, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsUrl"),
+			txtMapWms, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsUsername"),
+			txtMapWmsUser, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsPassword"),
+			txtMapWmsPassword, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("panByClick"),
+			radioNavPanByClick, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("panByDrag"),
+			radioNavPanByDrag, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("zoomFromCenter"),
+			radioNavZoomFromCenter, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("zoomFromCorner"),
+			radioNavZoomFromCorner, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailDisplayName"),
+			txtMailDisplayname, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailAddress"),
+			txtMailAddress, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailServer"),
+			txtMailServer, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsImageFormat"),
+			comboMapWmsImg, BeanProperty.create("selectedItem")));
+		{
+			Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+				settingsModel1, BeanProperty.create("deptCategory"),
+				comboAutoGroupDepts, BeanProperty.create("selectedItem"));
+			binding.setConverter(integerToObject1);
+			bindingGroup.addBinding(binding);
+		}
+		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JButton btnCancel;
-    private JButton btnSave;
-    private JTabbedPane tabbedPane1;
-    private JPanel userinfo;
-    private JLabel lblUser;
-    private JLabel lblCompany;
-    private JTextField txtUser;
-    private JTextField txtCompany;
-    private JPanel mapsettings;
-    private JRadioButton radioMapDefault;
-    private JRadioButton radioMapWms;
-    private JTextField txtMapWms;
-    private JButton btnMapWmsOpen;
-    private JLabel lblMapWmsUser;
-    private JLabel lblMapWmsPassword;
-    private JTextField txtMapWmsUser;
-    private JPasswordField txtMapWmsPassword;
-    private JComboBox comboMapWmsImg;
-    private JScrollPane scrollWMS;
-    private WmsLayerTree treeWMS;
-    private JButton btnMoveUp;
-    private JButton btnMoveDown;
-    private JPanel navigation;
-    private JRadioButton radioNavPanByClick;
-    private JRadioButton radioNavPanByDrag;
-    private JRadioButton radioNavZoomFromCenter;
-    private JRadioButton radioNavZoomFromCorner;
-    private JPanel panel4;
-    private JLabel lblMailDisplayname;
-    private JLabel lblMailAddress;
-    private JLabel lblMailServer;
-    private JTextField txtMailDisplayname;
-    private JTextField txtMailAddress;
-    private JTextField txtMailServer;
-    private JPanel pnlDiverse;
-    private JPanel autostartup;
-    private JCheckBox chkAutoStartParm;
-    private JPanel pnlLBA;
-    private JLabel lblLbaUpdate;
-    private JComboBox comboLbaUpdate;
-    private JPanel panel2;
-    private ToggleAddresstype togglePrivateFixed;
-    private ToggleAddresstype togglePrivateMobile;
-    private ToggleAddresstype toggleCompanyFixed;
-    private ToggleAddresstype toggleCompanyMobile;
-    private ToggleAddresstype toggleLba;
-    private ToggleAddresstype toggleBlocklist;
-    private JLabel lblPrivateAdrTypes;
-    private JLabel lblCompanyAdrtypes;
-    private JLabel lblLbaText;
-    private JToggleButton togglePolygon;
-    private JToggleButton toggleEllipse;
-    private JToggleButton toggleImport;
-    private ToggleAddresstype toggleVulnerable;
-    private ToggleAddresstype toggleHeadOfHousehold;
-    public SettingsModel settingsModel1;
-    private StringToInt stringToInt1;
-    private BindingGroup bindingGroup;
+	private JButton btnCancel;
+	private JButton btnSave;
+	private JTabbedPane tabbedPane1;
+	private JPanel userinfo;
+	private JLabel lblUser;
+	private JLabel lblCompany;
+	private JTextField txtUser;
+	private JTextField txtCompany;
+	private JPanel mapsettings;
+	private JRadioButton radioMapDefault;
+	private JRadioButton radioMapWms;
+	private JTextField txtMapWms;
+	private JButton btnMapWmsOpen;
+	private JLabel lblMapWmsUser;
+	private JLabel lblMapWmsPassword;
+	private JTextField txtMapWmsUser;
+	private JPasswordField txtMapWmsPassword;
+	private JComboBox comboMapWmsImg;
+	private JScrollPane scrollWMS;
+	private WmsLayerTree treeWMS;
+	private JButton btnMoveUp;
+	private JButton btnMoveDown;
+	private JPanel navigation;
+	private JRadioButton radioNavPanByClick;
+	private JRadioButton radioNavPanByDrag;
+	private JRadioButton radioNavZoomFromCenter;
+	private JRadioButton radioNavZoomFromCorner;
+	private JPanel panel4;
+	private JLabel lblMailDisplayname;
+	private JLabel lblMailAddress;
+	private JLabel lblMailServer;
+	private JTextField txtMailDisplayname;
+	private JTextField txtMailAddress;
+	private JTextField txtMailServer;
+	private JPanel pnlDiverse;
+	private JPanel autostartup;
+	private JCheckBox chkAutoStartParm;
+	private JLabel lblAutoGroupDepts;
+	private JComboBox comboAutoGroupDepts;
+	private JPanel pnlLBA;
+	private JLabel lblLbaUpdate;
+	private JComboBox comboLbaUpdate;
+	private JPanel panel2;
+	private ToggleAddresstype togglePrivateFixed;
+	private ToggleAddresstype togglePrivateMobile;
+	private ToggleAddresstype toggleCompanyFixed;
+	private ToggleAddresstype toggleCompanyMobile;
+	private ToggleAddresstype toggleLba;
+	private ToggleAddresstype toggleBlocklist;
+	private JLabel lblPrivateAdrTypes;
+	private JLabel lblCompanyAdrtypes;
+	private JLabel lblLbaText;
+	private JToggleButton togglePolygon;
+	private JToggleButton toggleEllipse;
+	private JToggleButton toggleImport;
+	private ToggleAddresstype toggleVulnerable;
+	private ToggleAddresstype toggleHeadOfHousehold;
+	public SettingsModel settingsModel1;
+	private StringToInt stringToInt1;
+	private IntegerToObject integerToObject1;
+	private BindingGroup bindingGroup;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

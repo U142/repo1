@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 
 public abstract class CheckItemList extends ArrayList<CheckItem> implements ItemListener, ActionListener {
@@ -55,10 +56,42 @@ public abstract class CheckItemList extends ArrayList<CheckItem> implements Item
 	
 	private void add_items_to_menu() {
 		m_group = new ButtonGroup();
+		int deptGroupCategory = PAS.get_pas().get_settings().getDeptCategory();
+		HashMap<String, JMenu> depts = new HashMap<String, JMenu>();
+
 		for(int i=0; i < size(); i++)
 		{
-			CheckItem current = (CheckItem)get(i);
+			/*CheckItem current = (CheckItem)get(i);
 			m_parent.add(current);
+			get_group().add(current);
+			current.setActionCommand(get_actioncommand());
+			current.addItemListener(this);
+			if(current.getActionListeners().length == 0)
+				current.addActionListener(this);*/
+			
+			CheckItem current = (CheckItem)get(i);
+			//1 means alphabetically categorize dept list
+			if(deptGroupCategory==1)
+			{
+				//alphabetically group department list
+				String key = (""+current.getText().charAt(0)).intern();
+				if(!depts.containsKey(key))
+				{
+					JMenu menu = new JMenu(key);
+					depts.put(key, menu);
+					m_parent.add(menu);
+					if(current.isSelected())
+					{
+						menu.setSelected(true);
+					}
+				}
+				depts.get(key).add(current);
+			}
+			else{
+				//no grouping is required show complete list stright away
+				m_parent.add(current);
+			}
+
 			get_group().add(current);
 			current.setActionCommand(get_actioncommand());
 			current.addItemListener(this);

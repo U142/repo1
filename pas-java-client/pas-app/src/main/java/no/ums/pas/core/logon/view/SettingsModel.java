@@ -46,6 +46,9 @@ public class SettingsModel extends AbstractBean {
 	
 	private int n_lbaupdate_selecteditem = -1;
 	
+	private long addressTypes;
+	private int deptCategory;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -231,6 +234,17 @@ public class SettingsModel extends AbstractBean {
 		this.oNewSendingAutoShape = oNewSendingAutoShape;
 	}
 	
-	
+	public long getAddressTypes() {
+		return addressTypes;
+	}
+	public void setAddressTypes(long addressTypes) {
+		this.addressTypes = addressTypes;
+	}
+	public int getDeptCategory() {
+		return deptCategory;
+	}
+	public void setDeptCategory(int deptCategory) {
+		this.deptCategory = deptCategory;
+	}
 
 }

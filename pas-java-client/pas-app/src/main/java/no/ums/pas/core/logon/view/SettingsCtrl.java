@@ -40,6 +40,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 
         initializeGui(settings, mailaccount, userinfo);
     	dlg.initValues();
+    	dlg.populateDeptCategory(settings.getDeptCategory());
     	dlg.setLocationRelativeTo(parent);
     	dlg.setVisible(true);
     }
@@ -122,7 +123,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     	dlg.getToggleLba().setVisible(b_enable_lba);
     	dlg.getToggleVulnerable().setVisible(b_enable_vulnerable);
     	dlg.getToggleHeadOfHousehold().setVisible(b_enable_headofhousehold);
-    	
+
     }
     
 	@Override
@@ -159,6 +160,13 @@ public class SettingsCtrl implements ISettingsUpdate {
 		s.setPanByDrag(model.getPanByDrag());
 		s.setZoomFromCenter(model.getZoomFromCenter());
 		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
+		try{
+			s.setDeptCategory((model.getDeptCategory()));
+		} catch(Exception e)	{
+
+			log.error("DeptGroupCategory exception",e);
+		}
+		s.setAddressTypes(model.getAddressTypes());
 		s.setSelectedWmsFormat(model.getWmsImageFormat());
 		s.setN_newsending_autochannel(model.getNewSendingAutoChannel());
 		s.setN_autoselect_shapetype(model.getNewSendingAutoShape());

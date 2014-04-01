@@ -43,6 +43,8 @@ public class Settings {
 	List<Object> messagelib_exploded_nodes;
 	private long n_newsending_autochannel = 0;
 	private int n_autoselect_shapetype = 0;
+	private long addressTypes;
+	private int deptCategory;
 	
 	public Settings() {
 		username = "";
@@ -125,6 +127,19 @@ public class Settings {
 		rect_messagelib_dlg = new Rectangle(0,0,0,0);
 		messagelib_exploded_nodes = null;
 
+	}
+	
+	public long getAddressTypes() {
+		return addressTypes;
+	}
+	public void setAddressTypes(long addressTypes) {
+		this.addressTypes = addressTypes;
+	}
+	public int getDeptCategory() {
+		return deptCategory;
+	}
+	public void setDeptCategory(int deptCategory) {
+		this.deptCategory = deptCategory;
 	}
 	
 	public long getN_newsending_autochannel() {

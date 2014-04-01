@@ -275,7 +275,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_settings.setWmsSite(ui.getSzWmsSite());
 		//m_settings.setXpos(ui.getLWinposX());
 		//m_settings.setYpos(ui.getLWinposY());
-		
+		m_settings.setDeptCategory(ui.getLDeptcategory());
+		m_settings.setAddressTypes(ui.getLAddresstypes());
+
 	}
 
 	
