@@ -35,20 +35,26 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -91,7 +97,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public final ButtonGroup group_fixedcompbtn = new ButtonGroup();
 	protected final ButtonGroup [] groups_arr = new ButtonGroup [] { group_smsprivbtn, group_fixedprivbtn, group_smscompbtn, group_fixedcompbtn };
 
-	public final JPopupMenu menu_municipals = new JPopupMenu();
+//	public final JPopupMenu menu_municipals = new JPopupMenu();
+	public final MunicipalJPopupMenu menu_municipals = new MunicipalJPopupMenu(PAS.get_pas());
 	
 	
 	SendObject m_parent;
@@ -853,6 +860,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(c.getClass().equals(MunicipalCheckbox.class))
 				((MunicipalCheckbox)c).setSelected(false);
 		}
+		
+		Component [] municipalMenus = menu_municipals.getComponents();
+		for(int i=0; i < municipalMenus.length; i++)
+		{
+			Component c = municipalMenus[i];
+			if(c.getClass().equals(MunicipalCheckbox.class))
+				((MunicipalCheckbox)c).setSelected(false);
+		}
 	}
 	private void set_sendingicons() {
 		switch(get_parent().get_sendproperties().get_sendingtype()) {
@@ -1230,16 +1245,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		c.setPreferredSize(new Dimension(n_width, n_height));		
 	}
 	
-	protected void add_municipals(final AbstractButton btn, final JPopupMenu pop, String sz_label)
+	protected void add_municipals(final AbstractButton btn, final MunicipalJPopupMenu pop, String sz_label)
 	{
 		//StdTextLabel lbl = new StdTextLabel(sz_label, 14, true);
-		JLabel lbl = new JLabel("<html><b>"+sz_label+"</b></html>");
-		lbl.setOpaque(true);
-		lbl.setBackground(SystemColor.controlDkShadow);
-		lbl.setForeground(SystemColor.controlHighlight);
-		lbl.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		
-		pop.add(lbl);
+//		JLabel lbl = new JLabel("<html><b>"+sz_label+"</b></html>");
+//		lbl.setOpaque(true);
+//		lbl.setBackground(SystemColor.controlDkShadow);
+//		lbl.setForeground(SystemColor.controlHighlight);
+//		lbl.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+//		
+//		pop.add(lbl);
 		SendPropertiesMunicipal mun;
 		MunicipalCheckbox chk;
 		DeptInfo dept = PAS.get_pas().get_userinfo().get_current_department();
@@ -1999,4 +2014,107 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		Color setColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
 		m_btn_color.setBg(setColor);
 	}
+	
+	class MunicipalJPopupMenu extends JPopupMenu implements ActionListener
+	{
+		private static final long	serialVersionUID	= 1;
+		private JPanel				panelTopBar			= new JPanel();
+		private JLabel 				heading 			= null;
+		private JButton				close				= null;
+		private JPanel				panelMenus			= new JPanel();
+		private JScrollPane			scroll				= null;
+		private JFrame				jframe				= null;
+
+		public MunicipalJPopupMenu(JFrame jframe) {
+			super();
+			this.jframe = jframe;
+			this.setLayout(new BorderLayout());
+			GridLayout gridLayout = new GridLayout(0, 2);
+			panelMenus.setLayout(gridLayout);
+			panelMenus.setBackground(UIManager.getColor("MenuItem.background"));
+			//		panelMenus.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+			init(jframe);
+		}
+		
+		private void init(JFrame jframe) {
+			super.removeAll();
+			scroll = new JScrollPane();
+			scroll.setViewportView(panelMenus);
+			scroll.setBorder(null);
+			scroll.setMinimumSize(new Dimension(50, 40));
+
+			scroll.setMaximumSize(new Dimension(scroll.getMaximumSize().width, 
+							this.getToolkit().getScreenSize().height
+			- this.getToolkit().getScreenInsets(jframe.getGraphicsConfiguration()).top
+			- this.getToolkit().getScreenInsets(jframe.getGraphicsConfiguration()).bottom - 10));
+			
+			heading = new JLabel("<html><b>"+Localization.l("main_sending_type_municipal_select")+"</b></html>");
+			heading.setOpaque(true);
+			heading.setBackground(SystemColor.controlDkShadow);
+			heading.setForeground(SystemColor.controlHighlight);
+			heading.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			close = new JButton(ImageLoader.load_icon("delete_16.png"));
+			close.setToolTipText(Localization.l("common_close"));
+			close.addActionListener(this);
+			panelTopBar.setLayout(new BorderLayout());
+			panelTopBar.add(heading,BorderLayout.CENTER);
+			panelTopBar.add(close,BorderLayout.EAST);
+			
+			super.add(panelTopBar, BorderLayout.NORTH);
+			super.add(scroll, BorderLayout.CENTER);
+		}
+		
+		public void show(Component invoker, int x, int y) {
+			init(jframe);
+			panelMenus.validate();
+			int maxsize = scroll.getMaximumSize().height;
+			int realsize = panelMenus.getPreferredSize().height;
+
+			int sizescroll = 0;
+
+			if (maxsize < realsize) {
+				sizescroll = scroll.getVerticalScrollBar().getPreferredSize().width;
+			}
+			
+			scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width + sizescroll + 20, 
+
+					scroll.getPreferredSize().height));
+			this.pack();
+//			this.setInvoker(invoker);
+			if (sizescroll != 0) {
+				//Set popup size only if scrollbar is visible
+				this.setPopupSize(new Dimension(scroll.getPreferredSize().width + 20, 
+
+									scroll.getMaximumSize().height - 20));
+			}
+			//        this.setMaximumSize(scroll.getMaximumSize());
+//			Point invokerOrigin = invoker.getLocationOnScreen();
+//			this.setLocation((int) invokerOrigin.getX() + x, (int) invokerOrigin.getY() + y);
+			this.setLocation(x, y);
+			this.setVisible(true);
+		}
+		
+		public void hidemenu() {
+			if (this.isVisible()) {
+				this.setVisible(false);
+			}
+		}
+
+		public void add(MunicipalCheckbox menuItem) {
+			//		menuItem.setMargin(new Insets(0, 20, 0 , 0));
+			if (menuItem == null) {
+				return;
+			}
+			panelMenus.add(menuItem);
+		}
+		
+		public Component[] getComponents() {
+			return panelMenus.getComponents();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			hidemenu();
+		}
+	}	
 }
