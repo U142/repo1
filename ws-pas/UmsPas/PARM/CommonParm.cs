@@ -112,6 +112,9 @@ namespace com.ums.UmsParm
         public int l_lba_update_percent;
         public long l_sending_autochannel;
         public int l_sending_autoshape;
+
+        public long l_addresstypes;
+        public int l_deptcategory;
     }
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
