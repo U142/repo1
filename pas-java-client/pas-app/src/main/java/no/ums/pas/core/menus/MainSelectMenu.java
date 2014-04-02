@@ -95,6 +95,12 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			init();
 		}
 		
+		public void reInitializeDepartmentMenus()
+		{
+			m_menu_departments.removeAll();
+			initDeptartmentMenu();
+		}
+		
 		public void initDeptartmentMenu() {
 			m_item_departments_check = new CheckItem[PAS.get_pas().get_userinfo().get_departments().size()];
 			int iCount = -1;

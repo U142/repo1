@@ -199,6 +199,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 			protected Object doInBackground() throws Exception {
 				new WSSaveUI(null).runNonThreaded();
 				new XmlWriter().saveSettings(true);
+				PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().reInitializeDepartmentMenus();
 				return "OK";
 			}
 
