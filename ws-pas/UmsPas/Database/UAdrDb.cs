@@ -184,7 +184,8 @@ namespace com.ums.PAS.Database
                 "FROM "+
                 "DEPARTMENT_X_MUNICIPAL DXM LEFT OUTER JOIN MUNICIPAL MU ON DXM.l_municipalid=MU.l_municipalid " +
                 "WHERE " +
-                "DXM.l_deptpk={0}",
+                "DXM.l_deptpk={0} " +
+                "ORDER BY MU.sz_name",
                 n_deptpk);
             OdbcDataReader rs = null;
             try
