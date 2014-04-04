@@ -149,6 +149,8 @@ public class SettingsCtrl implements ISettingsUpdate {
 		
 		no.ums.pas.core.logon.Settings s = Variables.getSettings();
 		MailAccount ma = PAS.get_pas().get_userinfo().get_mailaccount();
+		final int oldDepartmentCategory = s.getDeptCategory();
+		final int newDepartmentCategory = model.getDeptCategory();
 		s.setUsername(model.getUsername());
 		s.setCompany(model.getCompanyid());
 		s.setParm(model.getAutoStartParm());
@@ -199,7 +201,8 @@ public class SettingsCtrl implements ISettingsUpdate {
 			protected Object doInBackground() throws Exception {
 				new WSSaveUI(null).runNonThreaded();
 				new XmlWriter().saveSettings(true);
-				PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().reInitializeDepartmentMenus();
+				if(oldDepartmentCategory != newDepartmentCategory)
+					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().reInitializeDepartmentMenus();
 				return "OK";
 			}
 

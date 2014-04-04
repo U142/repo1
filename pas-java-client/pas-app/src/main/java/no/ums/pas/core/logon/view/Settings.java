@@ -73,13 +73,10 @@ public class Settings extends JFrame {
 		comboLbaUpdate.addItem(new Integer(40));
 		comboLbaUpdate.addItem(new Integer(50));
 		
-		DeptCategory catg1 = new DeptCategory(0, "None");
-		DeptCategory catg2 = new DeptCategory(1, "Alphabetically");
-		DeptCategory catg3 = new DeptCategory(2, "GAS Categories");
+		DeptCategory catg1 = new DeptCategory(0, Localization.l("main_pas_settings_dept_category_none"));
+		DeptCategory catg2 = new DeptCategory(1, Localization.l("main_pas_settings_dept_category_alphabetically"));
 		comboAutoGroupDepts.addItem(catg1);
 		comboAutoGroupDepts.addItem(catg2);
-//		comboAutoGroupDepts.addItem(catg3);
-
 
 		sot.setCallback(new ActionListener() {
 			@Override
