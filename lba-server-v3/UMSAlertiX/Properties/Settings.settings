@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UMSAlertiX_AlertiX3_AlertixWsApiService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://148.123.47.27/ax/alertapi</Value>
+      <Value Profile="(Default)">https://148.123.47.27/ax/alertapi/</Value>
     </Setting>
   </Settings>
 </SettingsFile>

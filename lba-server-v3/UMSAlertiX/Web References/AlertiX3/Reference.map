@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Results>
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="file:///C:/Development/alertix3/AlertixWsApi.wsdl" filename="AlertixWsApi.wsdl" />
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="file:///C:/Development/alertix3/alertapi.wsdl" filename="AlertixWsApiService.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="file:///S:/Projects/pas/lba-server-v3/wsdl/alertapi.wsdl" filename="AlertixWsApiService.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://148.123.47.27/ax/alertapi/?wsdl=AlertixWsApi.wsdl" filename="AlertixWsApi.wsdl" />
   </Results>
 </DiscoveryClientResultsFile>
