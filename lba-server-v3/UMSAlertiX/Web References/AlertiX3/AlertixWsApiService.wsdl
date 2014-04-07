@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wsdl:definitions xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.wsapi.api.alertix.cellvision/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://wsapi.api.alertix.cellvision/" name="AlertixWsApiService" targetNamespace="http://impl.wsapi.api.alertix.cellvision/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsdl:import namespace="http://wsapi.api.alertix.cellvision/" location="AlertixWsApi.wsdl" />
+  <wsdl:import namespace="http://wsapi.api.alertix.cellvision/" location="https://148.123.47.27/ax/alertapi/?wsdl=AlertixWsApi.wsdl" />
   <wsdl:types />
   <wsdl:binding name="AlertixWsApiServiceSoapBinding" type="ns1:AlertixWsApi">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="deleteSubscriberList">
-      <soap:operation soapAction="" style="document" />
-      <wsdl:input name="deleteSubscriberList">
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output name="deleteSubscriberListResponse">
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getAlertSubscribers">
       <soap:operation soapAction="" style="document" />
       <wsdl:input name="getAlertSubscribers">
@@ -31,21 +22,75 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getAlertSubscribersEx">
-      <soap:operation soapAction="" style="document" />
-      <wsdl:input name="getAlertSubscribersEx">
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output name="getAlertSubscribersExResponse">
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteAlerts">
       <soap:operation soapAction="" style="document" />
       <wsdl:input name="deleteAlerts">
         <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="deleteAlertsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllTargets">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAllTargets">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAllTargetsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSubscriberList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createSubscriberList">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createSubscriberListResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTarget">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getTarget">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getTargetResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelAlert">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="cancelAlert">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="cancelAlertResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscriberList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteSubscriberList">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteSubscriberListResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="verifyAlertPeriod">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="verifyAlertPeriod">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="verifyAlertPeriodResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertSubscribersEx">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getAlertSubscribersEx">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAlertSubscribersExResponse">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -76,15 +121,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getAllTargets">
-      <soap:operation soapAction="" style="document" />
-      <wsdl:input name="getAllTargets">
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output name="getAllTargetsResponse">
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getSubscriberLists">
       <soap:operation soapAction="" style="document" />
       <wsdl:input name="getSubscriberLists">
@@ -94,21 +130,21 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createSubscriberList">
+    <wsdl:operation name="updateTarget">
       <soap:operation soapAction="" style="document" />
-      <wsdl:input name="createSubscriberList">
+      <wsdl:input name="updateTarget">
         <soap:body use="literal" />
       </wsdl:input>
-      <wsdl:output name="createSubscriberListResponse">
+      <wsdl:output name="updateTargetResponse">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTarget">
+    <wsdl:operation name="getSmsInbox">
       <soap:operation soapAction="" style="document" />
-      <wsdl:input name="getTarget">
+      <wsdl:input name="getSmsInbox">
         <soap:body use="literal" />
       </wsdl:input>
-      <wsdl:output name="getTargetResponse">
+      <wsdl:output name="getSmsInboxResponse">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -247,10 +283,19 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateAlert">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateAlert">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateAlertResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="AlertixWsApiService">
     <wsdl:port name="AlertixWsApiPort" binding="tns:AlertixWsApiServiceSoapBinding">
-      <soap:address location="https://148.123.47.27/ax/alertapi" />
+      <soap:address location="https://148.123.47.27/ax/alertapi/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
