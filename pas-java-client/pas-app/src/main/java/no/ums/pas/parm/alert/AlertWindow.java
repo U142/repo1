@@ -77,6 +77,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
 			m_alert.getPanelToolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
+			m_alert.getPanelToolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes());
             // Please don't use the code below as an example off how things should be done.
             // Prefer initing a model with the desired value instead, that the UI should listen to.
             switch (Variables.getSettings().getN_autoselect_shapetype()) {
@@ -137,7 +138,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 
 				
 		setLayout(new BorderLayout());
-		int n_width = 770, n_height = 550;
+		int n_width = 770, n_height = 600;
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		
 		setBounds(d.width, d.height, n_width, n_height);
@@ -264,6 +265,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	}
 	
 	public void set_next_text() {
+//		System.out.println("inside AlertWindow set_next_text called...");
 		if(m_tabbedpane.getSelectedIndex() == m_tabbedpane.getTabCount()-1) {
             m_btn_next.setText(Localization.l("common_save"));
 			
@@ -344,6 +346,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	}
 	
 	private void disableNext() {
+//		System.out.println("inside AlertWindow disableNext called..");
 		if(m_tabbedpane!=null && m_alert!=null)
 		{
 			for(int i=m_tabbedpane.indexOfComponent(m_alert.getGui())+1;i<m_tabbedpane.getTabCount();i++)
@@ -404,6 +407,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
+//		System.out.println("inside AlertWindow actionPerformed called..ActionCommand="+e.getActionCommand());
 		if("act_next".equals(e.getActionCommand())) {
 			boolean proceed = true;
 			
@@ -609,6 +613,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			if(m_alert==null)
 				return;
 			int tmp = m_alert.getPanelToolbar().get_addresstypes();
+//			System.out.println("inside AlertWindow m_alert.getPanelToolbar().get_addresstypes()="+tmp);
 			if(hasSMS(tmp))
 			{
                 m_tabbedpane.insertTab(Localization.l("main_sending_sms_heading"), null,

@@ -80,6 +80,11 @@ public class SendController implements ActionListener {
 	public static final int SENDTO_ONLY_VULNERABLE_CITIZENS = 1 << 21;
 	public static final int SENDTO_CAP = 1 << 22;
 	
+	public static final int RECIPTYPE_PRIVATE_RESIDENT = 1 << 23;
+	public static final int RECIPTYPE_PRIVATE_OWNER_HOME = 1 << 24;
+	public static final int RECIPTYPE_PRIVATE_OWNER_VACATION = 1 << 25;
+	public static final int SENDTO_USE_ABAS_RECIPIENTS = 1 << 26;
+	
 	public static final int SENDTO_USE_NOFAX_COMPANY = 1 << 27;
 	public static final int SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28; //reserved for future use
 	public static final int SENDTO_USE_NOFAX_GLOBAL = 1 << 29; //should always be off
@@ -309,6 +314,7 @@ public class SendController implements ActionListener {
 		return true;
 	}
 	public SendObject createSendingFromAlert(AlertVO alert) {
+//		System.out.println("inside SendController createSendingFromAlert called");
 		int n_type = -1;
 		if(alert.getM_shape().getClass().equals(PolygonStruct.class))
 			n_type = SendProperties.SENDING_TYPE_POLYGON_;
@@ -352,7 +358,8 @@ public class SendController implements ActionListener {
             Error.getError().addError(Localization.l("common_error"), "Could not clone Alert polygon", e, Error.SEVERITY_ERROR);
 		}
 		obj.get_toolbar().set_addresstypes(alert.getAddresstypes());
-		obj.get_toolbar().init_addresstypes(alert.getAddresstypes());
+//		obj.get_toolbar().init_addresstypes(alert.getAddresstypes());
+		obj.get_toolbar().populateABASPanelData(alert.getAddresstypes());
 		obj.get_sendproperties().set_sendingname(alert.getName(), alert.getDescription());
 		obj.get_sendproperties().set_validity(alert.getValidity());
 		obj.get_sendproperties().set_oadc_number(alert.getOadc());
@@ -660,9 +667,10 @@ public class SendController implements ActionListener {
 						set_activesending(obj);
 						if(userValues)
 						{
-							obj.get_toolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
-							obj.get_toolbar().initSelections();				
-
+							obj.get_toolbar().set_addresstypes((int)Variables.getSettings().getAddressTypes());
+//							obj.get_toolbar().initSelections();				
+							obj.get_toolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes());
+							
 							//Variables.getSettings().setN_autoselect_shapetype(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_);
 							if(bAutoSelectShapeType)
 							{
