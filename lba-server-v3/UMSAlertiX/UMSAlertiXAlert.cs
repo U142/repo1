@@ -93,9 +93,9 @@ namespace UMSAlertiX
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (lValidity > 0)
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(lValidity);
+                    alertPeriod.duration = GetAlertDuration(lValidity);
                 else
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(oController.message_validity);
+                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
@@ -158,8 +158,8 @@ namespace UMSAlertiX
                 messages, 
                 execMode, 
                 additionalSubscribers, 
-                filters, 
-                alertPeriod, 
+                filters,
+                alertPeriod,
                 ref szUpdateSQL, 
                 lRefNo, 
                 ref lRequestType, 
@@ -260,10 +260,10 @@ namespace UMSAlertiX
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (lValidity > 0)
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(lValidity);
+                    alertPeriod.duration = GetAlertDuration(lValidity);
                 else
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(oController.message_validity);
-
+                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
+                
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
@@ -319,8 +319,8 @@ namespace UMSAlertiX
                 messages, 
                 execMode, 
                 additionalSubscribers, 
-                filters, 
-                alertPeriod, 
+                filters,
+                alertPeriod,
                 ref szUpdateSQL, 
                 lRefNo, 
                 ref lRequestType, 
@@ -436,9 +436,9 @@ namespace UMSAlertiX
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (lValidity > 0)
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(lValidity);
+                    alertPeriod.duration = GetAlertDuration(lValidity);
                 else
-                    alertPeriod.expiry = DateTime.Now.AddMinutes(oController.message_validity);
+                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
@@ -514,6 +514,7 @@ namespace UMSAlertiX
             List<FilterTag> filters = new List<FilterTag>();
 
             AlertPeriod alertPeriod = new AlertPeriod();
+            int validity; // used to be AlertPeriod
 
             string szUpdateSQL;
 
@@ -579,6 +580,7 @@ namespace UMSAlertiX
 
                 // TODO: Get validity from LBASEND
                 alertPeriod = GetAlertPeriod(lRefNo);
+                validity = alertPeriod.duration.minutes;
 
                 // TODO: Get messages from TEXT and TEXT_CC
                 int lRetVal = GetAlertMsg(lRefNo, messages, displayMode);
@@ -741,7 +743,7 @@ namespace UMSAlertiX
 
                             if (aResponse.result == Result.SUCCESS)
                             {
-                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_started_ts=" + DateTime.Now.ToString("yyyyMMddHHmmss") + ", l_expires_ts=" + alertPeriod.expiry.ToString("yyyyMMddHHmmss") + ", l_response=" + (int)aResponse.result + ", sz_jobid='" + aResponse.id + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_started_ts=" + DateTime.Now.ToString("yyyyMMddHHmmss") + ", l_expires_ts=" + DateTime.Now.AddMinutes(alertPeriod.duration.minutes).ToString("yyyyMMddHHmmss") + ", l_response=" + (int)aResponse.result + ", sz_jobid='" + aResponse.id + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                                 oController.ExecDB(szUpdateSQL, oController.dsn);
                                 oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.result.ToString() + ") (job=" + aResponse.id + ")");
                             }
@@ -763,7 +765,8 @@ namespace UMSAlertiX
 
                             if (aResponse.result == Result.SUCCESS)
                             {
-                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_expires_ts=" + alertPeriod.expiry.ToString("yyyyMMddHHmmss") + ", l_response=" + (int)aResponse.result + ", sz_jobid='" + aResponse.id + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                                // TODO: Uncertain if I can use DateTime.Now
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_expires_ts=" + DateTime.Now.AddMinutes(alertPeriod.duration.minutes).ToString("yyyyMMddHHmmss") + ", l_response=" + (int)aResponse.result + ", sz_jobid='" + aResponse.id + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                                 oController.ExecDB(szUpdateSQL, oController.dsn);
                                 oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.result.ToString() + ") (job=" + aResponse.id + ")");
                             }
@@ -820,7 +823,7 @@ namespace UMSAlertiX
                             msg.displayMode = displayMode;
                             msg.text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value; ;
                             msg.originator = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
-
+                            
                             List<string> ccs = new List<string>();
                             foreach (XmlNode oCCode in oCountryMsg.ChildNodes)
                             {
@@ -906,10 +909,28 @@ namespace UMSAlertiX
         private AlertPeriod GetAlertPeriod(int lRefNo)
         {
             AlertPeriod ret = new AlertPeriod();
+            Duration duration = new Duration();
+
             ret.start = DateTime.Now;
-            ret.expiry = oController.GetExpiry(lRefNo);
+
+            DateTime end = oController.GetExpiry(lRefNo);
+            TimeSpan timeSpan = end - ret.start;
+            duration.minutes = timeSpan.Minutes;
+            ret.duration = duration;
 
             return ret;
+        }
+
+        private Duration GetAlertDuration(int minutes)
+        {
+            Duration duration = new Duration();
+
+            DateTime start = DateTime.Now;
+            DateTime end = DateTime.Now.AddMinutes(minutes);
+            TimeSpan timeSpan = end - start;
+            duration.minutes = timeSpan.Minutes;
+
+            return duration;
         }
 
         private int GetAlertMsg(int lRefNo, List<MessageSelector> messages, smsDisplayMode displayMode)

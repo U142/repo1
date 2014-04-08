@@ -9,7 +9,6 @@ using UMSAlertiX.AlertiX3;
 using com.ums.UmsCommon;
 using com.ums.UmsCommon.CoorConvert;
 using System.Data.Odbc;
-using com.ums.UmsCommon;
 
 namespace UMSAlertiX
 {

@@ -136,6 +136,9 @@
     <None Include="Web References\AlertiX3\AlertSubscribersResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\AlertiX3\AlertTimingResponse.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\AlertiX3\DeleteResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -156,6 +159,9 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\AlertiX3\Response.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\AlertiX3\SmsInboxResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\AlertiX3\Snapshot.datasource">
@@ -208,10 +214,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="C:\Development\alertix3\alertapi.wsdl">
+    <WebReferenceUrl Include="S:\Projects\pas\lba-server-v3\wsdl\alertapi.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AlertiX3\</RelPath>
-      <UpdateFromURL>C:\Development\alertix3\alertapi.wsdl</UpdateFromURL>
+      <UpdateFromURL>S:\Projects\pas\lba-server-v3\wsdl\alertapi.wsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
