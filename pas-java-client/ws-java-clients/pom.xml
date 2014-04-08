@@ -228,7 +228,7 @@
         <profile>
             <id>beta</id>
             <properties>
-                <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
+                <wsdl.base>https://beta.ums2.no/PAS/ws_pas/WS</wsdl.base>
             </properties>
         </profile>
         <profile>
