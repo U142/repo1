@@ -412,5 +412,6 @@
     <DeployTargetFolderProd>\www\pas\ws_pasprod</DeployTargetFolderProd>
     <DeployUrl>secure.ums.no/pas/ws_pas</DeployUrl>
     <DeployUrl-se>Default Web Site/pas/ws_pas</DeployUrl-se>
+	<DeployUrl-beta>Default Web Site/pas/ws_pas</DeployUrl-beta>
   </PropertyGroup>
 </Project>

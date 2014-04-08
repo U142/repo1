@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="UmsDeploy">
-		<Error Condition="$(Configuration) == 'Beta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderBeta parameter required for $(Configuration)" />
+		<Error Condition="$(Configuration) == 'Beta' And $(DeployUrl-beta) == ''" Text="Missing DeployUrl-beta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'oldbeta' And $(DeployTargetFolderBeta) == ''" Text="Missing DeployTargetFolderOldBeta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'nlbeta' And $(DeployTargetFolderNlbeta) == ''" Text="Missing DeployTargetFolderNlbeta parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'QA' And $(DeployTargetFolderQa) == ''" Text="Missing DeployTargetFolderQa parameter required for $(Configuration)" />
@@ -9,10 +9,10 @@
 		<Error Condition="$(Configuration) == 'Orange_Prod' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<Error Condition="$(Configuration) == 'Orange_QA' And $(DeployUrl) == ''" Text="Missing DeployUrl parameter required for $(Configuration)" />
 		<PropertyGroup Condition="$(Configuration) == 'beta'">
-			<DeployShare1>\\192.168.3.52\www</DeployShare1>
-			<DeployUser1>Administrator</DeployUser1>
-			<DeployPassword1>Digi20ums</DeployPassword1>
-			<DeployLocation1>$(DeployShare1)$(DeployTargetFolderBeta)</DeployLocation1>
+			<DeployUrl1>https://192.168.3.52:8172/MsDeploy.axd</DeployUrl1>
+			<DeployPath1>$(DeployUrl-beta)</DeployPath1>
+			<username>Administrator</username>
+			<password>Digi20ums</password>
 		</PropertyGroup>
 		<PropertyGroup Condition="$(Configuration) == 'oldbeta'">
 			<DeployShare1>\\192.168.3.40\www</DeployShare1>
