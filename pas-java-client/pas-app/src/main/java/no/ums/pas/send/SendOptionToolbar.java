@@ -144,7 +144,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype m_btn_adrtypes_vulnerable;
 	public ToggleAddresstype m_btn_adrtypes_headofhousehold;
 	
-	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
+//	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	JToggleButton m_btn_finalize;
 	SendingColorPicker m_colorpicker;
@@ -183,7 +183,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JComboBox<RecipientChannel> comboPrivateRecipientChannel = null;
 	private JComboBox<RecipientChannel> comboCompanyRecipientChannel = null;
 	
-	public JCheckBox getchkLocationBased() { return chkLocationBased; }
+	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
 	private PreviewFrame m_gis_preview = null;
 	public void setPreviewFrame(PreviewFrame f) { m_gis_preview = f; }
@@ -545,12 +545,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				
 				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+				chkLocationBased.setEnabled(false);
+				chkLocationBased.setSelected(false);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 				break;
 			case SendProperties.SENDING_TYPE_MUNICIPAL_:
 				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+				chkLocationBased.setEnabled(false);
+				chkLocationBased.setSelected(false);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);				
 				break;
@@ -656,6 +660,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		if((FLAGS & BTN_CELL_BROADCAST_) == BTN_CELL_BROADCAST_) {
 			this.m_btn_adrtypes_cell_broadcast_text.setVisible(b_show);
+			this.chkLocationBased.setVisible(b_show);
 		}
 		if((FLAGS & BTN_CELL_BROADCAST_VOICE_) == BTN_CELL_BROADCAST_VOICE_) {
 			this.m_btn_adrtypes_cell_broadcast_voice.setVisible(b_show);
@@ -804,7 +809,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
 //		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) 
 //			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
+//		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
+		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !chkLocationBased.isSelected()) 
 			TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
 		
 		if(chkLocationBased.isSelected()) 
@@ -937,7 +943,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_callback = callback;
 		m_btngroup_lba = new ButtonGroup();
 		init();
-		this.setSize(340, 25);
+		this.setSize(500, 200);
 		try {
 			this.setVisible(true);
 			this.setFocusable(true);
@@ -1249,10 +1255,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_close.setActionCommand("act_sending_close");
 		m_btn_open.setActionCommand("act_open_polygon");
 		
-		m_btn_adrtypes_cell_broadcast_text.setSelected(false);
-		m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
-		m_btn_adrtypes_nofax.setSelected(false);
-		
 		recipientTab = new JTabbedPane();
 		
 		chkLocationBased = new JCheckBox(gen_adrtypes_text(0, ADRGROUPS.LBA));
@@ -1347,6 +1349,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		chkPropertyOwnerPrivate.setActionCommand("act_set_addresstypes");
 		chkPropertyOwnerVacation.setActionCommand("act_set_addresstypes");
 		
+		m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+		chkLocationBased.setSelected(false);
+		m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
+		m_btn_adrtypes_nofax.setSelected(false);
+		
 		//log.debug(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_cellbroadcast_rights());
 		if(PAS.get_pas() != null && !PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management().cell_broadcast())
 			show_buttons(SendOptionToolbar.BTN_CELL_BROADCAST_,false);
@@ -1439,7 +1446,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		chkPropertyOwnerVacation.setEnabled(b);
 		lblSelectCompanyRecipients.setEnabled(b);
 		comboCompanyRecipientChannel.setEnabled(b);
-//		recipientTab.setVisible(b);
+		recipientTab.setVisible(b);
 	}
 	
 	/*private ImageIcon load_icon(String sz_filename) {
@@ -2176,7 +2183,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype get_adrtype_company_fixed() { return m_btn_adrtypes_company_fixed; }
 	public ToggleAddresstype get_adrtype_private_mobile() { return m_btn_adrtypes_private_mobile; }
 	public ToggleAddresstype get_adrtype_company_mobile() { return m_btn_adrtypes_company_mobile; }
-	public ToggleAddresstype get_adrtype_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
+//	public ToggleAddresstype get_adrtype_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_adrtype_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	public ToggleAddresstype get_adrtype_nofax() { return m_btn_adrtypes_nofax; }
 	public ToggleAddresstype get_adrtype_vulnerable() { return m_btn_adrtypes_vulnerable; }

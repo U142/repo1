@@ -194,8 +194,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		// Dette er for å aktivere cell broadcast tab'en
 			if(m_alert.getAlert() != null && m_alert.getAlert().getArea() != null) {
 				if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
-					m_alert.getPanelToolbar().get_cell_broadcast_text().setSelected(true);
-					actionPerformed(new ActionEvent(m_alert.getPanelToolbar().get_cell_broadcast_text(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
+//					m_alert.getPanelToolbar().get_cell_broadcast_text().setSelected(true);
+//					actionPerformed(new ActionEvent(m_alert.getPanelToolbar().get_cell_broadcast_text(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
+					m_alert.getPanelToolbar().getChkLocationBased().setSelected(true);
+					actionPerformed(new ActionEvent(m_alert.getPanelToolbar().getChkLocationBased(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
 				}
 			}
 			if(m_alert.getAlert()!=null) {
@@ -509,7 +511,8 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				ready = false;
 			}
-			if(ready && m_alert.getPanelToolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+//			if(ready && m_alert.getPanelToolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+			if(ready && m_alert.getPanelToolbar().getChkLocationBased().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
 				JFrame frame = get_frame();
 				JOptionPane.showMessageDialog(frame,m_cell_broadcast_text_panel.validateFields());
 				frame.dispose();

@@ -191,6 +191,7 @@ public class AlertController implements ActionListener {
 	}
 
 	public void createNewAlert(int highestTempPk, EventVO eventParent,ShapeStruct shape) throws ParmException {
+		log.debug("inside AlertController createNewAlert called");
 		this.alert = null;
 		this.tmptPk = highestTempPk;
 		this.eventParent = eventParent;
@@ -336,7 +337,8 @@ public class AlertController implements ActionListener {
 		else
 			this.alert.setLocked(0);
 		
-		if(toolbarPanel.get_cell_broadcast_text().isSelected() || toolbarPanel.get_cell_broadcast_voice().isSelected()) {
+//		if(toolbarPanel.get_cell_broadcast_text().isSelected() || toolbarPanel.get_cell_broadcast_voice().isSelected()) {
+		if(toolbarPanel.getChkLocationBased().isSelected() || toolbarPanel.get_cell_broadcast_voice().isSelected()) {
 			// Her skal jeg gjøre noe kjekt faktisk hente info fra cell broadcast panel
 			alert.setCBMessages(parent.get_cell_broadcast_text().getMessages());
 			alert.setArea((Area)parent.get_cell_broadcast_text().get_combo_area().getSelectedItem());
@@ -443,7 +445,8 @@ public class AlertController implements ActionListener {
 		toolbarPanel.get_radio_polygonal_ellipse().setEnabled(val);
 		toolbarPanel.get_btn_open().setEnabled(val);
 		toolbarPanel.get_btn_color().setEnabled(val);
-		toolbarPanel.get_adrtype_cell_broadcast_text().setEnabled(val);
+//		toolbarPanel.get_adrtype_cell_broadcast_text().setEnabled(val);
+		toolbarPanel.getChkLocationBased().setEnabled(val);
 		toolbarPanel.get_adrtype_company_fixed().setEnabled(val);
 		toolbarPanel.get_adrtype_company_mobile().setEnabled(val);
 		toolbarPanel.get_adrtype_private_fixed().setEnabled(val);

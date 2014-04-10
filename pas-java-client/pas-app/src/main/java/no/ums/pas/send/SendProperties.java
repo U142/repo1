@@ -345,7 +345,8 @@ public abstract class SendProperties extends Object {
 				sz_statusstring = "0";
 			}
 			sz_vals[28] = sz_statusstring;
-			if(parent.get_cell_broadcast_text().isSelected() || parent.get_cell_broadcast_voice().isSelected()) {
+//			if(parent.get_cell_broadcast_text().isSelected() || parent.get_cell_broadcast_voice().isSelected()) {
+			if(parent.getChkLocationBased().isSelected() || parent.get_cell_broadcast_voice().isSelected()) {
 				//sz_vals[29]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_localtext().getText());
 				//sz_vals[30]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_internationaltext().getText());
 				sz_vals[29]= "";

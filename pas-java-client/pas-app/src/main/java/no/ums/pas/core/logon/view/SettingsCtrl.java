@@ -122,6 +122,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     	}
     	dlg.getPnlLBA().setVisible(b_enable_lba);
 //    	dlg.getToggleLba().setVisible(b_enable_lba);
+    	dlg.getChkLocationBased().setVisible(b_enable_lba);
     	dlg.getToggleVulnerable().setVisible(b_enable_vulnerable);
     	dlg.getToggleHeadOfHousehold().setVisible(b_enable_headofhousehold);
 

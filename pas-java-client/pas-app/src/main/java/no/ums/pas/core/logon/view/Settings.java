@@ -330,6 +330,7 @@ public class Settings extends JFrame implements ActionListener{
 		comboCompanyRecipientChannel.setEnabled(b);
 		lblSelectPrivateRecipients.setEnabled(b);
 		lblSelectCompanyRecipients.setEnabled(b);
+		recipientTab.setVisible(b);
 	}
 	public String gen_adrtypes_text(int n_adrtypes, ADRGROUPS group)
 	{
@@ -671,6 +672,11 @@ public class Settings extends JFrame implements ActionListener{
 	/*public ToggleAddresstype getToggleLba() {
 		return toggleLba;
 	}*/
+	
+	public JCheckBox getChkLocationBased()
+	{
+		return chkLocationBased;
+	}
 
 	public ToggleAddresstype getTogglePrivateFixed() {
 		return togglePrivateFixed;
