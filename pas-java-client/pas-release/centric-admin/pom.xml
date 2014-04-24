@@ -35,7 +35,7 @@
                             <keypass>${key.keypass}</keypass>
                             <storepass>${key.storepass}</storepass>
                             <alias>${key.alias}</alias>
-                            <verify>true</verify>
+                            <!--<verify>true</verify>-->
                             <archive>${project.build.directory}/${project.artifactId}-${project.version}.jar</archive>
                         </configuration>
                     </execution>
