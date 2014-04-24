@@ -319,7 +319,7 @@ namespace UMSAlertiX
         {
             Operator oRet = new Operator();
 
-            string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password FROM LBAOPERATORS WHERE sz_version='3.0' AND l_operator=" + l_operator.ToString();
+            string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password FROM LBAOPERATORS WHERE sz_version='3.1' AND l_operator=" + l_operator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(dsn);
             OdbcCommand cmdOperator = new OdbcCommand(qryOperator, dbConn);
@@ -350,8 +350,8 @@ namespace UMSAlertiX
         {
             int lCount = 0;
 
-            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE OP.sz_version='3.0' AND PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString();
-            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE OP.sz_version='3.0' AND PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString() + " ORDER BY l_operator";
+            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE OP.sz_version='3.1' AND PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString();
+            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE OP.sz_version='3.1' AND PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString() + " ORDER BY l_operator";
 
             OdbcConnection dbConn = new OdbcConnection(dsn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
@@ -393,8 +393,8 @@ namespace UMSAlertiX
         {
             int lCount = 0;
 
-            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OP.sz_version='3.0' AND OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString();
-            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OP.sz_version='3.0' AND OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
+            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OP.sz_version='3.1' AND OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString();
+            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OP.sz_version='3.1' AND OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
 
             OdbcConnection dbConn = new OdbcConnection(dsn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);

@@ -33,7 +33,7 @@ namespace UMSAlertiX
             List<String> additionalSubscribers = new List<string>();
             List<FilterTag> filters = new List<FilterTag>();
 
-            AlertPeriod alertPeriod = new AlertPeriod();
+            AlertPeriod alertPeriod = null;
 
             string szUpdateSQL;
 
@@ -92,15 +92,13 @@ namespace UMSAlertiX
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
-                if (lValidity > 0)
-                    alertPeriod.duration = GetAlertDuration(lValidity);
-                else
-                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
+                if (lValidity <= 0)
+                    lValidity = GetAlertContentExpiry(oController.message_validity);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode);
+                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode, lValidity);
                     if (lRetVal != 0)
                     {
                         oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
@@ -176,7 +174,7 @@ namespace UMSAlertiX
 
             List<String> additionalSubscribers = new List<string>();
             List<FilterTag> filters = new List<FilterTag>();
-            AlertPeriod alertPeriod = new AlertPeriod();
+            AlertPeriod alertPeriod = null;
             
             UTM uCoConv = new UTM();
 
@@ -259,15 +257,13 @@ namespace UMSAlertiX
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
-                if (lValidity > 0)
-                    alertPeriod.duration = GetAlertDuration(lValidity);
-                else
-                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
+                if (lValidity <= 0)
+                    lValidity = GetAlertContentExpiry(oController.message_validity);
                 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode);
+                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode, lValidity);
                     if (lRetVal != 0)
                     {
                         oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
@@ -337,7 +333,7 @@ namespace UMSAlertiX
 
             List<String> additionalSubscribers = new List<string>();
             List<FilterTag> filters = new List<FilterTag>();
-            AlertPeriod alertPeriod = new AlertPeriod();
+            AlertPeriod alertPeriod = null;
 
             UTM uCoConv = new UTM();
 
@@ -435,15 +431,13 @@ namespace UMSAlertiX
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
-                if (lValidity > 0)
-                    alertPeriod.duration = GetAlertDuration(lValidity);
-                else
-                    alertPeriod.duration = GetAlertDuration(oController.message_validity);
+                if (lValidity <= 0)
+                    lValidity = GetAlertContentExpiry(oController.message_validity);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode);
+                    int lRetVal = GetAlertMsg(oTextMessages, messages, displayMode, lValidity);
                     if (lRetVal != 0)
                     {
                         oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
@@ -513,7 +507,7 @@ namespace UMSAlertiX
             List<String> additionalSubscribers = new List<string>();
             List<FilterTag> filters = new List<FilterTag>();
 
-            AlertPeriod alertPeriod = new AlertPeriod();
+            AlertPeriod alertPeriod = null;
             int validity; // used to be AlertPeriod
 
             string szUpdateSQL;
@@ -579,11 +573,10 @@ namespace UMSAlertiX
                 }
 
                 // TODO: Get validity from LBASEND
-                alertPeriod = GetAlertPeriod(lRefNo);
-                validity = alertPeriod.duration.minutes;
+                validity = GetAlertContentExpiry(lRefNo);
 
                 // TODO: Get messages from TEXT and TEXT_CC
-                int lRetVal = GetAlertMsg(lRefNo, messages, displayMode);
+                int lRetVal = GetAlertMsg(lRefNo, messages, displayMode, validity);
                 if (lRetVal != 0)
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
@@ -796,7 +789,7 @@ namespace UMSAlertiX
             return lReturn;
         }
 
-        private int GetAlertMsg(XmlNode oTextMessages, List<MessageSelector> messages, smsDisplayMode displayMode)
+        private int GetAlertMsg(XmlNode oTextMessages, List<MessageSelector> messages, smsDisplayMode displayMode, int validity)
         {
             try
             {
@@ -813,6 +806,7 @@ namespace UMSAlertiX
                             msg.displayMode = displayMode;
                             msg.text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value;
                             msg.originator = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
+                            msg.expiryMinutes = validity;
 
                             messages.Add(new DefaultSelector() { content = msg });
                         }
@@ -823,7 +817,9 @@ namespace UMSAlertiX
                             msg.displayMode = displayMode;
                             msg.text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value; ;
                             msg.originator = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
+                            msg.expiryMinutes = validity;
                             
+
                             List<string> ccs = new List<string>();
                             foreach (XmlNode oCCode in oCountryMsg.ChildNodes)
                             {
@@ -846,8 +842,20 @@ namespace UMSAlertiX
                 return Constant.EXC_GetAlertMsg; //GetAlertMsg exception
             }
 
+            // Need to sort messages so that DefaultSelector() comes last
+            sortMessages(ref messages);
+
             return Constant.OK; //ok
         }
+
+        private void sortMessages(ref List<MessageSelector> messages)
+        {
+            messages.Sort((MessageSelector a, MessageSelector b) =>
+            {
+                return a is DefaultSelector ? 0 : 1;
+            });
+        }
+
 
         private int UpdateTries(int lRefNo, int lTempStatus, int lEndStatus, int lResponse, int lOperator)
         {
@@ -906,6 +914,15 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
+        private int GetAlertContentExpiry(int lRefNo)
+        {
+            DateTime end = oController.GetExpiry(lRefNo);
+            
+            TimeSpan duration = end - DateTime.Now;
+            
+            return duration.Minutes;
+        }
+        
         private AlertPeriod GetAlertPeriod(int lRefNo)
         {
             AlertPeriod ret = new AlertPeriod();
@@ -933,7 +950,7 @@ namespace UMSAlertiX
             return duration;
         }
 
-        private int GetAlertMsg(int lRefNo, List<MessageSelector> messages, smsDisplayMode displayMode)
+        private int GetAlertMsg(int lRefNo, List<MessageSelector> messages, smsDisplayMode displayMode, int validity)
         {
             List<Message> ccMessages = oController.GetMessages(lRefNo);
 
@@ -947,6 +964,8 @@ namespace UMSAlertiX
                     msg.displayMode = displayMode;
                     msg.text = ccMessage.messageText;
                     msg.originator = ccMessage.originator;
+                    msg.expiryMinutes = validity;
+                    
 
                     messages.Add(new DefaultSelector() { content = msg });
                 }
@@ -957,6 +976,8 @@ namespace UMSAlertiX
                     msg.displayMode = displayMode;
                     msg.text = ccMessage.messageText;
                     msg.originator = ccMessage.originator;
+                    msg.expiryMinutes = validity;
+                    
 
                     List<string> ccs = new List<string>();
                     foreach (int countryCode in ccMessage.countryCodes)
