@@ -1,0 +1,1517 @@
+<?xml version="1.0" ?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://wsapi.api.alertix.cellvision/" name="AlertixWsApi" targetNamespace="http://wsapi.api.alertix.cellvision/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://wsapi.api.alertix.cellvision/" elementFormDefault="unqualified" targetNamespace="http://wsapi.api.alertix.cellvision/" version="1.0">
+<xs:element name="addSubscriberListMsisdns" type="tns:addSubscriberListMsisdns"></xs:element>
+<xs:element name="addSubscriberListMsisdnsResponse" type="tns:addSubscriberListMsisdnsResponse"></xs:element>
+<xs:element name="cancelAlert" type="tns:cancelAlert"></xs:element>
+<xs:element name="cancelAlertResponse" type="tns:cancelAlertResponse"></xs:element>
+<xs:element name="createSnapshot" type="tns:createSnapshot"></xs:element>
+<xs:element name="createSnapshotResponse" type="tns:createSnapshotResponse"></xs:element>
+<xs:element name="createSubscriberList" type="tns:createSubscriberList"></xs:element>
+<xs:element name="createSubscriberListResponse" type="tns:createSubscriberListResponse"></xs:element>
+<xs:element name="createTarget" type="tns:createTarget"></xs:element>
+<xs:element name="createTargetResponse" type="tns:createTargetResponse"></xs:element>
+<xs:element name="deleteAlert" type="tns:deleteAlert"></xs:element>
+<xs:element name="deleteAlertResponse" type="tns:deleteAlertResponse"></xs:element>
+<xs:element name="deleteAlerts" type="tns:deleteAlerts"></xs:element>
+<xs:element name="deleteAlertsResponse" type="tns:deleteAlertsResponse"></xs:element>
+<xs:element name="deleteSubscriberList" type="tns:deleteSubscriberList"></xs:element>
+<xs:element name="deleteSubscriberListMsisdns" type="tns:deleteSubscriberListMsisdns"></xs:element>
+<xs:element name="deleteSubscriberListMsisdnsResponse" type="tns:deleteSubscriberListMsisdnsResponse"></xs:element>
+<xs:element name="deleteSubscriberListResponse" type="tns:deleteSubscriberListResponse"></xs:element>
+<xs:element name="deleteTarget" type="tns:deleteTarget"></xs:element>
+<xs:element name="deleteTargetResponse" type="tns:deleteTargetResponse"></xs:element>
+<xs:element name="executeAlert" type="tns:executeAlert"></xs:element>
+<xs:element name="executeAlertResponse" type="tns:executeAlertResponse"></xs:element>
+<xs:element name="getAlertEvents" type="tns:getAlertEvents"></xs:element>
+<xs:element name="getAlertEventsResponse" type="tns:getAlertEventsResponse"></xs:element>
+<xs:element name="getAlertInfo" type="tns:getAlertInfo"></xs:element>
+<xs:element name="getAlertInfoResponse" type="tns:getAlertInfoResponse"></xs:element>
+<xs:element name="getAlertInfos" type="tns:getAlertInfos"></xs:element>
+<xs:element name="getAlertInfosResponse" type="tns:getAlertInfosResponse"></xs:element>
+<xs:element name="getAlertStatus" type="tns:getAlertStatus"></xs:element>
+<xs:element name="getAlertStatusByCell" type="tns:getAlertStatusByCell"></xs:element>
+<xs:element name="getAlertStatusByCellResponse" type="tns:getAlertStatusByCellResponse"></xs:element>
+<xs:element name="getAlertStatusByCountry" type="tns:getAlertStatusByCountry"></xs:element>
+<xs:element name="getAlertStatusByCountryResponse" type="tns:getAlertStatusByCountryResponse"></xs:element>
+<xs:element name="getAlertStatusResponse" type="tns:getAlertStatusResponse"></xs:element>
+<xs:element name="getAlertSubscribers" type="tns:getAlertSubscribers"></xs:element>
+<xs:element name="getAlertSubscribersEx" type="tns:getAlertSubscribersEx"></xs:element>
+<xs:element name="getAlertSubscribersExResponse" type="tns:getAlertSubscribersExResponse"></xs:element>
+<xs:element name="getAlertSubscribersResponse" type="tns:getAlertSubscribersResponse"></xs:element>
+<xs:element name="getAllOperators" type="tns:getAllOperators"></xs:element>
+<xs:element name="getAllOperatorsResponse" type="tns:getAllOperatorsResponse"></xs:element>
+<xs:element name="getAllTargets" type="tns:getAllTargets"></xs:element>
+<xs:element name="getAllTargetsResponse" type="tns:getAllTargetsResponse"></xs:element>
+<xs:element name="getFilterCategories" type="tns:getFilterCategories"></xs:element>
+<xs:element name="getFilterCategoriesResponse" type="tns:getFilterCategoriesResponse"></xs:element>
+<xs:element name="getFilterOptions" type="tns:getFilterOptions"></xs:element>
+<xs:element name="getFilterOptionsResponse" type="tns:getFilterOptionsResponse"></xs:element>
+<xs:element name="getSmsInbox" type="tns:getSmsInbox"></xs:element>
+<xs:element name="getSmsInboxResponse" type="tns:getSmsInboxResponse"></xs:element>
+<xs:element name="getSubscriberCountByCell" type="tns:getSubscriberCountByCell"></xs:element>
+<xs:element name="getSubscriberCountByCellResponse" type="tns:getSubscriberCountByCellResponse"></xs:element>
+<xs:element name="getSubscriberCountByCountry" type="tns:getSubscriberCountByCountry"></xs:element>
+<xs:element name="getSubscriberCountByCountryResponse" type="tns:getSubscriberCountByCountryResponse"></xs:element>
+<xs:element name="getSubscriberListMsisdns" type="tns:getSubscriberListMsisdns"></xs:element>
+<xs:element name="getSubscriberListMsisdnsResponse" type="tns:getSubscriberListMsisdnsResponse"></xs:element>
+<xs:element name="getSubscriberLists" type="tns:getSubscriberLists"></xs:element>
+<xs:element name="getSubscriberListsResponse" type="tns:getSubscriberListsResponse"></xs:element>
+<xs:element name="getTarget" type="tns:getTarget"></xs:element>
+<xs:element name="getTargetResponse" type="tns:getTargetResponse"></xs:element>
+<xs:element name="updateAlert" type="tns:updateAlert"></xs:element>
+<xs:element name="updateAlertResponse" type="tns:updateAlertResponse"></xs:element>
+<xs:element name="updateTarget" type="tns:updateTarget"></xs:element>
+<xs:element name="updateTargetResponse" type="tns:updateTargetResponse"></xs:element>
+<xs:element name="verifyAlertPeriod" type="tns:verifyAlertPeriod"></xs:element>
+<xs:element name="verifyAlertPeriodResponse" type="tns:verifyAlertPeriodResponse"></xs:element>
+<xs:complexType name="getAlertSubscribers">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertSubscribersResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertSubscribersResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertSubscribersResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="alertSubscribers" nillable="true" type="tns:AlertSubscriber"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="description" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="result" type="tns:Result"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertSubscriber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="location" type="tns:Point"></xs:element>
+      <xs:element minOccurs="0" name="msisdn" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="status" type="tns:submitStatus"></xs:element>
+      <xs:element minOccurs="0" name="updated" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Point">
+    <xs:sequence>
+      <xs:element name="easting" type="xs:double"></xs:element>
+      <xs:element name="northing" type="xs:double"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addSubscriberListMsisdns">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="msisdns" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addSubscriberListMsisdnsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AddResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AddResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="added" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="deleteAlerts">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="from" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="to" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteAlertsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AffectedResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AffectedResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="affected" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getAllTargets">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAllTargetsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:TargetInfoResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="TargetInfoResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="targets" nillable="true" type="tns:TargetInfo"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="TargetInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="created" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="targetType" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="updated" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getTarget">
+    <xs:sequence>
+      <xs:element name="targetName" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getTargetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:TargetResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="TargetResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="target" type="tns:Target"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="Target">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createSubscriberList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createSubscriberListResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteSubscriberList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteSubscriberListResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="cancelAlert">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="cancelAlertResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="verifyAlertPeriod">
+    <xs:sequence>
+      <xs:element name="period" type="tns:AlertPeriod"></xs:element>
+      <xs:element name="maxEntries" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertPeriod">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="duration" type="tns:Duration"></xs:element>
+      <xs:element minOccurs="0" name="recurrence" type="tns:Recurrence"></xs:element>
+      <xs:element minOccurs="0" name="start" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Duration">
+    <xs:sequence>
+      <xs:element name="minutes" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Recurrence">
+    <xs:sequence>
+      <xs:element name="cron" type="xs:string"></xs:element>
+      <xs:element name="stop" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="verifyAlertPeriodResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertTimingResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertTimingResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="timing" nillable="true" type="xs:dateTime"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getAlertSubscribersEx">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertSubscribersExResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertSubscribersExResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertSubscribersExResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="alertSubscribers" nillable="true" type="tns:AlertSubscriberEx"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="AlertSubscriberEx">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cellLocation" type="tns:PointLocation"></xs:element>
+      <xs:element minOccurs="0" name="cgi" type="tns:Cgi"></xs:element>
+      <xs:element minOccurs="0" name="country" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="currentLocation" type="tns:CircleLocation"></xs:element>
+      <xs:element minOccurs="0" name="msisdn" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="operator" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="status" type="tns:submitStatus"></xs:element>
+      <xs:element minOccurs="0" name="updated" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="PointLocation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="point" type="tns:Point"></xs:element>
+      <xs:element minOccurs="0" name="timestamp" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Cgi">
+    <xs:sequence>
+      <xs:element name="cid" type="xs:int"></xs:element>
+      <xs:element name="lac" type="xs:int"></xs:element>
+      <xs:element name="mcc" type="xs:int"></xs:element>
+      <xs:element name="mnc" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="CircleLocation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="circle" type="tns:Circle"></xs:element>
+      <xs:element minOccurs="0" name="timestamp" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Circle">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="center" type="tns:Point"></xs:element>
+      <xs:element name="radius" type="xs:double"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="executeAlert">
+    <xs:sequence>
+      <xs:element name="target" type="tns:Target"></xs:element>
+      <xs:element name="message" type="tns:AlertMessage"></xs:element>
+      <xs:element minOccurs="0" name="period" type="tns:AlertPeriod"></xs:element>
+      <xs:element name="submission" type="tns:SubmissionMode"></xs:element>
+      <xs:element name="positioning" type="tns:PositioningMode"></xs:element>
+      <xs:element minOccurs="0" name="filter" type="tns:Filter"></xs:element>
+      <xs:element minOccurs="0" name="spamFilter" type="tns:SpamFilter"></xs:element>
+      <xs:element name="priority" type="tns:Priority"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="additionalSubscribers" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertMessage">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="messageSelectors" nillable="true" type="tns:MessageSelector"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType abstract="true" name="MessageSelector">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Filter">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filterTags" nillable="true" type="tns:FilterTag"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="FilterTag">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="category" type="xs:string"></xs:element>
+      <xs:element name="filterType" type="tns:FilterType"></xs:element>
+      <xs:element minOccurs="0" name="value" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SpamFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="timeout" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="token" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="executeAlertResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Alert"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Alert">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="id" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="deleteSubscriberListMsisdns">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="msisdns" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteSubscriberListMsisdnsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DeleteResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="DeleteResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="deleted" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getFilterOptions">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="filterType" type="tns:FilterType"></xs:element>
+      <xs:element minOccurs="0" name="category" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getFilterOptionsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:FilterOptions"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="FilterOptions">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getSubscriberLists">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberListsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:SubscriberListsResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SubscriberListsResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="subscriberListNames" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="updateTarget">
+    <xs:sequence>
+      <xs:element name="target" type="tns:Target"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateTargetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSmsInbox">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="from" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="to" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="minMoId" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSmsInboxResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:SmsInboxResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SmsInboxResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="mos" nillable="true" type="tns:SmsMo"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="SmsMo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="account" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="location" type="tns:Location"></xs:element>
+      <xs:element minOccurs="0" name="moId" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="originator" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="text" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="timestamp" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Location">
+    <xs:sequence>
+      <xs:element name="azimuth" type="xs:double"></xs:element>
+      <xs:element name="beamwidth" type="xs:double"></xs:element>
+      <xs:element name="easting" type="xs:double"></xs:element>
+      <xs:element name="northing" type="xs:double"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertInfos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="from" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="to" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertInfosResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertInfos"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertInfos">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="alertList" nillable="true" type="tns:AlertDetails"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="AlertDetails">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="additionalSubscribers" nillable="true" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="created" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="filter" type="tns:Filter"></xs:element>
+      <xs:element minOccurs="0" name="id" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="message" type="tns:AlertMessage"></xs:element>
+      <xs:element minOccurs="0" name="nextRun" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="period" type="tns:AlertPeriod"></xs:element>
+      <xs:element minOccurs="0" name="positioning" type="tns:PositioningMode"></xs:element>
+      <xs:element minOccurs="0" name="previousRun" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="priority" type="tns:Priority"></xs:element>
+      <xs:element minOccurs="0" name="spamFilter" type="tns:SpamFilter"></xs:element>
+      <xs:element minOccurs="0" name="start" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="state" type="tns:AlertState"></xs:element>
+      <xs:element minOccurs="0" name="submissionMode" type="tns:SubmissionMode"></xs:element>
+      <xs:element minOccurs="0" name="submitCount" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="subscriberCount" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="target" type="tns:Target"></xs:element>
+      <xs:element minOccurs="0" name="user" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createSnapshot">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="target" type="tns:Target"></xs:element>
+      <xs:element minOccurs="0" name="subscriberFilter" type="tns:SubscriberFilter"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SubscriberFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="excludeList" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="includeList" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createSnapshotResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Snapshot"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Snapshot">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="id" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getAlertInfo">
+    <xs:sequence>
+      <xs:element name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertInfo"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertInfo">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="alertDetails" type="tns:AlertDetails"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getAlertStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertStatusResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertStatus"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertStatus">
+    <xs:complexContent>
+      <xs:extension base="tns:CountResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="deliveryStatus" type="tns:DeliveryStatus"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="CountResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="subscriberCount" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="DeliveryStatus">
+    <xs:sequence>
+      <xs:element name="deliveredSuccessfully" type="xs:int"></xs:element>
+      <xs:element name="deliveryExpired" type="xs:int"></xs:element>
+      <xs:element name="deliveryFailed" type="xs:int"></xs:element>
+      <xs:element name="deliveryUnknown" type="xs:int"></xs:element>
+      <xs:element name="excludedCell" type="xs:int"></xs:element>
+      <xs:element name="excludedPos" type="xs:int"></xs:element>
+      <xs:element name="failedSubmission" type="xs:int"></xs:element>
+      <xs:element name="processing" type="xs:int"></xs:element>
+      <xs:element name="pushedSuccessfully" type="xs:int"></xs:element>
+      <xs:element name="submitted" type="xs:int"></xs:element>
+      <xs:element name="totalCount" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertEvents">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertEventsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertEvents"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertEvents">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:AlertEvent"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="AlertEvent">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="count" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="delta" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="elapsed" type="xs:long"></xs:element>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="start" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberCountByCountry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="target" type="tns:Target"></xs:element>
+      <xs:element minOccurs="0" name="filter" type="tns:Filter"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberCountByCountryResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:SubscriberCountByCountry"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SubscriberCountByCountry">
+    <xs:complexContent>
+      <xs:extension base="tns:CountResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:CountrySubscriberCount"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CountrySubscriberCount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="count" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="country" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAllOperators">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAllOperatorsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:operators"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="operators">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getAlertStatusByCell">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertStatusByCellResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertStatusByCell"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertStatusByCell">
+    <xs:complexContent>
+      <xs:extension base="tns:CountResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="cellDeliveryStatuses" nillable="true" type="tns:CellDeliveryStatus"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CellDeliveryStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cell" type="tns:CellInfo"></xs:element>
+      <xs:element minOccurs="0" name="deliveryStatus" type="tns:DeliveryStatus"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="CellInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="antenna" type="tns:Antenna"></xs:element>
+      <xs:element minOccurs="0" name="cgi" type="tns:Cgi"></xs:element>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="sitePos" type="tns:Point"></xs:element>
+      <xs:element name="system" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="Antenna">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="azimuth" type="xs:double"></xs:element>
+      <xs:element minOccurs="0" name="beamWidth" type="xs:double"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberCountByCell">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="target" type="tns:Target"></xs:element>
+      <xs:element minOccurs="0" name="filter" type="tns:Filter"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberCountByCellResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:SubscriberCountByCell"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SubscriberCountByCell">
+    <xs:complexContent>
+      <xs:extension base="tns:CountResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:CellSubscriberCount"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CellSubscriberCount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cell" type="tns:CellInfo"></xs:element>
+      <xs:element minOccurs="0" name="count" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createTarget">
+    <xs:sequence>
+      <xs:element name="target" type="tns:Target"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="createTargetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getFilterCategories">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="filterType" type="tns:FilterType"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getFilterCategoriesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:FilterCategories"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="FilterCategories">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="categories" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="getSubscriberListMsisdns">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriberListMsisdnsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:MsisdnsResponse"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="MsisdnsResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:Response">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="msisdns" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="deleteAlert">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteAlertResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertStatusByCountry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAlertStatusByCountryResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:AlertStatusByCountry"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="AlertStatusByCountry">
+    <xs:complexContent>
+      <xs:extension base="tns:CountResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="countryDeliveryStatuses" nillable="true" type="tns:CountryDeliveryStatus"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CountryDeliveryStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="country" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="deliveryStatus" type="tns:DeliveryStatus"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteTarget">
+    <xs:sequence>
+      <xs:element name="targetName" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteTargetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateAlert">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+      <xs:element name="target" type="tns:Target"></xs:element>
+      <xs:element name="message" type="tns:AlertMessage"></xs:element>
+      <xs:element minOccurs="0" name="period" type="tns:AlertPeriod"></xs:element>
+      <xs:element name="submission" type="tns:SubmissionMode"></xs:element>
+      <xs:element name="positioning" type="tns:PositioningMode"></xs:element>
+      <xs:element minOccurs="0" name="filter" type="tns:Filter"></xs:element>
+      <xs:element minOccurs="0" name="spamFilter" type="tns:SpamFilter"></xs:element>
+      <xs:element name="priority" type="tns:Priority"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="additionalSubscribers" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateAlertResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Response"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="DefaultSelector">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageSelector">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="content" type="tns:Content"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="Content">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+<xs:complexType name="SnapshotTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="snapshotId" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="NationalitySelector">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageSelector">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="codes" nillable="true" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="content" type="tns:Content"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="OperatorSelector">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageSelector">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="codes" nillable="true" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="content" type="tns:Content"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CountryListTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="countries" nillable="true" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CellListTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="cells" nillable="true" type="tns:Cell"></xs:element>
+          <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="Cell">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cgi" type="tns:Cgi"></xs:element>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="StoredTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="SmsContent">
+    <xs:complexContent>
+      <xs:extension base="tns:Content">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="displayMode" type="tns:smsDisplayMode"></xs:element>
+          <xs:element minOccurs="0" name="expiryMinutes" type="xs:int"></xs:element>
+          <xs:element minOccurs="0" name="originator" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="text" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="AlertTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="alertId" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="CircleTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="circle" type="tns:Circle"></xs:element>
+          <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="PolygonTarget">
+    <xs:complexContent>
+      <xs:extension base="tns:Target">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="polygon" type="tns:Polygon"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="Polygon">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="vertices" nillable="true" type="tns:Point"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="submitStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INITIALIZED"></xs:enumeration>
+      <xs:enumeration value="SUBMITTED"></xs:enumeration>
+      <xs:enumeration value="SUBMISSION_FAILED"></xs:enumeration>
+      <xs:enumeration value="DELIVERED_SUCCESSFULLY"></xs:enumeration>
+      <xs:enumeration value="DELIVERY_EXPIRED"></xs:enumeration>
+      <xs:enumeration value="DELIVERY_FAILED"></xs:enumeration>
+      <xs:enumeration value="DELIVERY_UNKNOWN"></xs:enumeration>
+      <xs:enumeration value="PUSHED_SUCCESSFULLY"></xs:enumeration>
+      <xs:enumeration value="EXCLUDED_CELL"></xs:enumeration>
+      <xs:enumeration value="EXCLUDED_POS"></xs:enumeration>
+      <xs:enumeration value="UNKNOWN"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="Result">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"></xs:enumeration>
+      <xs:enumeration value="ERROR"></xs:enumeration>
+      <xs:enumeration value="INVALID_ALERT_MESSAGE"></xs:enumeration>
+      <xs:enumeration value="INVALID_SCHEDULE"></xs:enumeration>
+      <xs:enumeration value="INVALID_EXPIRY"></xs:enumeration>
+      <xs:enumeration value="INVALID_FILTER"></xs:enumeration>
+      <xs:enumeration value="INVALID_PARAM"></xs:enumeration>
+      <xs:enumeration value="NO_SUBSCRIBERS"></xs:enumeration>
+      <xs:enumeration value="ALREADY_EXISTS"></xs:enumeration>
+      <xs:enumeration value="NOT_FOUND"></xs:enumeration>
+      <xs:enumeration value="UNAUTHORIZED"></xs:enumeration>
+      <xs:enumeration value="UNKNOWN_ALERTID"></xs:enumeration>
+      <xs:enumeration value="INVALID_TARGET"></xs:enumeration>
+      <xs:enumeration value="INVALID_ALERTPERIOD"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="SubmissionMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NORMAL"></xs:enumeration>
+      <xs:enumeration value="SIMULATE"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="PositioningMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LAST"></xs:enumeration>
+      <xs:enumeration value="ENHANCED"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="FilterType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SubscriberIncludeList"></xs:enumeration>
+      <xs:enumeration value="SubscriberExcludeList"></xs:enumeration>
+      <xs:enumeration value="OperatorInclude"></xs:enumeration>
+      <xs:enumeration value="OperatorExclude"></xs:enumeration>
+      <xs:enumeration value="DeviceInclude"></xs:enumeration>
+      <xs:enumeration value="DeviceCapabilityInclude"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="Priority">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DEFAULT"></xs:enumeration>
+      <xs:enumeration value="LOW"></xs:enumeration>
+      <xs:enumeration value="MEDIUM"></xs:enumeration>
+      <xs:enumeration value="HIGH"></xs:enumeration>
+      <xs:enumeration value="EMERGENCY"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="AlertState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SCHEDULED"></xs:enumeration>
+      <xs:enumeration value="PREPARING"></xs:enumeration>
+      <xs:enumeration value="NO_SUBSCRIBERS"></xs:enumeration>
+      <xs:enumeration value="SUBMITTING"></xs:enumeration>
+      <xs:enumeration value="ERROR"></xs:enumeration>
+      <xs:enumeration value="SUBMITTED"></xs:enumeration>
+      <xs:enumeration value="DELETING"></xs:enumeration>
+      <xs:enumeration value="COMPLETED"></xs:enumeration>
+      <xs:enumeration value="ONGOING"></xs:enumeration>
+      <xs:enumeration value="CANCELLED"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="smsDisplayMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NORMAL"></xs:enumeration>
+      <xs:enumeration value="FLASH"></xs:enumeration>
+      <xs:enumeration value="SILENT"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="deleteAlerts">
+    <wsdl:part element="ns1:deleteAlerts" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAlertResponse">
+    <wsdl:part element="ns1:deleteAlertResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSmsInboxResponse">
+    <wsdl:part element="ns1:getSmsInboxResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTargetResponse">
+    <wsdl:part element="ns1:getTargetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateAlert">
+    <wsdl:part element="ns1:updateAlert" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFilterCategoriesResponse">
+    <wsdl:part element="ns1:getFilterCategoriesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateAlertResponse">
+    <wsdl:part element="ns1:updateAlertResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteTarget">
+    <wsdl:part element="ns1:deleteTarget" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscriberListMsisdnsResponse">
+    <wsdl:part element="ns1:deleteSubscriberListMsisdnsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscriberList">
+    <wsdl:part element="ns1:deleteSubscriberList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatusResponse">
+    <wsdl:part element="ns1:getAlertStatusResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertSubscribersEx">
+    <wsdl:part element="ns1:getAlertSubscribersEx" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertInfo">
+    <wsdl:part element="ns1:getAlertInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllOperatorsResponse">
+    <wsdl:part element="ns1:getAllOperatorsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberListsResponse">
+    <wsdl:part element="ns1:getSubscriberListsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFilterCategories">
+    <wsdl:part element="ns1:getFilterCategories" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSubscriberListResponse">
+    <wsdl:part element="ns1:createSubscriberListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatus">
+    <wsdl:part element="ns1:getAlertStatus" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSnapshotResponse">
+    <wsdl:part element="ns1:createSnapshotResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createTargetResponse">
+    <wsdl:part element="ns1:createTargetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateTargetResponse">
+    <wsdl:part element="ns1:updateTargetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verifyAlertPeriodResponse">
+    <wsdl:part element="ns1:verifyAlertPeriodResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFilterOptions">
+    <wsdl:part element="ns1:getFilterOptions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberListMsisdns">
+    <wsdl:part element="ns1:getSubscriberListMsisdns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSubscriberListMsisdnsResponse">
+    <wsdl:part element="ns1:addSubscriberListMsisdnsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatusByCellResponse">
+    <wsdl:part element="ns1:getAlertStatusByCellResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberLists">
+    <wsdl:part element="ns1:getSubscriberLists" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSmsInbox">
+    <wsdl:part element="ns1:getSmsInbox" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertSubscribersResponse">
+    <wsdl:part element="ns1:getAlertSubscribersResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertSubscribersExResponse">
+    <wsdl:part element="ns1:getAlertSubscribersExResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAlertsResponse">
+    <wsdl:part element="ns1:deleteAlertsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatusByCountry">
+    <wsdl:part element="ns1:getAlertStatusByCountry" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTarget">
+    <wsdl:part element="ns1:getTarget" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertInfosResponse">
+    <wsdl:part element="ns1:getAlertInfosResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSnapshot">
+    <wsdl:part element="ns1:createSnapshot" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertInfoResponse">
+    <wsdl:part element="ns1:getAlertInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertSubscribers">
+    <wsdl:part element="ns1:getAlertSubscribers" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateTarget">
+    <wsdl:part element="ns1:updateTarget" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createTarget">
+    <wsdl:part element="ns1:createTarget" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberCountByCellResponse">
+    <wsdl:part element="ns1:getSubscriberCountByCellResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscriberListResponse">
+    <wsdl:part element="ns1:deleteSubscriberListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberCountByCountryResponse">
+    <wsdl:part element="ns1:getSubscriberCountByCountryResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verifyAlertPeriod">
+    <wsdl:part element="ns1:verifyAlertPeriod" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllOperators">
+    <wsdl:part element="ns1:getAllOperators" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatusByCell">
+    <wsdl:part element="ns1:getAlertStatusByCell" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberCountByCountry">
+    <wsdl:part element="ns1:getSubscriberCountByCountry" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSubscriberListMsisdns">
+    <wsdl:part element="ns1:addSubscriberListMsisdns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeAlert">
+    <wsdl:part element="ns1:executeAlert" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertEventsResponse">
+    <wsdl:part element="ns1:getAlertEventsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllTargetsResponse">
+    <wsdl:part element="ns1:getAllTargetsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberCountByCell">
+    <wsdl:part element="ns1:getSubscriberCountByCell" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelAlertResponse">
+    <wsdl:part element="ns1:cancelAlertResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertStatusByCountryResponse">
+    <wsdl:part element="ns1:getAlertStatusByCountryResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelAlert">
+    <wsdl:part element="ns1:cancelAlert" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertEvents">
+    <wsdl:part element="ns1:getAlertEvents" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAlert">
+    <wsdl:part element="ns1:deleteAlert" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllTargets">
+    <wsdl:part element="ns1:getAllTargets" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFilterOptionsResponse">
+    <wsdl:part element="ns1:getFilterOptionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAlertInfos">
+    <wsdl:part element="ns1:getAlertInfos" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriberListMsisdnsResponse">
+    <wsdl:part element="ns1:getSubscriberListMsisdnsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeAlertResponse">
+    <wsdl:part element="ns1:executeAlertResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscriberListMsisdns">
+    <wsdl:part element="ns1:deleteSubscriberListMsisdns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteTargetResponse">
+    <wsdl:part element="ns1:deleteTargetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSubscriberList">
+    <wsdl:part element="ns1:createSubscriberList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AlertixWsApi">
+    <wsdl:operation name="getAlertSubscribers">
+      <wsdl:input message="ns1:getAlertSubscribers" name="getAlertSubscribers">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertSubscribersResponse" name="getAlertSubscribersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSubscriberListMsisdns">
+      <wsdl:input message="ns1:addSubscriberListMsisdns" name="addSubscriberListMsisdns">
+    </wsdl:input>
+      <wsdl:output message="ns1:addSubscriberListMsisdnsResponse" name="addSubscriberListMsisdnsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAlerts">
+      <wsdl:input message="ns1:deleteAlerts" name="deleteAlerts">
+    </wsdl:input>
+      <wsdl:output message="ns1:deleteAlertsResponse" name="deleteAlertsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllTargets">
+      <wsdl:input message="ns1:getAllTargets" name="getAllTargets">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAllTargetsResponse" name="getAllTargetsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTarget">
+      <wsdl:input message="ns1:getTarget" name="getTarget">
+    </wsdl:input>
+      <wsdl:output message="ns1:getTargetResponse" name="getTargetResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSubscriberList">
+      <wsdl:input message="ns1:createSubscriberList" name="createSubscriberList">
+    </wsdl:input>
+      <wsdl:output message="ns1:createSubscriberListResponse" name="createSubscriberListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscriberList">
+      <wsdl:input message="ns1:deleteSubscriberList" name="deleteSubscriberList">
+    </wsdl:input>
+      <wsdl:output message="ns1:deleteSubscriberListResponse" name="deleteSubscriberListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelAlert">
+      <wsdl:input message="ns1:cancelAlert" name="cancelAlert">
+    </wsdl:input>
+      <wsdl:output message="ns1:cancelAlertResponse" name="cancelAlertResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="verifyAlertPeriod">
+      <wsdl:input message="ns1:verifyAlertPeriod" name="verifyAlertPeriod">
+    </wsdl:input>
+      <wsdl:output message="ns1:verifyAlertPeriodResponse" name="verifyAlertPeriodResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertSubscribersEx">
+      <wsdl:input message="ns1:getAlertSubscribersEx" name="getAlertSubscribersEx">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertSubscribersExResponse" name="getAlertSubscribersExResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeAlert">
+      <wsdl:input message="ns1:executeAlert" name="executeAlert">
+    </wsdl:input>
+      <wsdl:output message="ns1:executeAlertResponse" name="executeAlertResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscriberListMsisdns">
+      <wsdl:input message="ns1:deleteSubscriberListMsisdns" name="deleteSubscriberListMsisdns">
+    </wsdl:input>
+      <wsdl:output message="ns1:deleteSubscriberListMsisdnsResponse" name="deleteSubscriberListMsisdnsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilterOptions">
+      <wsdl:input message="ns1:getFilterOptions" name="getFilterOptions">
+    </wsdl:input>
+      <wsdl:output message="ns1:getFilterOptionsResponse" name="getFilterOptionsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberLists">
+      <wsdl:input message="ns1:getSubscriberLists" name="getSubscriberLists">
+    </wsdl:input>
+      <wsdl:output message="ns1:getSubscriberListsResponse" name="getSubscriberListsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateTarget">
+      <wsdl:input message="ns1:updateTarget" name="updateTarget">
+    </wsdl:input>
+      <wsdl:output message="ns1:updateTargetResponse" name="updateTargetResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSmsInbox">
+      <wsdl:input message="ns1:getSmsInbox" name="getSmsInbox">
+    </wsdl:input>
+      <wsdl:output message="ns1:getSmsInboxResponse" name="getSmsInboxResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertInfos">
+      <wsdl:input message="ns1:getAlertInfos" name="getAlertInfos">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertInfosResponse" name="getAlertInfosResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSnapshot">
+      <wsdl:input message="ns1:createSnapshot" name="createSnapshot">
+    </wsdl:input>
+      <wsdl:output message="ns1:createSnapshotResponse" name="createSnapshotResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertInfo">
+      <wsdl:input message="ns1:getAlertInfo" name="getAlertInfo">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertInfoResponse" name="getAlertInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatus">
+      <wsdl:input message="ns1:getAlertStatus" name="getAlertStatus">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertStatusResponse" name="getAlertStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertEvents">
+      <wsdl:input message="ns1:getAlertEvents" name="getAlertEvents">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertEventsResponse" name="getAlertEventsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCountry">
+      <wsdl:input message="ns1:getSubscriberCountByCountry" name="getSubscriberCountByCountry">
+    </wsdl:input>
+      <wsdl:output message="ns1:getSubscriberCountByCountryResponse" name="getSubscriberCountByCountryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllOperators">
+      <wsdl:input message="ns1:getAllOperators" name="getAllOperators">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAllOperatorsResponse" name="getAllOperatorsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatusByCell">
+      <wsdl:input message="ns1:getAlertStatusByCell" name="getAlertStatusByCell">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertStatusByCellResponse" name="getAlertStatusByCellResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCell">
+      <wsdl:input message="ns1:getSubscriberCountByCell" name="getSubscriberCountByCell">
+    </wsdl:input>
+      <wsdl:output message="ns1:getSubscriberCountByCellResponse" name="getSubscriberCountByCellResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createTarget">
+      <wsdl:input message="ns1:createTarget" name="createTarget">
+    </wsdl:input>
+      <wsdl:output message="ns1:createTargetResponse" name="createTargetResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilterCategories">
+      <wsdl:input message="ns1:getFilterCategories" name="getFilterCategories">
+    </wsdl:input>
+      <wsdl:output message="ns1:getFilterCategoriesResponse" name="getFilterCategoriesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberListMsisdns">
+      <wsdl:input message="ns1:getSubscriberListMsisdns" name="getSubscriberListMsisdns">
+    </wsdl:input>
+      <wsdl:output message="ns1:getSubscriberListMsisdnsResponse" name="getSubscriberListMsisdnsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAlert">
+      <wsdl:input message="ns1:deleteAlert" name="deleteAlert">
+    </wsdl:input>
+      <wsdl:output message="ns1:deleteAlertResponse" name="deleteAlertResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAlertStatusByCountry">
+      <wsdl:input message="ns1:getAlertStatusByCountry" name="getAlertStatusByCountry">
+    </wsdl:input>
+      <wsdl:output message="ns1:getAlertStatusByCountryResponse" name="getAlertStatusByCountryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteTarget">
+      <wsdl:input message="ns1:deleteTarget" name="deleteTarget">
+    </wsdl:input>
+      <wsdl:output message="ns1:deleteTargetResponse" name="deleteTargetResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateAlert">
+      <wsdl:input message="ns1:updateAlert" name="updateAlert">
+    </wsdl:input>
+      <wsdl:output message="ns1:updateAlertResponse" name="updateAlertResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

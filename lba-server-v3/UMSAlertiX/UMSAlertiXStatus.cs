@@ -20,7 +20,7 @@ namespace UMSAlertiX
 
         public void UpdateJobStatus() // checks status of jobs
         {
-            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, s.l_status FROM LBASEND s INNER JOIN LBAOPERATORS o ON o.l_operator=s.l_operator AND o.sz_version='3.0' WHERE s.l_status=300 OR s.l_status=305 OR (s.l_status=310 AND s.l_items=0)";
+            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, s.l_status FROM LBASEND s INNER JOIN LBAOPERATORS o ON o.l_operator=s.l_operator AND o.sz_version='3.1' WHERE s.l_status=300 OR s.l_status=305 OR (s.l_status=310 AND s.l_items=0)";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
@@ -125,7 +125,7 @@ namespace UMSAlertiX
 
         public void UpdateCCStatus() // updates jobs with country code status
         {
-            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, s.l_expires_ts FROM LBASEND s INNER JOIN LBAOPERATORS o ON o.l_operator=s.l_operator AND o.sz_version='3.0' where s.l_status=340 or s.l_status=310";
+            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, s.l_expires_ts FROM LBASEND s INNER JOIN LBAOPERATORS o ON o.l_operator=s.l_operator AND o.sz_version='3.1' where s.l_status=340 or s.l_status=310";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
