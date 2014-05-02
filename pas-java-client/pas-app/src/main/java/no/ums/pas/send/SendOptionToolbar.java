@@ -180,8 +180,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JCheckBox chkResident = null;
 	private JCheckBox chkPropertyOwnerPrivate = null;
 	private JCheckBox chkPropertyOwnerVacation = null;
-	private JComboBox<RecipientChannel> comboPrivateRecipientChannel = null;
-	private JComboBox<RecipientChannel> comboCompanyRecipientChannel = null;
+	private JComboBox comboPrivateRecipientChannel = null;
+	private JComboBox comboCompanyRecipientChannel = null;
 	
 	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
@@ -1272,10 +1272,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		chkPropertyOwnerPrivate.setFont(font);
 		chkPropertyOwnerVacation.setFont(font);
 		
-		comboPrivateRecipientChannel = new JComboBox<RecipientChannel>();
+		comboPrivateRecipientChannel = new JComboBox();
 		initRecipientChannel(ChannelType.PRIVATE,comboPrivateRecipientChannel);
 		
-		comboCompanyRecipientChannel = new JComboBox<RecipientChannel>();
+		comboCompanyRecipientChannel = new JComboBox();
 		initRecipientChannel(ChannelType.COMPANY,comboCompanyRecipientChannel);
 		
 //		privateReceipientPanel.setLayout(new GridLayout(4, 1));
@@ -1489,7 +1489,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_sms_or_fixed_voice"), SendController.SENDTO_SMS_COMPANY_ALT_FIXED));//smsOrvoiceFixedChannel
 		return recipientChannelList;
 	}
-	private void initRecipientChannel(ChannelType channelType,JComboBox<RecipientChannel> comboRecipientChannel)
+	private void initRecipientChannel(ChannelType channelType,JComboBox comboRecipientChannel)
 	{
 		ArrayList<RecipientChannel> recipientChannelList = null;	
 		

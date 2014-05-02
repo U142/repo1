@@ -178,7 +178,7 @@ public class Settings extends JFrame implements ActionListener{
 		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_sms_or_fixed_voice"), SendController.SENDTO_SMS_COMPANY_ALT_FIXED));//smsOrvoiceFixedChannel
 		return recipientChannelList;
 	}
-	private void initRecipientChannel(ChannelType channelType,JComboBox<RecipientChannel> comboRecipientChannel)
+	private void initRecipientChannel(ChannelType channelType,JComboBox comboRecipientChannel)
 	{
 		ArrayList<RecipientChannel> recipientChannelList = null;	
 		
