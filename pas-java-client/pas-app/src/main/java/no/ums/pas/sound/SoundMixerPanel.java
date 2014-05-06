@@ -1,8 +1,8 @@
 package no.ums.pas.sound;
 
-
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.ums.tools.StdTextLabel;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -27,9 +27,9 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 	JLabel m_lbl_record = new JLabel(Localization.l("sound_mixer_recording"));
     JLabel m_lbl_speaker = new JLabel(Localization.l("sound_mixer_volume"));
     JLabel m_lbl_head	= new JLabel(Localization.l("sound_mixer_heading"));
-
+    StdTextLabel space = new StdTextLabel("", new Dimension(5, 3));
     public SoundMixer getMixer() { return m_mixer; }
-	
+    
 	public SoundMixerPanel() {
 		super();
         this.setBorder(BorderFactory.createTitledBorder(Localization.l("sound_mixer_heading")));
@@ -87,7 +87,7 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 		m_slider_recvol.setOrientation(JSlider.VERTICAL);
 		m_slider_playvol.setOrientation(JSlider.VERTICAL);
 		m_slider_headvol.setOrientation(JSlider.VERTICAL);
-		Dimension d = new Dimension(30, 100);
+		Dimension d = new Dimension(60, 100);
 		m_slider_recvol.setPreferredSize(d);
 		m_slider_playvol.setPreferredSize(d);
 		m_slider_headvol.setPreferredSize(d);
@@ -95,7 +95,6 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 		m_slider_playvol.setName("Master Volume");
 		m_slider_headvol.setName("Wav");
 
-		
 		if(!m_mixer.isRecInited()) {
 			m_slider_recvol.setEnabled(false);
 		}
@@ -132,7 +131,10 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 			add(m_chk_headmute, m_gridconst);
 		}
 		
-		set_gridconst(6, 0, 2, 1, GridBagConstraints.CENTER);
+		set_gridconst(6, 0, 1, 1, GridBagConstraints.CENTER);
+		add(space, m_gridconst);
+
+		set_gridconst(7, 0, 2, 1, GridBagConstraints.CENTER);
 		add(m_lbl_record, m_gridconst);
 		set_gridconst(7, 1, 1, 1, GridBagConstraints.CENTER);
 		add(m_slider_recvol, m_gridconst);

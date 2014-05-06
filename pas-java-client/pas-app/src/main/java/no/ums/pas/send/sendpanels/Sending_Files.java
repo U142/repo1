@@ -107,7 +107,7 @@ public class Sending_Files extends DefaultPanel {
 		//m_tabbedpane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CONTENT_BORDER_KIND, Boolean.TRUE);
 		boolean rec = true;
 		try {
-			int x = 500; //450
+			int x = 600; //450 increasing width of sound recorder panel
 			int y = 400; //300
 			try
 			{
