@@ -26,7 +26,8 @@ public class LocalizationFinder
                     new Locale("fr", "FR"),
                     new Locale("nl", "NL"),
                     new Locale("da", "DK"),
-                    new Locale("fi", "FI"));
+                    new Locale("fi", "FI"),
+                    new Locale("es", "ES"));
 	}
 	protected static ArrayList<Locale> getAvailableLocales(String bundleName, File dir) {
 		try
