@@ -260,6 +260,8 @@
                     <archive>
                         <manifestEntries>
                             <Permissions>all-permissions</Permissions>
+                            <Codebase>*</Codebase>
+                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
                         </manifestEntries>
                     </archive>
                 </configuration>
