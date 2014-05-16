@@ -95,7 +95,7 @@ public class Sending_Files extends DefaultPanel {
 	
 	public Sending_Files(PAS pas, SendWindow parentwin, SoundFile file) {
 		super();
-		this.setPreferredSize(new Dimension(500, 420));
+		this.setPreferredSize(new Dimension(600, 420));//increased width of sound panle by 100
 		parent = parentwin;
 		m_soundfile = file;
 		m_tabbedpane = new JTabbedPane();

@@ -271,7 +271,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 		setWindowTitle(m_sendobject.get_sendproperties().get_sendingname());
 		setLayout(new BorderLayout());
 		m_sendcontroller = controller;
-		int n_width = 770, n_height = 550;
+		int n_width = 870, n_height = 550;//increased width of new alert sending window by 100 
 		//setBounds((controller.get_pas().getWidth() / 2) - (n_width/2), (controller.get_pas().getHeight() / 2) - (n_height/2), n_width, n_height);
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		setBounds(d.width, d.height, n_width, n_height);
