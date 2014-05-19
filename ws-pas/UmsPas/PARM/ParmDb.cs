@@ -2525,5 +2525,31 @@ namespace com.ums.UmsParm
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public int GetDepartmentAddresstypes(int deptpk)
+        {
+            int n_ret = 0;
+            String szSQL = String.Format("SELECT l_addresstypes FROM BBDEPARTMENTMODS WHERE l_deptpk={0}", deptpk);
+            OdbcDataReader rs = null;
+
+            try
+            {
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                    n_ret = rs.GetInt32(0);
+                rs.Close();
+                return n_ret;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, szSQL, e.Message);
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+        }
     }
 }
