@@ -452,7 +452,7 @@ namespace com.ums.PAS.Database
                 }
                 else if (m_n_pastype == 2)
                 {
-                    szSQL = String.Format(@"select 
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, @"select 
                                                 isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
                                             FROM 
                                                 ADR_KONSUM, DEPARTMENT_X_MUNICIPAL DX 
