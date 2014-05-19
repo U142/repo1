@@ -271,7 +271,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 		setWindowTitle(m_sendobject.get_sendproperties().get_sendingname());
 		setLayout(new BorderLayout());
 		m_sendcontroller = controller;
-		int n_width = 770, n_height = 550;
+		int n_width = 870, n_height = 550;//increased width of new alert sending window by 100 
 		//setBounds((controller.get_pas().getWidth() / 2) - (n_width/2), (controller.get_pas().getHeight() / 2) - (n_height/2), n_width, n_height);
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		setBounds(d.width, d.height, n_width, n_height);
@@ -413,7 +413,8 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel), true);
 		}
 
-		if(obj.get_toolbar().get_cell_broadcast_text().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
+//		if(obj.get_toolbar().get_cell_broadcast_text().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
+		if(obj.get_toolbar().getChkLocationBased().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
             m_tabbedpane.addTab(Localization.l("main_status_locationbased_alert"), null,
 							m_cell_broadcast_text_panel,
                     Localization.l("main_sending_lba_tooltip"));
@@ -594,6 +595,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
+//		System.out.println("inside SendWindow actionPerformed called for actionEvent="+e.getActionCommand());
 		if("act_next".equals(e.getActionCommand())) {
 			boolean movenext = true;
 			if(m_tabbedpane.getSelectedComponent().equals(m_settings) && m_settings.m_b_use_scheddatetime){
@@ -682,7 +684,8 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 		} else if("act_send".equals(e.getActionCommand())) {
 			boolean ready = true;
 			
-			if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+//			if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+			if(m_sendobject.get_toolbar().getChkLocationBased().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
 				JOptionPane.showMessageDialog(this,m_cell_broadcast_text_panel.validateFields());
 				m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 				ready = false;
@@ -754,7 +757,8 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 			try
 			{
 				boolean ready = true;
-				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+//				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+				if(m_sendobject.get_toolbar().getChkLocationBased().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
 					JOptionPane.showMessageDialog(this,m_cell_broadcast_text_panel.validateFields());
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;
@@ -832,7 +836,8 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 			try
 			{
 				boolean ready = true;
-				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+//				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+				if(m_sendobject.get_toolbar().getChkLocationBased().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
 					JOptionPane.showMessageDialog(this,m_cell_broadcast_text_panel.validateFields());
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;

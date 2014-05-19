@@ -4,8 +4,10 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.ChannelType;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.menus.defines.CheckItem;
@@ -35,6 +37,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -42,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -52,9 +57,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -65,6 +72,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -136,7 +144,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype m_btn_adrtypes_vulnerable;
 	public ToggleAddresstype m_btn_adrtypes_headofhousehold;
 	
-	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
+//	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	JToggleButton m_btn_finalize;
 	SendingColorPicker m_colorpicker;
@@ -162,6 +170,21 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	StdTextLabel m_lbl_addresstypes_company = new StdTextLabel("", 9, false);
 	StdTextLabel m_lbl_addresstypes_lba = new StdTextLabel("", 9, false);
 	
+	private JCheckBox chkAddressBased = null;
+	private JCheckBox chkLocationBased = null;
+	private JTabbedPane recipientTab;
+	private JPanel privateReceipientPanel;
+	private JPanel companyReceipientPanel;
+	private StdTextLabel lblSelectPrivateRecipients = new StdTextLabel("", 9, false);
+	private StdTextLabel lblSelectCompanyRecipients = new StdTextLabel("", 9, false);
+	private JCheckBox chkResident = null;
+	private JCheckBox chkPropertyOwnerPrivate = null;
+	private JCheckBox chkPropertyOwnerVacation = null;
+	private JComboBox comboPrivateRecipientChannel = null;
+	private JComboBox comboCompanyRecipientChannel = null;
+	
+	public JCheckBox getChkLocationBased() { return chkLocationBased; }
+	
 	private PreviewFrame m_gis_preview = null;
 	public void setPreviewFrame(PreviewFrame f) { m_gis_preview = f; }
 	
@@ -173,6 +196,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		NOFAX,
 		VULNERABLE,
 		HEAD_OF_HOUSEHOLD,
+		ABAS
 	}
 	
 	public int get_addresstypes() { return m_n_addresstypes; }
@@ -275,14 +299,23 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				ret += temp;
 			}
 
+			if(group==ADRGROUPS.ABAS)
+			{
+				ret += "<font size='3'><b>" + Localization.l("main_sending_adr_option_address_based") + "</b></font><br>";
+				
+				if((m_n_addresstypes & SendController.SENDTO_USE_NOFAX_COMPANY) > 0) {
+                    temp += sz_font + "- " + Localization.l("main_sending_adr_option_using_blocklist");
+                }
+				ret += temp;
+			}
 			if(group==ADRGROUPS.LBA)
 			{
 				if((m_n_addresstypes & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) {
                     temp += sz_font + "- " + Localization.l("main_sending_adr_option_location_based_sms");
                 }
-				if(temp.length()>0) {
+//				if(temp.length()>0) {
                     ret += "<font size='3'><b>" + Localization.l("main_sending_adr_option_location_based") + "</b></font><br>";
-                }
+//                }
 				ret += temp;
 			}
 			if(group==ADRGROUPS.NOFAX)
@@ -359,12 +392,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_adrtypes_company_mobile.setSelected(false);
 		if((m_n_addresstypes & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT &&
 				can_lba())
-		{
-			m_btn_adrtypes_cell_broadcast_text.setSelected(true);
-		}
+			chkLocationBased.setSelected(true);
 		else
 		{
-			m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+			chkLocationBased.setSelected(false);
 			m_n_addresstypes &= ~SendController.SENDTO_CELL_BROADCAST_TEXT;
 			
 		}
@@ -391,27 +422,83 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		m_btn_adrtypes_nophone_private.setSelected(false);
 		m_btn_adrtypes_nophone_company.setSelected(false);
+		
+		boolean bEnableAbas = IsAbasChannelSelected();
+		m_btn_adrtypes_nofax.setEnabled(bEnableAbas);
+		if(!bEnableAbas && m_btn_adrtypes_nofax.isSelected())
+			m_btn_adrtypes_nofax.setSelected(false);
+		m_btn_adrtypes_vulnerable.setEnabled(bEnableAbas);
+		m_btn_adrtypes_headofhousehold.setEnabled(bEnableAbas);
 				
 		if(report_addresschanges()!=null)
 			report_addresschanges().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
 		m_lbl_addresstypes_private.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.PRIVATE));
 		m_lbl_addresstypes_company.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.COMPANY));
 		m_lbl_addresstypes_lba.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.LBA));	
+		
+		changeVisibilityOfABASPanel(chkAddressBased.isSelected());
 
-		m_btn_adrtypes_nofax.setEnabled(IsAbasChannelSelected());
-		if(!IsAbasChannelSelected() && m_btn_adrtypes_nofax.isSelected())
-			m_btn_adrtypes_nofax.setSelected(false);
-		m_btn_adrtypes_vulnerable.setEnabled(IsAbasChannelSelected());
-		m_btn_adrtypes_headofhousehold.setEnabled(IsAbasChannelSelected());
-
+	}
+	public void populateABASPanelData(int types)
+	{
+//		System.out.println("SendoptionToolbar populateABASPanelData called types="+types);
+		if (types==0)
+		{
+			changeVisibilityOfABASPanel(chkAddressBased.isSelected());
+			return;
+		}
+		
+		if((SendController.SENDTO_CELL_BROADCAST_TEXT & types)==SendController.SENDTO_CELL_BROADCAST_TEXT)
+		{
+			chkLocationBased.setText(gen_adrtypes_text(types, ADRGROUPS.LBA));
+			chkLocationBased.setSelected(true);
+		}
+		if((SendController.SENDTO_USE_ABAS_RECIPIENTS & types)==SendController.SENDTO_USE_ABAS_RECIPIENTS)
+		{
+			chkAddressBased.setText(gen_adrtypes_text(types, ADRGROUPS.ABAS));
+			chkAddressBased.setSelected(true);
+		}
+		if((SendController.SENDTO_USE_NOFAX_COMPANY & types)==SendController.SENDTO_USE_NOFAX_COMPANY)
+			m_btn_adrtypes_nofax.setSelected(true);
+		if((SendController.SENDTO_ONLY_VULNERABLE_CITIZENS & types)== SendController.SENDTO_ONLY_VULNERABLE_CITIZENS)
+			m_btn_adrtypes_vulnerable.setSelected(true);
+		if((SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD & types) == SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD)
+			m_btn_adrtypes_headofhousehold.setSelected(true);
+		
+		changeVisibilityOfABASPanel(chkAddressBased.isSelected());
+		
+		for(int i=1;i<comboPrivateRecipientChannel.getItemCount();i++)
+		{
+			int value = ((RecipientChannel)comboPrivateRecipientChannel.getItemAt(i)).getValue();
+			if((value & types)==value)
+				comboPrivateRecipientChannel.setSelectedIndex(i);
+		}
+		for(int i=1;i<comboCompanyRecipientChannel.getItemCount();i++)
+		{
+			int value = ((RecipientChannel)comboCompanyRecipientChannel.getItemAt(i)).getValue();
+			if((value & types)==value)
+				comboCompanyRecipientChannel.setSelectedIndex(i);
+		}
+		if((SendController.RECIPTYPE_PRIVATE_RESIDENT & types)==SendController.RECIPTYPE_PRIVATE_RESIDENT)
+			chkResident.setSelected(true);
+		if((SendController.RECIPTYPE_PRIVATE_OWNER_HOME & types)==SendController.RECIPTYPE_PRIVATE_OWNER_HOME)
+			chkPropertyOwnerPrivate.setSelected(true);
+		if((SendController.RECIPTYPE_PRIVATE_OWNER_VACATION & types)==SendController.RECIPTYPE_PRIVATE_OWNER_VACATION)
+			chkPropertyOwnerVacation.setSelected(true);
 	}
 	
 	public boolean IsAbasChannelSelected()
 	{
-		return m_btn_adrtypes_private_fixed.isSelected() | 
+		/*return m_btn_adrtypes_private_fixed.isSelected() | 
 				m_btn_adrtypes_private_mobile.isSelected() |
 				m_btn_adrtypes_company_fixed.isSelected() | 
-				m_btn_adrtypes_company_mobile.isSelected();	
+				m_btn_adrtypes_company_mobile.isSelected();	*/
+		boolean flag= (((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue() > 0 | 
+				((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue() > 0 |
+				chkResident.isSelected() |
+				chkPropertyOwnerPrivate.isSelected() |
+				chkPropertyOwnerVacation.isSelected() )& chkAddressBased.isSelected();	
+		return flag;
 	}
 	
 	public static final int BTN_SENDINGTYPE_POLYGON_	= 1;
@@ -458,12 +545,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				
 				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+				chkLocationBased.setEnabled(false);
+				chkLocationBased.setSelected(false);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 				break;
 			case SendProperties.SENDING_TYPE_MUNICIPAL_:
 				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+				chkLocationBased.setEnabled(false);
+				chkLocationBased.setSelected(false);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);				
 				break;
@@ -569,6 +660,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		if((FLAGS & BTN_CELL_BROADCAST_) == BTN_CELL_BROADCAST_) {
 			this.m_btn_adrtypes_cell_broadcast_text.setVisible(b_show);
+			this.chkLocationBased.setVisible(b_show);
 		}
 		if((FLAGS & BTN_CELL_BROADCAST_VOICE_) == BTN_CELL_BROADCAST_VOICE_) {
 			this.m_btn_adrtypes_cell_broadcast_voice.setVisible(b_show);
@@ -715,23 +807,45 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			TYPES |= m_btn_adrtypes_nophone_private.get_adrtype();
 		if(m_btn_adrtypes_nophone_company.isSelected() && m_btn_adrtypes_nophone_company.isVisible()) 
 			TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) 
-			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
+//		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) 
+//			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
+//		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
+		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !chkLocationBased.isSelected()) 
 			TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
 		
+		if(chkLocationBased.isSelected()) 
+			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
 		
-		if(m_btn_adrtypes_nofax.isSelected()) 
+		if(chkAddressBased.isSelected())
+		{
+			TYPES |= SendController.SENDTO_USE_ABAS_RECIPIENTS;
+			
+			if(IsAbasChannelSelected())
+			{
+				TYPES |= ((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue();
+				TYPES |= ((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue();
+				
+				if(chkResident.isSelected())
+					TYPES |= SendController.RECIPTYPE_PRIVATE_RESIDENT;
+				if(chkPropertyOwnerPrivate.isSelected())
+					TYPES |= SendController.RECIPTYPE_PRIVATE_OWNER_HOME;
+				if(chkPropertyOwnerVacation.isSelected())
+					TYPES |= SendController.RECIPTYPE_PRIVATE_OWNER_VACATION;
+			}
+		}
+		
+		if(m_btn_adrtypes_nofax.isSelected() && IsAbasChannelSelected()) {
 			TYPES |= m_btn_adrtypes_nofax.get_adrtype();
+		}
 		//only make this option available if the button is visible
 		if(m_btn_adrtypes_vulnerable.isSelected() && m_btn_adrtypes_vulnerable.isVisible()) 
 			TYPES |= m_btn_adrtypes_vulnerable.get_adrtype();
 		if(m_btn_adrtypes_headofhousehold.isSelected() && m_btn_adrtypes_headofhousehold.isVisible())
 			TYPES |= m_btn_adrtypes_headofhousehold.get_adrtype();
-		TYPES = customizeSelections(TYPES);
+		//commented as per new combo box for recipient channels
+//		TYPES = customizeSelections(TYPES);
 		set_addresstypes(TYPES);
 		log.debug("Addresstypes = " + TYPES);
-
 		
 	}
 	
@@ -829,7 +943,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_callback = callback;
 		m_btngroup_lba = new ButtonGroup();
 		init();
-		this.setSize(340, 25);
+		this.setSize(500, 200);
 		try {
 			this.setVisible(true);
 			this.setFocusable(true);
@@ -1141,7 +1255,102 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_close.setActionCommand("act_sending_close");
 		m_btn_open.setActionCommand("act_open_polygon");
 		
+		recipientTab = new JTabbedPane();
+		
+		chkLocationBased = new JCheckBox(gen_adrtypes_text(0, ADRGROUPS.LBA));
+		chkAddressBased = new JCheckBox(gen_adrtypes_text(0, ADRGROUPS.ABAS));
+		
+		privateReceipientPanel = new JPanel();
+		lblSelectPrivateRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
+		lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
+		chkResident = new JCheckBox(Localization.l("main_sending_adr_sel_residents"));
+		chkPropertyOwnerPrivate = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_private"));
+		chkPropertyOwnerVacation = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_vacation"));
+		
+		Font font = new Font(null,Font.BOLD,12);
+		chkResident.setFont(font);
+		chkPropertyOwnerPrivate.setFont(font);
+		chkPropertyOwnerVacation.setFont(font);
+		
+		comboPrivateRecipientChannel = new JComboBox();
+		initRecipientChannel(ChannelType.PRIVATE,comboPrivateRecipientChannel);
+		
+		comboCompanyRecipientChannel = new JComboBox();
+		initRecipientChannel(ChannelType.COMPANY,comboCompanyRecipientChannel);
+		
+//		privateReceipientPanel.setLayout(new GridLayout(4, 1));
+		privateReceipientPanel.setLayout(new GridBagLayout());
+		GridBagConstraints privateRecipientConstraint = new GridBagConstraints();
+		
+		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
+		privateRecipientConstraint.gridx=0;
+		privateRecipientConstraint.gridy=0;
+		privateRecipientConstraint.ipadx=10;
+		privateRecipientConstraint.ipady=6;
+		privateReceipientPanel.add(lblSelectPrivateRecipients,privateRecipientConstraint);
+		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
+		privateRecipientConstraint.gridx=1;
+		privateRecipientConstraint.gridy=0;
+		privateReceipientPanel.add(comboPrivateRecipientChannel,privateRecipientConstraint);
+		
+		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
+		privateRecipientConstraint.gridx=0;
+		privateRecipientConstraint.gridy=1;
+		privateRecipientConstraint.gridwidth=2;
+		privateReceipientPanel.add(chkResident,privateRecipientConstraint);
+		
+		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
+		privateRecipientConstraint.gridx=0;
+		privateRecipientConstraint.gridy=2;
+		privateRecipientConstraint.gridwidth=2;
+		privateReceipientPanel.add(chkPropertyOwnerPrivate,privateRecipientConstraint);
+		
+		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
+		privateRecipientConstraint.gridx=0;
+		privateRecipientConstraint.gridy=3;
+		privateRecipientConstraint.gridwidth=2;
+		privateReceipientPanel.add(chkPropertyOwnerVacation,privateRecipientConstraint);
+		
+		recipientTab.addTab(Localization.l("common_adr_private"), null, privateReceipientPanel, Localization.l("common_adr_private"));
+		
+		companyReceipientPanel = new JPanel();
+		
+		companyReceipientPanel.setLayout(new GridBagLayout());
+		GridBagConstraints companyRecipientConstraint = new GridBagConstraints();
+		
+		companyRecipientConstraint.fill = GridBagConstraints.NORTHWEST;
+		companyRecipientConstraint.gridx=0;
+		companyRecipientConstraint.gridy=0;
+		companyRecipientConstraint.ipadx=10;
+		companyRecipientConstraint.ipady=6;
+		companyRecipientConstraint.anchor=GridBagConstraints.FIRST_LINE_START;
+		companyReceipientPanel.add(lblSelectCompanyRecipients,companyRecipientConstraint);
+		companyRecipientConstraint.fill = GridBagConstraints.NORTH;
+		companyRecipientConstraint.gridx=1;
+		companyRecipientConstraint.gridy=0;
+		companyRecipientConstraint.insets=new Insets(0, 0, 90, 0);
+		companyReceipientPanel.add(comboCompanyRecipientChannel,companyRecipientConstraint);
+		
+		recipientTab.addTab(Localization.l("common_adr_company"), null, companyReceipientPanel, Localization.l("common_adr_company"));
+		
+		chkLocationBased.addActionListener(this);
+		chkAddressBased.addActionListener(this);
+		comboPrivateRecipientChannel.addActionListener(this);
+		comboCompanyRecipientChannel.addActionListener(this);
+		chkResident.addActionListener(this);
+		chkPropertyOwnerPrivate.addActionListener(this);
+		chkPropertyOwnerVacation.addActionListener(this);
+		
+		chkLocationBased.setActionCommand("act_set_addresstypes");
+		chkAddressBased.setActionCommand("act_set_addresstypes");
+		comboPrivateRecipientChannel.setActionCommand("act_set_addresstypes");
+		comboCompanyRecipientChannel.setActionCommand("act_set_addresstypes");
+		chkResident.setActionCommand("act_set_addresstypes");
+		chkPropertyOwnerPrivate.setActionCommand("act_set_addresstypes");
+		chkPropertyOwnerVacation.setActionCommand("act_set_addresstypes");
+		
 		m_btn_adrtypes_cell_broadcast_text.setSelected(false);
+		chkLocationBased.setSelected(false);
 		m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 		m_btn_adrtypes_nofax.setSelected(false);
 		
@@ -1225,6 +1434,21 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		lock_sending(false);
 	}
+	
+	private void changeVisibilityOfABASPanel(boolean b)
+	{
+		if(b && !chkAddressBased.isSelected())
+			return;
+		lblSelectPrivateRecipients.setEnabled(b);
+		comboPrivateRecipientChannel.setEnabled(b);
+		chkResident.setEnabled(b);
+		chkPropertyOwnerPrivate.setEnabled(b);
+		chkPropertyOwnerVacation.setEnabled(b);
+		lblSelectCompanyRecipients.setEnabled(b);
+		comboCompanyRecipientChannel.setEnabled(b);
+		recipientTab.setVisible(b);
+	}
+	
 	/*private ImageIcon load_icon(String sz_filename) {
 		URL url_icon = null;
 		ImageIcon icon = null;
@@ -1236,6 +1460,54 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		return icon;
 	}*/
+	
+	private ArrayList<RecipientChannel> getPrivateRecipientList()
+	{
+		ArrayList<RecipientChannel> recipientChannelList = new ArrayList<RecipientChannel>();
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice"), SendController.SENDTO_FIXED_PRIVATE));//voiceFixedChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_PRIVATE));//voiceMobileChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_option_sms"), SendController.SENDTO_SMS_PRIVATE));//smsChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice_and_sms"), SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_SMS_PRIVATE));//voiceFixedAndSMSChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_and_mobile_voice"), SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_MOBILE_PRIVATE));//voiceFixedAndVoiceMobileChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_and_mobile"), SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE));//voiceFixedAndVoiceMobilePriorityChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED));//voiceMobileAndVoiceFixedPriorityChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice_or_sms"), SendController.SENDTO_FIXED_PRIVATE_ALT_SMS));//voiceFixedOrSMSChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_sms_or_fixed_voice"), SendController.SENDTO_SMS_PRIVATE_ALT_FIXED));//smsOrvoiceFixedChannel
+		return recipientChannelList;
+	}
+	private ArrayList<RecipientChannel> getCompanyRecipientList()
+	{
+		ArrayList<RecipientChannel> recipientChannelList = new ArrayList<RecipientChannel>();
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice"), SendController.SENDTO_FIXED_COMPANY));//voiceFixedChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_COMPANY));//voiceMobileChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_option_sms"), SendController.SENDTO_SMS_COMPANY));//smsChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice_and_sms"), SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_SMS_COMPANY));//voiceFixedAndSMSChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_and_mobile_voice"), SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_MOBILE_COMPANY));//voiceFixedAndVoiceMobileChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_and_mobile"), SendController.SENDTO_FIXED_COMPANY_AND_MOBILE));//voiceFixedAndVoiceMobilePriorityChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), SendController.SENDTO_MOBILE_COMPANY_AND_FIXED));//voiceMobileAndVoiceFixedPriorityChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_fixed_voice_or_sms"), SendController.SENDTO_FIXED_COMPANY_ALT_SMS));//voiceFixedOrSMSChannel
+		recipientChannelList.add(new RecipientChannel(Localization.l("main_sending_adr_sel_private_sms_or_fixed_voice"), SendController.SENDTO_SMS_COMPANY_ALT_FIXED));//smsOrvoiceFixedChannel
+		return recipientChannelList;
+	}
+	private void initRecipientChannel(ChannelType channelType,JComboBox comboRecipientChannel)
+	{
+		ArrayList<RecipientChannel> recipientChannelList = null;	
+		
+		switch (channelType) {
+		case PRIVATE:
+			recipientChannelList = getPrivateRecipientList();
+			break;
+		case COMPANY:
+			recipientChannelList = getCompanyRecipientList();
+			break;
+		}
+		
+		comboRecipientChannel.addItem(new RecipientChannel(Localization.l("main_sending_adr_sel_channels"),0));
+		for(RecipientChannel channel : recipientChannelList)
+		{
+			comboRecipientChannel.addItem(channel);
+		}
+	}
 	
 	public void set_size(java.awt.Component c, int n_width) {
 		//c.setPreferredSize(new Dimension(n_width, 30));
@@ -1381,31 +1653,46 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	
 		int groupSpacing=5;
 		
-		add(m_btn_adrtypes_private_fixed, m_gridconst);
 		m_place_holder = new JLabel("");
-		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
-		add(m_place_holder,m_gridconst);
-		addSeparator(2);
-		inc_xpanels2();
-		add(m_btn_adrtypes_private_mobile, m_gridconst);
-		m_place_holder = new JLabel("");
-		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
-		add(m_place_holder,m_gridconst);
-		addSeparator(groupSpacing);
-		inc_xpanels2();
-		add(m_btn_adrtypes_company_fixed, m_gridconst);
-		m_place_holder = new JLabel("");
-		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
-		add(m_place_holder,m_gridconst);
-		addSeparator(2);
-		inc_xpanels2();
-		add(m_btn_adrtypes_company_mobile, m_gridconst);
+//		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+//		add(m_place_holder,m_gridconst);
+//		addSeparator(2);
+//		inc_xpanels2();
+		///add(m_btn_adrtypes_abas, m_gridconst);
+		m_gridconst.gridwidth=12;
+		add(chkLocationBased, m_gridconst);
+		
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
 		addSeparator(groupSpacing);
 		inc_xpanels2();
-        add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
+        ///add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
+        
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it.
+		///add(m_btn_adrtypes_private_fixed, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
+		addSeparator(2);
+		inc_xpanels2();
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it.
+		///add(m_btn_adrtypes_private_mobile, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
+		addSeparator(groupSpacing);
+		inc_xpanels2();
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it.
+		///add(m_btn_adrtypes_company_fixed, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
+		addSeparator(2);
+		inc_xpanels2();
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it.
+		///add(m_btn_adrtypes_company_mobile, m_gridconst);
+		
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
@@ -1452,13 +1739,35 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		inc_panels2();
 		set_gridconst(0, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);	
-		add(m_lbl_addresstypes_private, m_gridconst);
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it. 
+//		add(m_lbl_addresstypes_private, m_gridconst);
+//		add(lblAbasAdrTypes, m_gridconst);
+		add(chkAddressBased, m_gridconst);
 		set_gridconst(4, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
-		add(m_lbl_addresstypes_company, m_gridconst);
-		set_gridconst(8, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
-		add(m_lbl_addresstypes_lba, m_gridconst);
-		init_addresstypes(0); //SendController.SENDTO_ALL);
-		add_spacing(DIR_VERTICAL, 5);
+		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it. 
+		///add(m_lbl_addresstypes_company, m_gridconst);
+		///set_gridconst(8, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
+		//add(m_lbl_addresstypes_lba, m_gridconst);
+		
+		add_spacing(DIR_VERTICAL, 15);
+		add_spacing(DIR_VERTICAL, 15);
+		add_spacing(DIR_VERTICAL, 15);
+		
+//		userOptions.setPreferredSize(new Dimension(getWidth(), getHeight()-200));
+		recipientTab.setUI(ULookAndFeel.newUTabbedPaneUI(recipientTab, new ULookAndFeel.TabCallback() {
+
+			@Override
+			public boolean CloseButtonClicked(JComponent c) {
+				return false;
+			}
+
+			@Override
+			public void CloseButtonHot(JComponent c) {
+			}
+			}));
+		recipientTab.setPreferredSize(new Dimension(500, 180));
+		set_gridconst(0, get_panel(), 200, 1, GridBagConstraints.SOUTHWEST);
+		add(recipientTab,m_gridconst);
 
 		doLayout();
 	}
@@ -1561,16 +1870,21 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);*/
 			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice))
 				m_btn_adrtypes_cell_broadcast_voice.toggleSelection();
-			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text))
-				m_btn_adrtypes_cell_broadcast_text.toggleSelection();
-			if(e.getSource().equals(m_btn_adrtypes_nofax))
+//			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text))
+//				m_btn_adrtypes_cell_broadcast_text.toggleSelection();
+			else if(e.getSource().equals(m_btn_adrtypes_nofax))
 				m_btn_adrtypes_nofax.toggleSelection();
-			if(e.getSource().equals(m_btn_adrtypes_vulnerable))
+			else if(e.getSource().equals(m_btn_adrtypes_vulnerable))
 				m_btn_adrtypes_vulnerable.toggleSelection();
-			if(e.getSource().equals(m_btn_adrtypes_headofhousehold))
+			else if(e.getSource().equals(m_btn_adrtypes_headofhousehold))
 				m_btn_adrtypes_headofhousehold.toggleSelection();
-				
+			else if(e.getSource().equals(chkAddressBased))
+				changeVisibilityOfABASPanel(chkAddressBased.isSelected());
 			gen_addresstypes();
+			
+			chkLocationBased.setText(gen_adrtypes_text(m_n_addresstypes,ADRGROUPS.LBA));
+			chkAddressBased.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.ABAS));
+			
 			if(get_parent()!=null && get_parent().isActive()) {
 				get_callback().actionPerformed(e);
 			}
@@ -1869,7 +2183,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public ToggleAddresstype get_adrtype_company_fixed() { return m_btn_adrtypes_company_fixed; }
 	public ToggleAddresstype get_adrtype_private_mobile() { return m_btn_adrtypes_private_mobile; }
 	public ToggleAddresstype get_adrtype_company_mobile() { return m_btn_adrtypes_company_mobile; }
-	public ToggleAddresstype get_adrtype_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
+//	public ToggleAddresstype get_adrtype_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_adrtype_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	public ToggleAddresstype get_adrtype_nofax() { return m_btn_adrtypes_nofax; }
 	public ToggleAddresstype get_adrtype_vulnerable() { return m_btn_adrtypes_vulnerable; }
@@ -1954,12 +2268,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}*/
 			if(can_lba())
 			{
-				m_btn_adrtypes_cell_broadcast_text.setEnabled(!b);
+//				m_btn_adrtypes_cell_broadcast_text.setEnabled(!b);
+				chkLocationBased.setEnabled(!b);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(!b);				
 			}
 			else
 			{
-				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
+//				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
+				chkLocationBased.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_voice.setEnabled(false);
 			}
 
@@ -1974,6 +2290,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_adrtypes_nofax.setEnabled(!b);
 			m_btn_adrtypes_vulnerable.setEnabled(!b);
 			m_btn_adrtypes_headofhousehold.setEnabled(!b);
+			
+			chkAddressBased.setEnabled(!b);
+			changeVisibilityOfABASPanel(!b);
 			
 			//test of auto expand polygon
 			//can be removed

@@ -41,13 +41,14 @@ public class SettingsCtrl implements ISettingsUpdate {
         initializeGui(settings, mailaccount, userinfo);
     	dlg.initValues();
     	dlg.populateDeptCategory(settings.getDeptCategory());
+    	dlg.populateABASPanelData(settings.getAddressTypes());
     	dlg.setLocationRelativeTo(parent);
     	dlg.setVisible(true);
     }
     
     public void initializeGui(no.ums.pas.core.logon.Settings s, MailAccount a, UserInfo userinfo)
     {
-    	dlg.getToggleLba().setSelected(false);
+//    	dlg.getToggleLba().setSelected(false);
     	dlg.getToggleBlocklist().setSelected(false);
     	dlg.settingsModel1.setAutoStartParm(s.parm());
     	dlg.settingsModel1.setCompanyid(s.getCompany());
@@ -120,7 +121,8 @@ public class SettingsCtrl implements ISettingsUpdate {
     		dlg.getChkAutoStartParm().setEnabled(b_enable_parm);
     	}
     	dlg.getPnlLBA().setVisible(b_enable_lba);
-    	dlg.getToggleLba().setVisible(b_enable_lba);
+//    	dlg.getToggleLba().setVisible(b_enable_lba);
+    	dlg.getChkLocationBased().setVisible(b_enable_lba);
     	dlg.getToggleVulnerable().setVisible(b_enable_vulnerable);
     	dlg.getToggleHeadOfHousehold().setVisible(b_enable_headofhousehold);
 
@@ -149,6 +151,8 @@ public class SettingsCtrl implements ISettingsUpdate {
 		
 		no.ums.pas.core.logon.Settings s = Variables.getSettings();
 		MailAccount ma = PAS.get_pas().get_userinfo().get_mailaccount();
+		final int oldDepartmentCategory = s.getDeptCategory();
+		final int newDepartmentCategory = model.getDeptCategory();
 		s.setUsername(model.getUsername());
 		s.setCompany(model.getCompanyid());
 		s.setParm(model.getAutoStartParm());
@@ -199,7 +203,8 @@ public class SettingsCtrl implements ISettingsUpdate {
 			protected Object doInBackground() throws Exception {
 				new WSSaveUI(null).runNonThreaded();
 				new XmlWriter().saveSettings(true);
-				PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().reInitializeDepartmentMenus();
+				if(oldDepartmentCategory != newDepartmentCategory)
+					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().reInitializeDepartmentMenus();
 				return "OK";
 			}
 

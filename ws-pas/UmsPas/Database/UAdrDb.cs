@@ -362,14 +362,15 @@ namespace com.ums.PAS.Database
                         if (m_n_pastype == 1)
                         {
                             szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
-                                                    "FROM ADR_KONSUM WHERE KOMMUNENR={0}",
-                                                    m[i].sz_municipalid);
+                                                    "FROM ADR_KONSUM WHERE KOMMUNENR={0}{1}",
+                                                    m[i].sz_municipalid,
+                                                    GetRecipientFilter(adrtypes));
                         }
                         else if (m_n_pastype == 2)
                         {
                             szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
-                                                    "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}",
-                                                    m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""));
+                                                    "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}{3}",
+                                                    m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""), GetRecipientFilter(adrtypes));
                         }
                         bfirst = false;
                     }
@@ -401,6 +402,38 @@ namespace com.ums.PAS.Database
             return count;
         }
 
+        private static string GetRecipientFilter(long adrtypes)
+        {
+            string recipientFilter = "";
+            if ((adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_RESIDENT) > 0 && (adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_HOME) > 0 && (adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_VACATION) > 0)
+            {
+                // all recipients, no filters needed
+            }
+            else if ((adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_RESIDENT) > 0 || (adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_HOME) > 0 || (adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_VACATION) > 0)
+            {
+                bool comma = false;
+                recipientFilter += " AND boligtype in (";
+                if ((adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_RESIDENT) > 0)
+                {
+                    if (comma) recipientFilter += ","; else comma = true;
+                    recipientFilter += "'R'";
+                }
+                if ((adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_HOME) > 0)
+                {
+                    if (comma) recipientFilter += ","; else comma = true;
+                    recipientFilter += "'B'";
+                }
+                if ((adrtypes & (long)ADRTYPES.RECIPTYPE_PRIVATE_OWNER_VACATION) > 0)
+                {
+                    if (comma) recipientFilter += ","; else comma = true;
+                    recipientFilter += "'F'";
+                }
+                recipientFilter += ")";
+            }
+
+            return recipientFilter;
+        }
+
         protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
         {
             UAdrCount count = new UAdrCount();
@@ -408,10 +441,45 @@ namespace com.ums.PAS.Database
             try
             {
                 bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
-                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
+                string szSQL = "";
+
+                if (m_n_pastype == 1)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
                                             e.center.lon, e.center.lat,
                                             e.radius.lon, e.radius.lat,
-                                            (m_n_pastype==2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "")) : ""));
+                                            (m_n_pastype == 2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "")) : ""));
+                }
+                else if (m_n_pastype == 2)
+                {
+                    szSQL = String.Format(@"select 
+                                                isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
+                                            FROM 
+                                                ADR_KONSUM, DEPARTMENT_X_MUNICIPAL DX 
+                                            WHERE
+                                                LAT >= {0} AND 
+                                                LAT <= {1} AND 
+                                                LON >= {2} AND 
+                                                LON <= {3} AND
+                                                ( ( (lat-{4})*(lat-{4}) / ({5}*{5}) ) + ( (lon-{6}) * (lon-{6}) / ({7}*{7}) ) < 1 ) AND
+                                                ADR_KONSUM.KOMMUNENR=DX.l_municipalid AND 
+                                                DX.l_deptpk={8} 
+                                                {9} 
+                                                {10}
+                                            GROUP BY 
+                                                BEDRIFT, f_hasfixed, f_hasmobile"
+                        , e.center.lon - e.radius.lon
+                        , e.center.lon + e.radius.lon
+                        , e.center.lat - e.radius.lat
+                        , e.center.lat + e.radius.lat
+                        , e.center.lon
+                        , e.radius.lon
+                        , e.center.lat
+                        , e.radius.lat
+                        , m_n_deptpk
+                        , (bVulnerableCitizensOnly ? "AND ISNULL(f_hasdisabled,0) IN (1)" : "")
+                        , GetRecipientFilter(adrtypes));
+                }
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())
@@ -472,7 +540,7 @@ namespace com.ums.PAS.Database
                                                             "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
                                             n_maxadr_polycount,
                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
-                                            ""/*,bOnlyHeadOfHousehold ? "ORDER BY l_familyno, l_personcode" : ""*/);
+                                            GetRecipientFilter(adrtypes));
                 }
                                                                 
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
@@ -596,11 +664,11 @@ namespace com.ums.PAS.Database
                             {
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3}, f_hasdisabled=0 " +
-                                                                                        "FROM ADR_INTEGRATION WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
+                                                                                        "FROM ADR_KONSUM WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3}, isnull(f_hasdisabled,0) f_hasdisabled " +
-                                                                                        "FROM ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
+                                                                                        "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].fnr != null && p[i].fnr.Trim().Length > 0 && !p[i].fnr.Trim().Equals("0")) // ignore if fnr is empty or 0
@@ -620,11 +688,11 @@ namespace com.ums.PAS.Database
                             {
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={2}, f_hasdisabled=0 " +
-                                                                                        "FROM ADR_INTEGRATION WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3", // IN (0,1)",
+                                                                                        "FROM ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={2}, isnull(f_hasdisabled,0) f_hasdisabled " +
-                                                                                        "FROM ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}", //BEDRIFT IN (0,1)
+                                                                                        "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].houseno != null && p[i].houseno.Trim().Length > 0 && !p[i].houseno.Trim().Equals("0")) // ignore if empty or 0
@@ -641,19 +709,19 @@ namespace com.ums.PAS.Database
                                 }
                             }
                         }
-                        else // not so many lines, selec everything
+                        else // not so many lines, select everything
                         {
                             if (p[i].propertyField) // property import
                             {
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3}, f_hasdisabled=0 FROM " +
-                                                             "ADR_INTEGRATION WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
+                                                             "ADR_KONSUM WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3", // IN (0,1)",
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3}, f_hasdisabled=0 FROM " +
-                                                             "ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
+                                                             "ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX  WHERE KOMMUNENR={0} AND GNR={1} AND BNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                         p[i].municipalid, p[i].gnr, p[i].bnr, p[i].n_linenumber - skiplines, m_n_deptpk);
 
                                 if (p[i].fnr != null && p[i].fnr.Trim().Length > 0 && !p[i].fnr.Trim().Equals("0")) // ignore if fnr is empty or 0
@@ -674,12 +742,12 @@ namespace com.ums.PAS.Database
                                 if (m_n_pastype == 1)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={2}, f_hasdisabled=0 FROM " +
-                                                             "ADR_INTEGRATION WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1)",
+                                                             "ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1)",
                                                              p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines);
                                 else if (m_n_pastype == 2)
                                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={2}, isnull(f_hasdisabled,0) f_hasdisabled FROM " +
-                                                             "ADR_INTEGRATION AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}",
+                                                             "ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={3}",
 
                                      p[i].municipalid, p[i].streetid, p[i].n_linenumber - skiplines, m_n_deptpk);
 
@@ -764,129 +832,6 @@ namespace com.ums.PAS.Database
                 throw;
             }
         }
-       
-        /*public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next, ref int skiplines, bool only_coors)
-        {
-            try
-            {
-                String szSQL = "";
-                int i = 0;
-                int n_validcount = 0;
-                for (i = startat; i < p.Count; i++)
-                {
-                    if (p[i].isValid())
-                    {
-                        if (n_validcount > 0) //there are more sql before this one, add union
-                            szSQL += " UNION ";
-                        if (only_coors)
-                        {
-                            if (m_n_pastype == 1)
-                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                    "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
-                            else if (m_n_pastype == 2)
-                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                    "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
-                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
-
-                        }
-                        else
-                        {
-                            if (m_n_pastype == 1)
-                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
-                                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
-                            else if (m_n_pastype == 2)
-                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
-                                                         "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
-                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
-
-                        }
-                        if (p[i].letter.Trim().Length > 0)
-                        {
-                            szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
-                        }
-                        n_validcount++;
-                        if (n_validcount >= max)
-                            break;
-                    }
-                }
-                if (n_validcount > 0)
-                {
-                    try
-                    {
-                        OdbcDataReader rs;
-                        //m_cmd = new OdbcCommand(szSQL, conn);
-                        //rs = m_cmd.ExecuteReader();
-                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN, true);
-
-                        while (rs.Read())
-                        {
-                            UAddress adr = new UAddress();
-                            readAddressFromDb(ref adr, ref rs, only_coors);
-                            if (adr.arrayindex >= 0)
-                            {
-                                p[adr.arrayindex].list.addLine(ref adr);
-                                //p[adr.arrayindex].list.finalize();
-                            }
-                        }
-                        rs.Close();
-                    }
-                    catch (Exception err)
-                    {
-                        next = startat;
-                        throw err;
-                    }
-                }
-                //return (i+1); //return next
-                next = (i + 1);
-                return i - startat + 1;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }*/
-
-        /*public int GetGisImport(ref UGisImportResultLine p)
-        {
-            String szSQL;
-            szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                          "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber=0 FROM " +
-                                          "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                          p.municipalid, p.streetid, p.houseno);
-            
-            if (p.letter.Trim().Length > 0)
-            {
-                szSQL += " AND OPPGANG='" + p.letter.Trim() + "'";
-            }
-            try
-            {
-                
-                //rs = base.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                OdbcDataReader rs;
-                m_cmd = new OdbcCommand(szSQL, conn);
-                rs = m_cmd.ExecuteReader();
-                while (rs.Read())
-                {
-                    UAddress adr = new UAddress();
-                    readAddressFromDb(ref adr, ref rs, false);
-                    p.list.addLine(ref adr);
-
-                }
-                rs.Close();
-            }
-            catch (Exception e)
-            {
-                ULog.error(0, "Error in retrieving GisImport addresses", e.Message);
-                throw e;
-            }
-
-
-            return 0;
-        }*/
 
         public UAddressList FindAddressesByDistance(UMapDistanceParams param)
         {
@@ -925,6 +870,10 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 return list;
             }
 
+            // Ger recipient filter (always include private residents even though they aren't flagged in the db)
+            PASUmsDb db = new PASUmsDb();
+            string recipientFilter = GetRecipientFilter(db.GetDepartmentAddresstypes(m_n_deptpk) | (int)ADRTYPES.RECIPTYPE_PRIVATE_RESIDENT);
+
             if (m_n_pastype == 1)
             {
                 szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
@@ -936,8 +885,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             {
                 szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber=0, isnull(f_hasdisabled,0) f_hasdisabled FROM " +
-                                             "ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE LON>{0} AND LON<={1} AND LAT>={2} AND LAT<{3} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
-                                             param.b_bo, param.u_bo, param.l_bo, param.r_bo, m_n_deptpk);
+                                             "ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE LON>{0} AND LON<={1} AND LAT>={2} AND LAT<{3} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}{5}",
+                                             param.b_bo, param.u_bo, param.l_bo, param.r_bo, m_n_deptpk, recipientFilter);
             }
             OdbcDataReader rs = null;
             try
@@ -949,190 +898,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                     UAddressBasics _adr = (UAddressBasics)adr;
                     readAddressFromDb(ref adr, ref rs, false);
                     list.addLine(adr);
-
-                    /*try
-                    {
-                        adr.kondmid = rs.GetString(0);
-                    }
-                    catch(Exception)
-                    {
-                        adr.kondmid = "0";
-                    }
-                    try
-                    {
-                        adr.name = rs.GetString(1);
-                    }
-                    catch(Exception)
-                    {
-                        adr.name = "";
-                    }
-                    try
-                    {
-                        adr.address = rs.GetString(2);
-                    }
-                    catch(Exception)
-                    {
-                        adr.address = "";
-                    }
-                    try
-                    {
-                        adr.houseno = rs.GetInt32(3);
-                    }
-                    catch(Exception)
-                    {
-                        adr.houseno = 0;
-                    }
-                    try
-                    {
-                        adr.letter = rs.GetString(4);
-                    }
-                    catch(Exception)
-                    {
-                        adr.letter = "";
-                    }
-                    try
-                    {
-                        adr.postno = rs.GetString(5);
-                    }
-                    catch(Exception)
-                    {
-                        adr.postno = "";
-                    }
-                    try
-                    {
-                        adr.postarea = rs.GetString(6);
-                    }
-                    catch(Exception)
-                    {
-                        adr.postarea = "";
-                    }
-                    try
-                    {
-                        adr.region = rs.GetInt32(7);
-                    }
-                    catch(Exception)
-                    {
-                        adr.region = 0;
-                    }
-                    try
-                    {
-                        adr.bday = rs.GetString(8);
-                    }
-                    catch(Exception)
-                    {
-                        adr.bday = "0";
-                    }
-                    //adr.bday = 0;
-                    try
-                    {
-                        adr.number = rs.GetString(9);
-                    }
-                    catch(Exception)
-                    {
-                        adr.number = "";
-                    }
-                    try
-                    {
-                        adr.lon = rs.GetDouble(10);
-                    }
-                    catch(Exception)
-                    {
-                        adr.lon = 0;
-                    }
-                    try
-                    {
-                        adr.lat = rs.GetDouble(11);
-                    }
-                    catch(Exception)
-                    {
-                        adr.lat  = 0;
-                    }
-                    try
-                    {
-                        adr.gno = rs.GetInt32(12);
-                    }
-                    catch(Exception)
-                    {
-                        adr.gno = 0;
-                    }
-                    try
-                    {
-                        adr.bno = rs.GetInt32(13);
-                    }
-                    catch(Exception)
-                    {
-                        adr.bno = 0;
-                    }
-                    try
-                    {
-                        adr.bedrift = rs.GetInt32(14);
-                    }
-                    catch(Exception)
-                    {
-                        adr.bedrift = 0;
-                    }
-                    try
-                    {
-                        adr.importid = rs.GetInt32(15);
-                    }
-                    catch(Exception)
-                    {
-                        adr.importid = -1;
-                    }
-                    try
-                    {
-                        adr.mobile = rs.GetString(16);
-                    }
-                    catch(Exception)
-                    {
-                        adr.mobile = "";
-                    }
-                    try
-                    {
-                        adr.streetid = rs.GetInt32(17);
-                    }
-                    catch(Exception)
-                    {
-                        adr.streetid = 0;
-                    }
-                    try
-                    {
-                        adr.xycode = rs.GetString(18);
-                    }
-                    catch(Exception)
-                    {
-                        adr.xycode = "a";
-                    }
-                    try
-                    {
-                        adr.hasfixed = rs.GetInt16(19);
-                    }
-                    catch(Exception)
-                    {
-                        adr.hasfixed = 0;
-                    }
-                    try
-                    {
-                        adr.hasmobile = rs.GetInt16(20);
-                    }
-                    catch(Exception)
-                    {
-                        adr.hasmobile = 0;
-                    }
-
-                        list.addLine(ref adr);*/
-                    /*}
-                    catch (Exception e)
-                    {
-                        //ULog.warning(-1, "Error in address", e.Message);
-                    }*/
-
                 }
-                /*}
-                catch (Exception e)
-                {
 
-                }*/
                 list.finalize();
                 rs.Close();
 

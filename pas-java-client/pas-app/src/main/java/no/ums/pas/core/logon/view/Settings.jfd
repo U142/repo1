@@ -25,7 +25,7 @@
        </void>
        <void method="setProperty">
         <string>$verticalGroup</string>
-        <string>par l {seq t {space :::p, comp tabbedPane1:::::x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string>
+        <string>par l {seq t {space :::p, comp tabbedPane1:::::x, space s:::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string>
        </void>
       </object>
       <void method="setProperty">
@@ -107,7 +107,7 @@
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::348:x}}</string>
+            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::463:x}}</string>
            </void>
           </object>
           <void method="setProperty">
@@ -194,7 +194,7 @@
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::193:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::255:x}, space :::p}}</string>
+            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par t {seq {comp btnMoveUp:6::p:31:p, space ::308:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::::370:x}, space :::p}}</string>
            </void>
           </object>
           <void method="setProperty">
@@ -511,7 +511,7 @@
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::313:x}}</string>
+            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::428:x}}</string>
            </void>
           </object>
           <void method="setProperty">
@@ -659,7 +659,7 @@
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::307:x}}</string>
+            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::422:x}}</string>
            </void>
           </object>
           <void method="setProperty">
@@ -781,13 +781,20 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq l {space :::p, par l {comp pnlLBA::l:::x:1, par l:l::p {comp autostartup::l:::x:1, comp panel2::l:0:614:x:1}}, space :::p}}</string>
+            <string>par l {seq {space :::p, par l {comp pnlLBA::l:::x:1, comp panel2::l:0::x:1, seq t {space :0:0:x, comp autostartup:::p::p:1}}, space :::p}}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :::p, comp autostartup:::p:53:p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::67:x}}</string>
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space :p:18:p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p:355:p, space :::x}}</string>
            </void>
           </object>
+          <void method="setProperty">
+           <string>preferredSize</string>
+           <object class="java.awt.Dimension">
+            <int>634</int>
+            <int>415</int>
+           </object>
+          </void>
           <void property="name">
            <string>pnlDiverse</string>
           </void>
@@ -798,11 +805,11 @@
              <class>org.jdesktop.layout.GroupLayout</class>
              <void method="setProperty">
               <string>$horizontalGroup</string>
-              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:195:p, space s:::p, comp lblAutoGroupDepts:::p::p, space :4:4:p, comp comboAutoGroupDepts:::p::p, space ::69:x}}</string>
+              <string>par l {seq l {space :::p, comp chkAutoStartParm:::p:193:p, space s:::p, comp lblAutoGroupDepts:::p::p, space :::p, comp comboAutoGroupDepts:::p::p, space ::307:x}}</string>
              </void>
              <void method="setProperty">
               <string>$verticalGroup</string>
-              <string>par l {seq {par l {comp chkAutoStartParm:::p::p, comp lblAutoGroupDepts:::p::p, seq l {space :1:1:p, comp comboAutoGroupDepts:::p::p}}, space :::x}}</string>
+              <string>par l {seq l {par b {comp chkAutoStartParm::b:p::p, comp lblAutoGroupDepts::b:p::p, comp comboAutoGroupDepts::b:p::p}, space :0:7:x}}</string>
              </void>
             </object>
             <void method="setProperty">
@@ -881,7 +888,7 @@
              <class>org.jdesktop.layout.GroupLayout</class>
              <void method="setProperty">
               <string>$horizontalGroup</string>
-              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space ::251:x}}</string>
+              <string>par l {seq l {space :::p, comp lblLbaUpdate:::p:293:p, space :::p, comp comboLbaUpdate:::p:44:p, space :::x}}</string>
              </void>
              <void method="setProperty">
               <string>$verticalGroup</string>
@@ -943,11 +950,11 @@
              <class>org.jdesktop.layout.GroupLayout</class>
              <void method="setProperty">
               <string>$horizontalGroup</string>
-              <string>par l {seq l {space :::p, par l:::p {seq l {par l {seq {comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p}, comp lblPrivateAdrTypes:::p:132:p:1}, space :::p, par l {seq l {comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p, space s:::p, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p, space :p:8:p, comp toggleHeadOfHousehold:::p::p}, comp lblCompanyAdrtypes::l:p:137:p:1}, space s:::p, par l {comp lblLbaText::l:p:111:p:2, comp toggleLba:8:l:p:47:p:1}}, seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}}, space :p::p}}</string>
+              <string>par l {seq {par l {seq {par l {seq {space :p:61:p, comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p, space :0:0:x}, seq l {space :p:19:p, par l {seq {comp chkLocationBased:::p::p, space :::x, comp toggleBlocklist:8::p::p, space :::p, comp toggleVulnerable:8::p::p, space :::p, comp toggleHeadOfHousehold:::p::p}, seq {comp chkAddressBased:::p::p, space :0:0:x}}}}, space :::x}, seq l {space :::p, comp recipientTab:::p:593:p, space :::x}}, comp togglePrivateFixed:8::p::p, space :::p, comp togglePrivateMobile:8::p::p, space :p:75:p, comp toggleCompanyFixed:8::p::p, space :::p, comp toggleCompanyMobile:8::p:57:p}}</string>
              </void>
              <void method="setProperty">
               <string>$verticalGroup</string>
-              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {comp toggleVulnerable:::::x, comp toggleBlocklist:::::x:1, comp toggleCompanyMobile::t:::x:1, comp togglePrivateFixed::t:::x:1, comp togglePrivateMobile::t:::x:1, comp toggleCompanyFixed::t:::x:1, comp toggleHeadOfHousehold:::p::p, comp toggleLba:::::x:1}, space :::p, par l {par l:::p {comp lblPrivateAdrTypes::l::61:x:1, comp lblCompanyAdrtypes::l:::x:1}, comp lblLbaText::::61:x}, space :::p}}</string>
+              <string>par l {seq t {space :::p, par t {comp togglePolygon::t:p::p, comp toggleEllipse:::p::p, comp toggleImport::t:p::p}, space s:::p, par l {comp chkLocationBased::l:p::p, par t:l::p {comp toggleBlocklist::t:p::p:1, comp toggleVulnerable::t:::x, comp toggleHeadOfHousehold::l:p::p}}, par l {seq {space :p:81:p, par l {comp toggleCompanyMobile::::0:x:1, comp toggleCompanyFixed::::0:x:1}, space :p:4:p, par l {comp togglePrivateFixed::l::0:x:1, comp togglePrivateMobile::l::0:x:1}, space :p:159:p}, seq l {space :p:3:p, comp chkAddressBased:::p::p, space s:::p, comp recipientTab:::p:148:p, space :::x}}}}</string>
              </void>
             </object>
             <void method="setProperty">
@@ -979,6 +986,10 @@
                 <null/>
                 <string>main_sending_adr_btn_fixed_private_tooltip</string>
                </object>
+              </void>
+              <void method="setProperty">
+               <string>visible</string>
+               <boolean>false</boolean>
               </void>
               <void property="name">
                <string>togglePrivateFixed</string>
@@ -1012,6 +1023,10 @@
                 <string>main_sending_adr_btn_mobile_private_tooltip</string>
                </object>
               </void>
+              <void method="setProperty">
+               <string>visible</string>
+               <boolean>false</boolean>
+              </void>
               <void property="name">
                <string>togglePrivateMobile</string>
               </void>
@@ -1043,6 +1058,10 @@
                 <null/>
                 <string>main_sending_adr_btn_fixed_company_tooltip</string>
                </object>
+              </void>
+              <void method="setProperty">
+               <string>visible</string>
+               <boolean>false</boolean>
               </void>
               <void property="name">
                <string>toggleCompanyFixed</string>
@@ -1076,6 +1095,10 @@
                 <string>main_sending_adr_btn_mobile_company_tooltip</string>
                </object>
               </void>
+              <void method="setProperty">
+               <string>visible</string>
+               <boolean>false</boolean>
+              </void>
               <void property="name">
                <string>toggleCompanyMobile</string>
               </void>
@@ -1084,46 +1107,6 @@
                 <string>JavaCodeGenerator.variableGetter</string>
                 <boolean>true</boolean>
                </void>
-              </void>
-             </object>
-            </void>
-            <void method="add">
-             <object class="com.jformdesigner.model.FormComponent">
-              <string>no.ums.pas.send.ToggleAddresstype</string>
-              <void method="setProperty">
-               <string>icon</string>
-               <object class="com.jformdesigner.model.SwingIcon">
-                <int>0</int>
-                <string>/no/ums/pas/icons/lba_24.png</string>
-               </object>
-              </void>
-              <void method="setProperty">
-               <string>rolloverEnabled</string>
-               <boolean>false</boolean>
-              </void>
-              <void method="setProperty">
-               <string>toolTipText</string>
-               <object class="com.jformdesigner.model.FormMessage">
-                <null/>
-                <string>main_sending_adr_btn_lba_text_tooltip</string>
-               </object>
-              </void>
-              <void property="name">
-               <string>toggleLba</string>
-              </void>
-              <void method="auxiliary">
-               <void method="setProperty">
-                <string>JavaCodeGenerator.variableGetter</string>
-                <boolean>true</boolean>
-               </void>
-              </void>
-              <void method="addEvent">
-               <object class="com.jformdesigner.model.FormEvent">
-                <string>java.awt.event.ActionListener</string>
-                <string>actionPerformed</string>
-                <string>toggleLbaActionPerformed</string>
-                <boolean>true</boolean>
-               </object>
               </void>
              </object>
             </void>
@@ -1164,38 +1147,6 @@
                 <string>toggleBlocklistActionPerformed</string>
                 <boolean>true</boolean>
                </object>
-              </void>
-             </object>
-            </void>
-            <void method="add">
-             <object class="com.jformdesigner.model.FormComponent">
-              <string>javax.swing.JLabel</string>
-              <void method="setProperty">
-               <string>verticalAlignment</string>
-               <int>1</int>
-              </void>
-              <void property="name">
-               <string>lblPrivateAdrTypes</string>
-              </void>
-             </object>
-            </void>
-            <void method="add">
-             <object class="com.jformdesigner.model.FormComponent">
-              <string>javax.swing.JLabel</string>
-              <void method="setProperty">
-               <string>verticalAlignment</string>
-               <int>1</int>
-              </void>
-              <void property="name">
-               <string>lblCompanyAdrtypes</string>
-              </void>
-             </object>
-            </void>
-            <void method="add">
-             <object class="com.jformdesigner.model.FormComponent">
-              <string>javax.swing.JLabel</string>
-              <void property="name">
-               <string>lblLbaText</string>
               </void>
              </object>
             </void>
@@ -1401,6 +1352,319 @@
               </void>
              </object>
             </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormContainer">
+              <string>javax.swing.JTabbedPane</string>
+              <object class="com.jformdesigner.model.FormLayoutManager">
+               <class>javax.swing.JTabbedPane</class>
+              </object>
+              <void property="name">
+               <string>recipientTab</string>
+              </void>
+              <void method="add">
+               <object class="com.jformdesigner.model.FormContainer">
+                <string>javax.swing.JPanel</string>
+                <object class="com.jformdesigner.model.FormLayoutManager">
+                 <class>java.awt.GridBagLayout</class>
+                 <void method="setProperty">
+                  <string>$columnSpecs</string>
+                  <string>0, 0</string>
+                 </void>
+                 <void method="setProperty">
+                  <string>$rowSpecs</string>
+                  <string>0, 0, 0, 0</string>
+                 </void>
+                 <void method="setProperty">
+                  <string>$hGap</string>
+                  <int>5</int>
+                 </void>
+                 <void method="setProperty">
+                  <string>$vGap</string>
+                  <int>5</int>
+                 </void>
+                 <void method="setProperty">
+                  <string>$alignLeft</string>
+                  <boolean>true</boolean>
+                 </void>
+                 <void method="setProperty">
+                  <string>$alignTop</string>
+                  <boolean>true</boolean>
+                 </void>
+                </object>
+                <void property="name">
+                 <string>privateReceipientPanel</string>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JLabel</string>
+                  <void method="setProperty">
+                   <string>text</string>
+                   <object class="com.jformdesigner.model.FormMessage">
+                    <null/>
+                    <string>main_sending_adr_sel_recipients</string>
+                   </object>
+                  </void>
+                  <void property="name">
+                   <string>lblSelectPrivateRecipients</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>insets</string>
+                   <object class="java.awt.Insets">
+                    <int>2</int>
+                    <int>20</int>
+                    <int>0</int>
+                    <int>0</int>
+                   </object>
+                  </void>
+                 </object>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JComboBox</string>
+                  <void property="name">
+                   <string>comboPrivateRecipientChannel</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>gridx</string>
+                   <int>1</int>
+                  </void>
+                  <void method="setProperty">
+                   <string>insets</string>
+                   <object class="java.awt.Insets">
+                    <int>2</int>
+                    <int>0</int>
+                    <int>0</int>
+                    <int>0</int>
+                   </object>
+                  </void>
+                 </object>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JCheckBox</string>
+                  <void method="setProperty">
+                   <string>text</string>
+                   <object class="com.jformdesigner.model.FormMessage">
+                    <null/>
+                    <string>main_sending_adr_sel_residents</string>
+                   </object>
+                  </void>
+                  <void property="name">
+                   <string>chkResident</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>gridy</string>
+                   <int>1</int>
+                  </void>
+                 </object>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JCheckBox</string>
+                  <void method="setProperty">
+                   <string>text</string>
+                   <object class="com.jformdesigner.model.FormMessage">
+                    <null/>
+                    <string>main_sending_adr_sel_property_owner_private</string>
+                   </object>
+                  </void>
+                  <void property="name">
+                   <string>chkPropertyOwnerPrivate</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>gridy</string>
+                   <int>2</int>
+                  </void>
+                 </object>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JCheckBox</string>
+                  <void method="setProperty">
+                   <string>text</string>
+                   <object class="com.jformdesigner.model.FormMessage">
+                    <null/>
+                    <string>main_sending_adr_sel_property_owner_vacation</string>
+                   </object>
+                  </void>
+                  <void property="name">
+                   <string>chkPropertyOwnerVacation</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>gridy</string>
+                   <int>3</int>
+                  </void>
+                 </object>
+                </void>
+               </object>
+               <object class="com.jformdesigner.model.FormLayoutConstraints">
+                <null/>
+                <void method="setProperty">
+                 <string>title</string>
+                 <object class="com.jformdesigner.model.FormMessage">
+                  <null/>
+                  <string>common_adr_private</string>
+                 </object>
+                </void>
+               </object>
+              </void>
+              <void method="add">
+               <object class="com.jformdesigner.model.FormContainer">
+                <string>javax.swing.JPanel</string>
+                <object class="com.jformdesigner.model.FormLayoutManager">
+                 <class>java.awt.GridBagLayout</class>
+                 <void method="setProperty">
+                  <string>$columnSpecs</string>
+                  <string>0, 0</string>
+                 </void>
+                 <void method="setProperty">
+                  <string>$rowSpecs</string>
+                  <string>0, 0, 0, 0</string>
+                 </void>
+                 <void method="setProperty">
+                  <string>$hGap</string>
+                  <int>5</int>
+                 </void>
+                 <void method="setProperty">
+                  <string>$vGap</string>
+                  <int>5</int>
+                 </void>
+                 <void method="setProperty">
+                  <string>$alignLeft</string>
+                  <boolean>true</boolean>
+                 </void>
+                 <void method="setProperty">
+                  <string>$alignTop</string>
+                  <boolean>true</boolean>
+                 </void>
+                </object>
+                <void property="name">
+                 <string>companyReceipientPanel</string>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JLabel</string>
+                  <void method="setProperty">
+                   <string>text</string>
+                   <object class="com.jformdesigner.model.FormMessage">
+                    <null/>
+                    <string>main_sending_adr_sel_recipients</string>
+                   </object>
+                  </void>
+                  <void property="name">
+                   <string>lblSelectCompanyRecipients</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>insets</string>
+                   <object class="java.awt.Insets">
+                    <int>2</int>
+                    <int>20</int>
+                    <int>0</int>
+                    <int>0</int>
+                   </object>
+                  </void>
+                 </object>
+                </void>
+                <void method="add">
+                 <object class="com.jformdesigner.model.FormComponent">
+                  <string>javax.swing.JComboBox</string>
+                  <void property="name">
+                   <string>comboCompanyRecipientChannel</string>
+                  </void>
+                 </object>
+                 <object class="com.jformdesigner.model.FormLayoutConstraints">
+                  <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
+                  <void method="setProperty">
+                   <string>gridx</string>
+                   <int>1</int>
+                  </void>
+                  <void method="setProperty">
+                   <string>insets</string>
+                   <object class="java.awt.Insets">
+                    <int>2</int>
+                    <int>74</int>
+                    <int>0</int>
+                    <int>0</int>
+                   </object>
+                  </void>
+                 </object>
+                </void>
+               </object>
+               <object class="com.jformdesigner.model.FormLayoutConstraints">
+                <null/>
+                <void method="setProperty">
+                 <string>title</string>
+                 <object class="com.jformdesigner.model.FormMessage">
+                  <null/>
+                  <string>common_adr_company</string>
+                 </object>
+                </void>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JCheckBox</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_option_location_based</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>preferredSize</string>
+               <object class="java.awt.Dimension">
+                <int>175</int>
+                <int>40</int>
+               </object>
+              </void>
+              <void property="name">
+               <string>chkLocationBased</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JCheckBox</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>main_sending_adr_option_address_based</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>preferredSize</string>
+               <object class="java.awt.Dimension">
+                <int>175</int>
+                <int>40</int>
+               </object>
+              </void>
+              <void property="name">
+               <string>chkAddressBased</string>
+              </void>
+             </object>
+            </void>
            </object>
           </void>
          </object>
@@ -1434,7 +1698,7 @@
        <string>size</string>
        <object class="java.awt.Dimension">
         <int>670</int>
-        <int>520</int>
+        <int>625</int>
        </object>
       </void>
      </object>
@@ -1570,7 +1834,7 @@
        </object>
       </void>
      </object>
-    </void>
+    </void>    
     <void method="addBindingGroup">
      <object class="com.jformdesigner.model.FormBindingGroup">
       <class>org.jdesktop.beansbinding.BindingGroup</class>
