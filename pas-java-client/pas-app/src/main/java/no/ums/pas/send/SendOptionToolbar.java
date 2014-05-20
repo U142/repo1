@@ -1435,6 +1435,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		lock_sending(false);
 	}
 	
+	private boolean isAnyABASChannelSelected()
+	{
+		return ((((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue() > 0) |(((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue() > 0));
+	}
 	private void changeVisibilityOfABASPanel(boolean b)
 	{
 		if(b && !chkAddressBased.isSelected())
@@ -2146,8 +2150,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	 */
 	public boolean canFinalize()
 	{
+
 		// Hengelåsen skal være visuelt og praktisk deaktivert frem til område og kanal er valgt
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
+		bCanFinalize = bCanFinalize && isAnyABASChannelSelected();
 		m_btn_finalize.setEnabled(bCanFinalize);
 		return bCanFinalize;
 	}
