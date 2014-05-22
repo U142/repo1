@@ -58,6 +58,12 @@ namespace com.ums.pas.integration.AddressLookup
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
             {
+                int timeout;
+                if (int.TryParse(System.Configuration.ConfigurationManager.AppSettings["OdbcTimeout"], out timeout))
+                {
+                    Command.CommandTimeout = timeout;
+                }
+
                 DateTime start;
                 TimeSpan duration;
 

@@ -16,6 +16,12 @@ namespace com.ums.pas.integration.AddressLookup
             using (OdbcConnection conn = new OdbcConnection(connectionString))
             using (OdbcCommand cmd = conn.CreateCommand())
             {
+                int timeout;
+                if (int.TryParse(System.Configuration.ConfigurationManager.AppSettings["OdbcTimeout"], out timeout))
+                {
+                    cmd.CommandTimeout = timeout;
+                }
+
                 conn.Open();
                 cmd.CommandText = @"select 
 	                                    SC.sz_description sz_category,

@@ -40,6 +40,12 @@ namespace com.ums.pas.integration.AddressLookup
             using (OdbcCommand CommandWithHouseNo = Connection.CreateCommand())
             using (OdbcCommand CommandNoHouse = Connection.CreateCommand())
             {
+                int timeout;
+                if (int.TryParse(System.Configuration.ConfigurationManager.AppSettings["OdbcTimeout"], out timeout))
+                {
+                    CommandNoHouse.CommandTimeout = timeout;
+                    CommandWithHouseNo.CommandTimeout = timeout;
+                }
 
                 Connection.Open();
                 //Command.CommandText = string.Format("SELECT TELEFON FROM ADR_KONSUMENT_201320105 WHERE POSTNR=? and HUSNR=?");// and CONTAINS(NAVN, ?)");
@@ -264,6 +270,12 @@ namespace com.ums.pas.integration.AddressLookup
             using (OdbcConnection Connection = new OdbcConnection(ConnectionString))
             using (OdbcCommand Command = Connection.CreateCommand())
             {
+                int timeout;
+                if (int.TryParse(System.Configuration.ConfigurationManager.AppSettings["OdbcTimeout"], out timeout))
+                {
+                    Command.CommandTimeout = timeout;
+                }
+                    
                 Connection.Open();
 
                 DateTime start;
