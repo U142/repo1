@@ -25,14 +25,17 @@ namespace com.ums.pas.integration
             int TtsRetries; int.TryParse(System.Configuration.ConfigurationManager.AppSettings["TtsRetries"], out TtsRetries); // get number of tts retries (or 0 for none)
 
             UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(tempPath, ttsPath, convertReq);
-            if (response.n_responsecode == 0) // TODO: implement retries if this fails?
+            if (response.n_responsecode == 0)
             {
                 string ttsFile = System.Configuration.ConfigurationManager.AppSettings["TtsPath"] + @"\" + response.sz_server_filename.Replace(".wav", ".raw");
                 int tries = 0;
 
                 // check if file exists and is available for reading, try 10 * retries+1 with 100ms delay
-                while (IsFileLocked(new FileInfo(ttsFile)) && tries++ > ((TtsRetries + 1) * 10))
+                while (IsFileLocked(new FileInfo(ttsFile)) || tries++ > ((TtsRetries + 1) * 10))
+                {
+                    Console.Write(".");
                     System.Threading.Thread.Sleep(100);
+                }
 
                 byte[] rawBytes = File.ReadAllBytes(ttsFile);
                 return new AudioContent()
@@ -57,7 +60,7 @@ namespace com.ums.pas.integration
             String tempPath = System.Configuration.ConfigurationManager.AppSettings["TempPath"];
             String ttsPath = System.Configuration.ConfigurationManager.AppSettings["TtsPath"];
             UCONVERT_TTS_RESPONSE response = new UAudio().ConvertTTS(tempPath, ttsPath, convertReq);
-            if (response.n_responsecode == 0) // TODO: implement retries if this fails?
+            if (response.n_responsecode == 0)
             {
                 return response.wav;
             }
