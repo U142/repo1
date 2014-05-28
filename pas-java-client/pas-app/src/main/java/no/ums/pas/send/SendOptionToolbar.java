@@ -575,8 +575,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public void show_buttonsbyadrtype(long ADR) {
 		m_btn_adrtypes_nophone_private.setVisible((ADR & SendController.SENDTO_NOPHONE_PRIVATE) == SendController.SENDTO_NOPHONE_PRIVATE);
 		m_btn_adrtypes_nophone_company.setVisible((ADR & SendController.SENDTO_NOPHONE_COMPANY) == SendController.SENDTO_NOPHONE_COMPANY);
+		log.debug("in show_buttonsbyadrtype ADR="+ADR);
 		show_buttonsbyadrtype(ADR, m_btn_adrtypes_private_fixed, m_btn_adrtypes_private_mobile, 
-				m_btn_adrtypes_company_fixed, m_btn_adrtypes_company_mobile, m_btn_adrtypes_cell_broadcast_text);
+				m_btn_adrtypes_company_fixed, m_btn_adrtypes_company_mobile, chkLocationBased,chkPropertyOwnerPrivate,chkPropertyOwnerVacation);
 		if(m_btn_adrtypes_private_fixed.isVisible() || m_btn_adrtypes_private_mobile.isVisible())
 			m_lbl_addresstypes_private.setVisible(true);
 		else
@@ -598,13 +599,17 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	
 	public void show_buttonsbyadrtype(long ADR, AbstractButton btn_private_fixed, AbstractButton btn_private_mobile,
 								AbstractButton btn_company_fixed, AbstractButton btn_company_mobile,
-								AbstractButton btn_lba_text)
+								JCheckBox chk_lba_text,
+								JCheckBox chk_property_owner_private, JCheckBox chk_property_owner_vacation)
 	{
 		btn_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
 		btn_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
 		btn_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
 		btn_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);		
-		btn_lba_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
+//		btn_lba_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
+		chk_lba_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
+		chk_property_owner_private.setVisible((ADR & SendController.RECIPTYPE_PRIVATE_OWNER_HOME) == SendController.RECIPTYPE_PRIVATE_OWNER_HOME);
+		chk_property_owner_vacation.setVisible((ADR & SendController.RECIPTYPE_PRIVATE_OWNER_VACATION) == SendController.RECIPTYPE_PRIVATE_OWNER_VACATION);
 	}
 	
 	
@@ -1439,6 +1444,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	{
 		return ((((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue() > 0) |(((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue() > 0));
 	}
+
+	private boolean isAnyABASRecipientTypeSelected()
+	{
+		return ( chkResident.isSelected() | chkPropertyOwnerVacation.isSelected() | chkPropertyOwnerPrivate.isSelected());
+	}
 	private void changeVisibilityOfABASPanel(boolean b)
 	{
 		if(b && !chkAddressBased.isSelected())
@@ -2153,7 +2163,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		// Hengelåsen skal være visuelt og praktisk deaktivert frem til område og kanal er valgt
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
-		bCanFinalize = bCanFinalize && isAnyABASChannelSelected();
+		bCanFinalize = bCanFinalize && isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected();
 		m_btn_finalize.setEnabled(bCanFinalize);
 		return bCanFinalize;
 	}
