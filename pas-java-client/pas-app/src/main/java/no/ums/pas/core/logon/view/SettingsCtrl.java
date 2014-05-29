@@ -95,6 +95,9 @@ public class SettingsCtrl implements ISettingsUpdate {
     	boolean b_enable_lba = false;
     	boolean b_enable_vulnerable = false;
     	boolean b_enable_headofhousehold = false;
+        //added for property owener fields
+        boolean enablePropertyOwnerPrivate = false;
+        boolean enablePropertyOwnerVacation = false;
     	for(DeptInfo di : userinfo.get_departments())
     	{
     		if(di.get_userprofile().get_parm_rights()>=1)
@@ -114,6 +117,15 @@ public class SettingsCtrl implements ISettingsUpdate {
     		{
     			b_enable_headofhousehold = true;
     		}
+    	    //added for property owener fields
+    	    if((adrtypes & SendController.RECIPTYPE_PRIVATE_OWNER_HOME)>0)
+    	    {
+    	        enablePropertyOwnerPrivate = true;
+    	    }
+    	    if((adrtypes & SendController.RECIPTYPE_PRIVATE_OWNER_VACATION)>0)
+    		{
+    	        enablePropertyOwnerVacation = true;
+    		}
     	}
     	if(!b_enable_parm)
     	{
@@ -125,6 +137,8 @@ public class SettingsCtrl implements ISettingsUpdate {
     	dlg.getChkLocationBased().setVisible(b_enable_lba);
     	dlg.getToggleVulnerable().setVisible(b_enable_vulnerable);
     	dlg.getToggleHeadOfHousehold().setVisible(b_enable_headofhousehold);
+        dlg.getChkPropertyOwnerPrivate().setVisible(enablePropertyOwnerPrivate);
+        dlg.getChkPropertyOwnerVacation().setVisible(enablePropertyOwnerVacation);
 
     }
     

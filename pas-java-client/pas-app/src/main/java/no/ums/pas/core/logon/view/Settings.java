@@ -678,6 +678,14 @@ public class Settings extends JFrame implements ActionListener{
 		return chkLocationBased;
 	}
 
+	public JCheckBox getChkPropertyOwnerPrivate() {
+		return chkPropertyOwnerPrivate;
+	}
+
+	public JCheckBox getChkPropertyOwnerVacation() {
+		return chkPropertyOwnerVacation;
+	}
+
 	public ToggleAddresstype getTogglePrivateFixed() {
 		return togglePrivateFixed;
 	}

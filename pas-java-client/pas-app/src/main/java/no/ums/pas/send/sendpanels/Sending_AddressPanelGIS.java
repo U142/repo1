@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
@@ -19,6 +21,8 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 	public static final long serialVersionUID = 1;
 	private StdTextLabel m_lbl_pointcount;
 	
+	private static final Log log = UmsLog.getLogger(Sending_AddressPanelGIS.class);
+
 	public Sending_AddressPanelGIS(PAS pas, SendWindow parentwin) {
 		super(pas, parentwin); // Houses er null, må få tak i husene. Må kjøre set_gislist
 		if(get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses() != null) {
@@ -67,6 +71,9 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 	 */
 	protected void _AddToAdrcount(AddressCount c, InhabitantBasics i, int adrtypes)
 	{
+		//need to add some logic here to count only those inhabitant whose resident type belongs to what user has selected while generating alert
+		//by default all records are considered for counting
+
         if ((adrtypes & (long)SendController.SENDTO_FIXED_PRIVATE)>0 && i.hasfixed() && !i.bedrift())
         	c.inc_private(1);
         if ((adrtypes & (long)SendController.SENDTO_FIXED_COMPANY) > 0 && i.hasfixed() && i.bedrift())
@@ -114,12 +121,28 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
             if (i.hasmobile())
             	c.inc_privatemobile(1);
         }
+        //added for private channel Voice [Mobile] and Voice [Fixed] prioritized
+        if ((adrtypes & (long)SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) > 0 && !i.bedrift())
+        {
+            if (i.hasfixed())
+                c.inc_private(1);
+            if (i.hasmobile())
+                c.inc_privatemobile(1);
+        }
         if ((adrtypes & (long)SendController.SENDTO_FIXED_COMPANY_AND_MOBILE) > 0 && i.bedrift())
         {
             if (i.hasfixed())
             	c.inc_company(1);
             if (i.hasmobile())
             	c.inc_companymobile(1);
+        }
+        //added for company channel Voice [Mobile] and Voice [Fixed] prioritized
+        if ((adrtypes & (long)SendController.SENDTO_MOBILE_COMPANY_AND_FIXED) > 0 && i.bedrift())
+        {
+            if (i.hasfixed())
+                c.inc_company(1);
+            if (i.hasmobile())
+                c.inc_companymobile(1);
         }
         if (!i.hasfixed() && !i.hasmobile())
         {
