@@ -1267,7 +1267,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		privateReceipientPanel = new JPanel();
 		lblSelectPrivateRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
-		lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
+		//lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
+        lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_channels"));
    		chkResident = new JCheckBox(Localization.l("main_sending_adr_sel_residents"));
 		chkPropertyOwnerPrivate = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_private"));
 		chkPropertyOwnerVacation = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_vacation"));
