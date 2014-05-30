@@ -1268,7 +1268,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		privateReceipientPanel = new JPanel();
 		lblSelectPrivateRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
 		lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
-		chkResident = new JCheckBox(Localization.l("main_sending_adr_sel_residents"));
+   		chkResident = new JCheckBox(Localization.l("main_sending_adr_sel_residents"));
 		chkPropertyOwnerPrivate = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_private"));
 		chkPropertyOwnerVacation = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_vacation"));
 		
@@ -2163,7 +2163,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		// Hengelåsen skal være visuelt og praktisk deaktivert frem til område og kanal er valgt
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
-		bCanFinalize = bCanFinalize && isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected();
+		bCanFinalize = bCanFinalize && (!chkAddressBased.isSelected() || (isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected()));
 		m_btn_finalize.setEnabled(bCanFinalize);
 		return bCanFinalize;
 	}
