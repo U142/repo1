@@ -243,6 +243,7 @@ public class AlertController implements ActionListener {
         gui = new AlertGUI(Localization.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
 		toolbarPanel.set_addresstypes(alert.getAddresstypes());
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
+		toolbarPanel.populateABASPanelData(alert.getAddresstypes());//added to repopulate address selection for edit
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
 
 		if(alert.getM_shape()==null) {

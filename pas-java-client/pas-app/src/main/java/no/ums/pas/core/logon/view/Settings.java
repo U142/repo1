@@ -1321,21 +1321,21 @@ public class Settings extends JFrame implements ActionListener{
 
 							//---- chkResident ----
 							chkResident.setText(bundle.getString("main_sending_adr_sel_residents"));
-							privateReceipientPanel.add(chkResident, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+							privateReceipientPanel.add(chkResident, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 5), 0, 0));
+								new Insets(0, 0, 5, 0), 0, 0));
 
 							//---- chkPropertyOwnerPrivate ----
 							chkPropertyOwnerPrivate.setText(bundle.getString("main_sending_adr_sel_property_owner_private"));
-							privateReceipientPanel.add(chkPropertyOwnerPrivate, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+							privateReceipientPanel.add(chkPropertyOwnerPrivate, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 5), 0, 0));
+								new Insets(0, 0, 5, 0), 0, 0));
 
 							//---- chkPropertyOwnerVacation ----
 							chkPropertyOwnerVacation.setText(bundle.getString("main_sending_adr_sel_property_owner_vacation"));
-							privateReceipientPanel.add(chkPropertyOwnerVacation, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+							privateReceipientPanel.add(chkPropertyOwnerVacation, new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 0, 5), 0, 0));
+								new Insets(0, 0, 0, 0), 0, 0));
 						}
 						recipientTab.addTab(bundle.getString("common_adr_private"), privateReceipientPanel);
 
@@ -1348,13 +1348,13 @@ public class Settings extends JFrame implements ActionListener{
 							((GridBagLayout)companyReceipientPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0E-4};
 
 							//---- lblSelectCompanyRecipients ----
-							lblSelectCompanyRecipients.setText(bundle.getString("main_sending_adr_sel_recipients"));
+							lblSelectCompanyRecipients.setText(bundle.getString("main_sending_adr_sel_recipients_company"));
 							companyReceipientPanel.add(lblSelectCompanyRecipients, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(2, 20, 5, 5), 0, 0));
 							companyReceipientPanel.add(comboCompanyRecipientChannel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(2, 74, 5, 0), 0, 0));
+								new Insets(2, 0, 5, 0), 0, 0));
 						}
 						recipientTab.addTab(bundle.getString("common_adr_company"), companyReceipientPanel);
 					}
