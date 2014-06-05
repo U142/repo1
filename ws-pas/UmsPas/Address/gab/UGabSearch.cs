@@ -241,7 +241,7 @@ namespace com.ums.PAS.Address.gab
                 {
                     // search address and region, skip postno (regardless of value)
                     sz_params = String.Format("token={0}&query={1}+{2}+{3}+{4}&format=3",
-                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs",
+                        "_rcLdtkkHFdW3CEZL8qr5C3-eVcW_Xu0i4igAEhjA4PxCL2e-ojriyTjbOnCwzUw8sreminLew8VBiaXQDknTg..",
                         m_params.sz_address,
                         m_params.sz_no,
                         m_params.sz_postarea,
@@ -251,13 +251,13 @@ namespace com.ums.PAS.Address.gab
                 {
                     // only postno, search for that
                     sz_params = String.Format("token={0}&query={1}&format=3",
-                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs",
+                        "_rcLdtkkHFdW3CEZL8qr5C3-eVcW_Xu0i4igAEhjA4PxCL2e-ojriyTjbOnCwzUw8sreminLew8VBiaXQDknTg..",
                         m_params.sz_postno);
                 }
                 else
                 {
                     sz_params = String.Format("token={0}&query=&format=3",
-                        "QfhsKalPzFacjSQy6VBs74rrb-WZCPV5nVUB9Un663EusjKC7htdicDfwG-fDrBs");
+                        "_rcLdtkkHFdW3CEZL8qr5C3-eVcW_Xu0i4igAEhjA4PxCL2e-ojriyTjbOnCwzUw8sreminLew8VBiaXQDknTg..");
                 }
 
                 if (m_params.sz_postno.Trim().Length > 0) // use postno filter for results
