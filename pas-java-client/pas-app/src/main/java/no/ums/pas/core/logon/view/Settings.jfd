@@ -1465,6 +1465,10 @@
                    <string>gridy</string>
                    <int>1</int>
                   </void>
+                  <void method="setProperty">
+                   <string>gridwidth</string>
+                   <int>2</int>
+                  </void>
                  </object>
                 </void>
                 <void method="add">
@@ -1485,6 +1489,10 @@
                   <class>com.jformdesigner.runtime.GridBagConstraintsEx</class>
                   <void method="setProperty">
                    <string>gridy</string>
+                   <int>2</int>
+                  </void>
+                  <void method="setProperty">
+                   <string>gridwidth</string>
                    <int>2</int>
                   </void>
                  </object>
@@ -1508,6 +1516,10 @@
                   <void method="setProperty">
                    <string>gridy</string>
                    <int>3</int>
+                  </void>
+                  <void method="setProperty">
+                   <string>gridwidth</string>
+                   <int>2</int>
                   </void>
                  </object>
                 </void>
@@ -1563,7 +1575,7 @@
                    <string>text</string>
                    <object class="com.jformdesigner.model.FormMessage">
                     <null/>
-                    <string>main_sending_adr_sel_recipients</string>
+                    <string>main_sending_adr_sel_recipients_company</string>
                    </object>
                   </void>
                   <void property="name">
@@ -1600,7 +1612,7 @@
                    <string>insets</string>
                    <object class="java.awt.Insets">
                     <int>2</int>
-                    <int>74</int>
+                    <int>0</int>
                     <int>0</int>
                     <int>0</int>
                    </object>
@@ -1834,7 +1846,7 @@
        </object>
       </void>
      </object>
-    </void>    
+    </void>
     <void method="addBindingGroup">
      <object class="com.jformdesigner.model.FormBindingGroup">
       <class>org.jdesktop.beansbinding.BindingGroup</class>

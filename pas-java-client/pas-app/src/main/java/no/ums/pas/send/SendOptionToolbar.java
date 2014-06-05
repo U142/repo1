@@ -1268,7 +1268,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		privateReceipientPanel = new JPanel();
 		lblSelectPrivateRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
 		//lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients"));
-        lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_channels"));
+        //lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_channels"));
+		lblSelectCompanyRecipients.setText(Localization.l("main_sending_adr_sel_recipients_company"));
    		chkResident = new JCheckBox(Localization.l("main_sending_adr_sel_residents"));
 		chkPropertyOwnerPrivate = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_private"));
 		chkPropertyOwnerVacation = new JCheckBox(Localization.l("main_sending_adr_sel_property_owner_vacation"));
@@ -1291,12 +1292,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
 		privateRecipientConstraint.gridx=0;
 		privateRecipientConstraint.gridy=0;
-		privateRecipientConstraint.ipadx=10;
-		privateRecipientConstraint.ipady=6;
+		privateRecipientConstraint.ipadx=60;
+		privateRecipientConstraint.ipady=40;
 		privateReceipientPanel.add(lblSelectPrivateRecipients,privateRecipientConstraint);
 		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
 		privateRecipientConstraint.gridx=1;
 		privateRecipientConstraint.gridy=0;
+		privateRecipientConstraint.ipadx=0;
+		privateRecipientConstraint.ipady=0;
 		privateReceipientPanel.add(comboPrivateRecipientChannel,privateRecipientConstraint);
 		
 		privateRecipientConstraint.fill = GridBagConstraints.HORIZONTAL;
@@ -1327,14 +1330,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		companyRecipientConstraint.fill = GridBagConstraints.NORTHWEST;
 		companyRecipientConstraint.gridx=0;
 		companyRecipientConstraint.gridy=0;
-		companyRecipientConstraint.ipadx=10;
-		companyRecipientConstraint.ipady=6;
+		companyRecipientConstraint.ipadx=40;
+		companyRecipientConstraint.ipady=30;
 		companyRecipientConstraint.anchor=GridBagConstraints.FIRST_LINE_START;
 		companyReceipientPanel.add(lblSelectCompanyRecipients,companyRecipientConstraint);
 		companyRecipientConstraint.fill = GridBagConstraints.NORTH;
 		companyRecipientConstraint.gridx=1;
 		companyRecipientConstraint.gridy=0;
-		companyRecipientConstraint.insets=new Insets(0, 0, 90, 0);
+		companyRecipientConstraint.ipadx=0;
+		companyRecipientConstraint.ipady=0;
+		companyRecipientConstraint.insets=new Insets(10, 0, 90, 0);
 		companyReceipientPanel.add(comboCompanyRecipientChannel,companyRecipientConstraint);
 		
 		recipientTab.addTab(Localization.l("common_adr_company"), null, companyReceipientPanel, Localization.l("common_adr_company"));
@@ -1753,7 +1758,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_btn_close, m_gridconst);
 		inc_xpanels2();
 		inc_panels2();
-		set_gridconst(0, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);	
+		set_gridconst(0, get_panel(), 12, 1, GridBagConstraints.NORTHWEST);	
 		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it. 
 //		add(m_lbl_addresstypes_private, m_gridconst);
 //		add(lblAbasAdrTypes, m_gridconst);
@@ -1780,7 +1785,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			public void CloseButtonHot(JComponent c) {
 			}
 			}));
-		recipientTab.setPreferredSize(new Dimension(500, 180));
+		recipientTab.setPreferredSize(new Dimension(520, 180));
 		set_gridconst(0, get_panel(), 200, 1, GridBagConstraints.SOUTHWEST);
 		add(recipientTab,m_gridconst);
 
