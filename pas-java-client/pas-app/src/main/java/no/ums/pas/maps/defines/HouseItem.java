@@ -1,6 +1,7 @@
 package no.ums.pas.maps.defines;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.Controller;
 import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.send.SendController;
@@ -78,7 +79,9 @@ public class HouseItem extends Object {
 		m_f_lon = f_lon;
 		m_f_lat = f_lat;
 		m_subitems = new ArrayList<InhabitantBasics>();
-		set_active_color(Color.WHITE);
+		Color tempCol=new Color(1f,1f,1f,Variables.getAlpha());
+//		set_active_color(Color.WHITE);
+		set_active_color(tempCol);
 	}
 	public void set_visible(boolean b_visible) { m_b_visible = b_visible; }
 	public boolean isVisible() {

@@ -19,6 +19,12 @@ public class Variables {
 	private static MapFrame mapFrame = null;
 	private static Settings settings = null;
 	private static StatusController statusController = null;
+	
+	private static float alpha = 0.01f;
+	
+	public static float getAlpha() {
+		return alpha;
+	}
 
     public static int getZoomLevel() {
         return zoomLevel;
