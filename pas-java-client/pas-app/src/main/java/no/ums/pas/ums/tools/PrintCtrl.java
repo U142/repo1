@@ -9,6 +9,7 @@ import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
@@ -67,26 +68,45 @@ public class PrintCtrl implements Printable, Pageable {
 	
 	public void doPrint()
 	{
-		
-		PrinterJob printJob = PrinterJob.getPrinterJob();
-		printJob.setPrintable(this);
-		printJob.setPageable(this);
-		//Variables.getDraw().set_suspended(true);
-	    if (printJob.printDialog()) {
-	        try {
-	        	//format = printJob.get
-	        	//printJob.setCopies(1);
-	    		current_mode = PRINTMODE.PRINTING;
-	    		totalItemsPrinted = 0;
-	        	printJob.print();
-	        } catch(Exception pe) {
-	          if(PAS.get_pas() != null)
-	        	PAS.get_pas().add_event("Error printing: " + pe, pe);
-	          Error.getError().addError("PrintCtrl","Exception in print",pe,1);
-	        } finally {
-	        	//Variables.getDraw().set_suspended(false);
-	        }
-	    }
+		if (componentToBePrinted.getClass().equals(MapFrame.class)) {
+			PrinterJob printJob = PrinterJob.getPrinterJob();
+			PrintMapCtrl map = new PrintMapCtrl((MapFrame) componentToBePrinted);
+			printJob.setPrintable(map);
+			if (printJob.printDialog()) {
+				try {
+					printJob.print();
+				} catch (Exception pe) {
+					if (PAS.get_pas() != null)
+						PAS.get_pas().add_event("Error printing frame: " + pe,
+								pe);
+					Error.getError().addError("PrintCtrl",
+							"Exception in print", pe, 1);
+				} finally {
+					// Variables.getDraw().set_suspended(false);
+				}
+			}
+		} else {
+			PrinterJob printJob = PrinterJob.getPrinterJob();
+			printJob.setPrintable(this);
+			printJob.setPageable(this);
+			// Variables.getDraw().set_suspended(true);
+			if (printJob.printDialog()) {
+				try {
+					// format = printJob.get
+					// printJob.setCopies(1);
+					current_mode = PRINTMODE.PRINTING;
+					totalItemsPrinted = 0;
+					printJob.print();
+				} catch (Exception pe) {
+					if (PAS.get_pas() != null)
+						PAS.get_pas().add_event("Error printing: " + pe, pe);
+					Error.getError().addError("PrintCtrl",
+							"Exception in print", pe, 1);
+				} finally {
+					// Variables.getDraw().set_suspended(false);
+				}
+			}
+		}
 	}
 
 	
@@ -220,7 +240,7 @@ public class PrintCtrl implements Printable, Pageable {
 	        	g2d.setFont(new Font(null, Font.BOLD, 8));
 	        	
 	        	if(is.get_table() != null && is.get_table().getRowCount() > 0) {
-                    // Superhacks for Ã¥ fÃ¥ riktig status, av en eller annen grunn sÃ¥ ble det ikke alltid riktig med den andre
+                    // Superhacks for å få riktig status, av en eller annen grunn så ble det ikke alltid riktig med den andre
 	        		//g2d.drawString(Localization.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
 	        		//g2d.drawString(Localization.l("common_refno"), 0, 0);
 	        		StringBuilder sendinglist = new StringBuilder();
@@ -442,4 +462,34 @@ class PrintCanvas extends Canvas {
         g.setColor(Color.red);
         g.drawLine(0, r.height, r.width, 0);
     }
+}
+
+class PrintMapCtrl implements Printable {
+	private MapFrame componentToBePrinted;
+
+	public PrintMapCtrl(MapFrame frame) {
+		this.componentToBePrinted = frame;
+	}
+
+	@Override
+	public int print(Graphics g, PageFormat pageFormat, int page)
+			throws PrinterException {
+		if (page > 0) {
+			return NO_SUCH_PAGE;
+		}
+		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform originalTransform = g2.getTransform();
+
+		double scaleX = pageFormat.getImageableWidth()
+				/ componentToBePrinted.getWidth();
+		double scaleY = pageFormat.getImageableHeight()
+				/ componentToBePrinted.getHeight();
+		// Maintain aspect ratio
+		double scale = Math.min(scaleX, scaleY);
+		g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+		g2.scale(scale, scale);
+		componentToBePrinted.printAll(g2);
+		g2.setTransform(originalTransform);
+		return PAGE_EXISTS;
+	}
 }
