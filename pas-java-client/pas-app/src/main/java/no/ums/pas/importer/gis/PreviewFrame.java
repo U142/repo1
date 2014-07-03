@@ -89,15 +89,33 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			FileWriter f = new FileWriter(gistemp);
 			PrintWriter writer = new PrintWriter(f);
 			
+			boolean isPropertyImport = false;
 			Iterator it = list.iterator();
 			while(it.hasNext()) {
 				gisr = (GISRecord)it.next();
-				writer.print(gisr.get_municipal() + "\t" + gisr.get_streetid() + 
+
+				if(gisr instanceof GISRecordProperty)
+				{
+					GISRecordProperty propertyRecord = (GISRecordProperty)gisr;
+					writer.print(propertyRecord.get_municipal() + "\t" + propertyRecord.getM_sz_gnr() +
+							"\t" + propertyRecord.getM_sz_bnr() + "\t" + propertyRecord.getM_sz_fnr() +
+							"\t" + propertyRecord.getM_sz_snr() +
+							"\t" + gisr.get_name1() + "\t" + gisr.get_name2() + "\r\n");
+					if(!isPropertyImport)
+						isPropertyImport=true;
+				}
+				else
+				{
+					writer.print(gisr.get_municipal() + "\t" + gisr.get_streetid() +
 						"\t" + gisr.get_houseno() + "\t" + gisr.get_letter() + 
 						"\t" + gisr.get_name1() + "\t" + gisr.get_name2() + "\r\n");
+				}
 			}
 			writer.flush();
 			writer.close();
+
+			if(isPropertyImport)
+				pp.setM_import_type("Property");
 
 			pp.actionPerformed(new ActionEvent(gistemp,ActionEvent.ACTION_PERFORMED,"act_autofetch_addresses"));
 			addComponentListener(this);

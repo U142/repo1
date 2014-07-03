@@ -217,8 +217,14 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
     }
 
     public void actionPerformed(final ActionEvent e) {
-        int n_skiplines		= (get_previewlist().isFirstlineHeading() ? 1 : 0);
-        String sz_separator = get_previewlist().get_gis().get_parser().get_separator();
+        int n_skiplines = 0;
+        String sz_separator = "";
+
+        if(get_previewlist()!=null) {
+            n_skiplines		= (get_previewlist().isFirstlineHeading() ? 1 : 0);
+            sz_separator = get_previewlist().get_gis().get_parser().get_separator();
+        }
+
         if("act_fetch_addresses".equals(e.getActionCommand())) { //actionevent from PreviewOptions.JButton => PreviewFrame
 
             try {
@@ -261,7 +267,15 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
                 File f_post = (File)e.getSource();
 
                 WSGisImport gis = new WSGisImport(this, "act_gis_imported", m_loader, m_encoding,getM_import_type());
-                GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, 0, "	", f_post);
+
+                GisColumnsetStreetid colset ;
+                if(isProperty()){
+                    colset = gis.newGisColumnsetPropertyId(0, 1, 2, 3, 4, 5, 6, 7, 0, "	", f_post);
+                }
+                else{
+                    colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, 6, 0, "	", f_post);
+                }
+
                 gis.setColSet(colset);
                 gis.start();
 

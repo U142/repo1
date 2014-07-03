@@ -10,6 +10,7 @@ import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.OtherActions;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.importer.gis.GISRecordProperty;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.countrycodes.CCode;
 import no.ums.pas.maps.MapFrame;
@@ -650,6 +651,16 @@ public class MainController implements ActionListener, TreeModelListener,
 					line.setNamefilter1(fromline.get_name1());
 					line.setNamefilter2(fromline.get_name2());
 					line.setNLinenumber(fromline.get_lineno());
+
+					if(fromline instanceof GISRecordProperty)
+					{
+						GISRecordProperty propertyLine= (GISRecordProperty)fromline;
+						line.setMunicipalid(propertyLine.get_municipal());
+						line.setGnr(propertyLine.getM_sz_gnr());
+						line.setBnr(propertyLine.getM_sz_bnr());
+						line.setFnr(propertyLine.getM_sz_fnr());
+						line.setSnr(propertyLine.getM_sz_snr());
+					}
 					arr.getUGisImportResultLine().add(line);
 				}
 				g.setLinelist(arr);
@@ -992,7 +1003,6 @@ public class MainController implements ActionListener, TreeModelListener,
 						log.debug("Node = " + node);
 						node.setUserObject(alert);
 					}
-					
 				} catch (ParmException e1) {
 					log.warn(e1.getMessage(), e1);
 					Error.getError().addError("MainController","Exception in actionPerformed - Alert save/cancel",e1,1);
@@ -1183,6 +1193,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		}
 		
 		if(e.getSource() == treeCtrl.getGui().getGenerateSending()) {
+
 			SwingUtilities.invokeLater(new Runnable() 
 			{
 				public void run()

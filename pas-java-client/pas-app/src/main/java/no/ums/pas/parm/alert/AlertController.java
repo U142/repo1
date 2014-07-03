@@ -367,6 +367,9 @@ public class AlertController implements ActionListener {
 			else
 				this.alert.submitShape(new GISShape(spGIS.get_gislist()));
 			
+			//In address import shape is drawn on the map but is always there in sendproperties,
+			//so overriding above if else logic with following statement
+			this.alert.submitShape(new GISShape(spGIS.get_gislist()));
 		}
 		else
 			this.alert.submitShape(PAS.get_pas().get_mappane().get_active_shape());
