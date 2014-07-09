@@ -240,7 +240,7 @@ public class PrintCtrl implements Printable, Pageable {
 	        	g2d.setFont(new Font(null, Font.BOLD, 8));
 	        	
 	        	if(is.get_table() != null && is.get_table().getRowCount() > 0) {
-                    // Superhacks for å få riktig status, av en eller annen grunn så ble det ikke alltid riktig med den andre
+                    // Hack to get correct status (not sure what and why, just translating Norwegian comment)
 	        		//g2d.drawString(Localization.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
 	        		//g2d.drawString(Localization.l("common_refno"), 0, 0);
 	        		StringBuilder sendinglist = new StringBuilder();
