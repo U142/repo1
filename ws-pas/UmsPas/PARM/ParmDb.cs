@@ -121,7 +121,7 @@ namespace com.ums.UmsParm
             {
                 CloseRecordSet();
             }*/
-            if(!b_ret)
+            if (!b_ret)
                 throw new UDbNoDataException("Could not find specified Alert (l_alertpk=" + l_alertpk + ")");
             return b_ret;
         }
@@ -199,7 +199,7 @@ namespace com.ums.UmsParm
         public bool GetEventAlertStructure(ref ULOGONINFO l, ref List<PAEVENT> list)
         {
             bool b_ret = false;
-            
+
             String szSQL = String.Format("SELECT " +
                                          "isnull(PE.l_eventpk,-1), " +
                                          "isnull(PE.l_parent,-1), " +
@@ -209,11 +209,11 @@ namespace com.ums.UmsParm
                                          "isnull(PE.l_timestamp,-1), " +
                                          "isnull(PE.f_epi_lon,0), " +
                                          "isnull(PE.f_epi_lat,0) " +
-                                         "FROM PAEVENT PE, PAOBJECT PO, BBUSERPROFILE_X_DEPT UPXD " + 
-                                         "WHERE PE.l_parent=PO.l_objectpk " + 
+                                         "FROM PAEVENT PE, PAOBJECT PO, BBUSERPROFILE_X_DEPT UPXD " +
+                                         "WHERE PE.l_parent=PO.l_objectpk " +
                                          "AND PO.l_deptpk=UPXD.l_deptpk " +
                                          "AND UPXD.l_deptpk={0} " +
-                                         "AND UPXD.l_userpk={1}", l.l_deptpk,l.l_userpk);
+                                         "AND UPXD.l_userpk={1}", l.l_deptpk, l.l_userpk);
 
             OdbcDataReader rs = null;
 
@@ -323,6 +323,20 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool DeletePAAreaShape(Int64 pk, PASHAPETYPES type)
+        {
+            try
+            {
+                String sql = String.Format("DELETE FROM PAAREASHAPE WHERE l_pk={0} AND l_type={1}",
+                                    pk, (int)type);
+                return ExecNonQuery(sql);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public bool CopyPAShape(Int64 n_refno, Int64 n_resend_from)
         {
             OdbcDataReader rs = null;
@@ -347,7 +361,7 @@ namespace com.ums.UmsParm
             }
             finally
             {
-                if(!rs.IsClosed)
+                if (!rs.IsClosed)
                     rs.Close();
             }
         }
@@ -402,9 +416,80 @@ namespace com.ums.UmsParm
                 {
                     long time = getDbClock();
                     //sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) " +
-                     //                   "VALUES({0}, {1}, {2}, '{3}', '{4}')",
-                     //                   pk, (int)type, getDbClock(), md5, sz_xml);
+                    //                   "VALUES({0}, {1}, {2}, '{3}', '{4}')",
+                    //                   pk, (int)type, getDbClock(), md5, sz_xml);
                     sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) VALUES(?, ?, ?, ?, ?)");
+                    OdbcCommand cmd = new OdbcCommand(sql, this.conn);
+                    cmd.Parameters.Add("@l_pk", OdbcType.Numeric).Value = pk;
+                    cmd.Parameters.Add("@l_type", OdbcType.Int).Value = (int)type;
+                    cmd.Parameters.Add("@l_timestamp", OdbcType.Numeric).Value = time;
+                    cmd.Parameters.Add("@sz_md5", OdbcType.Char, 32).Value = md5;
+                    cmd.Parameters.Add("@sz_xml", OdbcType.Text).Value = sz_xml;
+                    int ret = cmd.ExecuteNonQuery();
+                    if (ret > 0)
+                    {
+                        bShapeChanged = true;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                ULog.error(pk, e.Message);
+                return false;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+        }
+
+        public bool UpdatePAShapeArea(Int64 pk, String sz_xml, PASHAPETYPES type, ref bool bShapeChanged)
+        {
+            OdbcDataReader rs = null;
+            sz_xml = sz_xml.Replace("'", "''");
+            try
+            {
+                bool exists = false;
+                String sz_existing_md5 = "";
+                String md5 = UmsCommon.Helpers.CreateMD5Hash(sz_xml);
+                String sql = String.Format("SELECT isnull(sz_md5,'') FROM PAAREASHAPE WHERE l_pk={0} AND l_type={1}", pk, (int)type);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    exists = true;
+                    sz_existing_md5 = rs.GetString(0);
+                }
+                rs.Close();
+
+                if (exists)
+                {
+                    if (!sz_existing_md5.Equals(md5)) //only update if md5 is changed
+                    {
+                        sql = String.Format("UPDATE PAAREASHAPE set l_type=?, sz_md5=?, sz_xml=? WHERE l_pk=?");
+                        OdbcCommand cmd = new OdbcCommand(sql, this.conn);
+                        cmd.Parameters.Add("@l_type", OdbcType.Int).Value = (int)type;
+                        cmd.Parameters.Add("@sz_md5", OdbcType.Char, 32).Value = md5;
+                        cmd.Parameters.Add("@sz_xml", OdbcType.Text).Value = sz_xml;
+                        cmd.Parameters.Add("@l_pk", OdbcType.Numeric).Value = pk;
+                        int ret = cmd.ExecuteNonQuery();
+                        if (ret > 0)
+                        {
+                            bShapeChanged = true;
+                            return true;
+                        }
+
+                    }
+                    else
+                        return true;
+                }
+                else
+                {
+                    long time = getDbClock();
+                    sql = String.Format("INSERT INTO PAAREASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) VALUES(?, ?, ?, ?, ?)");
                     OdbcCommand cmd = new OdbcCommand(sql, this.conn);
                     cmd.Parameters.Add("@l_pk", OdbcType.Numeric).Value = pk;
                     cmd.Parameters.Add("@l_type", OdbcType.Int).Value = (int)type;
@@ -442,7 +527,7 @@ namespace com.ums.UmsParm
             bool b_ret = false;
             pa.l_alertpk = l_alertpk;
             String szSQL = String.Format("SELECT l_alertpk, isnull(l_parent,-1), sz_name, sz_description, isnull(l_profilepk, -1), " +
-                                            "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), "+
+                                            "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), " +
                                             "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,''), isnull(l_expiry, 60) l_expiry " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
             OdbcDataReader rs = null;
@@ -638,7 +723,7 @@ namespace com.ums.UmsParm
                     sendingInfos.Add(mdv);
                 }
                 rs.Close();
-                foreach(MDVSENDINGINFO mdv in sendingInfos)
+                foreach (MDVSENDINGINFO mdv in sendingInfos)
                 {
                     try
                     {
@@ -814,7 +899,7 @@ namespace com.ums.UmsParm
             m.l_removedup = 1;
             m.l_maxchannels = a.n_maxchannels;
             //m.l_nofax = a.n_nofax;
-           
+
 
             m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse
             if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE &&
@@ -823,7 +908,7 @@ namespace com.ums.UmsParm
 
             m.sz_groups = "";
             m.l_type = 1; //voice
-            m.f_dynacall = (a.n_function==UCommon.USENDING_LIVE ? 1 : 2);
+            m.f_dynacall = (a.n_function == UCommon.USENDING_LIVE ? 1 : 2);
             m.l_addresstypes = a.l_addresstypes;
             m.l_userpk = l.l_userpk;
 
@@ -972,7 +1057,7 @@ namespace com.ums.UmsParm
         {
             return InsertBBVALID(ref s.l_refno, ref s.m_valid);
         }
-        
+
         public bool InsertBBVALID(ref long l_refno, ref BBVALID valid)
         {
             String szSQL = String.Format("INSERT INTO BBVALID(l_refno, l_valid) VALUES({0}, {1})", l_refno, valid.l_valid);
@@ -987,7 +1072,7 @@ namespace com.ums.UmsParm
                 throw;
             }
         }
-        
+
         public bool InsertBBSENDNUM(ref PAS_SENDING s)
         {
             return InsertBBSENDNUM(ref s.l_refno, ref s.m_sendnum);
@@ -1010,7 +1095,7 @@ namespace com.ums.UmsParm
 
         public bool InsertMDVSENDINGINFO_DCALL(ref long l_refno)
         {
-            String szSQL = String.Format("INSERT INTO MDVSENDINGINFO_DCALL(l_refno,l_adr2,l_adr3,l_adr4,l_adr5) VALUES({0},-1,-1,-1,-1)",l_refno);
+            String szSQL = String.Format("INSERT INTO MDVSENDINGINFO_DCALL(l_refno,l_adr2,l_adr3,l_adr4,l_adr5) VALUES({0},-1,-1,-1,-1)", l_refno);
             try
             {
                 ExecNonQuery(szSQL);
@@ -1040,19 +1125,19 @@ namespace com.ums.UmsParm
                             s.m_sendinginfo.sz_sepused,
                             s.m_sendinginfo.l_addresspos,
                             s.m_sendinginfo.l_lastantsep,
-                            s.l_refno, 
+                            s.l_refno,
                             s.m_sendinginfo.l_createdate,
                             s.m_sendinginfo.l_createtime,
                             s.m_sendinginfo.l_scheddate,
                             sz_schedtime, //s.m_sendinginfo.l_schedtime, 
                             s.m_sendinginfo.sz_sendingname.Replace("'", "''"),
-                            s.m_sendinginfo.l_sendingstatus, 
+                            s.m_sendinginfo.l_sendingstatus,
                             s.m_sendinginfo.l_companypk,
                             s.m_sendinginfo.l_deptpk,
                             s.m_sendinginfo.l_nofax,
-                            s.m_sendinginfo.l_group, 
-                            s.m_sendinginfo.l_removedup, 
-                            s.m_sendinginfo.l_type, 
+                            s.m_sendinginfo.l_group,
+                            s.m_sendinginfo.l_removedup,
+                            s.m_sendinginfo.l_type,
                             s.m_sendinginfo.f_dynacall,
                             s.m_sendinginfo.l_addresstypes,
                             s.m_sendinginfo.l_userpk,
@@ -1068,7 +1153,7 @@ namespace com.ums.UmsParm
                 throw;
             }
         }
-        
+
         public bool InsertBBACTIONPROFILE(ref long l_refno, ref BBACTIONPROFILESEND ap)
         {
             String szSQL = String.Format("INSERT INTO BBACTIONPROFILESEND(l_actionprofilepk, l_refno) VALUES({0}, {1})",
@@ -1150,10 +1235,10 @@ namespace com.ums.UmsParm
             // Sjekk om brukeren har tilgang
             String szSQL = String.Format("UPDATE LBASMSIN_REPLYNUMBERS SET l_activerefno={0},l_timestamp={1} WHERE sz_replynumber='{2}'", s.l_refno, DateTime.Now.ToString("yyyyMMddHHmmss"), s.ResponseNumber);
             try
-            {                
+            {
                 ExecNonQuery(szSQL);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 ULog.error(s.l_refno, szSQL, e.Message);
                 throw;
@@ -1213,47 +1298,47 @@ namespace com.ums.UmsParm
                     if (rs != null && !rs.IsClosed)
                         rs.Close();
                 }
- 
 
 
-                    sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
-                                        "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
-                                        "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
-                                        "{26}, {27}, {28}, '{29}', {30}, {31}",
-                                                0, //0 projectpk
-                                                s.l_refno, //1
-                                                s.m_sendinginfo.l_companypk, //2
-                                                s.m_sendinginfo.l_deptpk, //3
-                                                n_oadctype, //4
-                                                n_msgclass, //5
-                                                logon.l_deptpri, //6
-                                                n_localsched, //7
-                                                s.n_expirytime_minutes, //8
-                                                n_scheddatetime, //9
-                        //s.m_sendinginfo.l_scheddate, //9
-                        //s.m_sendinginfo.l_schedtime, //9
-                                                n_priserver, //10
-                                                n_altserver, //11
-                                                sz_tarifclass.Replace("'", "''"), //12
-                                                s.sz_smsoadc.Replace("'", "''"), //13
-                                                s.m_sendinginfo.sz_sendingname.Replace("'", "''"), //14
-                                                (s.getSimulation() ? 1 : 0), //15
-                                                0,//parent refno //16
-                                                0,//expected items //17
-                                                s.sz_smsmessage.Replace("'", "''"), //18
-                                                n_fromapplication, //19
-                                                s.m_sendinginfo.l_group, //20
-                                                s.m_sendinginfo.sz_sepused.Replace("'", "''"), //21
-                                                s.m_sendinginfo.l_lastantsep, //22
-                                                s.m_sendinginfo.l_addresspos, //23
-                                                s.m_sendinginfo.l_createdate, //24
-                                                s.m_sendinginfo.l_createtime, //25
-                                                s.m_sendinginfo.l_userpk, //26
-                                                s.m_sendinginfo.l_nofax, //27
-                                                s.m_sendinginfo.l_removedup, //28
-                                                sz_stdcc.Replace("'", "''"), //29
-                                                s.m_sendinginfo.l_addresstypes, //30
-                                                s.m_sendinginfo.f_dynacall); //31
+
+                sql = String.Format("sp_sms_ins_smsqref_bcp_v2 {0}, {1}, {2}, {3}, {4}, {5}," +
+                                    "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
+                                    "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
+                                    "{26}, {27}, {28}, '{29}', {30}, {31}",
+                                            0, //0 projectpk
+                                            s.l_refno, //1
+                                            s.m_sendinginfo.l_companypk, //2
+                                            s.m_sendinginfo.l_deptpk, //3
+                                            n_oadctype, //4
+                                            n_msgclass, //5
+                                            logon.l_deptpri, //6
+                                            n_localsched, //7
+                                            s.n_expirytime_minutes, //8
+                                            n_scheddatetime, //9
+                    //s.m_sendinginfo.l_scheddate, //9
+                    //s.m_sendinginfo.l_schedtime, //9
+                                            n_priserver, //10
+                                            n_altserver, //11
+                                            sz_tarifclass.Replace("'", "''"), //12
+                                            s.sz_smsoadc.Replace("'", "''"), //13
+                                            s.m_sendinginfo.sz_sendingname.Replace("'", "''"), //14
+                                            (s.getSimulation() ? 1 : 0), //15
+                                            0,//parent refno //16
+                                            0,//expected items //17
+                                            s.sz_smsmessage.Replace("'", "''"), //18
+                                            n_fromapplication, //19
+                                            s.m_sendinginfo.l_group, //20
+                                            s.m_sendinginfo.sz_sepused.Replace("'", "''"), //21
+                                            s.m_sendinginfo.l_lastantsep, //22
+                                            s.m_sendinginfo.l_addresspos, //23
+                                            s.m_sendinginfo.l_createdate, //24
+                                            s.m_sendinginfo.l_createtime, //25
+                                            s.m_sendinginfo.l_userpk, //26
+                                            s.m_sendinginfo.l_nofax, //27
+                                            s.m_sendinginfo.l_removedup, //28
+                                            sz_stdcc.Replace("'", "''"), //29
+                                            s.m_sendinginfo.l_addresstypes, //30
+                                            s.m_sendinginfo.f_dynacall); //31
                 return ExecNonQuery(sql);
             }
             catch (Exception e)
@@ -1272,7 +1357,7 @@ namespace com.ums.UmsParm
                 InsertBBVALID(ref p);
                 //InsertMDVSENDINGINFO(ref p);
                 SP_smsqref_bcp(ref s, ref logon);
-                
+
                 return true;
             }
             catch (Exception)
@@ -1334,7 +1419,7 @@ namespace com.ums.UmsParm
             {
                 throw;
             }
-            
+
         }
 
         public List<int> GetCBOperatorsForSendByComp(long l_comppk)
@@ -1447,7 +1532,7 @@ namespace com.ums.UmsParm
 
         public bool InsertLBARecordCB(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
-                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, 
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/,
                                     ref List<Int32> operatorfilter, long l_comppk, long l_type) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
         {
             String szSQL = "";
@@ -1555,6 +1640,33 @@ namespace com.ums.UmsParm
         {
             String ret = "";
             String szSQL = String.Format("SELECT isnull(sz_areaid,'-1') FROM PAALERT WHERE l_alertpk={0}", l_pk);
+            OdbcDataReader rs = null;
+            try
+            {
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    ret = rs.GetString(0);
+                }
+                rs.Close();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, szSQL, e.Message);
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+        }
+
+        public String GetPAAreaAreaID(String l_pk)
+        {
+            String ret = "";
+            String szSQL = String.Format("SELECT isnull(sz_areaid,'-1') FROM PAAREA WHERE l_alertpk={0}", l_pk);
             OdbcDataReader rs = null;
             try
             {
@@ -1906,7 +2018,7 @@ namespace com.ums.UmsParm
             {
                 long ret = 0;
                 long textpk = 0;
-                
+
 
                 for (int i = 0; i < a.getLanguageCount(); i++)
                 {
@@ -1977,9 +2089,10 @@ namespace com.ums.UmsParm
         /** Prepare for single operator resend */
         public bool prepare_single_operator_resend(int refno, int lbaoperator)
         {
-            try {
+            try
+            {
                 String szSQL = String.Format("UPDATE LBASEND SET sz_jobid='' WHERE l_refno={0} AND l_operator={1}", refno, lbaoperator);
-            
+
                 if (ExecNonQuery(szSQL))
                 {
                     return true;
@@ -2145,7 +2258,7 @@ namespace com.ums.UmsParm
             }
             rs.Close();
             //check rights for each sending
-            foreach(var refno in refnolist)
+            foreach (var refno in refnolist)
             {
                 response.responsecode = canUserDeleteStatus(ref l, refno);
                 if (response.responsecode != UDeleteStatusResponse.OK)
@@ -2153,9 +2266,9 @@ namespace com.ums.UmsParm
                     return response;
                 }
             }
-            
+
             //delete all mdvsendinginfos
-            foreach(var refno in refnolist)
+            foreach (var refno in refnolist)
             {
                 deleteStatus(refno);
             }
@@ -2178,7 +2291,7 @@ namespace com.ums.UmsParm
         {
             if (r.l_refno > 0)
             {
-                if (canUserDeleteStatus(ref l, r.l_refno)==UDeleteStatusResponse.OK)
+                if (canUserDeleteStatus(ref l, r.l_refno) == UDeleteStatusResponse.OK)
                 {
                     try
                     {
@@ -2245,12 +2358,12 @@ namespace com.ums.UmsParm
         protected UDeleteStatusResponse canUserDeleteStatus(ref ULOGONINFO l, long refno)
         {
             String sql = String.Format(
-                "select BUP.l_status FROM BBUSER BU, BBUSERPROFILE BUP, BBUSERPROFILE_X_DEPT BUXD, MDVSENDINGINFO MDV WHERE "+
-                "BU.sz_hash_paspwd='{0}' AND "+
-                "BU.l_userpk={1} AND "+
-                "BU.l_userpk=BUXD.l_userpk AND "+
-                "BUXD.l_deptpk=MDV.l_deptpk AND "+
-                "MDV.l_refno={2} AND "+
+                "select BUP.l_status FROM BBUSER BU, BBUSERPROFILE BUP, BBUSERPROFILE_X_DEPT BUXD, MDVSENDINGINFO MDV WHERE " +
+                "BU.sz_hash_paspwd='{0}' AND " +
+                "BU.l_userpk={1} AND " +
+                "BU.l_userpk=BUXD.l_userpk AND " +
+                "BUXD.l_deptpk=MDV.l_deptpk AND " +
+                "MDV.l_refno={2} AND " +
                 "BUXD.l_profilepk=BUP.l_profilepk",
                 l.sz_password, l.l_userpk, refno);
             int status = 0;
@@ -2260,7 +2373,7 @@ namespace com.ums.UmsParm
                 status = rs.GetInt32(0);
             }
             rs.Close();
-            return (status>=2 ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_USER_RESTRICTED);
+            return (status >= 2 ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_USER_RESTRICTED);
         }
 
         public UCancelSendingResponse cancelSending(ref ULOGONINFO logon, long refno)
@@ -2361,7 +2474,7 @@ namespace com.ums.UmsParm
                 if (rs != null && !rs.IsClosed)
                     rs.Close();
             }
-            
+
         }
 
         public String getPAShapeFromDb(long l_alertpk, PASHAPETYPES type)
@@ -2380,7 +2493,7 @@ namespace com.ums.UmsParm
             return ret;
         }
 
-        public UShape setPAShapeObsolete(ULOGONINFO logon, UDEPARTMENT department,UShape shape)
+        public UShape setPAShapeObsolete(ULOGONINFO logon, UDEPARTMENT department, UShape shape)
         {
             String szSQL = "";
             OdbcDataReader rs = null;
@@ -2408,7 +2521,7 @@ namespace com.ums.UmsParm
             }
             finally
             {
-                if(rs!=null && !rs.IsClosed)
+                if (rs != null && !rs.IsClosed)
                     rs.Close();
             }
         }
