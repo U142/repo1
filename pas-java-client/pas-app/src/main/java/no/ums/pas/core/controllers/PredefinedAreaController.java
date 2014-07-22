@@ -55,7 +55,6 @@ public class PredefinedAreaController extends MainAreaController{
 			Error.getError().addError("PredefinedAreaController","IOException in StorageController.create_path",e,1);
 		}
 		/*PredefinedAreaConstants.init(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PREDEFINEDAREA_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + File.separator));
-//		 Kjører denne testen for å se om programmet ble avsluttet riktig, dersom filen eksisterer var det noe feil
 		File cleanExit = new File(PredefinedAreaConstants.cleanExit);
 		if(cleanExit.exists()) {
 			File dir = new File(PredefinedAreaConstants.homePath);
@@ -129,7 +128,6 @@ public class PredefinedAreaController extends MainAreaController{
 		} catch(Exception e) {
 			Error.getError().addError("PredefinedAreaController","Exception in drawLayers",e,1);
 		}
-		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
 			get_shape().draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 2, false);
 		}
@@ -151,7 +149,6 @@ public class PredefinedAreaController extends MainAreaController{
 				//}
 			}
 		}
-		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
 			get_shape().calc_coortopix(getMapNavigation());
 		}
@@ -189,8 +186,6 @@ public class PredefinedAreaController extends MainAreaController{
 		this.clearShapesFromDrawQueue();
 	}
 	
-//	 Hvorfor satte du denne til protected? Jeg forandrer den til public
-	// Fordi du er teh søkk, jeg setter den til private :p
 	public void addShapeToDrawQueue(ShapeStruct s) {
 		get_shapelist().add(s);
 	}
