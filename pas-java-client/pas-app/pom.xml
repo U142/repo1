@@ -103,7 +103,7 @@
                         <configuration>
                             <classifier>pas</classifier>
                             <includes>
-                                <include>no/ums/pas/*</include>
+                                <include>no/ums/pas/**</include>
                             </includes>
                         </configuration>
                     </execution>
