@@ -551,6 +551,7 @@ namespace com.ums.PAS.Database
                         dept.l_resource = Int32.Parse(rs["l_resource"].ToString());
                         dept.l_email = Int32.Parse(rs["l_email"].ToString());
                         l_dept_email = Int32.Parse(rs["l_dept_email"].ToString());
+                        dept.f_storedareas = Int32.Parse(rs["f_storedareas"].ToString());
 
                         String xml = rs["sz_restriction_shape"].ToString();
                         UShape restrictionshape = UShape.ParseFromXml(xml);
@@ -846,6 +847,7 @@ namespace com.ums.PAS.Database
                             dept.l_addresstypes = long.Parse(rs["l_addresstypes"].ToString());
                             dept.sz_defaultnumber = rs["sz_defaultnumber"].ToString();
                             dept.f_map = Int32.Parse(rs["f_map"].ToString());
+                            dept.f_storedareas = Int32.Parse(rs["f_storedareas"].ToString());
                             dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
                             String xml = rs["sz_restriction_shape"].ToString();
                             UShape restrictionshape = UShape.ParseFromXml(xml);

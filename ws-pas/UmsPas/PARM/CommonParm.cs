@@ -165,6 +165,7 @@ namespace com.ums.UmsParm
         public int f_superuser;
         public int l_resource;
         public int l_email;
+        public int f_storedareas;
 
         public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
         public void AddMunicipal(String sz_id, String sz_name)

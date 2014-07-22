@@ -2596,15 +2596,7 @@ namespace com.ums.ws.parm
                 {
                     a.l_alertpk = n_ret;
                     a.l_temppk = n_ret;
-                    if (operation.ToString().ToLower().Equals("delete"))
-                    {                       
-                        try
-                        {
-                            db.DeletePAAreaShape(a.l_alertpk, PASHAPETYPES.PAAREA);
-                        }
-                        catch (Exception) { }
-                    }
-                    else //if it's not a delete op, update the shape(s)
+                    if (!operation.ToString().ToLower().Equals("delete")) //if it's not a delete op, update the shape(s)
                     {
                         if (a.m_shape != null)
                         {

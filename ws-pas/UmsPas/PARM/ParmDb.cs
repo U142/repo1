@@ -323,20 +323,6 @@ namespace com.ums.UmsParm
             }
         }
 
-        public bool DeletePAAreaShape(Int64 pk, PASHAPETYPES type)
-        {
-            try
-            {
-                String sql = String.Format("DELETE FROM PAAREASHAPE WHERE l_pk={0} AND l_type={1}",
-                                    pk, (int)type);
-                return ExecNonQuery(sql);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public bool CopyPAShape(Int64 n_refno, Int64 n_resend_from)
         {
             OdbcDataReader rs = null;
