@@ -303,6 +303,7 @@ namespace com.ums.UmsCommon
         PAUSERRESTRICTION = 8,
         PADEPARTMENTRESTRICTION = 16,
         PASENDING = 32,
+        PAAREA = 64
     }
 
     public static class Helpers

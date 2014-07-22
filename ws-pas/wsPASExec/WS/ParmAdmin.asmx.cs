@@ -179,6 +179,26 @@ namespace com.ums.ws.parm
             }
         }
 
+        [WebMethod]
+        public UPAALERTRESTULT ExecAreaUpdate(ULOGONINFO logon, PAALERT a)
+        {
+            try
+            {
+                UPAALERTRESTULT ret = new UPAALERTRESTULT();
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
+                createOutXml();
+                ret.pk = HandleAreaUpdate(a.parmop, ref logon, ref a);
+                outxml.insertEndElement(); //PAROOT
+                outxml.insertEndDocument();
+                outxml.finalize();
+                db.close();
+                return ret;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [WebMethod]
         public byte[] UpdateParm(byte[] zipfile /*zip-file that contains two files*/, ULOGONINFO logoninfo,
@@ -749,6 +769,66 @@ namespace com.ums.ws.parm
             return true;
         }
 
+        protected bool _write_server_shape(ref UGeminiStreet shape, String l_pk, String nodetype, ref String szShapeString)
+        {
+            try
+            {
+                String tmp = "";
+                String sz_pkfield = "l_alertpk";
+                tmp = String.Format("<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\">",
+                    nodetype, shape.col_alpha, shape.col_red, shape.col_green, shape.col_blue, sz_pkfield, l_pk);
+                szShapeString += tmp;
+
+                Hashtable tbl = new Hashtable();
+                int written = 0;
+                List<com.ums.PAS.Address.UGisImportResultLine> list = shape.gemini().linelist;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    String mun, stre, hou, let, nam1, nam2;
+                    list[i].finalize();
+                    if (!list[i].isValid())
+                        continue;
+                    mun = list[i].municipalid;
+                    stre = list[i].streetid;
+                    hou = list[i].houseno;
+                    let = list[i].letter;
+                    nam1 = list[i].namefilter1;
+                    nam2 = list[i].namefilter2;
+
+                    String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim();
+                    if (tbl[key] != null && tbl[key].ToString() == "1")
+                        continue;
+                    tbl.Add(key, "1");
+                    if (mun.Length == 0)
+                        mun = " ";
+                    if (stre.Length == 0)
+                        stre = " ";
+                    if (hou.Length == 0)
+                        hou = " ";
+                    if (let.Length == 0)
+                        let = " ";
+                    if (nam1.Length == 0)
+                        nam1 = " ";
+                    if (nam2.Length == 0)
+                        nam2 = " ";
+                    tmp = String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" />",
+                        mun, stre, hou, let, nam1, nam2);
+                    szShapeString += tmp;
+                    written++;
+                }
+                //WRITE END LINE
+                tmp = String.Format("</{0}>", nodetype);
+                szShapeString += tmp;
+            }
+            catch (Exception e)
+            {
+                ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
+                throw;
+            }
+
+            return true;
+        }
+
         protected bool _write_server_lbashape(ref PAALERT a, ref StreamWriter w, PARMOPERATION op, ref String szShapeString, ref bool bUseLba)
         {
             try
@@ -843,6 +923,50 @@ namespace com.ums.ws.parm
             return true;
         }
 
+        protected bool write_server_shape_area(ref PAALERT a, PARMOPERATION op)
+        {
+            try
+            {
+                //char pktype = 'a';
+                String l_pk = "s" + a.l_alertpk;
+                String nodetype = "Unknown";
+                String szShapeToDb = "";
+                bool bShapeChanged = false;
+                StreamWriter w = null;
+                if (typeof(UPolygon).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertpolygon";
+                    UPolygon poly = a.m_shape.poly();
+
+                    _write_server_shape(ref poly, l_pk, nodetype, ref w, ref szShapeToDb);
+                }
+                else if (typeof(UEllipse).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertellipse";
+                    UEllipse ell = a.m_shape.ellipse();
+                    _write_server_shape(ref ell, l_pk, nodetype, ref w, ref szShapeToDb);
+                }
+                else if (typeof(UGeminiStreet).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertstreetid";
+                    UGeminiStreet street = a.m_shape.gemini();
+
+                    _write_server_shape(ref street, l_pk, nodetype, ref szShapeToDb);
+                }
+                else if (typeof(UMunicipalShape).Equals(a.m_shape.GetType()))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                    throw new NotImplementedException();
+                db.UpdatePAShapeArea(a.l_alertpk, szShapeToDb, PASHAPETYPES.PAAREA, ref bShapeChanged);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return true;
+        }
 
         private bool parse_as_polygon(ref XmlNode node, ref StreamWriter w, String nodetype, String l_pk, String sz_pkfield, ref ARGB argb)
         {
@@ -1681,6 +1805,97 @@ namespace com.ums.ws.parm
             }
 
         }
+
+        /// <summary>
+        /// Added a new function to fetch areas
+        /// </summary>
+        /// <returns></returns>
+        [WebMethod]
+        public List<PAALERT> GetAreas(ULOGONINFO logoninfo, int parentPk)
+        {
+            String sz_sql;
+            List<PAALERT> lstPaalert;
+            PAALERT paalert;
+            OdbcDataReader rs = null;
+            string sz_shape_xml;
+            UShape sh;
+
+            m_logon = logoninfo;
+
+            //log on
+            try
+            {
+                db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                return null;
+            }
+
+            if (parentPk < 1)
+                sz_sql = String.Format("sp_parm_getarea {0}, {1}", m_logon.l_userpk, m_logon.l_deptpk);
+            else
+                sz_sql = String.Format("sp_parm_getarea {0}, {1}, {2}", m_logon.l_userpk, m_logon.l_deptpk, parentPk);
+
+            try
+            {
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
+                lstPaalert = new List<PAALERT>();
+                while (rs.Read())
+                {
+                    paalert = new PAALERT();
+
+                    long.TryParse(rs["l_areapk"].ToString(), out paalert.l_alertpk);
+                    paalert.l_parent = rs["l_parent"].ToString();
+                    paalert.sz_name = rs["sz_name"].ToString();
+                    paalert.sz_description = rs["sz_description"].ToString();
+                    paalert.sz_name = paalert.sz_name.Replace("&", "&amp;");
+                    paalert.sz_description = paalert.sz_description.Replace("&", "&amp;");
+                    long.TryParse(rs["l_profilepk"].ToString(), out paalert.l_profilepk);
+                    paalert.l_schedpk = rs["l_schedpk"].ToString();
+                    paalert.sz_oadc = rs["sz_oadc"].ToString();
+                    long.TryParse(rs["l_validity"].ToString(), out paalert.l_validity);
+                    long.TryParse(rs["l_addresstypes"].ToString(), out paalert.l_addresstypes);
+                    paalert.l_timestamp = rs["l_timestamp"].ToString();
+                    long.TryParse(rs["f_locked"].ToString(), out paalert.f_locked);
+                    paalert.sz_areaid = rs["sz_areaid"].ToString();
+                    Int32.TryParse(rs["l_maxchannels"].ToString(), out paalert.n_maxchannels);
+                    Int32.TryParse(rs["l_requesttype"].ToString(), out paalert.n_requesttype);
+                    Int32.TryParse(rs["l_expiry"].ToString(), out paalert.n_expiry);
+                    paalert.sz_sms_oadc = rs["sz_sms_oadc"].ToString();
+                    paalert.sz_sms_message = rs["sz_sms_message"].ToString();
+                    sz_shape_xml = rs["sz_xml"].ToString();
+
+                    if (sz_shape_xml.Length > 0)
+                    {
+                        try
+                        {
+                            sz_shape_xml = sz_shape_xml.Replace("alertpolygon", "polygon");
+                            sz_shape_xml = sz_shape_xml.Replace("alertellipse", "ellipse");
+                            sh = UShape.ParseFromXml(sz_shape_xml);
+                            paalert.m_shape = sh;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    lstPaalert.Add(paalert);
+                }
+                rs.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return lstPaalert;
+        }
+
         private int GetAlerts()
         {
             DateTime start = DateTime.Now;
@@ -2351,6 +2566,62 @@ namespace com.ums.ws.parm
             }
         }
 
+        /*new function for insert/update/delete of areas, by using PAALERT class*/
+        public long HandleAreaUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAALERT a)
+        {
+            String sz_sql = "";
+            String sz_name;
+            String sz_description;
+            String sz_oadc;
+            String sz_message;
+            String l_timestamp;
+            try
+            {
+                m_logon = logon;
+                sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+                l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
+                a.l_timestamp = long.Parse(l_timestamp).ToString();
+
+                sz_name = a.sz_name.Replace("'", "''");
+                sz_description = a.sz_description.Replace("'", "''");
+                sz_oadc = a.sz_sms_oadc.Replace("'", "''");
+                sz_message = a.sz_sms_message.Replace("'", "''");
+                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paarea '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}', '{18}', {19}",
+                                        operation.ToString().ToLower(), a.l_alertpk, logon.l_userpk, logon.l_comppk, a.l_parent,
+                                        sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
+                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, sz_oadc, sz_message, "-1", logon.l_deptpk);
+                ULog.write("sz_sql=" + sz_sql);
+                long n_ret = db_exec(sz_sql, "paarea", operation.ToString().ToLower(), a.l_alertpk.ToString(), sz_description, false);
+                if (n_ret > 0) //ok
+                {
+                    a.l_alertpk = n_ret;
+                    a.l_temppk = n_ret;
+                    if (operation.ToString().ToLower().Equals("delete"))
+                    {                       
+                        try
+                        {
+                            db.DeletePAAreaShape(a.l_alertpk, PASHAPETYPES.PAAREA);
+                        }
+                        catch (Exception) { }
+                    }
+                    else //if it's not a delete op, update the shape(s)
+                    {
+                        if (a.m_shape != null)
+                        {
+                            //xml read write not required for areas
+                            write_server_shape_area(ref a, operation);
+                        }                        
+                    }
+                }
+                return n_ret;
+            }
+            catch (Exception e)
+            {
+                ULog.error("HandleAreaUpdate: SQL Error:\n" + sz_sql + "\n" + e.Message);
+                throw;
+            }
+        }
+
         /*new function for insert/update/delete of alerts, by using PAALERT class*/
         public long HandleAlertUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAALERT a)
         {
@@ -2612,6 +2883,8 @@ namespace com.ums.ws.parm
                 sz_pkid = "l_eventpk";
             else if (sz_table.Equals("PAOBJECT"))
                 sz_pkid = "l_objectpk";
+            else if (sz_table.Equals("PAAREA"))
+                sz_pkid = "l_areapk";
 
             String sz_sql = String.Format("UPDATE {0} SET sz_description='{1}' WHERE {2}={3}",
                                           sz_table, sz_desc.Replace("'","''"), sz_pkid, l_objpk);
