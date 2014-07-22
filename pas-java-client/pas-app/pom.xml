@@ -103,7 +103,7 @@
                         <configuration>
                             <classifier>pas</classifier>
                             <includes>
-                                <include>no/ums/pas/**</include>
+                                <include>no/ums/pas/*</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -116,6 +116,7 @@
                         <configuration>
                             <classifier>core</classifier>
                             <includes>
+                                <include>no/ums/pas/area/**</include>
                                 <include>no/ums/pas/core/**</include>
                                 <include>no/ums/pas/entrypoint/**</include>
                                 <include>no/ums/pas/localization/**</include>
