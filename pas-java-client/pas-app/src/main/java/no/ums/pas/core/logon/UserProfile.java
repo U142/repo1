@@ -38,6 +38,7 @@ public class UserProfile {
 	private int messagelibShare;
 	private int superuser;
 	private int resource;
+	private int m_n_storedareas;
 	
 	public String get_name() { return m_sz_name; }
 	public String get_description() { return m_sz_description; }
@@ -63,7 +64,7 @@ public class UserProfile {
 					 int l_pb_name, int l_pb_phone, int l_pb_pin, int l_pb_locality, int l_locality,
 					 int l_sched, int l_sched_retry, int l_sched_cancel, int l_sched_pause,
 					 int l_sched_share, int l_messagelib_share, int l_superuser, int l_resource,
-					 int l_email) {
+					 int l_email, int l_storedareas) {
 		m_sz_name = name;
 		m_sz_description = description;
 		m_n_fleetcontrol = fleetcontrol;
@@ -77,7 +78,7 @@ public class UserProfile {
 		m_n_email = l_email;
 		m_right_management = new RightsManagement(this);
 		m_n_weather = 0; // TODO fiks denne
-		
+		m_n_storedareas = l_storedareas;
 		setMessagelib(l_messagelib);
 		setPhonebook(l_phonebook);
 		setLists(l_lists);
@@ -238,6 +239,13 @@ public class UserProfile {
 		this.resource = resource;
 	}
 	
+	public int get_storedareas() {
+		return m_n_storedareas;
+	}
+	public void set_storedareas(int m_n_storedareas) {
+		this.m_n_storedareas = m_n_storedareas;
+	}
+
 	/*public UserProfile() {
 		m_sz_name = "Rolseprofil";
 		m_sz_description = "Dette er bare en testprofil";

@@ -102,6 +102,20 @@ public interface OtherActions {
         }
     };
 
+    // act_open_predefined_area - mainmenu_libraries_predefinearea
+    Action PREDEFINED_AREAS = new UmsAction("mainmenu_libraries_predefined_areas") {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            log.debug("sub menu PREDEFINED_AREAS called");
+            if(PAS.get_pas().getPredefinedAreaController()==null && !PAS.isPredefinedAreaOpen()) {
+				PAS.setPredefinedAreaOpen(PAS.pasplugin.onOpenPredefinedArea());
+			}
+            else {
+            	PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_AREAS_);
+            }
+        }
+    };
+
     // act_start_parm - mainmenu_parm_start
     Action PARM_START = new UmsAction("mainmenu_parm_start") {
         @Override

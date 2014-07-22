@@ -4,6 +4,11 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
+import no.ums.pas.area.AreaController.AreaSource;
+import no.ums.pas.area.main.MainAreaController;
+import no.ums.pas.area.server.AreaServerCon;
+import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.ChannelType;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -19,6 +24,7 @@ import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -68,6 +74,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -152,8 +161,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public JButton m_btn_send;
 	public JButton m_btn_close;
 	public JButton m_btn_open;
+	private JButton btnSaveArea;
 	private int m_n_addresstypes = 0;
 	ActionListener m_callback;
+	public JButton getBtnSaveArea() {
+		return btnSaveArea;
+	}
 	protected ActionListener get_callback() { return m_callback; }
 	public void setCallback(ActionListener c) { m_callback = c; }
 	protected ActionListener m_alert_callback;
@@ -182,7 +195,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JCheckBox chkPropertyOwnerVacation = null;
 	private JComboBox comboPrivateRecipientChannel = null;
 	private JComboBox comboCompanyRecipientChannel = null;
-	
+	private JLabel lblSelectArea = null;
+	private JComboBox comboAreaList = null;
 	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
 	private PreviewFrame m_gis_preview = null;
@@ -1131,6 +1145,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//m_radio_activate.setDisabledSelectedIcon(load_icon("no.gif"));
 		//m_radio_activate.setSelectedIcon(load_icon("yes.gif"));
 		
+		btnSaveArea = new JButton(ImageLoader.load_icon("save_area.png"));
+
 		if(PAS.icon_version==2)
 			m_icon_polygon_edit = ImageLoader.load_icon("brush_16.png");
 		else
@@ -1175,7 +1191,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
             m_btn_send.setToolTipText(Localization.l("main_sending_prepare"));
             m_btn_close.setToolTipText(Localization.l("main_sending_adr_btn_close_sending"));
             m_btn_open.setToolTipText(Localization.l("mainmenu_file_import"));
-		
+            btnSaveArea.setToolTipText(Localization.l("main_sending_adr_btn_save_predefined_area"));
+
 		m_group_sendingtype.add(m_radio_sendingtype_polygon);
 		m_group_sendingtype.add(m_radio_sendingtype_ellipse);
 		m_group_sendingtype.add(m_radio_sendingtype_polygonal_ellipse);
@@ -1206,6 +1223,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		set_size(m_radio_activate, SIZE_BUTTON_SMALL);
 		set_size(m_btn_finalize, SIZE_BUTTON_LARGE);
 		set_size(m_btn_close, SIZE_BUTTON_LARGE);
+		set_size(btnSaveArea, SIZE_BUTTON_LARGE);
 		
 		m_radio_sendingtype_polygon.addActionListener(this);
 		m_radio_sendingtype_ellipse.addActionListener(this);
@@ -1232,6 +1250,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_finalize.addActionListener(this);
 		m_btn_close.addActionListener(this);
 		m_btn_open.addActionListener(this);
+		btnSaveArea.addActionListener(this);
 		ActionEvent e = new ActionEvent(m_radio_activate, ActionEvent.ACTION_PERFORMED, "act_register_activation_btn");
 		//if(get_parent().get_sendcontroller() != null)
 		if(get_callback()!=null)
@@ -1259,7 +1278,88 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_headofhousehold.setActionCommand("act_set_addresstypes");
 		m_btn_close.setActionCommand("act_sending_close");
 		m_btn_open.setActionCommand("act_open_polygon");
-		
+		btnSaveArea.setActionCommand("act_save_predefined_area");
+		lblSelectArea = new JLabel(Localization.l("main_sending_adr_option_select_area"));
+
+		comboAreaList = new JComboBox();
+		log.debug("after creating areaListCombo 1");
+		ArrayList<AreaVO> areaList = Variables.getAreaList();
+		if(areaList == null || areaList.size()==0)
+		{
+			AreaServerCon areaSyncUtility = new AreaServerCon();
+			areaSyncUtility.execute(null, "fetch");
+			try
+			{
+				areaSyncUtility.join();
+				areaList = areaSyncUtility.getAreaList();
+				log.debug("in sendoptiontollbar areaList size="+areaList.size());
+			}
+			catch(Exception ex)
+			{}
+		}
+		resetAreaList();
+		comboAreaList.setToolTipText(Localization.l("main_sending_adr_btn_select_area_tooltip"));
+		comboAreaList.setEditable(true);
+		comboAreaList.setSelectedItem("");
+		comboAreaList.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() { 
+			public void keyReleased(KeyEvent e) {
+				log.debug("1key entered=" + e.getKeyCode());
+				if(e.getKeyChar()==KeyEvent.VK_ENTER)
+				{
+					//areaListCombo.setFocusable(false);
+					comboAreaList.hidePopup();
+					if(comboAreaList.getSelectedItem() instanceof AreaVO)
+					{
+						AreaVO selectedArea = (AreaVO) comboAreaList.getSelectedItem();
+						log.debug("selected object is321 = "+selectedArea);
+						autoSelectShapeFromPredefinedArea(selectedArea.getM_shape());
+					}
+				}
+				else if(e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode()==KeyEvent.VK_RIGHT)
+				{
+					//do nothing when up or down keys are pressed
+				}
+				//add validation logic here, to decide which keys are allowed
+				else if (e.getKeyCode() != 38 && e.getKeyCode() != 40 && e.getKeyCode() != 10) 
+				{
+	                String a = comboAreaList.getEditor().getItem().toString();
+	                comboAreaList.removeAllItems();
+	                int st = 0;
+//	                comboAreaList.addItem(new String(a));
+
+	                ArrayList<AreaVO> areaList = Variables.getAreaList();
+	                for (int i = 0; i < areaList.size(); i++) {
+	                    if (areaList.get(i).getName().toUpperCase().startsWith(a.toUpperCase()))
+	                    {
+	                    	comboAreaList.addItem(areaList.get(i));
+	                    	st++;
+	                    }
+	                }
+	                comboAreaList.getEditor().setItem(new String(a));
+//	                comboAreaList.setEditable(true);
+//	                comboAreaList.setFocusable(true);
+	                comboAreaList.hidePopup();
+	                if (st != 0) { comboAreaList.showPopup(); }
+	                PAS.get_pas().kickRepaint();
+	            }
+        }});
+
+		comboAreaList.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==ItemEvent.SELECTED)
+				{
+					if(comboAreaList.getSelectedItem() instanceof AreaVO)
+					{
+						AreaVO selectedArea = (AreaVO) comboAreaList.getSelectedItem();
+						//log.debug("comboAreaList item changed="+selectedArea + ";e.getStateChange()=" + e.getStateChange());
+						autoSelectShapeFromPredefinedArea(selectedArea.getM_shape());
+					}
+				}
+			}
+		});
+
 		recipientTab = new JTabbedPane();
 		
 		chkLocationBased = new JCheckBox(gen_adrtypes_text(0, ADRGROUPS.LBA));
@@ -1446,6 +1546,18 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		lock_sending(false);
 	}
 	
+	private void resetAreaList()
+	{
+		ArrayList<AreaVO> areaList = Variables.getAreaList();
+		comboAreaList.removeAllItems();
+		comboAreaList.addItem("");
+		for (int i = 0; i < areaList.size(); i++) {
+			comboAreaList.addItem(areaList.get(i));
+        }
+		log.debug("in sendoptiontollbar areaListCombo size="+comboAreaList.getItemCount());
+		comboAreaList.setSelectedItem("");
+	}
+
 	private boolean isAnyABASChannelSelected()
 	{
 		return ((((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue() > 0) |(((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue() > 0));
@@ -1666,13 +1778,31 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_btn_open, m_gridconst);
 		inc_xpanels2();
 		add_spacing(DIR_VERTICAL, 15);
-		
+
 		this.reset_xpanels();
+		int groupSpacing=5;
+		
+		inc_panels2();
+		inc_xpanels2();
+//		add_spacing(DIR_VERTICAL, 15);
+		add_spacing(DIR_VERTICAL, 15);
+		m_place_holder = new JLabel("");
+//		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		m_gridconst.anchor = GridBagConstraints.CENTER;
+		set_gridconst(0, get_panel(), 30, 1, GridBagConstraints.NORTHWEST);
+		add(lblSelectArea,m_gridconst);
+		inc_xpanels2();
+		addSeparator(groupSpacing);
+//		add_spacing(DIR_VERTICAL, 15);
+		set_gridconst(5, get_panel(), 60, 1, GridBagConstraints.NORTHWEST);
+		comboAreaList.setPreferredSize(new Dimension(300, 23));
+		add(comboAreaList,m_gridconst);
+
+		this.reset_xpanels();
+		add_spacing(DIR_VERTICAL, 15);
 		inc_panels2();
 		//inc_xpanels2();
 	
-		int groupSpacing=5;
-		
 		m_place_holder = new JLabel("");
 //		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 //		add(m_place_holder,m_gridconst);
@@ -1757,19 +1887,38 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		add(m_btn_close, m_gridconst);
 		inc_xpanels2();
+		add(btnSaveArea, m_gridconst);
+		inc_xpanels2();
 		inc_panels2();
 		set_gridconst(0, get_panel(), 12, 1, GridBagConstraints.NORTHWEST);	
 		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it. 
 //		add(m_lbl_addresstypes_private, m_gridconst);
 //		add(lblAbasAdrTypes, m_gridconst);
 		add(chkAddressBased, m_gridconst);
-		set_gridconst(4, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
+//		set_gridconst(4, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		//simply by not adding below component we can bypass the code written for its event handling, instead of removing it. 
 		///add(m_lbl_addresstypes_company, m_gridconst);
 		///set_gridconst(8, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		//add(m_lbl_addresstypes_lba, m_gridconst);
 		
-		add_spacing(DIR_VERTICAL, 15);
+//		inc_panels2();
+//		addSeparator(2);
+
+//		inc_xpanels2();
+//		addSeparator(2);
+//		inc_xpanels2();
+
+//		add_spacing(DIR_VERTICAL, 15);
+//		inc_panels2();
+//		inc_panels2();
+//		set_gridconst(0, get_panel(), 50, 1, GridBagConstraints.NORTHWEST);
+
+//		inc_xpanels2();
+//		inc_panels2();
+//		inc_xpanels2();
+
+
+		inc_panels2();
 		add_spacing(DIR_VERTICAL, 15);
 		add_spacing(DIR_VERTICAL, 15);
 		
@@ -1786,7 +1935,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}
 			}));
 		recipientTab.setPreferredSize(new Dimension(520, 180));
-		set_gridconst(0, get_panel(), 200, 1, GridBagConstraints.SOUTHWEST);
+		set_gridconst(0, get_panel(), 220, 1, GridBagConstraints.SOUTHWEST);
 		add(recipientTab,m_gridconst);
 
 		doLayout();
@@ -1798,6 +1947,49 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			log.debug(m_radio_activate.getActionCommand());
 			//m_radio_activate.doClick();
 		}
+	}
+	private void autoSelectShapeFromPredefinedArea(ShapeStruct shape)
+	{
+		ShapeStruct s = null;
+		try
+		{
+			if(shape!=null)
+			{
+				if(shape instanceof PolygonStruct)
+				{
+					s = (PolygonStruct)shape.clone();
+//					m_radio_sendingtype_polygon.doClick();
+					m_radio_sendingtype_polygon.setSelected(true);
+//					log.debug("doclick of polygon toggle button called12");
+					get_parent().set_type(SendProperties.SENDING_TYPE_POLYGON_);
+					get_parent().get_sendproperties().typecast_poly();
+					get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+					get_callback().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+	//				this.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_sendingtype_polygon"));
+
+//					PAS.get_pas().get_mappane().get_actionhandler().addAction("act_add_polypoint","");
+				}
+				else if (shape instanceof EllipseStruct)
+				{
+					s = (EllipseStruct)shape.clone();
+//					m_radio_sendingtype_ellipse.doClick();
+					m_radio_sendingtype_ellipse.setSelected(true);
+//					log.debug("doclick of ellipse toggle button called12");
+					get_parent().set_type(SendProperties.SENDING_TYPE_CIRCLE_);
+					get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MapMode.SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+					get_callback().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+	//				this.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_sendingtype_ellipse"));
+
+//					PAS.get_pas().get_mappane().get_actionhandler().addAction("act_set_ellipse_corner","");
+				}
+				s.shapeName = m_txt_sendname.getText();
+				PAS.get_pas().kickRepaint();
+				setActiveShape(s);
+			}
+		}
+		catch (Exception e) {
+		}
+		canFinalize();
 	}
 	
 	public void setActiveShape(ShapeStruct s) {
@@ -1939,6 +2131,42 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		else if("act_open_polygon".equals(e.getActionCommand())) {
 			import_polygon();
+		}
+		else if("act_save_predefined_area".equals(e.getActionCommand())) {
+			log.debug("act_save_predefined_area event called from predefinede area1");
+//			btnSaveArea.setEnabled(false);
+
+			if(!PAS.get_pas().get_eastcontent().lockFocusToAreasTab())
+			{
+				try
+				{
+					MainAreaController mainAreaController = PAS.get_pas().getPredefinedAreaController();
+					AreaController areaCtrl = null;
+					if(mainAreaController==null)
+					{
+						PAS.get_pas().initPredefinedAreaController();
+						mainAreaController = PAS.get_pas().getPredefinedAreaController();
+					}
+					areaCtrl = mainAreaController.getAreaCtrl();
+					if (areaCtrl == null) {
+						areaCtrl = new AreaController(mainAreaController, mainAreaController.getMapNavigation());
+					}
+	//				AreaVO area = null;
+					areaCtrl.setEditMode(false);
+					areaCtrl.createNewArea(null, false,AreaSource.NEW_ALERT);
+					areaCtrl.setActiveShape(get_parent().get_sendproperties().get_shapestruct());
+				}
+				catch(Exception ex)
+				{
+					log.error("error",ex);
+				}
+			}
+		}
+		else if("act_save_predefined_area_complete".equals(e.getActionCommand())) {
+//			this.btnSaveArea.setEnabled(false);
+			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(m_txt_sendname.getText()));
+			get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "");
+			PAS.get_pas().kickRepaint();
 		}
 		else if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
 			@SuppressWarnings("unchecked")
@@ -2095,6 +2323,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 				
 				resetMunicipals();
+				resetAreaList();
 				//enableEdit(false);
 				//setActive();
 			}
@@ -2108,6 +2337,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				//if(get_callback()!=null)
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 				resetMunicipals();
+				resetAreaList();
 			}
 			catch(Exception err) { }
 		}
@@ -2118,7 +2348,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MapMode.SENDING_ELLIPSE_POLYGON, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 				//if(get_callback()!=null)
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-				resetMunicipals();				
+				resetMunicipals();
+				resetAreaList();
 			}
 			catch(Exception err) { }
 		}
@@ -2130,7 +2361,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				MunicipalCheckbox chk = (MunicipalCheckbox)e.getSource();
 				get_parent().get_sendproperties().typecast_municipal().AddMunicipal(chk.getMunicipal(), chk.isSelected());
 			}
-
+			resetAreaList();
         	//PAS.get_pas().kickRepaint();
 		}
 		else if("act_preview_gislist".equals(e.getActionCommand())) {
@@ -2138,6 +2369,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_gis_preview = new PreviewFrame(this.get_parent());
 			else if(!this.getIsAlert())
 				m_gis_preview.setVisible(true);
+			resetAreaList();
 		}
         else if("act_sendingtype_house_select".equals(e.getActionCommand())) {
 
@@ -2154,7 +2386,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
                 PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_clear_selected_houses"));
             }
             get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.HOUSESELECT_ALERT, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
-
+            resetAreaList();
             //PAS.get_pas().kickRepaint();
         }
 		canFinalize();
@@ -2171,7 +2403,25 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
 		bCanFinalize = bCanFinalize && (!chkAddressBased.isSelected() || (isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected()));
 		m_btn_finalize.setEnabled(bCanFinalize);
+		enableSaveArea(bCanFinalize);
 		return bCanFinalize;
+	}
+	private void enableSaveArea(boolean bCanFinalize)
+	{
+		boolean isPredefinedArea = false;
+		boolean isShapeValid = false;
+		if (comboAreaList!=null)
+			isPredefinedArea = (comboAreaList.getSelectedItem().toString().trim().length() !=0);
+//		log.debug("isPredefinedArea="+isPredefinedArea);
+
+		//check if the shape is polygon or ellipse
+		try
+		{
+			if(get_parent().get_sendproperties().get_shapestruct() instanceof PolygonStruct || get_parent().get_sendproperties().get_shapestruct() instanceof EllipseStruct)
+				isShapeValid=true;
+		} catch(NullPointerException npe){ }
+		bCanFinalize = bCanFinalize && !(isPredefinedArea) && isShapeValid;
+		btnSaveArea.setEnabled(bCanFinalize);
 	}
 	
 	public void set_sendingname(String sz_name, String sz_description) {
@@ -2315,6 +2565,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			
 			chkAddressBased.setEnabled(!b);
 			changeVisibilityOfABASPanel(!b);
+
+			lblSelectArea.setEnabled(!b);
+			comboAreaList.setEnabled(!b);
 			
 			//test of auto expand polygon
 			//can be removed

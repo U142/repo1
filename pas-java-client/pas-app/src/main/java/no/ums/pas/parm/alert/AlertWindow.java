@@ -138,7 +138,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 
 				
 		setLayout(new BorderLayout());
-		int n_width = 770, n_height = 600;
+		int n_width = 770, n_height = 620;//height changed after adding predefined area combo box
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		
 		setBounds(d.width, d.height, n_width, n_height);

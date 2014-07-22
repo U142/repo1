@@ -190,6 +190,18 @@ public interface PasScriptingInterface {
     boolean onAddMainSelectMenu(MainSelectMenu.MainMenuBar menu);
 	
     /**
+     * Function to open predefined areas list
+     * @return
+     */
+    boolean onOpenPredefinedArea();
+
+    /**
+     * Function to close predefined areas list
+     * @return
+     */
+    boolean onClosePredefinedArea();
+
+    /**
      * Function to start PARM
      * @return
      */

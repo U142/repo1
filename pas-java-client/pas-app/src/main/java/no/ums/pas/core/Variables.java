@@ -1,6 +1,7 @@
 package no.ums.pas.core;
 
 import no.ums.pas.Draw;
+import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
@@ -9,6 +10,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendController;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 public class Variables {
 	
@@ -20,6 +22,13 @@ public class Variables {
 	private static Settings settings = null;
 	private static StatusController statusController = null;
 	
+	private static ArrayList<AreaVO> areaList;
+	public static ArrayList<AreaVO> getAreaList() {
+		return areaList;
+	}
+	public static void setAreaList(ArrayList<AreaVO> areaList) {
+		Variables.areaList = areaList;
+	}
 	private static float alpha = 0.01f;
 	
 	public static float getAlpha() {

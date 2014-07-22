@@ -20,7 +20,7 @@ public class ShowSettingsDlg {
 		//Settings s = new Settings(frm);
 		UserInfo ui = new UserInfo();
 		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2097471, 2, 0, 0, 0, 0,
-							0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+							0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		DeptInfo di = new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null);
 		ui.get_departments().add(di);
 		ui.set_current_department(di);

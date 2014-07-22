@@ -204,7 +204,8 @@ public class MapApplet extends JApplet implements ActionListener {
 					d.getLMessagelibShare(),
 					d.getFSuperuser(),
 					d.getLResource(),
-					d.getLEmail());
+					d.getLEmail(),
+					d.getFStoredareas());
 			}
 
 
@@ -395,7 +396,7 @@ public class MapApplet extends JApplet implements ActionListener {
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
                 false, 3, 150, "NLAlertAdmin", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape,
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		
 		
 		Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();

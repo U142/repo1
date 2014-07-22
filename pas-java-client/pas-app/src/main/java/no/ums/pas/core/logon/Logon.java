@@ -291,6 +291,8 @@ public class Logon implements ActionListener {
 				for(int i=0; i < depts.size(); i++)
 				{
 					UDEPARTMENT d = depts.get(i);
+
+					log.debug("in Logon before LAddresstypes="+d.getLAddresstypes() + ";for dept="+ d.getLDeptpk() + ";phonebook="+d.getLPhonebook()+";getFStoredareas="+d.getFStoredareas());
 					m_info.add_department(d.getLDeptpk(), d.getSzDeptid(), d.getSzStdcc(), d.getLbo(), d.getRbo(), 
 							d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
 							d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
@@ -320,7 +322,8 @@ public class Logon implements ActionListener {
 							d.getLMessagelibShare(),
 							d.getFSuperuser(),
 							d.getLResource(),
-							d.getLEmail());
+							d.getLEmail(),
+							d.getFStoredareas());//**check
 							
 				}
 				//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);

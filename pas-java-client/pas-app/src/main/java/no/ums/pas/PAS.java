@@ -6,6 +6,7 @@ import no.ums.log.swing.LogFrame;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
 import no.ums.pas.core.controllers.HouseController;
+import no.ums.pas.core.controllers.PredefinedAreaController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.MailAccount;
@@ -126,6 +127,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public String ADDRESSSEARCH_URL = "";
 	public String VB4_URL = "";
 	StatusController m_statuscontroller = null;
+	private PredefinedAreaController predefinedAreaController = null;
 	GPSController m_gpscontroller = null;
 	HouseController m_housecontroller = null;
 	InhabitantFrame m_inhabitantframe = null;
@@ -184,6 +186,16 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		return m_b_parm_open;
 	}
 
+	private static boolean m_b_predefinedArea_open = false;
+	public static void setPredefinedAreaOpen(boolean b)
+ 	{
+ 		m_b_predefinedArea_open = b;
+ 	}
+ 	public static boolean isPredefinedAreaOpen()
+ 	{
+ 		return m_b_predefinedArea_open;
+ 	}
+
 	private LookAndFeel m_lookandfeel;
 	public LookAndFeel get_lookandfeel() { return m_lookandfeel; }
 	//public LookAndFeel get_lookandfeel() { return UIManager.getCrossPlatformLookAndFeelClassName(); }
@@ -201,6 +213,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
     public String get_pasappsite() { return PAS_APP_SITE; }
 
     public StatusController get_statuscontroller() { return m_statuscontroller; }
+    public PredefinedAreaController getPredefinedAreaController() { return predefinedAreaController; }
 	public GPSController get_gpscontroller() { return m_gpscontroller; }
 	public HouseController get_housecontroller() { return m_housecontroller; }
 	public InhabitantFrame get_inhabitantframe() { return m_inhabitantframe; }
@@ -562,6 +575,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String sz_storage_gisimport = "gis"+File.separator;
 		String sz_storage_usersettings = "";
 		String sz_storage_parm = "PARM"+File.separator;
+		String sz_storage_predefinedarea = "AREA"+File.separator;
 			//sz_home = "C:\\Program Files\\UMS Population Alert System\\";
 		String os_name = System.getProperty("os.name");
 		boolean b_windows = false;
@@ -656,7 +670,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			site = site.substring(8,site.length()-1);
 		
 		m_storagecontroller.create_storageelements(sz_home, sz_storage_tempwav, sz_storage_status, sz_storage_fleetcontrol,
-												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + File.separator);
+												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + File.separator,
+												sz_storage_predefinedarea + site + File.separator);
 		SoundRecorder.setVocTempPath(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_));
 
 		try
@@ -1402,6 +1417,54 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
+	public void closePredefinedArea(final boolean b_appexit) {
+		if(getPredefinedAreaController()!=null) {
+
+//			(new File(ParmConstants.cleanExit)).delete();
+			new Thread("Predefined area Exit thread")
+			{
+				public void run()
+				{
+		            /*final LoadingFrame progress = new LoadingFrame(Localization.l("main_parm_closing_parm"), null);
+		            progress.set_totalitems(0, Localization.l("main_parm_closing_parm"));
+					progress.start_and_show();
+					try
+					{
+						new XmlWriter().writeTreeToFile(get_parmcontroller().getTreeCtrl().get_treegui().getTree(),get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel());
+					}
+					catch(Exception e)
+					{
+
+					}*/
+					log.debug("Closing Predefined area");
+					try
+					{
+						getPredefinedAreaController().endSession(true);
+					}
+					catch(Exception er) { }
+					// Hvis programmet avslutter før dette blir gjort vet det at tempfilene skal slettes
+					// og henter alt fra databasen igjen.
+
+					if(b_appexit) { //also remove area tab
+						try
+						{
+							get_eastcontent().setIndexZero();
+							get_eastcontent().remove_tab(EastContent.PANEL_PREDEFINED_AREAS_);
+						}
+						catch(Exception e)
+						{
+							log.warn(e.getMessage(), e);
+						}
+					}
+
+					predefinedAreaController = null;
+//					progress.stop_and_hide();
+					get_pasactionlistener().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"act_set_predefinedarea_closed"));
+				}
+			}.start();
+		}
+	}
+
 	public void close_parm(final boolean b_appexit) {
 		if(get_parmcontroller()!=null) {
 			
@@ -1599,6 +1662,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
+	public void initPredefinedAreaController() {
+		predefinedAreaController = new PredefinedAreaController(get_sitename(), get_userinfo());
+		predefinedAreaController.start();
+	}
+
 	public void init_parmcontroller() {
 		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
         m_parmcontroller.start();

@@ -8,6 +8,9 @@ import no.ums.map.tiled.TileCacheGsmCoverage;
 import no.ums.map.tiled.TileCacheUmtsCoverage;
 import no.ums.map.tiled.TileLookupImpl;
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
+import no.ums.pas.area.AreaController.AreaSource;
+import no.ums.pas.area.main.MainAreaController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -1082,6 +1085,7 @@ public class StatusSending {
 
 		public static final long serialVersionUID = 1;
 		JButton m_btn_goto = null;
+		JButton m_btn_save_area = null;
 		JButton m_btn_confirm_lba_sending = null;
 		JButton m_btn_cancel_lba_sending = null;
 		private JCheckBox m_chk_layers_gsm = new JCheckBox("GSM900 " + Localization.l("main_status_gsmcoverage"), false);
@@ -1210,7 +1214,11 @@ public class StatusSending {
 			m_btn_goto.setPreferredSize(btn_size);
             m_btn_goto.setToolTipText(Localization.l("main_status_show_map_of_sending"));
 			
-			
+            m_btn_save_area = new JButton(ImageLoader.load_icon("save_area.png"));
+            m_btn_save_area.addActionListener(this);
+            m_btn_save_area.setPreferredSize(btn_size);
+            m_btn_save_area.setToolTipText(Localization.l("main_sending_adr_btn_save_predefined_area"));
+
 			m_chk_layers_gsm.addActionListener(this);
 			m_chk_layers_umts.addActionListener(this);
 			m_chk_layers_gsm.setActionCommand("act_show_layers_gsm");
@@ -1276,6 +1284,35 @@ public class StatusSending {
 				}
 				
 			}
+			else if(e.getSource().equals(m_btn_save_area))
+			{
+				log.debug("save area button from status view clicked1");
+				if(!PAS.get_pas().get_eastcontent().lockFocusToAreasTab())
+				{
+					try
+					{
+						MainAreaController mainAreaController = PAS.get_pas().getPredefinedAreaController();
+						AreaController areaCtrl = null;
+						if(mainAreaController==null)
+						{
+							PAS.get_pas().initPredefinedAreaController();
+							mainAreaController = PAS.get_pas().getPredefinedAreaController();
+						}
+						areaCtrl = mainAreaController.getAreaCtrl();
+						if (areaCtrl == null) {
+							areaCtrl = new AreaController(mainAreaController, mainAreaController.getMapNavigation());
+						}
+		//				AreaVO area = null;
+						areaCtrl.setEditMode(false);
+						areaCtrl.createNewArea(null, false,AreaSource.STATUS);
+						areaCtrl.setActiveShape(get_shape());
+					}
+					catch(Exception ex)
+					{
+						log.error("error",ex);
+					}
+				}
+			}
 			else if("act_show_layers_gsm".equals(e.getActionCommand()))
 			{
                 // Disable the current GSM overlay, if present
@@ -1336,8 +1373,6 @@ public class StatusSending {
 			
 			add_spacing(DIR_HORIZONTAL, 20);
 			
-			
-			
 			set_gridconst(inc_xpanels(), get_panel(), 1, 1);
 			add(m_btn_cancel_lba_sending, m_gridconst);
 			
@@ -1346,7 +1381,10 @@ public class StatusSending {
 			set_gridconst(inc_xpanels(), get_panel(), 1, 1);
 			add(m_btn_confirm_lba_sending, m_gridconst);
 			
-			
+			add_spacing(DIR_HORIZONTAL, 10);
+
+			set_gridconst(inc_xpanels(), get_panel(), 1, 1);
+			add(m_btn_save_area, m_gridconst);
 			
 			m_chk_layers_gsm.setSize(new Dimension(10, 100));
 			m_chk_layers_umts.setSize(new Dimension(10, 100));
@@ -1361,6 +1399,16 @@ public class StatusSending {
 
 		public void init() {
 			setVisible(true);
+			boolean enableSaveArea = false;
+			try{
+				if(get_shape() instanceof PolygonStruct || get_shape() instanceof EllipseStruct)
+					enableSaveArea = true;
+			} catch(NullPointerException npe) {
+
+			} catch (ClassCastException cce) {
+
+			}
+			m_btn_save_area.setVisible(enableSaveArea);
 		}
 		
 	}

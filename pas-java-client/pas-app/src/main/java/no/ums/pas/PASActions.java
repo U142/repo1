@@ -61,7 +61,11 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_set_parm_closed".equals(e.getActionCommand())) {
 			PAS.setParmOpen(false);//parm_open = false;
-		}else if("act_set_theme".equals(e.getActionCommand())) {
+		}
+		else if("act_set_predefinedarea_closed".equals(e.getActionCommand())) {
+			PAS.setPredefinedAreaOpen(false);//m_b_predefinedArea_open = false;
+		}
+		else if("act_set_theme".equals(e.getActionCommand())) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
 				{
@@ -256,7 +260,7 @@ public class PASActions implements ActionListener {
 		else if("act_set_active_shape".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().actionPerformed(e);
 		}
-		else if("act_activate_parm_drawmode".equals(e.getActionCommand())) {
+		else if("act_activate_parm_drawmode".equals(e.getActionCommand()) || "act_activate_area_drawmode".equals(e.getActionCommand())) {
 			ShapeStruct s = (ShapeStruct)e.getSource();
 			if(s.getClass().equals(PolygonStruct.class))
 				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);

@@ -153,7 +153,7 @@ public class UserInfo extends Object implements Cloneable {
 					 int l_pb_name, int l_pb_phone, int l_pb_pin, int l_pb_locality, int l_locality,
 					 int l_sched, int l_sched_retry, int l_sched_cancel, int l_sched_pause,
 					 int l_sched_share, int l_messagelib_share, int l_superuser, int l_resource,
-					 int l_email)
+					 int l_email, int l_storedareas)
 	{
 		try {
 		NavStruct nav_init = new NavStruct(lbo, rbo, ubo, bbo);
@@ -165,7 +165,7 @@ public class UserInfo extends Object implements Cloneable {
 									l_pb_name, l_pb_phone, l_pb_pin, l_pb_locality,
 									l_locality, l_sched, l_sched_retry, l_sched_cancel,
 									l_sched_pause, l_sched_share, l_messagelib_share,
-									l_superuser, l_resource, l_email);
+									l_superuser, l_resource, l_email, l_storedareas);
 		DeptInfo dept = get_departments().add(l_deptpk, sz_deptid, sz_stdcc, nav_init, f_default, l_deptpri, 
 										l_maxalloc, sz_defaultnumber, m_userprofile, municipals, l_pas, l_langpk,
 										restriction_shapes);

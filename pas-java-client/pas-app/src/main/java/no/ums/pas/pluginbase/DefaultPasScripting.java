@@ -7,6 +7,7 @@ import no.ums.map.tiled.TileData;
 import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
+import no.ums.pas.area.constants.PredefinedAreaConstants;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
@@ -42,6 +43,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.ShapeIntegrity;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
+import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.send.SendPropertiesGIS;
@@ -240,6 +242,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 1).asRadio()));
         group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 5).asRadio()));
 
+        //new menu created for predefined areas
+        final JMenu libraries = menu.add(new JMenu(Localization.l("mainmenu_libraries")));
+        libraries.add(OtherActions.PREDEFINED_AREAS);
+        checkAccessRights();
         
         final JMenu parm = menu.add(new JMenu(Localization.l("mainmenu_parm")));
         parm.add(OtherActions.PARM_START);
@@ -255,7 +261,19 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         help.add(OtherActions.HELP_SHOWLOG);
 		return true;
 	}
-	
+
+    private void checkAccessRights()
+    {
+    	boolean enablePredefinedArea = false;
+    	long storedareas = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_storedareas();
+    	int phonebook = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().getPhonebook();
+//    	log.debug("in checkAccessRights storedareas=" + storedareas + ";phonebook="+phonebook);
+    	if((storedareas > 0) && (phonebook > PredefinedAreaConstants.NO_ACCESS))
+    		enablePredefinedArea = true;
+
+    	OtherActions.PREDEFINED_AREAS.setEnabled(enablePredefinedArea);
+    }
+
 	@Override
 	public boolean onAddPASComponents(PAS p)
 	{
@@ -283,6 +301,59 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 	
+	@Override
+	public boolean onOpenPredefinedArea() {
+		new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                try {
+                    long start = System.currentTimeMillis();
+                    PAS.get_pas().waitForFirstMap();
+
+                    log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
+                    log.debug(String.format(Locale.ENGLISH, "Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
+                    if (PAS.get_pas().getPredefinedAreaController() != null) {
+                        return null;
+                    }
+                } catch (Exception err) {
+                    log.warn("Failed to Open Predefined areas list", err);
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+//            	if(Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1)
+//            	{
+            		log.debug("Opening Predefined areas list");
+	                PAS.get_pas().initPredefinedAreaController();
+//	                PAS.get_pas().getPredefinedAreaController().setExpandedNodes();
+	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_AREAS_);
+//            	}
+//            	else
+//            	{
+//            		log.debug("No PARM righs");
+//            	}
+            }
+        }.execute();
+		return true;
+	}
+
+	@Override
+	public boolean onClosePredefinedArea()
+	{
+//		PAS.setPredefinedAreaOpen(false);
+		try
+		{
+			if(PAS.get_pas().getPredefinedAreaController().getAreaCtrl().isLock())
+				PAS.get_pas().getPredefinedAreaController().getAreaCtrl().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_cancel_predefined_area"));
+		}
+		catch(NullPointerException npe)
+		{}
+		PAS.get_pas().closePredefinedArea(true);
+		return true;
+	}
+
 	@Override
     public boolean onStartParm() {
         new SwingWorker() {
@@ -415,7 +486,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			break;
 		}
 
-
+		checkAccessRights();
 		StatusActions.OPEN.setEnabled(pas.get_rightsmanagement().status());
 
 		pas.get_mainmenu().setHouseeditorEnabled(pas.get_rightsmanagement().houseeditor() >= 1);
@@ -1078,6 +1149,13 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			p.get_parmcontroller().drawLayers(g);
 		}
 		
+		if(p.getPredefinedAreaController()!=null &&
+				(EastContent.CURRENT_PANEL==EastContent.PANEL_PREDEFINED_AREAS_ ||
+				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_))
+		{
+			p.getPredefinedAreaController().drawLayers(g);
+		}
+
 		/*try {
 			if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
 				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)

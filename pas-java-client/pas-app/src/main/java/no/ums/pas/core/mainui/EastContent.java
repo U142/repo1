@@ -4,6 +4,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmPanel;
+import no.ums.pas.PredefinedAreaPanel;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
@@ -60,8 +61,11 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public static final int PANEL_HOUSEEDITOR_ = 6;
 	public static final int PANEL_PARM_ = 7;
 	public static final int PANEL_TAS_ = 8;
+	public static final int PANEL_PREDEFINED_AREAS_ = 9;
 	
 	public static int CURRENT_PANEL = PANEL_INFO_;
+
+	public static int LAST_PANEL = PANEL_INFO_;
 
 	PAS m_pas;
 	private GridBagLayout	m_gridlayout;
@@ -107,6 +111,12 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			return null;
 	}
 	
+	public PredefinedAreaPanel getPredefinedArea() {
+		if(PAS.get_pas().getPredefinedAreaController()!=null)
+			return PAS.get_pas().getPredefinedAreaController().getPredefinedAreaPanel();
+		else
+			return null;
+	}
 	
 	public EastContent(PAS pas)
 	{
@@ -171,6 +181,17 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 							//});
 							//m_statuspanel = null;
 						}
+						else if(c instanceof PredefinedAreaPanel)
+						{
+							//SwingUtilities.invokeLater(new Runnable() {
+							//	public void run()
+								{
+									m_tabbedpane.setSelectedComponent(get_infopanel());
+									PAS.pasplugin.onClosePredefinedArea();
+								}
+								return false;
+							//});
+						}
 						return false;
 					}
 
@@ -226,8 +247,29 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 
 	}
 	
+	public boolean lockFocusToAreasTab()
+	{
+		try
+		{
+			if(PAS.get_pas().getPredefinedAreaController().getAreaCtrl().isLock())
+			{
+				flip_to(PANEL_PREDEFINED_AREAS_);
+				PAS.get_pas().getPredefinedAreaController().getAreaCtrl().getGui().toFront();
+				return true;
+			}
+		}
+		catch(NullPointerException npe)
+		{}
+		return false;
+	}
+
 	protected void tabChanged()
 	{
+		if(LAST_PANEL == PANEL_PREDEFINED_AREAS_)
+		{
+			if(lockFocusToAreasTab())
+				return;
+		}
 		Component c = m_tabbedpane.getSelectedComponent();
 		if(c instanceof InfoPanel)
 		{
@@ -253,8 +295,14 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		{
 			CURRENT_PANEL = PANEL_HOUSEEDITOR_;
 		}
+		else if(c instanceof PredefinedAreaPanel)
+		{
+			CURRENT_PANEL = PANEL_PREDEFINED_AREAS_;
+		}
 		log.debug("Current panel = " + CURRENT_PANEL);
+
 		PAS.pasplugin.onEastContentTabClicked(EastContent.this, m_tabbedpane);		
+		LAST_PANEL = CURRENT_PANEL;
 	}
 	
 	public void InitTAS()
@@ -574,6 +622,9 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					if(get_taspanel()!=null)
 						get_tabbedpane().setSelectedComponent(get_taspanel());
 					break;
+				case PANEL_PREDEFINED_AREAS_:
+					get_tabbedpane().setSelectedComponent(getPredefinedArea());
+					break;
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
@@ -634,6 +685,12 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 							get_tabbedpane().addTab(Localization.l("main_tas_title") + " (" + CountryCodes.getCountryByCCode(PAS.get_pas().get_userinfo().get_current_department().get_stdcc()) + ")", null, get_taspanel(), Localization.l("main_tas_title"));
 						}
 					}
+				case PANEL_PREDEFINED_AREAS_:
+					if(find_component(getPredefinedArea())==-1) {
+						get_tabbedpane().addTab(Localization.l("mainmenu_libraries_predefined_areas_tab"), null, getPredefinedArea(), Localization.l("mainmenu_libraries_predefined_areas"));
+						getPredefinedArea().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
+					}
+					break;
 			}
 		}
 		catch(Exception e)
@@ -702,6 +759,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			case PANEL_TAS_:
 				tab = get_taspanel();
 				break;
+			case PANEL_PREDEFINED_AREAS_:
+				tab = getPredefinedArea();
+				//componentResized(null);
+				break;
 		}
 		return tab;
 	}
@@ -738,6 +799,9 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				{
 					
 				}
+				break;
+			case PANEL_PREDEFINED_AREAS_:
+				get_tabbedpane().remove(getPredefinedArea());
 				break;
 		}
 	}

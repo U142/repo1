@@ -15,7 +15,7 @@ public class StorageController {
 	public static final int PATH_USERSETTINGS_ = 4;
 	public static final int PATH_GISIMPORT_ = 5;
 	public static final int PATH_PARM_ = 6;
-	
+	public static final int PATH_PREDEFINEDAREA_ = 7;
 	
 	public StorageController() {
 		
@@ -23,7 +23,7 @@ public class StorageController {
 	
 	public void create_storageelements(String sz_home, String sz_tempwav, String sz_status,
 										String sz_fleetcontrol, String sz_usersettings, String sz_gisimport, 
-										String sz_parm) {
+										String sz_parm, String sz_predefinedarea) {
 		StorageElements.set_home(sz_home);
 		//StorageElements.set_tempwav(StorageElements.get_home() + sz_tempwav);
 		StorageElements.set_tempwav(System.getProperty("java.io.tmpdir") + sz_tempwav);
@@ -32,6 +32,7 @@ public class StorageController {
 		StorageElements.set_usersettings(StorageElements.get_home() + sz_usersettings);
 		StorageElements.set_gisimport(StorageElements.get_home() + sz_gisimport);
 		StorageElements.set_parm(StorageElements.get_home() + sz_parm);
+		StorageElements.set_predefinedarea(StorageElements.get_home() + sz_predefinedarea);
 	}
 	
 	
@@ -43,6 +44,7 @@ public class StorageController {
 		private static String m_sz_path_usersettings;
 		private static String m_sz_path_gisimport;
 		private static String m_sz_path_parm;
+		private static String m_sz_path_predefinedarea;
 		private static String get_home() { return m_sz_home; }
 		private static String get_tempwav() { return m_sz_path_tempwav; }
 		private static String get_status() { return m_sz_path_status; }
@@ -50,6 +52,7 @@ public class StorageController {
 		private static String get_usersettings() { return m_sz_path_usersettings; }
 		private static String get_gisimport() { return m_sz_path_gisimport; }
 		private static String get_parm() { return m_sz_path_parm; }
+		private static String get_predefinedarea() { return m_sz_path_predefinedarea; }
 		private static String m_sz_lasterror = null;
 		private static void set_lasterror(String sz_error) { m_sz_lasterror = sz_error; }
 		public static String get_lasterror() { return m_sz_lasterror; }
@@ -116,6 +119,17 @@ public class StorageController {
 				Error.getError().addError("StorageController","IOException in set_parm",e,1);
 			}
 		}
+
+		protected static void set_predefinedarea(String sz_path) {
+			m_sz_path_predefinedarea = sz_path;
+			try {
+				create_path(get_path(PATH_PREDEFINEDAREA_));
+			} catch(IOException e) {
+				set_lasterror("ERROR: " + e.getMessage());
+				Error.getError().addError("StorageController","IOException in set_parm",e,1);
+			}
+		}
+
 		// Satte denne fra private til public for å kunne brukes ved opprettelse av parm underkataloger
 		//
 		public static boolean create_path(String sz_path) throws IOException {
@@ -143,6 +157,8 @@ public class StorageController {
 				return get_gisimport();
 			else if(n_type == PATH_PARM_)
 				return get_parm();
+			else if(n_type == PATH_PREDEFINEDAREA_)
+				return get_predefinedarea();
 			return null;
 		}
 	}
