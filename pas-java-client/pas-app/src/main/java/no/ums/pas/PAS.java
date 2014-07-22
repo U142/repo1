@@ -1442,8 +1442,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						getPredefinedAreaController().endSession(true);
 					}
 					catch(Exception er) { }
-					// Hvis programmet avslutter før dette blir gjort vet det at tempfilene skal slettes
-					// og henter alt fra databasen igjen.
 
 					if(b_appexit) { //also remove area tab
 						try
