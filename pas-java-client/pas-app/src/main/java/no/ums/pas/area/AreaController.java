@@ -45,6 +45,7 @@ public class AreaController implements ActionListener{
 	
 	private boolean editMode = false;
 	private AreaSource source;
+	private ActionListener sourceCallback;
 	protected ShapeStruct m_edit_shape;
 	protected ShapeStruct m_edit_shape_original;
 	protected ShapeStruct m_old_shape;
@@ -140,7 +141,7 @@ public class AreaController implements ActionListener{
 				PAS.get_pas().getPredefinedAreaController().clearDrawQueue();
 		}
 		else if("act_save_predefined_area".equals(e.getActionCommand())){
-			log.debug("inside AreaController Save btn from area gui clicked");
+//			log.debug("inside AreaController Save btn from area gui clicked");
 			
 			//add validation logic here
 			//validate();
@@ -173,11 +174,16 @@ public class AreaController implements ActionListener{
 			else if(this.getSource().equals(AreaSource.NEW_ALERT))
 			{
 				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().getBtnSaveArea().setEnabled(false);
-				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
+				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
+			}
+			else if(this.getSource().equals(AreaSource.STATUS))
+			{
+				//pas event back to statussending
+				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
 			}
 		}
 		else if("act_cancel_predefined_area".equals(e.getActionCommand())){
-			log.debug("inside AreaController Cancel btn from area gui clicked1");
+//			log.debug("inside AreaController Cancel btn from area gui clicked1");
 //			this.setEditShape(m_edit_shape_original);
 			if(editMode)
 				currentArea.submitShape(m_old_shape);
@@ -185,9 +191,16 @@ public class AreaController implements ActionListener{
 			lock = false;
 			if(this.getSource().equals(AreaSource.LIBRARY))
 				clearMap();
-			else if(this.getSource().equals(AreaSource.NEW_ALERT))
-				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
-//			else if(this.getSource().equals(AreaSource.STATUS))
+			else if(this.getSource().equals(AreaSource.NEW_ALERT) || this.getSource().equals(AreaSource.STATUS))
+			{
+				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_cancel"));
+//				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
+			}
+			else if(this.getSource().equals(AreaSource.STATUS))
+			{
+//				//pas event back to statussending
+				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_cancel"));
+			}
 		}
 		validate();
 	}
@@ -203,8 +216,9 @@ public class AreaController implements ActionListener{
 		return false;
 	}
 
-	public void createNewArea(DefaultMutableTreeNode currentNode,boolean editMode, AreaSource source) throws ParmException {
+	public void createNewArea(ActionListener callback, DefaultMutableTreeNode currentNode,boolean editMode, AreaSource source) throws ParmException {
 		this.currentArea = null;
+		this.sourceCallback = callback;
 		this.source = source;
 		if(currentNode!=null)
 		{

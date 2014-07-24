@@ -298,7 +298,7 @@ TreeSelectionListener{
 					if (this.areaCtrl == null) {
 						this.areaCtrl = new AreaController(this, getMapNavigation());
 					}
-					this.areaCtrl.createNewArea(remNode,false,AreaSource.LIBRARY);
+					this.areaCtrl.createNewArea(this,remNode,false,AreaSource.LIBRARY);
 				}
 				catch(Exception ex)
 				{

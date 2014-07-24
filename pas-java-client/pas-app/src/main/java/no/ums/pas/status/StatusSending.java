@@ -10,6 +10,7 @@ import no.ums.map.tiled.TileLookupImpl;
 import no.ums.pas.PAS;
 import no.ums.pas.area.AreaController;
 import no.ums.pas.area.AreaController.AreaSource;
+import no.ums.pas.area.constants.PredefinedAreaConstants;
 import no.ums.pas.area.main.MainAreaController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -1304,7 +1305,7 @@ public class StatusSending {
 						}
 		//				AreaVO area = null;
 						areaCtrl.setEditMode(false);
-						areaCtrl.createNewArea(null, false,AreaSource.STATUS);
+						areaCtrl.createNewArea(this,null, false,AreaSource.STATUS);
 						areaCtrl.setActiveShape(get_shape());
 					}
 					catch(Exception ex)
@@ -1312,6 +1313,16 @@ public class StatusSending {
 						log.error("error",ex);
 					}
 				}
+			}
+			else if("act_save_predefined_area_cancel".equals(e.getActionCommand()))
+			{
+//				m_btn_save_area.setEnabled(false);
+//				log.debug("in status view act_save_predefined_area_cancel called");
+			}
+			else if("act_save_predefined_area_complete".equals(e.getActionCommand()))
+			{
+//				m_btn_save_area.setEnabled(false);
+//				log.debug("in status view act_save_predefined_area_complete called");
 			}
 			else if("act_show_layers_gsm".equals(e.getActionCommand()))
 			{
@@ -1408,6 +1419,16 @@ public class StatusSending {
 			} catch (ClassCastException cce) {
 
 			}
+
+			//check for predefined areas's access
+			boolean hasPredefinedAreaAccess = false;
+			long storedareas = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_storedareas();
+			int phonebook = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().getPhonebook();
+//			log.debug("in init storedareas=" + storedareas + ";phonebook="+phonebook);
+			if((storedareas > 0) && (phonebook > PredefinedAreaConstants.READ_ONLY))
+				hasPredefinedAreaAccess = true;
+
+			enableSaveArea = enableSaveArea && hasPredefinedAreaAccess;
 			m_btn_save_area.setVisible(enableSaveArea);
 		}
 		

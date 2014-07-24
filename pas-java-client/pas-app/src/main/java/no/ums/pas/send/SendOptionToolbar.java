@@ -6,6 +6,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.area.AreaController;
 import no.ums.pas.area.AreaController.AreaSource;
+import no.ums.pas.area.constants.PredefinedAreaConstants;
 import no.ums.pas.area.main.MainAreaController;
 import no.ums.pas.area.server.AreaServerCon;
 import no.ums.pas.area.voobjects.AreaVO;
@@ -962,7 +963,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_callback = callback;
 		m_btngroup_lba = new ButtonGroup();
 		init();
-		this.setSize(500, 200);
+		this.setSize(550, 200);
 		try {
 			this.setVisible(true);
 			this.setFocusable(true);
@@ -1797,6 +1798,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		set_gridconst(5, get_panel(), 60, 1, GridBagConstraints.NORTHWEST);
 		comboAreaList.setPreferredSize(new Dimension(300, 23));
 		add(comboAreaList,m_gridconst);
+		inc_xpanels2();
+		set_gridconst(11, get_panel(), 10, 1, GridBagConstraints.EAST);
+		add(btnSaveArea, m_gridconst);
 
 		this.reset_xpanels();
 		add_spacing(DIR_VERTICAL, 15);
@@ -1887,7 +1891,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		add(m_btn_close, m_gridconst);
 		inc_xpanels2();
-		add(btnSaveArea, m_gridconst);
+//		add(btnSaveArea, m_gridconst);
 		inc_xpanels2();
 		inc_panels2();
 		set_gridconst(0, get_panel(), 12, 1, GridBagConstraints.NORTHWEST);	
@@ -2153,7 +2157,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 					}
 	//				AreaVO area = null;
 					areaCtrl.setEditMode(false);
-					areaCtrl.createNewArea(null, false,AreaSource.NEW_ALERT);
+					areaCtrl.createNewArea(this, null, false,AreaSource.NEW_ALERT);
 					areaCtrl.setActiveShape(get_parent().get_sendproperties().get_shapestruct());
 				}
 				catch(Exception ex)
@@ -2162,8 +2166,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				}
 			}
 		}
+		else if("act_save_predefined_area_cancel".equals(e.getActionCommand())) {
+//			log.debug("in sendoptiontoolbar act_save_predefined_area_cancel called");
+		}
 		else if("act_save_predefined_area_complete".equals(e.getActionCommand())) {
-//			this.btnSaveArea.setEnabled(false);
+			this.btnSaveArea.setEnabled(false);
+//			log.debug("in sendoptiontoolbar act_save_predefined_area_complete called");
 			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(m_txt_sendname.getText()));
 			get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "");
 			PAS.get_pas().kickRepaint();
@@ -2420,7 +2428,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(get_parent().get_sendproperties().get_shapestruct() instanceof PolygonStruct || get_parent().get_sendproperties().get_shapestruct() instanceof EllipseStruct)
 				isShapeValid=true;
 		} catch(NullPointerException npe){ }
-		bCanFinalize = bCanFinalize && !(isPredefinedArea) && isShapeValid;
+
+		//check for predefined areas's access
+		boolean hasPredefinedAreaAccess = false;
+		long storedareas = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_storedareas();
+		int phonebook = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().getPhonebook();
+//    	log.debug("in enableSaveArea storedareas=" + storedareas + ";phonebook="+phonebook);
+		if((storedareas > 0) && (phonebook > PredefinedAreaConstants.READ_ONLY))
+			hasPredefinedAreaAccess = true;
+
+		bCanFinalize = bCanFinalize && !(isPredefinedArea) && isShapeValid && hasPredefinedAreaAccess;
 		btnSaveArea.setEnabled(bCanFinalize);
 	}
 	
