@@ -1511,7 +1511,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			StringBuilder sb = new StringBuilder();
 			sb.append(PAS.get_pas().getVB4Url());
 			sb.append("/uploadedfiles/");
-			sb.append("0_NO-UMS-PAS.pdf");
+			//sb.append("0_NO-UMS-PAS.pdf");
+			sb.append(Localization.l("mainmenu_help_documentation_filename"));
 			Desktop.getDesktop().browse(URI.create(sb.toString()));
 		}catch(Exception e)
 		{
