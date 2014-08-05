@@ -660,6 +660,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						line.setBnr(propertyLine.getM_sz_bnr());
 						line.setFnr(propertyLine.getM_sz_fnr());
 						line.setSnr(propertyLine.getM_sz_snr());
+						line.setPropertyField(true);
 					}
 					arr.getUGisImportResultLine().add(line);
 				}

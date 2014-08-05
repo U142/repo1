@@ -14,6 +14,7 @@ import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.importer.gis.GISRecordProperty;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
@@ -933,13 +934,37 @@ public class XmlReader {
 			Node n = nl.item(b);
 			if (n.getNodeType() == Node.ELEMENT_NODE) {
 				Element elgis = (Element) n;
-				GISRecord gisr = new GISRecord(elgis.getAttribute("municipal"),
-						elgis.getAttribute("streetid"),
-						elgis.getAttribute("houseno"),
-						elgis.getAttribute("letter"),
-						elgis.getAttribute("namefilter1"),
-						elgis.getAttribute("namefilter2"));
-				gislist.add(gisr);
+
+				try
+				{
+					String propertyfield = elgis.getAttribute("propertyfield");
+					if(propertyfield != null && "true".equalsIgnoreCase(propertyfield))
+					{
+						GISRecordProperty gisr = new GISRecordProperty(elgis.getAttribute("municipal"), elgis.getAttribute("gnr"), elgis.getAttribute("bnr"), elgis.getAttribute("fnr"), elgis.getAttribute("snr"),
+								elgis.getAttribute("namefilter1"), elgis.getAttribute("namefilter2"));
+						gislist.add(gisr);
+					}
+					else
+					{
+						GISRecord gisr = new GISRecord(elgis.getAttribute("municipal"),
+							elgis.getAttribute("streetid"),
+							elgis.getAttribute("houseno"),
+							elgis.getAttribute("letter"),
+							elgis.getAttribute("namefilter1"),
+							elgis.getAttribute("namefilter2"));
+						gislist.add(gisr);
+					}
+				}
+				catch(NullPointerException npe)
+				{
+					GISRecord gisr = new GISRecord(elgis.getAttribute("municipal"),
+							elgis.getAttribute("streetid"),
+							elgis.getAttribute("houseno"),
+							elgis.getAttribute("letter"),
+							elgis.getAttribute("namefilter1"),
+							elgis.getAttribute("namefilter2"));
+						gislist.add(gisr);
+				}
 			}
 		}
 		ShapeStruct ss = new GISShape(gislist);
