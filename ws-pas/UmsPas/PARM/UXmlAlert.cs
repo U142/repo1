@@ -215,6 +215,7 @@ namespace com.ums.UmsParm
                 l_alertpk = node.Attributes["l_alertpk"].Value;
                 XmlNodeList nl = node.SelectNodes("line");
                 String municipal, streetid, houseno, letter, namefilter1, namefilter2;
+                String gnr, bnr, fnr, snr, apartmentid, propertyfield;
                 List<UGisImportResultLine> filelines = new List<UGisImportResultLine>();
                 for (int i = 0; i < nl.Count; i++)
                 {
@@ -227,6 +228,12 @@ namespace com.ums.UmsParm
                         letter = n.Attributes["letter"].Value;
                         namefilter1 = n.Attributes["namefilter1"].Value;
                         namefilter2 = n.Attributes["namefilter2"].Value;
+                        gnr = n.Attributes["gnr"].Value;
+                        bnr = n.Attributes["bnr"].Value;
+                        fnr = n.Attributes["fnr"].Value;
+                        snr = n.Attributes["snr"].Value;
+                        propertyfield = n.Attributes["propertyfield"].Value;
+
                         UGisImportResultLine res = new UGisImportResultLine();
                         res.n_linenumber = (i + 1);
                         res.municipalid = municipal;
@@ -235,6 +242,12 @@ namespace com.ums.UmsParm
                         res.letter = letter;
                         res.namefilter1 = namefilter1;
                         res.namefilter2 = namefilter2;
+                        res.gnr = gnr;
+                        res.bnr = bnr;
+                        res.fnr = fnr;
+                        res.snr = snr;
+                        if (propertyfield != null && propertyfield.Equals("true"))
+                            res.propertyField = true;
                         res.b_isvalid = true;
                         res.finalize();
                         filelines.Add(res);
