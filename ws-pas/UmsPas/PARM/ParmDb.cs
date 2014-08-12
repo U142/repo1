@@ -5,6 +5,7 @@ using com.ums.UmsCommon;
 using com.ums.PAS.CB;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace com.ums.UmsParm
 {
@@ -516,52 +517,61 @@ namespace com.ums.UmsParm
                                             "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), " +
                                             "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,''), isnull(l_expiry, 60) l_expiry " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
-            OdbcDataReader rs = null;
+            //OdbcDataReader rs = null;
 
-            try
+            using (OdbcConnection con2 = new OdbcConnection(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString))
+            using (OdbcCommand cmd = new OdbcCommand(szSQL, con2))
             {
-                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
-                if (rs.Read())
+                con2.ConnectionTimeout = 120;
+                con2.Open();
+
+                using (OdbcDataReader rs = cmd.ExecuteReader())
+
+                    try
+                    {
+                        //rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                        if (rs.Read())
+                        {
+                            pa.setAlertPk(rs.GetInt64(0));
+                            pa.setParent(rs.GetString(1));
+                            pa.setName(rs.GetString(2));
+                            if (rs.IsDBNull(3))
+                                pa.setDescription("");
+                            else
+                                pa.setDescription(rs.GetString(3));
+                            pa.setProfilePk(rs.GetInt32(4));
+                            pa.setSchedPk(rs.GetString(5));
+                            pa.setOadc(rs.GetString(6));
+                            pa.setValidity(rs.GetInt32(7));
+                            pa.setAddressTypes(rs.GetInt32(8));
+                            pa.setTimestamp(rs.GetString(9));
+                            pa.setLocked(rs.GetInt32(10));
+                            pa.setAreaID(rs.GetString(11));
+                            pa.setMaxChannels(rs.GetInt32(12));
+                            pa.setRequestType(rs.GetInt32(13));
+                            pa.setFunction(n_function);
+                            pa.setSmsOadc(rs.GetString(14));
+                            pa.setSmsMessage(rs.GetString(15));
+                            pa.setExpiry(rs.GetInt32(16));
+                            b_ret = true;
+                        }
+                        rs.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        setLastError(e.Message);
+                        pa.setAlertPk(0);
+                    }
+                    finally
+                    {
+                        if (rs != null && !rs.IsClosed)
+                            rs.Close();
+                    }
+                /*finally
                 {
-                    pa.setAlertPk(rs.GetInt64(0));
-                    pa.setParent(rs.GetString(1));
-                    pa.setName(rs.GetString(2));
-                    if (rs.IsDBNull(3))
-                        pa.setDescription("");
-                    else
-                        pa.setDescription(rs.GetString(3));
-                    pa.setProfilePk(rs.GetInt32(4));
-                    pa.setSchedPk(rs.GetString(5));
-                    pa.setOadc(rs.GetString(6));
-                    pa.setValidity(rs.GetInt32(7));
-                    pa.setAddressTypes(rs.GetInt32(8));
-                    pa.setTimestamp(rs.GetString(9));
-                    pa.setLocked(rs.GetInt32(10));
-                    pa.setAreaID(rs.GetString(11));
-                    pa.setMaxChannels(rs.GetInt32(12));
-                    pa.setRequestType(rs.GetInt32(13));
-                    pa.setFunction(n_function);
-                    pa.setSmsOadc(rs.GetString(14));
-                    pa.setSmsMessage(rs.GetString(15));
-                    pa.setExpiry(rs.GetInt32(16));
-                    b_ret = true;
-                }
-                rs.Close();
+                    CloseRecordSet();
+                }*/
             }
-            catch (Exception e)
-            {
-                setLastError(e.Message);
-                pa.setAlertPk(0);
-            }
-            finally
-            {
-                if (rs != null && !rs.IsClosed)
-                    rs.Close();
-            }
-            /*finally
-            {
-                CloseRecordSet();
-            }*/
             return b_ret;
         }
 
