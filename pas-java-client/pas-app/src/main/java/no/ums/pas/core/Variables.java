@@ -22,6 +22,11 @@ public class Variables {
 	private static Settings settings = null;
 	private static StatusController statusController = null;
 	
+	private static String switchOverDate = "20140602000000";
+	public static String getSwitchOverDate() {
+		return switchOverDate;
+	}
+
 	private static ArrayList<AreaVO> areaList;
 	public static ArrayList<AreaVO> getAreaList() {
 		return areaList;

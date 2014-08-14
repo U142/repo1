@@ -77,7 +77,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
 			m_alert.getPanelToolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
-			m_alert.getPanelToolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes());
+			m_alert.getPanelToolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes(),false);
             // Please don't use the code below as an example off how things should be done.
             // Prefer initing a model with the desired value instead, that the UI should listen to.
             switch (Variables.getSettings().getN_autoselect_shapetype()) {

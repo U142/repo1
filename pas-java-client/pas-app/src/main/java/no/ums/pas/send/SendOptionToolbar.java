@@ -454,9 +454,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		changeVisibilityOfABASPanel(chkAddressBased.isSelected());
 
 	}
-	public void populateABASPanelData(int types)
+	public void populateABASPanelData(int types, boolean oldPARM)
 	{
-//		System.out.println("SendoptionToolbar populateABASPanelData called types="+types);
 		if (types==0)
 		{
 			changeVisibilityOfABASPanel(chkAddressBased.isSelected());
@@ -494,6 +493,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if((value & types)==value)
 				comboCompanyRecipientChannel.setSelectedIndex(i);
 		}
+
+		if(oldPARM && (((RecipientChannel)comboPrivateRecipientChannel.getSelectedItem()).getValue() > 0 || ((RecipientChannel)comboCompanyRecipientChannel.getSelectedItem()).getValue() > 0))
+		{
+			chkAddressBased.setText(gen_adrtypes_text(types, ADRGROUPS.ABAS));
+			chkAddressBased.setSelected(true);
+		}
+
 		if((SendController.RECIPTYPE_PRIVATE_RESIDENT & types)==SendController.RECIPTYPE_PRIVATE_RESIDENT)
 			chkResident.setSelected(true);
 		if((SendController.RECIPTYPE_PRIVATE_OWNER_HOME & types)==SendController.RECIPTYPE_PRIVATE_OWNER_HOME)
@@ -705,6 +711,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         if((FLAGS & BTN_SENDINGTYPE_HOUSE_SELECT_ALERT) == BTN_SENDINGTYPE_HOUSE_SELECT_ALERT) {
             this.m_radio_sendingtype_house_select .setVisible(b_show);
         }
+
 	}
 
 	public boolean adrGroupRepresented(ButtonGroup bg)
@@ -1166,7 +1173,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//m_radio_activate.setSelectedIcon(m_icon_polygon_edit);
 		
 		if(PAS.icon_version==2)
-			m_btn_open = new JButton(ImageLoader.load_icon("folder_open_24.png"));		
+			m_btn_open = new JButton(ImageLoader.load_icon("folder_open_24.png"));
 		else
 			m_btn_open = new JButton(ImageLoader.load_icon("open.gif"));
 

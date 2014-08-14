@@ -22,9 +22,11 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -316,4 +318,16 @@ public final class Utils {
         return streetInfo;
     }
 
+	public synchronized static boolean isOldPARM(String switchOverDate,
+			String alertDate) {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date alertDt = dateFormat.parse(alertDate);
+			Date switchOverDt = dateFormat.parse(switchOverDate);
+			if(alertDt.before(switchOverDt))
+				return true;
+		} catch (Exception ex) {
+		}
+		return false;
+	}
 }

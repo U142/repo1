@@ -90,7 +90,6 @@ public class SendController implements ActionListener {
 	public static final int SENDTO_USE_NOFAX_GLOBAL = 1 << 29; //should always be off
 	public static final int SENDTO_ONLY_HEAD_OF_HOUSEHOLD = 1 << 30;
 	
-	
 	public static final int CHECK_PRIVATE_SMS_INCLUDED = SENDTO_SMS_PRIVATE + SENDTO_SMS_PRIVATE_ALT_FIXED + SENDTO_FIXED_PRIVATE_ALT_SMS;
 	public static final int CHECK_COMPANY_SMS_INCLUDED = SENDTO_SMS_COMPANY + SENDTO_SMS_COMPANY_ALT_FIXED + SENDTO_FIXED_COMPANY_ALT_SMS;
 	public static final int CHECK_SMS_INCLUDED = CHECK_PRIVATE_SMS_INCLUDED + CHECK_COMPANY_SMS_INCLUDED;
@@ -359,7 +358,7 @@ public class SendController implements ActionListener {
 		}
 		obj.get_toolbar().set_addresstypes(alert.getAddresstypes());
 //		obj.get_toolbar().init_addresstypes(alert.getAddresstypes());
-		obj.get_toolbar().populateABASPanelData(alert.getAddresstypes());
+		obj.get_toolbar().populateABASPanelData(alert.getAddresstypes(),Utils.isOldPARM(Variables.getSwitchOverDate(), alert.getTimestamp()));
 		obj.get_sendproperties().set_sendingname(alert.getName(), alert.getDescription());
 		obj.get_sendproperties().set_validity(alert.getValidity());
 		obj.get_sendproperties().set_oadc_number(alert.getOadc());
@@ -668,8 +667,8 @@ public class SendController implements ActionListener {
 						if(userValues)
 						{
 							obj.get_toolbar().set_addresstypes((int)Variables.getSettings().getAddressTypes());
-//							obj.get_toolbar().initSelections();				
-							obj.get_toolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes());
+//							obj.get_toolbar().initSelections();
+							obj.get_toolbar().populateABASPanelData((int)Variables.getSettings().getAddressTypes(),false);
 							
 							//Variables.getSettings().setN_autoselect_shapetype(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_);
 							if(bAutoSelectShapeType)
