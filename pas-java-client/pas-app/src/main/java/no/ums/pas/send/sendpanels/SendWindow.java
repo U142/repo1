@@ -1006,7 +1006,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 	
 	public void showSpecifyLanguage() {
 		JFrame frame = get_frame();
-        JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_default_lang"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_default_lang"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 		frame.dispose();
 	}
 	

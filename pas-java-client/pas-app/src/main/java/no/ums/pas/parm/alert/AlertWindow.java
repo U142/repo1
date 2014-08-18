@@ -432,7 +432,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			
 			if(!proceed) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_paint_or_open"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_paint_or_open"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 			}
 			//JOptionPane.showMessageDialog(this, "rols: " + m_tabbedpane.getSelectedComponent().toString() + m_alert.getGui().toString());
@@ -460,6 +460,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
             get_loader().set_starttext(Localization.l("common_finished"));
 			m_btn_next.setEnabled(true);
 			m_btn_simulation.setEnabled(false);
+//			this.disableNext();
 			//m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_alert_settings), true);
 			if(edit)
 				set_alert_values();
@@ -489,7 +490,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			if((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 					(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert.getGui());
 				ready = false;
@@ -506,7 +507,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			}
 			if(ready && get_alert_settings().get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				ready = false;
@@ -807,7 +808,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass()) {
 			JFrame frame = get_frame();
-            JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			m_tabbedpane.setSelectedComponent(m_alert.getGui());
 			return;
@@ -823,7 +824,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(alert_name_index < m_tabbedpane.getSelectedIndex()) {
 			if(m_alert_settings.get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_sendingname_mandatory"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				return;
