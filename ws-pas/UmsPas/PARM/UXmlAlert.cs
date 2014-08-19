@@ -246,7 +246,7 @@ namespace com.ums.UmsParm
                         res.bnr = bnr;
                         res.fnr = fnr;
                         res.snr = snr;
-                        if (propertyfield != null && propertyfield.Equals("true"))
+                        if (propertyfield != null && propertyfield.ToLower().Equals("true"))
                             res.propertyField = true;
                         res.b_isvalid = true;
                         res.finalize();
