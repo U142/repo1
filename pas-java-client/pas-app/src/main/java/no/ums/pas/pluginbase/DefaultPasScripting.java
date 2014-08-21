@@ -66,6 +66,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.List;
@@ -1511,8 +1512,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			StringBuilder sb = new StringBuilder();
 			sb.append(PAS.get_pas().getVB4Url());
 			sb.append("/doc/");
-			//sb.append("0_NO-UMS-PAS.pdf");
-			sb.append(Localization.l("mainmenu_help_documentation_filename"));
+			sb.append(URLEncoder.encode(Localization.l("mainmenu_help_documentation_filename"), "UTF-8"));
 			Desktop.getDesktop().browse(URI.create(sb.toString()));
 		}catch(Exception e)
 		{
