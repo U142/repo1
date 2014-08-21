@@ -221,6 +221,9 @@ public class Houses {
 		
 		for(InhabitantBasics b : l)
 		{
+			//to solve map zoom out issue, ignore recipients with 0 lat,lon value while calculating zoom level
+			if(b.get_lat()==0 || b.get_lon()==0)
+				continue;
 			sum_lat += b.get_lat();
 			sum_lon += b.get_lon();
 			++i;
@@ -233,6 +236,8 @@ public class Houses {
 		
 		for(InhabitantBasics b : l)
 		{
+			if(b.get_lat()==0 || b.get_lon()==0)
+				continue;
 			sum_deviations_lat += Math.pow(mean_lat*factor - b.get_lat()*factor,2);
 			sum_deviations_lon += Math.pow(mean_lon*factor - b.get_lon()*factor,2);			
 		}
