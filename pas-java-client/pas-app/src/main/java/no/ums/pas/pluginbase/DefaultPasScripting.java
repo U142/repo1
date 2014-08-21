@@ -1512,7 +1512,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			StringBuilder sb = new StringBuilder();
 			sb.append(PAS.get_pas().getVB4Url());
 			sb.append("/doc/");
-			sb.append(URLEncoder.encode(Localization.l("mainmenu_help_documentation_filename"), "UTF-8"));
+			sb.append(URLEncoder.encode(Localization.l("mainmenu_help_documentation_filename"), "UTF-8").replace("+", "%20"));
 			Desktop.getDesktop().browse(URI.create(sb.toString()));
 		}catch(Exception e)
 		{
