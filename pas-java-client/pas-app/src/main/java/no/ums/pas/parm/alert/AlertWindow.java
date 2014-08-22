@@ -488,9 +488,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			boolean ready = true;
 			
 			if((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
-					(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) {
+					(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1) ||
+					(!hasRecipientTypeAndChannel(m_alert.getPanelToolbar().get_addresstypes()) && isABAS(m_alert.getPanelToolbar().get_addresstypes()))
+					) {
 				JFrame frame = get_frame();
-                JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+				if(isABAS(m_alert.getPanelToolbar().get_addresstypes()))
+					JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type_abas"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert.getGui());
 				ready = false;
@@ -805,10 +810,16 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				}
 			}
 		}
-		if(((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
-				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass()) {
+		if((((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
+				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)
+				|| (!hasRecipientTypeAndChannel(m_alert.getPanelToolbar().get_addresstypes()) && isABAS(m_alert.getPanelToolbar().get_addresstypes()))
+				) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass())
+				) {
 			JFrame frame = get_frame();
-            JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+			if(isABAS(m_alert.getPanelToolbar().get_addresstypes()))
+				JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type_abas"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(this, Localization.l("main_parm_alert_dlg_specify_recipient_type"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			frame.dispose();
 			m_tabbedpane.setSelectedComponent(m_alert.getGui());
 			return;

@@ -125,6 +125,26 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 			return true;
 		return false;
 	}
+	public boolean hasRecipientTypeAndChannel(int n_adrtypes)
+	{
+		if((hasVoice(n_adrtypes) || hasSMS(n_adrtypes)) && hasRecipient(n_adrtypes))
+			return true;
+		return false;
+	}
+	public boolean isABAS(int n_adrtypes)
+	{
+		if((n_adrtypes & SendController.SENDTO_USE_ABAS_RECIPIENTS) > 0)
+			return true;
+		return false;
+	}
+	public boolean hasRecipient(int n_adrtypes)
+	{
+		if((n_adrtypes & SendController.RECIPTYPE_PRIVATE_RESIDENT) > 0 ||
+			(n_adrtypes & SendController.RECIPTYPE_PRIVATE_OWNER_HOME) > 0 ||
+			(n_adrtypes & SendController.RECIPTYPE_PRIVATE_OWNER_VACATION) > 0)
+			return true;
+		return false;
+	}
 	public boolean hasSMS(int n_adrtypes)
 	{
 		if(doSendSMS() && 
