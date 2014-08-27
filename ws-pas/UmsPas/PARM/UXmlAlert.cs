@@ -235,7 +235,7 @@ namespace com.ums.UmsParm
                         propertyfield = n.Attributes["propertyfield"].Value;
 
                         UGisImportResultLine res = new UGisImportResultLine();
-                        res.n_linenumber = (i + 1);
+                        res.n_linenumber = i; // (i + 1); // shouldn't be +1, line number is used for array index and should start with 0
                         res.municipalid = municipal;
                         res.streetid = streetid;
                         res.houseno = houseno;
