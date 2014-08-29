@@ -148,7 +148,7 @@ namespace com.ums.PAS.Database
 
         protected bool NsLookup(ref UNSLOOKUP ns)
         {
-            
+
             try
             {
                 //Returns:ISO 3166 Two-letter Country Code, Region Code, City, Postal Code, Latitude, Longitude, Metropolitan Code, Area Code, ISP, Organization, Error code
@@ -163,20 +163,24 @@ namespace com.ums.PAS.Database
                 {
                     ns.l_lastdatetime = UCommon.UGetFullDateTimeNow().getDateTime();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     ns.l_lastdatetime = 0;
                 }
                 if (remoteIP.Length > 0)
                 {
-                    //remoteIP = "81.191.35.194";
-                    //String szUrl = String.Format("{0}&i={1}", UCommon.UPATHS.sz_url_nslookup, remoteIP);
-                    String szUrl = String.Format("{0}&i={1}", ConfigurationSettings.AppSettings["sz_url_nslookup"], remoteIP);
+                    int requestTimeout;
+                    if(!int.TryParse(System.Configuration.ConfigurationManager.AppSettings["l_nslookup_timeout"], out requestTimeout))
+                        requestTimeout = 5000; // set timeout to 5 seconds if value is missing
+
+                    String szUrl = String.Format("{0}&i={1}", System.Configuration.ConfigurationManager.AppSettings["sz_url_nslookup"], remoteIP);
                     HttpWebRequest req = (HttpWebRequest)WebRequest.Create(szUrl);
+                    req.Timeout = requestTimeout;
                     HttpWebResponse response = (HttpWebResponse)req.GetResponse();
                     StreamReader sr = new StreamReader(response.GetResponseStream());
                     String output = sr.ReadToEnd();
-                    String [] arr = output.Split(',');
+                    String[] arr = output.Split(',');
+
                     try
                     {
                         sr.Close();
@@ -189,7 +193,7 @@ namespace com.ums.PAS.Database
 
                     for (int i = 0; i < arr.Length; i++)
                         arr[i] = arr[i].Replace("\"", "");
-                    
+
                     if (arr.Length >= 3)
                     {
                         if (arr[2].Length > 0)
@@ -198,14 +202,14 @@ namespace com.ums.PAS.Database
                             ns.sz_location += " " + arr[0] + "\n";
                         if (ns.sz_location.Length == 0 && arr.Length >= 11)
                             ns.sz_location = arr[10];
-                            
+
                         //ns.sz_location = arr[2] + " " + arr[0] + "\n";
                     }
                     if (arr.Length >= 10)
                     {
                         String provider = arr[8];
                         String providertext = arr[9];
-                        if(provider.Length > 0)
+                        if (provider.Length > 0)
                             ns.sz_location += provider;
                         if (!provider.Equals(providertext) && providertext.Length > 0)
                             ns.sz_location += " - " + providertext;
@@ -220,7 +224,7 @@ namespace com.ums.PAS.Database
             }
             catch (Exception)
             {
-                throw;
+                return false; // don't throw exception if lookup fails, don't want to halt execution of PAS if nslookup fails or site is unavailable
             }
         }
 
