@@ -404,8 +404,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		}
 		else if(m_alert_send!=null)
 			m_alert_send.get_chk_execute_remote().setEnabled(true);
-				
-			
+
+		//to permanantly disable remote execute checkbox
+		m_alert_send.get_chk_execute_remote().setEnabled(false);
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
@@ -975,6 +976,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_alert_send.get_chk_execute_remote().setSelected(false);
 		else if(m_alert.getAlert().getLocked()==1)
 			m_alert_send.get_chk_execute_remote().setSelected(true);
+
+		//to permanantly disable remote execute checkbox
+		m_alert_send.get_chk_execute_remote().setEnabled(false);
+
 		m_alert_settings.get_parent().get_sms_broadcast_text().get_txt_messagetext().setText(m_alert.getAlert().get_sms_message());
 		m_alert_settings.get_parent().get_sms_broadcast_text().get_txt_oadc_text().setText(m_alert.getAlert().get_sms_oadc());
 		m_alert_settings.get_parent().get_sms_broadcast_text().setExpiry(m_alert.getAlert().get_LBAExpiry());

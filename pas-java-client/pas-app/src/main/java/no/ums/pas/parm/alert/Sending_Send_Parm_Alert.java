@@ -108,6 +108,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		m_txt_refno.setVisible(false);
 		m_lbl_adrfile.setVisible(false);
 		m_txt_adrfile.setVisible(false);
+		enableInput(false);//always disable this checkbox
 		//set_gridconst(0, inc_panels(), 2, 1, GridBagConstraints.CENTER);
 		//add(btn_send, m_gridconst);
 		init();
@@ -122,7 +123,8 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		m_lbl_adrfile.setIcon(m_icon_indicator[n_status]);
 	}
 	public void init() {
-		
+		m_txt_activate_ext.setEnabled(false);
+		m_chk_execute_remote.setEnabled(false);
 	}
 	public void create_upload_indicators() {
 		m_txt_wav_upload = new StdTextLabel[parent.get_files().length];
