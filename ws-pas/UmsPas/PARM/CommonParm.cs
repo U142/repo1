@@ -380,6 +380,13 @@ namespace com.ums.UmsParm
                         retshape.ParseFromXml(ref doc);
                         return retshape;
                     }
+                    nl = doc.GetElementsByTagName("streetid");
+                    if (nl.Count > 0)
+                    {
+                        retshape = new UGeminiStreet();
+                        retshape.ParseFromXml(ref doc);
+                        return retshape;
+                    }
                     throw new UXmlShapeException("XML String does not contain a valid shape");
 
                 }
@@ -808,7 +815,75 @@ namespace com.ums.UmsParm
         }
         protected override bool ParseFromXml(ref XmlDocument doc)
         {
-            throw new NotImplementedException();
+            try
+            {
+                XmlNodeList headnode = doc.GetElementsByTagName("streetid");
+
+                if (headnode.Count >= 1)
+                {
+                    XmlNode node = headnode.Item(0);
+                    String col_a = node.Attributes["col_a"].Value;
+                    String col_r = node.Attributes["col_r"].Value;
+                    String col_g = node.Attributes["col_g"].Value;
+                    String col_b = node.Attributes["col_b"].Value;
+                    this.col_alpha = Int32.Parse(col_a);
+                    this.col_red = Int32.Parse(col_r);
+                    this.col_green = Int32.Parse(col_g);
+                    this.col_blue = Int32.Parse(col_b);
+                }
+                XmlNodeList points = doc.GetElementsByTagName("line");
+
+                String municipal, streetid, houseno, letter, namefilter1, namefilter2;
+                String gnr, bnr, fnr, snr, apartmentid, propertyfield;
+
+                this.linelist = new List<com.ums.PAS.Address.UGisImportResultLine>();
+
+                if (points.Count != 0)
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        XmlNode node = points.Item(i);
+
+                        municipal = node.Attributes["municipal"].Value;
+                        streetid = node.Attributes["streetid"].Value;
+                        houseno = node.Attributes["houseno"].Value;
+                        letter = node.Attributes["letter"].Value;
+                        namefilter1 = node.Attributes["namefilter1"].Value;
+                        namefilter2 = node.Attributes["namefilter2"].Value;
+                        apartmentid = node.Attributes["apartmentid"].Value;
+                        gnr = node.Attributes["gnr"].Value;
+                        bnr = node.Attributes["bnr"].Value;
+                        fnr = node.Attributes["fnr"].Value;
+                        snr = node.Attributes["snr"].Value;
+                        propertyfield = node.Attributes["propertyfield"].Value;
+
+                        com.ums.PAS.Address.UGisImportResultLine resultLine = new PAS.Address.UGisImportResultLine();
+
+                        resultLine.municipalid = municipal;
+                        resultLine.streetid = streetid;
+                        resultLine.houseno = houseno;
+                        resultLine.letter = letter;
+                        resultLine.apartmentid = apartmentid;
+                        resultLine.namefilter1 = namefilter1;
+                        resultLine.namefilter2 = namefilter2;
+                        resultLine.gnr = gnr;
+                        resultLine.bnr = bnr;
+                        resultLine.fnr = fnr;
+                        resultLine.snr = snr;
+
+                        resultLine.propertyField = Convert.ToBoolean(propertyfield);
+
+                        this.linelist.Add(resultLine);
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.warning("Error parsing Xml string");
+                return false;
+            }
         }
         protected override string CreateXml(ref USimpleXmlWriter d)
         {

@@ -823,7 +823,7 @@ namespace com.ums.ws.parm
                 List<com.ums.PAS.Address.UGisImportResultLine> list = shape.gemini().linelist;
                 for (int i = 0; i < list.Count; i++)
                 {
-                    String mun, stre, hou, let, nam1, nam2;
+                    String mun, stre, hou, let, nam1, nam2, apartmentid, gnr, bnr, fnr, snr;
                     list[i].finalize();
                     if (!list[i].isValid())
                         continue;
@@ -833,8 +833,14 @@ namespace com.ums.ws.parm
                     let = list[i].letter;
                     nam1 = list[i].namefilter1;
                     nam2 = list[i].namefilter2;
+                    apartmentid = list[i].apartmentid;
+                    gnr = list[i].gnr;
+                    bnr = list[i].bnr;
+                    fnr = list[i].fnr;
+                    snr = list[i].snr;
 
-                    String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim();
+                    String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim() + "." + apartmentid.Trim()
+                        + "." + gnr.Trim() + "." + bnr.Trim() + "." + fnr.Trim() + "." + snr.Trim();
                     if (tbl[key] != null && tbl[key].ToString() == "1")
                         continue;
                     tbl.Add(key, "1");
@@ -850,8 +856,18 @@ namespace com.ums.ws.parm
                         nam1 = " ";
                     if (nam2.Length == 0)
                         nam2 = " ";
-                    tmp = String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" />",
-                        mun, stre, hou, let, nam1, nam2);
+                    if (apartmentid.Length == 0)
+                        apartmentid = " ";
+                    if (gnr.Length == 0)
+                        gnr = " ";
+                    if (bnr.Length == 0)
+                        bnr = " ";
+                    if (fnr.Length == 0)
+                        fnr = " ";
+                    if (snr.Length == 0)
+                        snr = " ";
+                    tmp = String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" apartmentid=\"{6}\" gnr=\"{7}\" bnr=\"{8}\" fnr=\"{9}\" snr=\"{10}\" propertyfield=\"{11}\"/>",
+                        mun, stre, hou, let, nam1, nam2, apartmentid, gnr, bnr, fnr, snr, list[i].propertyField);
                     szShapeString += tmp;
                     written++;
                 }
@@ -1912,6 +1928,7 @@ namespace com.ums.ws.parm
                         {
                             sz_shape_xml = sz_shape_xml.Replace("alertpolygon", "polygon");
                             sz_shape_xml = sz_shape_xml.Replace("alertellipse", "ellipse");
+                            sz_shape_xml = sz_shape_xml.Replace("alertstreetid", "streetid");
                             sh = UShape.ParseFromXml(sz_shape_xml);
                             paalert.m_shape = sh;
                         }
