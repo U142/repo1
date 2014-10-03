@@ -839,6 +839,29 @@ namespace com.ums.ws.parm
                     fnr = list[i].fnr;
                     snr = list[i].snr;
 
+                    if (mun == null)
+                        mun = "";
+                    if (stre == null)
+                        stre = "";
+                    if (hou == null)
+                        hou = "";
+                    if (let == null)
+                        let = "";
+                    if (nam1 == null)
+                        nam1 = "";
+                    if (nam2 == null)
+                        nam2 = "";
+                    if (apartmentid == null)
+                        apartmentid = "";
+                    if (gnr == null)
+                        gnr = "";
+                    if (bnr == null)
+                        bnr = "";
+                    if (fnr == null)
+                        fnr = "";
+                    if (snr == null)
+                        snr = "";
+
                     String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim() + "." + apartmentid.Trim()
                         + "." + gnr.Trim() + "." + bnr.Trim() + "." + fnr.Trim() + "." + snr.Trim();
                     if (tbl[key] != null && tbl[key].ToString() == "1")

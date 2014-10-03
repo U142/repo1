@@ -4,6 +4,7 @@ package no.ums.pas.importer.gis;
 //import no.ums.log.UmsLog;
 
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.localization.Localization;
@@ -239,9 +240,26 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			//to allow to import more files
 			if(JOptionPane.showConfirmDialog(this, Localization.l("import_more_files_are_you_sure"), Localization.l("import_more_files"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 			{
-				SendObject currentSendObject = PAS.get_pas().get_sendcontroller().get_activesending();
-				currentSendObject.set_import_more_flag(true);
-				new ImportPolygon(currentSendObject.get_toolbar(), "act_polygon_imported", false, PAS.get_pas());			
+				boolean isShapeFromArea = false;
+				try
+				{
+					AreaController areaController = PAS.get_pas().getPredefinedAreaController().getAreaCtrl();
+					if(areaController.isLock() && areaController.getSendProperties()!=null)
+					{
+						areaController.setImportMore(true);
+						new ImportPolygon(areaController, "act_polygon_imported", false, PAS.get_pas());
+						isShapeFromArea = true;
+					}
+				}
+				catch (Exception err) {
+					err.printStackTrace();
+				}
+
+				if(!isShapeFromArea) {
+					SendObject currentSendObject = PAS.get_pas().get_sendcontroller().get_activesending();
+					currentSendObject.set_import_more_flag(true);
+					new ImportPolygon(currentSendObject.get_toolbar(), "act_polygon_imported", false, PAS.get_pas());
+				}
 			}
 			this.setVisible(false);
 			enableControls(true);

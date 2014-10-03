@@ -1,6 +1,7 @@
 package no.ums.pas.area.tree;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -258,6 +259,7 @@ public class AreaTreeController {
 			TreePath path = new TreePath(treeNode.getPath());
 			gui.getTree().scrollPathToVisible(path);
 		}
+
 	}
 	
 	public void updateAreaToTree(AreaVO newArea,DefaultMutableTreeNode currentNode)
@@ -294,7 +296,6 @@ public class AreaTreeController {
 		
 		getGui().getTreeModel().removeNodeFromParent(currentNode);
 //		this.areaNodeMap.remove(node);
-		
 	}
 	
 	/*public DefaultMutableTreeNode getNodeFromTree(AreaVO parent)
@@ -324,7 +325,7 @@ public class AreaTreeController {
 				// e.getX(), e.getY()
 				// gui.createPopupMenu();
 			
-			log.debug("inside maybeShowPopup() e.getButton()="+e.getButton());//
+//			log.debug("inside maybeShowPopup() e.getButton()="+e.getButton());//
 			try
 			{
 				if(PAS.get_pas().getPredefinedAreaController().getAreaCtrl().isLock())

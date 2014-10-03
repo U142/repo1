@@ -114,7 +114,7 @@ public class AreaTreeGUI extends DefaultPanel implements ComponentListener {
 				if(tip.getClass().equals(AreaVO.class))
 				{
 					AreaVO avo = (AreaVO)tip;
-                    String tiptext = "<html>" + Localization.l("mainmenu_libraries_predefined_areas") + " = " + avo.getAlertpk().substring(1);
+                    String tiptext = "<html>" + Localization.l("mainmenu_libraries_predefined_areas") + " = " + avo.getAlertpk();
 //					tiptext += avo.getDescription();
 					tiptext += "</html>";
 					return tiptext;

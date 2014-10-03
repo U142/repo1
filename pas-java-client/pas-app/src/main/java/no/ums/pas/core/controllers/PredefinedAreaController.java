@@ -19,6 +19,7 @@ import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -41,10 +42,18 @@ public class PredefinedAreaController extends MainAreaController{
 	public ShapeStruct get_shape() { return m_shape; }
 	public ShapeStruct get_shape_filled() { return m_shape_filled; }
 	
+	private boolean inBackground;
+
 	public PredefinedAreaController(String sz_sitename, UserInfo userinfo) {
 		super(sz_sitename, userinfo);
 		predefinedAreaPanel = new PredefinedAreaPanel(this);
 		m_shape   = null;//new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mapsize());
+	}
+	public PredefinedAreaController(String sz_sitename, UserInfo userinfo, boolean inBackground) {
+		super(sz_sitename, userinfo,inBackground);
+		this.inBackground = inBackground;
+//		predefinedAreaPanel = new PredefinedAreaPanel(this);
+		m_shape = null;//new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mapsize());
 	}
 	
 	public void createGUI() {
@@ -223,7 +232,17 @@ public class PredefinedAreaController extends MainAreaController{
 			//this.event = (EventVO) object;
 			try {
 				if(((AreaVO)object).getM_shape()!=null) {
-					no.ums.pas.maps.defines.NavStruct nav = ((AreaVO)object).getM_shape().calc_bounds();//((AlertVO)object).getM_polygon().calc_bounds();
+					ShapeStruct gisShape = null;
+					no.ums.pas.maps.defines.NavStruct nav = null;
+					if(((AreaVO)object).getM_shape() instanceof GISShape)
+					{
+						gisShape = ((AreaVO)object).getM_shape();
+						nav = ((GISShape) gisShape).get_gislist().GetBounds();
+					}
+					else
+					{
+						nav = ((AreaVO)object).getM_shape().calc_bounds();//((AlertVO)object).getM_polygon().calc_bounds();
+					}
 					if(nav!=null)
 						PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				}

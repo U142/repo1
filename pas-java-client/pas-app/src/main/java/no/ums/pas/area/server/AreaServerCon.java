@@ -1,9 +1,12 @@
 package no.ums.pas.area.server;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -12,8 +15,12 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.importer.gis.GISRecordProperty;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.MapPoint;
@@ -33,6 +40,15 @@ import no.ums.ws.common.parm.UShape;
 import no.ums.ws.parm.admin.ArrayOfPAALERT;
 import no.ums.ws.parm.admin.ParmAdmin;
 import no.ums.ws.parm.admin.UPAALERTRESTULT;
+import no.ums.ws.pas.ArrayOfUGisImportLine;
+import no.ums.ws.pas.ArrayOfUGisImportPropertyLine;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UGisImportLine;
+import no.ums.ws.pas.UGisImportList;
+import no.ums.ws.pas.UGisImportPropertyLine;
+import no.ums.ws.pas.UGisImportPropertyList;
+import no.ums.ws.pas.UGisImportResultsByStreetId;
+
 
 /**
  * @author sachinn
@@ -78,6 +94,7 @@ public class AreaServerCon extends Thread {
 				fetchAreaList();
 				Variables.setAreaList(areaList);
 			}
+			PAS.get_pas().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_predefined_areas_changed"));
 		}
 	}
 	
@@ -178,16 +195,35 @@ public class AreaServerCon extends Thread {
 					GISRecord fromline = from.get_gislist().get(i);
 					UGisImportResultLine line = new UGisImportResultLine();
 					line.setBIsvalid(true);
-					line.setMunicipalid(fromline.get_municipal());
-					line.setStreetid(fromline.get_streetid());
-					line.setHouseno(fromline.get_houseno());
-					line.setLetter(fromline.get_letter());
-					line.setNamefilter1(fromline.get_name1());
-					line.setNamefilter2(fromline.get_name2());
+					line.setMunicipalid(fromline.get_municipal()!=null ? fromline.get_municipal() : "");
+					line.setStreetid(fromline.get_streetid() !=null ? fromline.get_streetid() : "");
+					line.setHouseno(fromline.get_houseno() !=null ? fromline.get_houseno() : "");
+					line.setLetter(fromline.get_letter() !=null ? fromline.get_letter() : "");
+					line.setNamefilter1(fromline.get_name1() !=null ? fromline.get_name1() : "");
+					line.setNamefilter2(fromline.get_name2() != null ? fromline.get_name2() : "");
 					line.setNLinenumber(fromline.get_lineno());
+					line.setApartmentid("");
+					line.setGnr("");
+					line.setBnr("");
+					line.setFnr("");
+					line.setSnr("");
+					if(fromline instanceof GISRecordProperty)
+					{
+						GISRecordProperty propertyLine= (GISRecordProperty)fromline;
+						line.setMunicipalid(propertyLine.get_municipal() != null ? propertyLine.get_municipal() : "");
+						line.setGnr(propertyLine.getM_sz_gnr() != null ? propertyLine.getM_sz_gnr() : "");
+						line.setBnr(propertyLine.getM_sz_bnr() != null ? propertyLine.getM_sz_bnr() : "");
+						line.setFnr(propertyLine.getM_sz_fnr() != null ? propertyLine.getM_sz_fnr() : "");
+						line.setSnr(propertyLine.getM_sz_snr() != null ? propertyLine.getM_sz_snr() : "");
+						line.setNamefilter1(propertyLine.get_name1() != null ? propertyLine.get_name1() : "");
+						line.setNamefilter2(propertyLine.get_name2() != null ? propertyLine.get_name2() : "");
+						line.setNLinenumber(propertyLine.get_lineno());
+						line.setPropertyField(true);
+					}
 					arr.getUGisImportResultLine().add(line);
 				}
 				g.setLinelist(arr);
+
 			}
 
 			shape.setColAlpha(alert.getM_shape().get_fill_color().getAlpha());
@@ -230,6 +266,8 @@ public class AreaServerCon extends Thread {
 
 //		log.debug("calling webservice to fetch areas list from backend");
 		areaList = new ArrayList<AreaVO>();
+		Set<String> keySet = new HashSet<String>();
+		keySet.add("0");
 		try {
 			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzUserid(PAS.get_pas().get_userinfo().get_userid());
@@ -258,8 +296,8 @@ public class AreaServerCon extends Thread {
 				area.setParent("" + alert.getLParent());
 				area.setName("" + alert.getSzName());
 				area.setDescription(alert.getSzDescription());
-
 				UShape mshape = alert.getMShape();
+
 				if (mshape instanceof UPolygon) {
 //					log.debug("it's a polygon shape");
 					UPolygon polyShape = (UPolygon) mshape;
@@ -305,12 +343,127 @@ public class AreaServerCon extends Thread {
 											.getY())));
 					area.submitShape(shape);
 				}
-				areaList.add(area);
+				else if (mshape instanceof UGeminiStreet) {
+
+					UGeminiStreet streetShape = (UGeminiStreet) mshape;
+					GISList gisList = fetchAddressForImportedPredefinedArea(streetShape.getLinelist().getUGisImportResultLine());
+					//gisList.fill(streetShape.getLinelist().getUGisImportResultLine());
+
+					GISShape shape = new GISShape(gisList);
+
+					shape.shapeName = area.getName();
+
+					col_r = (int) streetShape.getColRed();
+					col_g = (int) streetShape.getColGreen();
+					col_b = (int) streetShape.getColBlue();
+					col_a = (int) streetShape.getColAlpha();
+					Color col = new Color(col_r, col_g, col_b, col_a);
+					shape.set_fill_color(col);
+
+					area.submitShape(shape);
+				}
+
+				if(keySet.contains(area.getParent()))
+				{
+					keySet.add(area.getAlertpk());
+					areaList.add(area);
+				}
 			}
 		} catch (Exception err) {
 			Error.getError().addError("MainAreaController",
 					"Exception fetching area list", err, Error.SEVERITY_ERROR);
 		}
+		keySet.clear();
 	}
 
+	public GISList fetchAddressForImportedPredefinedArea(List<UGisImportResultLine> lines)
+	{
+		GISList gisList = null;
+
+		ULOGONINFO logon = new ULOGONINFO();
+        UserInfo u = PAS.get_pas().get_userinfo();
+        logon.setLComppk(u.get_comppk());
+        logon.setLDeptpk(u.get_current_department().get_deptpk());
+        logon.setLUserpk(new Long(u.get_userpk()));
+        logon.setSzCompid(u.get_compid());
+        logon.setSzDeptid(u.get_current_department().get_deptid());
+        logon.setSzPassword(u.get_passwd());
+        logon.setSzStdcc(u.get_current_department().get_stdcc());
+        logon.setLDeptpk(u.get_current_department().get_deptpk());
+        logon.setSessionid(u.get_sessionid());
+        logon.setJobid(WSThread.GenJobId());
+
+        try
+        {
+	        URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
+	        QName service = new QName("http://ums.no/ws/pas/", "pasws");
+	        UGisImportResultsByStreetId res = null;
+
+	        boolean propertyImport = false;
+
+	        //to determine the type of address import
+            if(lines!=null && lines.size()>0)
+            {
+            	no.ums.ws.common.parm.UGisImportResultLine line = lines.get(0);
+            	if(line.isPropertyField())
+            		propertyImport=true;
+            }
+
+            if(propertyImport)
+            {
+            	ArrayOfUGisImportPropertyLine importPropertyLines = new ArrayOfUGisImportPropertyLine();
+                UGisImportPropertyList propertySearch = new UGisImportPropertyList();
+                propertySearch.setList(importPropertyLines);
+                propertySearch.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
+                propertySearch.setSKIPLINES(0);
+
+            	for (no.ums.ws.common.parm.UGisImportResultLine rl : lines) {
+	        		UGisImportPropertyLine resline = new UGisImportPropertyLine();
+                        resline.setMunicipalid(rl.getMunicipalid());
+                        resline.setGnr(rl.getGnr());
+                        resline.setBnr(rl.getBnr());
+                        resline.setFnr(rl.getFnr());
+                        resline.setSnr(rl.getSnr());
+                        resline.setApartmentid(rl.getApartmentid());
+                        resline.setNamefilter1(rl.getNamefilter1());
+                        resline.setNamefilter2(rl.getNamefilter2());
+                        importPropertyLines.getUGisImportPropertyLine().add(resline);
+            	}
+
+            	res = new Pasws(wsdl, service).getPaswsSoap12().getGisByPropertyIdV3(logon, propertySearch);
+                gisList = new GISList();
+                gisList.fillProperty(res);
+            }
+            else
+            {
+            	ArrayOfUGisImportLine importStreetLines = new ArrayOfUGisImportLine();
+                UGisImportList streetSearch = new UGisImportList();
+                streetSearch.setList(importStreetLines);
+                streetSearch.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
+                streetSearch.setSKIPLINES(0);
+
+            	for (no.ums.ws.common.parm.UGisImportResultLine rl : lines) {
+	        		UGisImportLine resline = new UGisImportLine();
+	        		resline.setMunicipalid(rl.getMunicipalid());
+                    resline.setStreetid(rl.getStreetid());
+                    resline.setHouseno(rl.getHouseno());
+                    resline.setLetter(rl.getLetter());
+                    resline.setApartmentid(rl.getApartmentid());
+                    resline.setNamefilter1(rl.getNamefilter1());
+                    resline.setNamefilter2(rl.getNamefilter2());
+                    importStreetLines.getUGisImportLine().add(resline);
+            	}
+
+            	res = new Pasws(wsdl, service).getPaswsSoap12().getGisByStreetIdV2(logon, streetSearch);
+            	gisList = new GISList();
+            	gisList.fill(res);
+            }
+        }
+        catch(Exception e)
+        {
+        	log.warn(e.getMessage(), e);
+        }
+
+        return gisList;
+	}
 }

@@ -91,6 +91,67 @@ public class GISList extends ArrayList<GISRecord> {
             add_gisrecord(gr);
         }
 	}
+
+	/**
+     * @Todo :Change inhabitantList
+     * @param r
+     */
+	public void fill(List<no.ums.ws.common.parm.UGisImportResultLine> lines)
+	{
+		//List<UGisImportResultLine> lines = r.getList().getUGisImportResultLine();
+		//if(r.getList().getUGisImportResultLine().size() > 500)
+		//	return;
+        for (no.ums.ws.common.parm.UGisImportResultLine rl : lines) {
+        	GISRecord gr = null;
+        	if(rl.isPropertyField())
+        	{
+        		gr = new GISRecordProperty(rl.getMunicipalid(), rl.getGnr(), rl.getBnr(), rl.getFnr(), rl.getSnr(),
+                        rl.getNamefilter1(), rl.getNamefilter2(), rl.getNLinenumber());
+        	}
+        	else
+        	{
+        		gr = new GISRecord(rl.getMunicipalid(), rl.getStreetid(), rl.getHouseno(), rl.getLetter(),
+                        rl.getNamefilter1(), rl.getNamefilter2(), rl.getNLinenumber());
+        	}
+
+            List<no.ums.ws.common.parm.UAddress> al = rl.getList().getList().getUAddress();
+            for (no.ums.ws.common.parm.UAddress a : al) {
+                Inhabitant in = new Inhabitant(a.getKondmid(), a.getName(), a.getAddress(),
+                        Integer.toString(a.getHouseno()), a.getLetter(), a.getPostno(), a.getPostarea(),
+                        Integer.toString(a.getRegion()), a.getBday(), a.getNumber(), a.getMobile(), a.getLat(),
+                        a.getLon(), a.getGno(), a.getBno(), a.getBedrift(), -1,
+                        a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile(),
+                        a.getHasdisabled());
+                gr.add_inhabitant(in);
+                if (a.getLat() < m_bounds._lbo)
+                    m_bounds._lbo = a.getLat();
+                if (a.getLat() > m_bounds._rbo)
+                    m_bounds._rbo = a.getLat();
+                if (a.getLon() < m_bounds._bbo)
+                    m_bounds._bbo = a.getLon();
+                if (a.getLon() > m_bounds._ubo)
+                    m_bounds._ubo = a.getLon();
+            }
+
+            List<no.ums.ws.common.parm.UAddressBasics> bl = rl.getList().getListBasics().getUAddressBasics();
+            for (no.ums.ws.common.parm.UAddressBasics a : bl) {
+                InhabitantBasics inhab = new InhabitantBasics(a.getKondmid(), a.getLat(), a.getLon(), a.getHasfixed(), a.getHasmobile(), a.getBedrift(), a.getArrayindex(), a.getHasdisabled());
+                //inhab.init(a.getKondmid(), null, null, null, null, null, null, null, null, null, null, a.getLat(), a.getLon(), 0, 0, a.getBedrift(), 0, 0, null, a.getHasfixed(), a.getHasmobile());
+                gr.add_inhabitant(inhab);
+                if (a.getLat() < m_bounds._lbo)
+                    m_bounds._lbo = a.getLat();
+                if (a.getLat() > m_bounds._rbo)
+                    m_bounds._rbo = a.getLat();
+                if (a.getLon() < m_bounds._bbo)
+                    m_bounds._bbo = a.getLon();
+                if (a.getLon() > m_bounds._ubo)
+                    m_bounds._ubo = a.getLon();
+            }
+
+            add_gisrecord(gr);
+        }
+	}
+
     public void fillProperty(UGisImportResultsByStreetId r)
     {
 

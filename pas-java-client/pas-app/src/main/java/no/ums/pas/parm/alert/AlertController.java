@@ -151,6 +151,8 @@ public class AlertController implements ActionListener {
 			sendObj.get_sendproperties().typecast_gis().set_gislist(list);
 			toolbarPanel.setActiveShape(m_edit_shape);
 			parent.get_btn_next().setEnabled(true);
+			//to control the visibility of save area button
+			toolbarPanel.canFinalize();
 			//PAS.get_pas().get_mappane().set_active_shape(sendObj.get_sendproperties().typecast_gis().get_shapestruct());
 			//PAS.get_pas().get_mappane().set_active_shape(m_edit_shape = (ShapeStruct)e.getSource());
 			//PAS.get_pas().actionPerformed(new ActionEvent(m_edit_shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
