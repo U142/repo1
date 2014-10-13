@@ -3,9 +3,11 @@ package no.ums.pas.importer;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
@@ -556,19 +558,39 @@ public class SosiFile extends Object {
 								String s = obj.data().get(1).toString();
 								int n_kurvenr = new Integer(s.substring(0, s.length()-1)).intValue();
 								get_flater().add_flate(n_kurvenr);
-								m_sendobj = new SendObject("Imported kurve " + n_kurvenr, SendProperties.SENDING_TYPE_POLYGON_, n_kurvenr, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
+
+								boolean isSosiImportedFromArea = false;
+								AreaController areaController = null;
+								if(get_callback() instanceof ImportPolygon)
+								{
+									if (((ImportPolygon)get_callback()).get_callback() instanceof AreaController)
+									{
+										isSosiImportedFromArea = true;
+										areaController = (AreaController) ((ImportPolygon)get_callback()).get_callback();
+									}
+								}
+								if(!isSosiImportedFromArea)
+									m_sendobj = new SendObject("Imported kurve " + n_kurvenr, SendProperties.SENDING_TYPE_POLYGON_, n_kurvenr, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 								int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(n_kurvenr);
 								if(n_flate==-1) {
 									//FLATE information not yet registrered
 									log.debug("FLATE information not yet registrered");
 								}
 								log.debug("Found flate " + n_flate + " for curve " + n_kurvenr);
-									
-								m_sendobj.get_sendproperties().set_shapestruct((PolygonStruct)get_flater().get_current_flate().get_polygon());
-								m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
-								hashSendings.put(n_kurvenr, m_sendobj);
-								get_callback().actionPerformed(new ActionEvent(m_sendobj, ActionEvent.ACTION_PERFORMED, "act_importsending_found"));
-							 
+
+								ShapeStruct shape = (PolygonStruct)get_flater().get_current_flate().get_polygon();
+								if(!isSosiImportedFromArea)
+								{
+									m_sendobj.get_sendproperties().set_shapestruct((PolygonStruct)get_flater().get_current_flate().get_polygon());
+									m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
+									hashSendings.put(n_kurvenr, m_sendobj);
+									get_callback().actionPerformed(new ActionEvent(m_sendobj, ActionEvent.ACTION_PERFORMED, "act_importsending_found"));
+								}
+								else
+								{
+									areaController.setActiveShape(shape);
+								}
+
 								b_expectcoor = false;
 								b_coorsadded = false;
 								n_coorstarts = 0;
