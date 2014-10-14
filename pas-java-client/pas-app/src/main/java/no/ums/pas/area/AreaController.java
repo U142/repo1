@@ -47,7 +47,7 @@ public class AreaController implements ActionListener{
 	private boolean lock = false;
 	private boolean importMore = false;
 	private boolean gotoFlag = false;
-	
+	private boolean sosImport = false;
 	private Col m_default_color = new Col(new Color(1.0f, 0.0f, 0.0f, 0.2f), new Color(1.0f, 0.0f, 0.0f, 0.9f));
 	
 	private boolean editMode = false;
@@ -87,6 +87,12 @@ public class AreaController implements ActionListener{
 
 	public boolean isGotoFlag() {
 		return gotoFlag;
+	}
+	public void setSosImport(boolean sosImport) {
+		this.sosImport = sosImport;
+	}
+	public boolean isSosImport() {
+		return sosImport;
 	}
 
 	public AreaSource getSource() { return source; }
@@ -255,8 +261,14 @@ public class AreaController implements ActionListener{
 				clearMap();
 			else if(this.getSource().equals(AreaSource.NEW_ALERT))
 			{
-				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().getBtnSaveArea().setEnabled(false);
-				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
+				try {
+					PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().getBtnSaveArea().setEnabled(false);
+				}
+				catch(Exception ex)
+				{
+					log.error(ex);
+				}
+				//sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
 			}
 			else if(this.getSource().equals(AreaSource.STATUS))
 			{
@@ -276,7 +288,7 @@ public class AreaController implements ActionListener{
 				clearMap();
 			else if(this.getSource().equals(AreaSource.NEW_ALERT) || this.getSource().equals(AreaSource.STATUS))
 			{
-				sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_cancel"));
+				//sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_cancel"));
 //				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
 			}
 			else if(this.getSource().equals(AreaSource.STATUS))
@@ -390,6 +402,8 @@ public class AreaController implements ActionListener{
 			
 			if(m_edit_shape!=null)
 				lockShape = m_edit_shape.can_lock(null);
+			if((!lockShape) && isSosImport())
+				lockShape = true;
 			
 			nameNotNull = !(this.getGui().getTxtName().getText().equals("") || this.getGui().getTxtName().getText()==null ||this.getGui().getTxtName().getText().length()==0);
 			nameAlreadyUsed = areaNameAlreadyExists(this.getGui().getTxtName().getText());

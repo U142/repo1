@@ -407,7 +407,13 @@ public class ImportPolygon implements ActionListener {
 			}
 			else if(m_callback!=null && m_callback instanceof AreaController)
 			{
-				PAS.get_pas().actionPerformed(new ActionEvent(((AreaController)m_callback).get_m_edit_shape().calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+				try {
+					PAS.get_pas().actionPerformed(new ActionEvent(((AreaController)m_callback).get_m_edit_shape().calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+				}
+				catch(Exception ex)
+				{
+					log.error(ex);
+				}
 			}
 		}
 		else if("act_shape_parsing_complete".equals(e.getActionCommand()))

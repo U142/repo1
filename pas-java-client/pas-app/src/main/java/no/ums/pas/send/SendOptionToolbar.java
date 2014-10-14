@@ -198,12 +198,19 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JComboBox comboCompanyRecipientChannel = null;
 	private JLabel lblSelectArea = null;
 	private JComboBox comboAreaList = null;
+
 	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
 	private boolean shapeFromLibrary = false;
-
+	private boolean sosShape = false;
 	public boolean isShapeFromLibrary() {
 		return shapeFromLibrary;
+	}
+	public boolean isSosShape() {
+		return sosShape;
+	}
+	public void setSosShape(boolean sosShape) {
+		this.sosShape = sosShape;
 	}
 
 	private PreviewFrame m_gis_preview = null;
@@ -2208,6 +2215,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 					}
 	//				AreaVO area = null;
 					areaCtrl.setEditMode(false);
+					areaCtrl.setSosImport(isSosShape());
 					areaCtrl.createNewArea(this, null, false,AreaSource.NEW_ALERT);
 					areaCtrl.setActiveShape(get_parent().get_sendproperties().get_shapestruct());
 				}
@@ -2462,10 +2470,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
 		bCanFinalize = bCanFinalize && (!chkAddressBased.isSelected() || (isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected()));
 		m_btn_finalize.setEnabled(bCanFinalize);
+
+		if((!get_parent().get_sendproperties().can_lock()) && isSosShape() && (!bCanFinalize))
+			bCanFinalize=true;
+
 		enableSaveArea(bCanFinalize);
 		return bCanFinalize;
 	}
-	private void enableSaveArea(boolean bCanFinalize)
+	public void enableSaveArea(boolean bCanFinalize)
 	{
 		boolean isPredefinedArea = false;
 		boolean isShapeValid = false;

@@ -140,6 +140,9 @@ public class AlertController implements ActionListener {
 			}
 			if(m_edit_shape != null) {
 				parent.get_btn_next().setEnabled(true);
+				//to enable save as predefined area button if required
+				toolbarPanel.enableSaveArea(true);
+				toolbarPanel.setSosShape(true);
 			}
 		}
 		else if("act_gis_imported".equals(e.getActionCommand())) {// || "act_gis_finish".equals(e.getActionCommand())) {
@@ -149,7 +152,7 @@ public class AlertController implements ActionListener {
 			sendObj.set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
 			sendObj.set_sendproperties(new SendPropertiesGIS(toolbarPanel));
 			sendObj.get_sendproperties().typecast_gis().set_gislist(list);
-			toolbarPanel.setActiveShape(m_edit_shape);
+//			toolbarPanel.setActiveShape(m_edit_shape);
 			parent.get_btn_next().setEnabled(true);
 			//to control the visibility of save area button
 			toolbarPanel.canFinalize();
@@ -190,6 +193,8 @@ public class AlertController implements ActionListener {
 		}
 		else if("act_enable_next".equals(e.getActionCommand())) {
 			getParent().get_btn_next().setEnabled(true);
+			//to enable save as predefined area button if required
+			toolbarPanel.canFinalize();
 		}
 	}
 
