@@ -1665,6 +1665,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		predefinedAreaController.start();
 	}
 
+	public void initPredefinedAreaControllerSilently() {
+		predefinedAreaController = new PredefinedAreaController(get_sitename(), get_userinfo());
+//		predefinedAreaController.start();
+	}
+
 	public void init_parmcontroller() {
 		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
         m_parmcontroller.start();

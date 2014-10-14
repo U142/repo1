@@ -3,6 +3,7 @@ package no.ums.pas.importer;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.esri.ShapeImporter;
@@ -142,7 +143,8 @@ public class ImportPolygon implements ActionListener {
 	private ActionListener m_callback;
 	private String m_action;
 	boolean m_b_isalert = false;
-	
+	public ActionListener get_callback(){ return m_callback; }
+
 	public ImportPolygon(ActionListener callback, String action, boolean bIsAlert, Component parent) {
 
 
@@ -396,11 +398,22 @@ public class ImportPolygon implements ActionListener {
 					Variables.getSendController().add_sending(obj, false, false, icallback_sendingadded);
 					obj.get_toolbar().set_addresstypes(adrtypes);
 					obj.get_toolbar().initSelections();
+					obj.get_toolbar().populateABASPanelData(adrtypes, false);
 				}
 			}
 			else if(m_callback!=null && m_callback instanceof AlertController)
 			{
 				m_callback.actionPerformed(new ActionEvent(sendings_found, ActionEvent.ACTION_PERFORMED, e.getActionCommand()));
+			}
+			else if(m_callback!=null && m_callback instanceof AreaController)
+			{
+				try {
+					PAS.get_pas().actionPerformed(new ActionEvent(((AreaController)m_callback).get_m_edit_shape().calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+				}
+				catch(Exception ex)
+				{
+					log.error(ex);
+				}
 			}
 		}
 		else if("act_shape_parsing_complete".equals(e.getActionCommand()))

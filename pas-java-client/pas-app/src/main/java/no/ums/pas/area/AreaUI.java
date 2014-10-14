@@ -70,11 +70,15 @@ public class AreaUI extends JFrame implements ActionListener, WindowListener{
 	public JToggleButton getTbPolygon() {
 		return tbPolygon;
 	}
-	
+
 	public JToggleButton getTbEllipse() {
 		return tbEllipse;
 	}
 	
+	public JToggleButton getTbImportPoly() {
+		return tbImportPoly;
+	}
+
 	public JTextField getTxtName() {
 		return txtName;
 	}
@@ -139,7 +143,7 @@ public class AreaUI extends JFrame implements ActionListener, WindowListener{
 		btnGroupAutoShape.add(tbPolygon);
 		btnGroupAutoShape.add(tbEllipse);
 		btnGroupAutoShape.add(tbImportPoly);
-		tbImportPoly.setVisible(false);
+//		tbImportPoly.setVisible(false);
 		clearErrorMessage();
 		updateShapeName();
 	}
@@ -173,18 +177,11 @@ public class AreaUI extends JFrame implements ActionListener, WindowListener{
 			if(areaController.getSource().equals(AreaSource.NEW_ALERT) || areaController.getSource().equals(AreaSource.STATUS))
 				return;
 			
-			//new ImportPolygon(this, "act_polygon_imported", false, PAS.get_pas());
-//			**check
-//			SendObject obj = new SendObject(alert.getName(), n_type, m_n_send_id, this, Variables.getNavigation());
-			
-//			if(m_gis_preview==null)
-//				m_gis_preview = new PreviewFrame(this.get_parent());
-			
-//			else if(!this.getIsAlert())
-//				m_gis_preview.setVisible(true);
+			new ImportPolygon(areaController, "act_polygon_imported", false, PAS.get_pas());
 			
 			areaController.actionPerformed(e);
 		}
+
 	}
 	
 	private void updateShapeName()

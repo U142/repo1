@@ -198,8 +198,21 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JComboBox comboCompanyRecipientChannel = null;
 	private JLabel lblSelectArea = null;
 	private JComboBox comboAreaList = null;
+
 	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
+	private boolean shapeFromLibrary = false;
+	private boolean sosShape = false;
+	public boolean isShapeFromLibrary() {
+		return shapeFromLibrary;
+	}
+	public boolean isSosShape() {
+		return sosShape;
+	}
+	public void setSosShape(boolean sosShape) {
+		this.sosShape = sosShape;
+	}
+
 	private PreviewFrame m_gis_preview = null;
 	public void setPreviewFrame(PreviewFrame f) { m_gis_preview = f; }
 	
@@ -1556,6 +1569,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	
 	private void resetAreaList()
 	{
+		shapeFromLibrary = false;
 		ArrayList<AreaVO> areaList = Variables.getAreaList();
 		comboAreaList.removeAllItems();
 		comboAreaList.addItem("");
@@ -1564,6 +1578,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         }
 		log.debug("in sendoptiontollbar areaListCombo size="+comboAreaList.getItemCount());
 		comboAreaList.setSelectedItem("");
+
+		if(PAS.get_pas().getPredefinedAreaController() != null)
+			PAS.get_pas().getPredefinedAreaController().getAreaCtrl().resetEditShape();
+	}
+
+	public void refreshAreaList()
+	{
+		this.resetAreaList();
 	}
 
 	private boolean isAnyABASChannelSelected()
@@ -1993,13 +2015,40 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 //					PAS.get_pas().get_mappane().get_actionhandler().addAction("act_set_ellipse_corner","");
 				}
+				else if(shape instanceof GISShape)
+				{
+					s = (GISShape)shape.clone();
+					m_btn_open.setSelected(true);
+
+					if(PAS.get_pas().getPredefinedAreaController()==null)
+						PAS.get_pas().initPredefinedAreaControllerSilently();
+
+					SendProperties m_sendproperties = PAS.get_pas().getPredefinedAreaController().getAreaCtrl().getSendProperties(true);
+
+					m_sendproperties.typecast_gis().set_gislist(((GISShape) s).get_gislist());
+					m_sendproperties.set_shapestruct(s);
+//					m_sendproperties.goto_area();
+
+	                get_parent().set_type(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_);
+	                get_parent().get_sendproperties().typecast_gis().set_gislist(((GISShape) s).get_gislist());
+	                get_parent().get_sendproperties().set_shapestruct(s);
+
+	                get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MapMode.PAN, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+					get_callback().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+					PAS.get_pas().get_mainmenu().set_pan();
+				}
 				s.shapeName = m_txt_sendname.getText();
+				if(PAS.get_pas().getPredefinedAreaController()!=null)
+					PAS.get_pas().getPredefinedAreaController().getAreaCtrl().setEditShape(s);
 				PAS.get_pas().kickRepaint();
 				setActiveShape(s);
+				shapeFromLibrary = true;
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 		}
+		PAS.get_pas().kickRepaint();
 		canFinalize();
 	}
 	
@@ -2139,8 +2188,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else if("act_sending_close".equals(e.getActionCommand())) {
 			//PAS.get_pas().add_event("Destroy sending");
 			destroy_sending();
+			resetAreaList();
 		}
 		else if("act_open_polygon".equals(e.getActionCommand())) {
+			resetAreaList();
 			import_polygon();
 		}
 		else if("act_save_predefined_area".equals(e.getActionCommand())) {
@@ -2164,6 +2215,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 					}
 	//				AreaVO area = null;
 					areaCtrl.setEditMode(false);
+					areaCtrl.setSosImport(isSosShape());
 					areaCtrl.createNewArea(this, null, false,AreaSource.NEW_ALERT);
 					areaCtrl.setActiveShape(get_parent().get_sendproperties().get_shapestruct());
 				}
@@ -2418,10 +2470,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		boolean bCanFinalize = !(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || (get_parent().get_sendproperties().get_addresstypes() == 0 || get_parent().get_sendproperties().get_addresstypes() == SendController.SENDTO_USE_NOFAX_COMPANY /* Den skal ikke kunne sende kun nofax */)));
 		bCanFinalize = bCanFinalize && (!chkAddressBased.isSelected() || (isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected()));
 		m_btn_finalize.setEnabled(bCanFinalize);
+
+		if((!get_parent().get_sendproperties().can_lock()) && isSosShape() && (!bCanFinalize))
+			bCanFinalize=true;
+
 		enableSaveArea(bCanFinalize);
 		return bCanFinalize;
 	}
-	private void enableSaveArea(boolean bCanFinalize)
+	public void enableSaveArea(boolean bCanFinalize)
 	{
 		boolean isPredefinedArea = false;
 		boolean isShapeValid = false;
@@ -2432,7 +2488,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//check if the shape is polygon or ellipse
 		try
 		{
-			if(get_parent().get_sendproperties().get_shapestruct() instanceof PolygonStruct || get_parent().get_sendproperties().get_shapestruct() instanceof EllipseStruct)
+			if(get_parent().get_sendproperties().get_shapestruct() instanceof PolygonStruct || get_parent().get_sendproperties().get_shapestruct() instanceof EllipseStruct || get_parent().get_sendproperties().get_shapestruct() instanceof GISShape)
 				isShapeValid=true;
 		} catch(NullPointerException npe){ }
 

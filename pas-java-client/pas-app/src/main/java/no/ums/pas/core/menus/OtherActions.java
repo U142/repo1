@@ -107,11 +107,18 @@ public interface OtherActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             log.debug("sub menu PREDEFINED_AREAS called");
-            if(PAS.get_pas().getPredefinedAreaController()==null && !PAS.isPredefinedAreaOpen()) {
-				PAS.setPredefinedAreaOpen(PAS.pasplugin.onOpenPredefinedArea());
-			}
-            else {
-            	PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_AREAS_);
+            if("act_close_predefined_area".equals(e.getActionCommand()))
+            {
+            	PAS.pasplugin.onClosePredefinedArea();
+            }
+            else
+            {
+	            if(PAS.get_pas().getPredefinedAreaController()==null && !PAS.isPredefinedAreaOpen()) {
+					PAS.setPredefinedAreaOpen(PAS.pasplugin.onOpenPredefinedArea());
+				}
+	            else {
+	            	PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_AREAS_);
+	            }
             }
         }
     };

@@ -260,12 +260,26 @@ public class PASActions implements ActionListener {
 		else if("act_set_active_shape".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().actionPerformed(e);
 		}
-		else if("act_activate_parm_drawmode".equals(e.getActionCommand()) || "act_activate_area_drawmode".equals(e.getActionCommand())) {
+		else if("act_activate_parm_drawmode".equals(e.getActionCommand())) {
 			ShapeStruct s = (ShapeStruct)e.getSource();
 			if(s.getClass().equals(PolygonStruct.class))
 				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 			else if(s.getClass().equals(EllipseStruct.class))
 				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
+			else if(s.getClass().equals(GISShape.class))
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
+			else if(s.getClass().equals(UnknownShape.class))
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.ASSIGN_EPICENTRE);
+			PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+		}
+		else if("act_activate_area_drawmode".equals(e.getActionCommand())) {
+			ShapeStruct s = (ShapeStruct)e.getSource();
+			if(s.getClass().equals(PolygonStruct.class))
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
+			else if(s.getClass().equals(EllipseStruct.class))
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
+			//else if(s.getClass().equals(GISShape.class))
+				//PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 			else if(s.getClass().equals(UnknownShape.class))
 				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.ASSIGN_EPICENTRE);
 			PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
@@ -590,6 +604,13 @@ public class PASActions implements ActionListener {
 			//AlertVO [] a = { (AlertVO)e.getSource() };
 			AlertVO [] a = (AlertVO[])e.getSource();
 			new no.ums.pas.importer.SosiExport(a);
+		}
+		else if("act_predefined_areas_changed".equals(e.getActionCommand()))
+		{
+			for(SendObject sending : PAS.get_pas().get_sendcontroller().get_sendings())
+			{
+				sending.get_toolbar().refreshAreaList();
+			}
 		}
 	}
 	

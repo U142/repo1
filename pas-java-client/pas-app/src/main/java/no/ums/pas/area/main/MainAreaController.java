@@ -25,6 +25,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -37,6 +38,7 @@ import no.ums.pas.area.tree.AreaTreeController;
 import no.ums.pas.area.tree.AreaTreeGUI;
 import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.parm.voobjects.ParmVO;
+import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
 
 /**
@@ -49,7 +51,7 @@ TreeSelectionListener{
 //	private MainGUI gui;
 	private AreaTreeController treeCtrl = new AreaTreeController(this);
 	public AreaTreeController getTreeCtrl() { return treeCtrl; }
-	private AreaController areaCtrl;
+	private AreaController areaCtrl1;
 	DefaultMutableTreeNode remNode;
 	private AreaVO area;
 	private EventController eventCtrl;
@@ -64,7 +66,10 @@ TreeSelectionListener{
 	public ParmVO getSelectedObject() { return selectedObject; }
 	
 	public AreaController getAreaCtrl() {
-		return areaCtrl;
+		if (this.areaCtrl1 == null) {
+			this.areaCtrl1 = new AreaController(this, getMapNavigation());
+		}
+		return areaCtrl1;
 	}
 	
 	public class ScrollPane extends JScrollPane implements AdjustmentListener {
@@ -96,6 +101,19 @@ TreeSelectionListener{
 			Error.getError().addError("MainAreaController","Exception in MainController",e,1);
 		}
 		treeCtrl.SetInitializing(true);
+	}
+
+	public MainAreaController(String sz_sitename, UserInfo userinfo,boolean inBackground) {
+//		initMap(new String [] { sz_sitename } );
+		this.tempPK = 0;
+		this.userinfo = userinfo;
+//		try {
+////			this.createGUI();
+//			this.initGUI();
+//		} catch(Exception e) {
+//			Error.getError().addError("MainAreaController","Exception in MainController",e,1);
+//		}
+//		treeCtrl.SetInitializing(true);
 	}
 
     public void start() {
@@ -295,10 +313,10 @@ TreeSelectionListener{
 					{
 					}
 					
-					if (this.areaCtrl == null) {
-						this.areaCtrl = new AreaController(this, getMapNavigation());
-					}
-					this.areaCtrl.createNewArea(this,remNode,false,AreaSource.LIBRARY);
+//					if (this.areaCtrl == null) {
+//						this.areaCtrl = new AreaController(this, getMapNavigation());
+//					}
+					this.getAreaCtrl().createNewArea(this,remNode,false,AreaSource.LIBRARY);
 				}
 				catch(Exception ex)
 				{
@@ -316,10 +334,10 @@ TreeSelectionListener{
 						AreaVO area = (AreaVO) object;
 						log.debug("area details; name="+area.getName()+";pk="+area.getPk());
 						
-						if (this.areaCtrl == null) {
-							this.areaCtrl = new AreaController(this, getMapNavigation());
-						}
-						this.areaCtrl.editArea(remNode, true, AreaSource.LIBRARY);
+//						if (this.areaCtrl == null) {
+//							this.areaCtrl = new AreaController(this, getMapNavigation());
+//						}
+						this.getAreaCtrl().editArea(remNode, true, AreaSource.LIBRARY);
 					}
 				}
 				catch(Exception ex)
@@ -344,9 +362,9 @@ TreeSelectionListener{
 							warningMessage = warningMessage + "\n" + Localization.l("common_subnodes") + " " + Localization.l("common_will_be_deleted");
 						if(JOptionPane.showConfirmDialog(null, warningMessage, Localization.l("mainmenu_libraries_predefined_areas_delete"), JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) 
 						{
-							if (this.areaCtrl == null) 
-								this.areaCtrl = new AreaController(this, getMapNavigation());
-							this.areaCtrl.deleteArea(area,remNode);
+//							if (this.areaCtrl == null)
+//								this.areaCtrl = new AreaController(this, getMapNavigation());
+							this.getAreaCtrl().deleteArea(area,remNode);
 						}
 					}
 				}
@@ -357,7 +375,7 @@ TreeSelectionListener{
 				
 			}
 			else if (e.getSource() == treeCtrl.getGui().getGotoMap()) {
-				log.debug("GotoMap clicked");
+				log.debug("GotoMap clicked1");
 				PAS.get_pas().getPredefinedAreaController().gotoMap();
 				/*try
 				{
@@ -681,12 +699,33 @@ TreeSelectionListener{
 		try {
 			ShapeStruct shape = null;
 			if(alert.getM_shape() != null) {
-				shape = (ShapeStruct)alert.getM_shape().clone();
-				alert.getM_shape().calc_coortopix(getMapNavigation());
-				//addShapeToDrawQueue(p.getM_shape());
+
+				if(alert.getM_shape() instanceof GISShape)
+				{
+					shape = (ShapeStruct)alert.getM_shape().clone();
+					alert.getM_shape().calc_coortopix(getMapNavigation());
+
+					SendProperties m_sendproperties = this.getAreaCtrl().getSendProperties(true);
+
+					m_sendproperties.typecast_gis().set_gislist(((GISShape) shape).get_gislist());
+					m_sendproperties.set_shapestruct(shape);
+//					m_sendproperties.goto_area();
+
+					this.getAreaCtrl().setEditShape(shape);
+
+					PAS.get_pas().kickRepaint();
+//					PAS.get_pas().actionPerformed(new ActionEvent(gisShape, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+//					PAS.get_pas().kickRepaint();
+				}
+				else
+				{
+					shape = (ShapeStruct)alert.getM_shape().clone();
+					alert.getM_shape().calc_coortopix(getMapNavigation());
+					//addShapeToDrawQueue(p.getM_shape());
+				}
 				PAS.get_pas().getPredefinedAreaController().addShapeToDrawQueue(alert.getM_shape());
 			}
-			
+
 //			DefaultMutableTreeNode dmt = findNodeByPk(((AreaVO)o).getParent());
 //			**check
 			/*DefaultMutableTreeNode dmt = this.getTreeCtrl().getNodeFromTree((AreaVO)o);

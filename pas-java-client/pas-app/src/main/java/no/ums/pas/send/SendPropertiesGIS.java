@@ -3,6 +3,7 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.AreaController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
@@ -89,6 +90,9 @@ public class SendPropertiesGIS extends SendProperties {
 	public SendPropertiesGIS(SendOptionToolbar toolbar) {
 		super(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_, toolbar, new Col(Color.black, Color.white));
 	}
+	public SendPropertiesGIS(AreaController areaController) {
+		super(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_, areaController, new Col(Color.black, Color.white));
+	}
 	
 	public int get_adrcount(int n_type) {
 		int ret = 0;
@@ -119,7 +123,20 @@ public class SendPropertiesGIS extends SendProperties {
 			{
 				//get_houses().calcHouseCoords();
 				Color c = new Color(get_color().getRed(), get_color().getGreen(), get_color().getBlue(), 128);
-				get_houses().draw_houses(g, 0, true, true, 10, get_addresstypes_bitwise(), c);
+
+				//to support gid import for predefined areas
+				try
+				{
+					get_houses().draw_houses(g, 0, true, true, 10, get_addresstypes_bitwise(), c);
+				}
+				catch(NullPointerException npe)
+				{
+					if(parentAreaController!=null)
+					{
+						get_houses().draw_houses(g, 0, true, true, 10, 0, c);
+					}
+				}
+
 			}
 		} catch(Exception e) {
 			//Error.getError().addError("Error in painting", "Could not paint GIS houses", e, 2);

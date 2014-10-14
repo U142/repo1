@@ -38,6 +38,7 @@ import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -330,6 +331,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	                PAS.get_pas().initPredefinedAreaController();
 //	                PAS.get_pas().getPredefinedAreaController().setExpandedNodes();
 	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_AREAS_);
+	                PAS.setPredefinedAreaOpen(true);
 //            	}
 //            	else
 //            	{
@@ -352,6 +354,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		catch(NullPointerException npe)
 		{}
 		PAS.get_pas().closePredefinedArea(true);
+		PAS.setPredefinedAreaOpen(false);
 		return true;
 	}
 
@@ -488,6 +491,16 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 
 		checkAccessRights();
+		//add logic to reload libraries on change of department
+		if(PAS.isPredefinedAreaOpen())
+		{
+			OtherActions.PREDEFINED_AREAS.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_predefined_area"));
+
+			//If changed department has access to Predefined areas, then open libraries tab
+			if(OtherActions.PREDEFINED_AREAS.isEnabled())
+				OtherActions.PREDEFINED_AREAS.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ""));
+		}
+
 		StatusActions.OPEN.setEnabled(pas.get_rightsmanagement().status());
 
 		pas.get_mainmenu().setHouseeditorEnabled(pas.get_rightsmanagement().houseeditor() >= 1);
@@ -1157,14 +1170,14 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			p.getPredefinedAreaController().drawLayers(g);
 		}
 
-		/*try {
+		try {
 			if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
 				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
 			{
 				p.get_sendcontroller().draw_polygons(g, PAS.get_pas().get_mappane().get_current_mousepos());
 			}
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
-		*/
+
 		if(ViewOptions.TOGGLE_HOUSES.isSelected())
 		{
 			p.get_housecontroller().calcHouseCoords();
@@ -1190,6 +1203,27 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 								g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);
 					}
 				}
+			}
+		}
+
+		//added to support gis import for predefined areas
+		if(EastContent.CURRENT_PANEL == EastContent.PANEL_PREDEFINED_AREAS_)
+		{
+			try
+			{
+				if(p.getPredefinedAreaController()!=null && p.getPredefinedAreaController().getAreaCtrl() !=null)
+				{
+					if(p.getPredefinedAreaController().getAreaCtrl().get_m_edit_shape() instanceof GISShape)
+					{
+						p.getPredefinedAreaController().getAreaCtrl().getSendProperties().calc_coortopix();
+						p.getPredefinedAreaController().getAreaCtrl().getSendProperties().draw(g, Variables.getMapFrame().get_current_mousepos());
+						p.getPredefinedAreaController().getAreaCtrl().setGotoFlag(false);
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+//				ex.printStackTrace();
 			}
 		}
 		try {
