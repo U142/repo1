@@ -36,7 +36,7 @@ public enum CountryCodes {
     		for(Entry<String,String> en : map.entrySet())
     		{
     			//Make a formatted CC String
-    			listCC.add(en.getKey().substring(en.getKey().lastIndexOf('_')+1) + "\t" + en.getValue());
+    			listCC.add(en.getKey().substring(en.getKey().lastIndexOf('_')+1) + ";" + en.getValue());
     		}
             for (CCode code : Lists.transform(listCC, CCode.PARSE)) {
                 codesById.put(code.getCCode(), code);

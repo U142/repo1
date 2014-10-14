@@ -21,7 +21,7 @@ public class CCode implements Cloneable {
         @Override
         public CCode apply(String input) { //@Nullable 
             Iterator<String> line = Splitter
-                    .on('\t')
+                    .on(';')
                     .trimResults(CharMatcher.is('"')) // Remove quotes
                     .split(input).iterator(); //Preconditions.checkNotNull(input, "input is null")
             String cCode = line.hasNext() ? line.next() : "-2";
