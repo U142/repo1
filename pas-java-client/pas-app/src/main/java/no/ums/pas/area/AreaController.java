@@ -265,9 +265,7 @@ public class AreaController implements ActionListener{
 					PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().getBtnSaveArea().setEnabled(false);
 				}
 				catch(Exception ex)
-				{
-					log.error(ex);
-				}
+				{ }
 				//sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
 			}
 			else if(this.getSource().equals(AreaSource.STATUS))
@@ -334,6 +332,7 @@ public class AreaController implements ActionListener{
 		{
 			this.gui.getTbPolygon().setEnabled(false);
 			this.gui.getTbEllipse().setEnabled(false);
+			this.gui.getTbImportPoly().setEnabled(false);
 		}
 		this.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_add_polypoint"));
 		

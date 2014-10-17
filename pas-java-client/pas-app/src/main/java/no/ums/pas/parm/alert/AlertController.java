@@ -141,8 +141,8 @@ public class AlertController implements ActionListener {
 			if(m_edit_shape != null) {
 				parent.get_btn_next().setEnabled(true);
 				//to enable save as predefined area button if required
-				toolbarPanel.enableSaveArea(true);
 				toolbarPanel.setSosShape(true);
+				toolbarPanel.canFinalize();
 			}
 		}
 		else if("act_gis_imported".equals(e.getActionCommand())) {// || "act_gis_finish".equals(e.getActionCommand())) {

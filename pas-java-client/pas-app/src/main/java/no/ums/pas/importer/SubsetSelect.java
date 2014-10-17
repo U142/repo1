@@ -8,6 +8,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.maps.MapFrame.MapMode;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.parm.alert.AlertController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Utils;
@@ -221,6 +222,11 @@ public class SubsetSelect extends JDialog implements WindowListener {
 					Variables.getMapFrame().setPaintModeBasedOnActiveShape(false);
 
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+					if(m_callback instanceof AlertController)
+					{
+						AlertController alertController = (AlertController) m_callback;
+						alertController.getPanelToolbar().setActiveShape(shape);
+					}
 				} catch(Exception err) {
 					
 				}

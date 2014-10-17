@@ -1570,6 +1570,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private void resetAreaList()
 	{
 		shapeFromLibrary = false;
+		setSosShape(false);
 		ArrayList<AreaVO> areaList = Variables.getAreaList();
 		comboAreaList.removeAllItems();
 		comboAreaList.addItem("");
@@ -2471,8 +2472,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		bCanFinalize = bCanFinalize && (!chkAddressBased.isSelected() || (isAnyABASChannelSelected() && isAnyABASRecipientTypeSelected()));
 		m_btn_finalize.setEnabled(bCanFinalize);
 
-		if((!get_parent().get_sendproperties().can_lock()) && isSosShape() && (!bCanFinalize))
-			bCanFinalize=true;
+//		if((!get_parent().get_sendproperties().can_lock()) && isSosShape() && (!bCanFinalize))
+//			bCanFinalize=true;
 
 		enableSaveArea(bCanFinalize);
 		return bCanFinalize;
