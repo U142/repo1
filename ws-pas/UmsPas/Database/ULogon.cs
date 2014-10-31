@@ -593,7 +593,7 @@ namespace com.ums.PAS.Database
                                 p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc +"_reg";
                                 p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
                                 p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;*/
-                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60);
+                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60, dept.l_deptpk);
                                 dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
                                 adr.close();
                             }

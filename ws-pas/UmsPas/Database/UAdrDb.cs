@@ -58,12 +58,19 @@ namespace com.ums.PAS.Database
             }
             try
             {
+                String dsn;
+
                 PASUmsDb db = new PASUmsDb();
                 m_n_pastype = db.GetPasType(n_deptpk);
                 if (m_n_pastype <= 0)
                     throw new ULogonFailedException();
 
-                String dsn = "address_" + sz_stdcc;
+                // use deptpk or CC?
+                if (db.UsesCustomDb(n_deptpk))
+                    dsn = "custom_" + n_deptpk;
+                else
+                    dsn = "address_" + sz_stdcc;
+
                 if (m_n_pastype == 2)
                     dsn += "_reg";
                 sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;

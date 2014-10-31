@@ -85,6 +85,42 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool UsesCustomDb(int n_deptpk)
+        {
+            if (n_deptpk < 0)
+                return false;
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            String szSQL = String.Format("SELECT isnull(f_custom_adrdb, 0) FROM BBDEPARTMENT WHERE l_deptpk={0}", n_deptpk);
+            OdbcDataReader rs = null;
+
+            try
+            {
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    byte customdb = rs.GetByte(0);
+                    rs.Close();
+                    return customdb == 1;
+                }
+                else
+                {
+                    rs.Close();
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                throw new UDbQueryException(szSQL);
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+        }
+
         /*
          * Check l_alertpk, external execution and owned by
          * check alert profile (no dynamic voc!)
