@@ -50,12 +50,15 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	private JComboBox m_combo_tts;
 	private JComboBox m_combo_txtlib;
 	public JComboBox get_txtlib() { return m_combo_txtlib; }
+	public JTextArea get_m_txt() { return m_text; }
 	private Sending_Files m_file;
 	public Sending_Files get_soundpanel() { return m_file; }
 	public SendWindow get_parent() { return m_parent; }
 	private SoundRecorderPanel m_playpanel;
 	public SoundRecorderPanel get_playpanel() { return m_playpanel; }
 	protected UCONVERTTTSRESPONSE current_response;
+	private String convertedText = null;
+	public String getConvertedText() { return convertedText; }
 	
 	public SoundTTSPanel(Sending_Files file, /*SendController controller, */SendWindow parent) {
 		super();
@@ -129,7 +132,15 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_tts_convert".equals(e.getActionCommand())) {
-			start_converter();
+			//check for empty message before tts conversion
+			if(m_text.getText() == null || m_text.getText().length()==0)
+			{
+				JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_empty_message_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				start_converter();
+			}
 		} else if("act_tts_convert_complete".equals(e.getActionCommand())) {
 			UCONVERTTTSRESPONSE response = (UCONVERTTTSRESPONSE)e.getSource();
 			//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, (String)e.getSource());
@@ -143,6 +154,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 				current_response = response;
 				get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS(response,-1, null));
 				// Her gjøres den ferdig og reloader parent for å enable next knappen
+				convertedText = m_text.getText();
 				get_parent().set_next_text();
 			}
 			converter_stopped(response.getSzServerFilename());
@@ -399,7 +411,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {

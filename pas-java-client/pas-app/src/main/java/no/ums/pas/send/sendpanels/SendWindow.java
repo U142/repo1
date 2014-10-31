@@ -11,6 +11,7 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.send.*;
 import no.ums.pas.sound.SoundFile;
+import no.ums.pas.sound.SoundTTSPanel;
 import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusCodeList;
@@ -660,6 +661,26 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 					movenext = false;
 				}
 				m_cell_broadcast_text_panel.set_size_label(m_cell_broadcast_text_panel.get_txt_messagetext().getText(), m_cell_broadcast_text_panel.get_lbl_localsize());
+			}
+			if(m_tabbedpane.getSelectedComponent().getClass() == Sending_Files.class) {
+				Sending_Files sending_Files = ((Sending_Files)m_tabbedpane.getSelectedComponent());
+				sending_Files.get_recorderpanel().getMixer().getMixer().checkError(this);
+				//logic to check for empty TTS message
+				if(sending_Files.get_soundPane().getSelectedComponent() instanceof SoundTTSPanel)
+				{
+					if(sending_Files.get_ttspanel().get_m_txt().getText().length() < 1)
+					{
+						JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_empty_message_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+						movenext = false;
+						return;
+					}
+					else if(sending_Files.get_ttspanel().getConvertedText() != null && !(sending_Files.get_ttspanel().getConvertedText().equals(sending_Files.get_ttspanel().get_m_txt().getText())))
+					{
+						JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_changed_message_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+						movenext = false;
+						return;
+					}
+				}
 			}
 			if(m_tabbedpane.getSelectedIndex() < m_tabbedpane.getTabCount()-1 && movenext) {
 				m_tabbedpane.setSelectedComponent(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()+1));
