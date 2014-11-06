@@ -239,7 +239,7 @@ namespace com.ums.ws.integration.v11
                             entry.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
                             entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
-                            entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
+                            entry.ZipCode = GetNumbers(rs.GetString(rs.GetOrdinal("POSTNR")));
                             entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
@@ -367,7 +367,7 @@ namespace com.ums.ws.integration.v11
                             entry.Id = rs.GetInt32(rs.GetOrdinal("KON_DMID"));
                             entry.Name = rs.GetString(rs.GetOrdinal("NAVN"));
                             entry.Address = rs.GetString(rs.GetOrdinal("ADRESSE"));
-                            entry.ZipCode = rs.GetInt32(rs.GetOrdinal("POSTNR"));
+                            entry.ZipCode = GetNumbers(rs.GetString(rs.GetOrdinal("POSTNR")));
                             entry.ZipArea = rs.GetString(rs.GetOrdinal("POSTSTED"));
 
                             if (!rs.IsDBNull(rs.GetOrdinal("l_category")) && !rs.IsDBNull(rs.GetOrdinal("sz_category")))
@@ -910,6 +910,13 @@ namespace com.ums.ws.integration.v11
                 }
             }
 
+            return ret;
+        }
+
+        private int GetNumbers(string input)
+        {
+            int ret;
+            int.TryParse(new string(input.Where(c => char.IsDigit(c)).ToArray()), out ret);
             return ret;
         }
     }
