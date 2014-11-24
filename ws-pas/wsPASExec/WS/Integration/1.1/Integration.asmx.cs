@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Services;
 using com.ums.UmsCommon;
 using com.ums.pas.integration;
 using com.ums.UmsDbLib;
-using com.ums.PAS.Project;
 using System.Data.Odbc;
 using System.Configuration;
 using System.Xml.Serialization;
+using com.ums.UmsParm;
 //using com.ums.pas.integration.AddressLookup;
 //using com.ums.pas.integration.AddressCleanup;
 
@@ -23,7 +22,8 @@ namespace com.ums.ws.integration.v11
     [System.ComponentModel.ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
-    public class Integration : com.ums.ws.integration.Integration {
+    public class Integration : com.ums.ws.integration.Integration
+    {
 
         /// <summary>
         /// (DEPRECATED) Get a list of vulnerable subscribers for a set of municipalities. Can filter by vulnerability code and company category
@@ -46,7 +46,8 @@ namespace com.ums.ws.integration.v11
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             if (Municipals == null || Municipals.Count == 0)
                 throw new Exception("No municipals selected.");
@@ -190,15 +191,16 @@ namespace com.ums.ws.integration.v11
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             string sql = "";
             string searchMunicipalities = "";
 
             if (Municipalities == null || Municipalities.Count == 0)
-                Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+                Municipalities = GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk).Select(m => m.Id).ToList();
             else
-                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
+                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
 
             // TODO: Check if municipalities is empty + cross reference with municipalities available for department
             foreach (int m in Municipalities)
@@ -250,10 +252,10 @@ namespace com.ums.ws.integration.v11
 
                             // property address
                             if (rs.GetInt32(rs.GetOrdinal("GATEKODE")) == 0 || (
-                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) && 
+                                    rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
                                     rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
                                 )
-                            ) 
+                            )
                             {
                                 entry.AddressDetails = new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null);
                             }
@@ -267,7 +269,7 @@ namespace com.ums.ws.integration.v11
 
                             if (!rs.IsDBNull(rs.GetOrdinal("TELEFON")) && rs.GetString(rs.GetOrdinal("TELEFON")).Length > 0)
                                 entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("TELEFON")), CanReceiveSms = false });
-                            
+
                             if (!rs.IsDBNull(rs.GetOrdinal("MOBIL")) && rs.GetString(rs.GetOrdinal("MOBIL")).Length > 0)
                                 entry.Endpoints.Add(new Phone() { Address = rs.GetString(rs.GetOrdinal("MOBIL")), CanReceiveSms = true });
 
@@ -287,7 +289,7 @@ namespace com.ums.ws.integration.v11
                                     rs.GetInt32(rs.GetOrdinal("GATEKODE")) == rs.GetInt32(rs.GetOrdinal("GNR")) &&
                                     rs.GetInt32(rs.GetOrdinal("HUSNR")) == 0
                                 )
-                            ) 
+                            )
                             {
                                 entry.AdditionalAddresses.Add(new PropertyAddress(rs.GetInt32(rs.GetOrdinal("KOMMUNENR")).ToString(), rs.GetInt32(rs.GetOrdinal("GNR")), rs.GetInt32(rs.GetOrdinal("BNR")), rs.GetInt32(rs.GetOrdinal("FNR")), rs.GetInt32(rs.GetOrdinal("SNR")), null));
                             }
@@ -331,7 +333,7 @@ namespace com.ums.ws.integration.v11
         /// <param name="ID">Unike ID for the entry</param>
         /// <param name="Language">Which language to return the vulnerable categories if appliccable</param>
         /// <returns>A entry from the additional registry with all additional addresses and contact persons</returns>
-        [WebMethod(Description= "Get a single entry from the additional registry")]
+        [WebMethod(Description = "Get a single entry from the additional registry")]
         public RegistryEntry GetRegistryEntry(Account Account, int ID, string Language)
         {
             RegistryEntry entry = new RegistryEntry();
@@ -344,11 +346,12 @@ namespace com.ums.ws.integration.v11
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             string sql = "sp_GetRegistryEntry ?, ?, ?";
 
-            List<int> Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+            List<int> Municipalities = GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk).Select(m => m.Id).ToList();
             string searchMunicipalities = string.Join(",", Municipalities.Select(m => m.ToString()).ToArray());
 
             using (var cmd = folkeReg.CreateCommand(sql))
@@ -477,14 +480,15 @@ namespace com.ums.ws.integration.v11
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             string sql = "sp_GetAdditionalRegistry ?, ?, ? ,? ,?";
 
             if (Municipalities == null || Municipalities.Count == 0)
-                Municipalities = GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList();
+                Municipalities = GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk).Select(m => m.Id).ToList();
             else
-                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
+                Municipalities = Municipalities.Intersect(GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk).Select(m => m.Id).ToList()).ToList();
 
             string searchMunicipalities = string.Join(",", Municipalities.Select(m => m.ToString()).ToArray());
             string searchCategories = Categories == null ? "" : string.Join(",", Categories.Select(c => c.ToString()).ToArray());
@@ -495,7 +499,7 @@ namespace com.ums.ws.integration.v11
                 cmd.Parameters.Add("municipalities", OdbcType.VarChar).Value = searchMunicipalities;
                 cmd.Parameters.Add("categories", OdbcType.VarChar).Value = searchCategories;
                 cmd.Parameters.Add("professions", OdbcType.VarChar).Value = searchProfessions;
-                switch(EntryType)
+                switch (EntryType)
                 {
                     case v11.EntryType.PERSON:
                         cmd.Parameters.Add("bedrift", OdbcType.Int).Value = 0;
@@ -612,7 +616,7 @@ namespace com.ums.ws.integration.v11
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        [WebMethod(Description= @"Get available municipalities, message profiles, configuraiton profiles, ttslangauages and more for a give account")]
+        [WebMethod(Description = @"Get available municipalities, message profiles, configuraiton profiles, ttslangauages and more for a give account")]
         public AccountInfo GetAccountInfo(Account Account)
         {
             AccountInfo ret = new AccountInfo();
@@ -625,7 +629,7 @@ namespace com.ums.ws.integration.v11
             UmsDb umsDb = new UmsDb();
             umsDb.CheckDepartmentLogonLiteral(ref logonInfo);
 
-            ret.Municipalities = GetMunicipalities(logonInfo.l_deptpk);
+            ret.Municipalities = GetMunicipalities(logonInfo.sz_stdcc, logonInfo.l_deptpk);
 
             return ret;
         }
@@ -635,7 +639,7 @@ namespace com.ums.ws.integration.v11
         /// </summary>
         /// <param name="Account"></param>
         /// <returns></returns>
-        [WebMethod(Description= @"Get available categories")]
+        [WebMethod(Description = @"Get available categories")]
         public List<Category> GetCategories(Account Account, EntryType? EntryType, string Language)
         {
             List<Category> ret = new List<Category>();
@@ -671,7 +675,8 @@ namespace com.ums.ws.integration.v11
                 throw new Exception("Entry type not supported");
             }
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             using (var cmd = folkeReg.CreateCommand(sql))
             {
@@ -716,7 +721,8 @@ namespace com.ums.ws.integration.v11
                     order by
                         SP.l_profession";
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(logonInfo.sz_stdcc, logonInfo.l_deptpk, 120);
 
             using (var cmd = folkeReg.CreateCommand(sql))
             {
@@ -731,6 +737,7 @@ namespace com.ums.ws.integration.v11
 
             return ret;
         }
+
         /*
         /// <summary>
         /// Match addresses without creating alert
@@ -891,11 +898,12 @@ namespace com.ums.ws.integration.v11
             return ret;
         }
         */
-        private List<Municipality> GetMunicipalities(int department)
+        private List<Municipality> GetMunicipalities(string sz_stdcc, int department)
         {
             List<Municipality> ret = new List<Municipality>();
 
-            UmsDb folkeReg = new UmsDb(ConfigurationManager.ConnectionStrings["vulnerable"].ConnectionString, 120);
+            //Get the instance of address database w.r.t. standard country code
+            UmsDb folkeReg = GetDatabaseInstance(sz_stdcc, department, 120);
 
             string sql = "select D.l_municipalid, M.sz_name from DEPARTMENT_X_MUNICIPAL D INNER JOIN MUNICIPAL M ON D.l_municipalid=M.l_municipalid where D.l_deptpk=? order by M.sz_name";
 
@@ -918,6 +926,43 @@ namespace com.ums.ws.integration.v11
             int ret;
             int.TryParse(new string(input.Where(c => char.IsDigit(c)).ToArray()), out ret);
             return ret;
+        }
+
+        /// <summary>
+        /// Used for address databases only
+        /// Get instance of database as per the Standard Country Code
+        /// </summary>
+        /// <param name="sz_stdcc">Standard Country Code</param>
+        /// <param name="n_deptpk">Department</param>
+        /// <param name="timeout">Timeout</param>
+        /// <returns></returns>
+        private UmsDb GetDatabaseInstance(string sz_stdcc, int n_deptpk, int timeout)
+        {
+            string sz_constring;
+            int m_n_pastype;    //0=no db rights, 1=normal address, 2=folkereg address         
+
+            if (!UCommon.USETTINGS.b_enable_adrdb)
+                throw new UServerDeniedAddressDatabaseException();
+
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                m_n_pastype = db.GetPasType(n_deptpk);
+                if (m_n_pastype <= 0)
+                    throw new ULogonFailedException();
+
+                String dsn = "address_" + sz_stdcc;
+                if (m_n_pastype == 2)
+                    dsn += "_reg";
+                sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
+                db.close();
+
+                return new UmsDb(sz_constring, timeout);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 
