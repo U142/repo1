@@ -668,7 +668,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 				//logic to check for empty TTS message
 				if(sending_Files.get_soundPane().getSelectedComponent() instanceof SoundTTSPanel)
 				{
-					if(sending_Files.get_ttspanel().get_m_txt().getText().length() < 1)
+					if(sending_Files.get_ttspanel().get_m_txt().getText().trim().length() < 1)
 					{
 						JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_empty_message_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 						movenext = false;
@@ -1026,6 +1026,7 @@ public class SendWindow extends JFrame implements ActionListener, ChangeListener
 			get_sendobject().get_sendproperties().set_oadc(m_settings.get_current_oadc());
             get_sendobject().get_sendproperties().set_sendingname(m_settings.get_sendingname(), Localization.l("mainmenu_file_newsending"));
 			get_sendobject().get_sendproperties().set_schedprofile(m_settings.get_current_schedprofile());
+			get_sendobject().get_sendproperties().set_1try_schedprofile(m_settings.get_1try_schedprofile());
 			get_sendobject().get_sendproperties().set_validity(m_settings.get_current_validity());
 			if(get_sendcontroller().get_pas().get_current_project()!=null)
 				get_sendobject().get_sendproperties().set_projectpk(get_sendcontroller().get_pas().get_current_project().get_projectpk());

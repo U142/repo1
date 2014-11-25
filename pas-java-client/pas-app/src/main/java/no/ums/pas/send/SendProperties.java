@@ -85,6 +85,7 @@ public abstract class SendProperties extends Object {
 	private String m_sz_oadc;
 	private int m_n_validity;
 	private BBSchedProfile m_schedprofile = null;
+	private BBSchedProfile m_1try_schedprofile = null;
 	private int m_n_sendingtype;
 	private String m_sz_projectpk = "";
 	private int m_n_simulation = 0;
@@ -100,6 +101,7 @@ public abstract class SendProperties extends Object {
 	private int m_n_channel; // centric
 	
 	private String sendTestType = null;
+	private int reshedVal = 0;
 	public String getSendTestType() {
 		return sendTestType;
 	}
@@ -124,6 +126,8 @@ public abstract class SendProperties extends Object {
 	public int get_validity() { return m_n_validity; }
 	public BBSchedProfile get_schedprofile() { return m_schedprofile; }
 	public void set_schedprofile(BBSchedProfile sched) { m_schedprofile = sched; }
+	public BBSchedProfile get_1try_schedprofile() { return m_1try_schedprofile; }
+	public void set_1try_schedprofile(BBSchedProfile sched) { m_1try_schedprofile = sched; }
 	public int get_sendingtype() { return m_n_sendingtype; }
 	protected SendOptionToolbar parent;
 	protected AreaController parentAreaController;
@@ -550,9 +554,10 @@ public abstract class SendProperties extends Object {
 		set_refno(l_refno);
 		return this.send();
 	}
-	public boolean send_test(int l_refno, ArrayList<String> arr_numberlist,String sendTestType) {
+	public boolean send_test(int l_refno, ArrayList<String> arr_numberlist,String sendTestType, int reshedVal) {
 		set_refno(l_refno);
 		setSendTestType(sendTestType);
+		this.reshedVal = reshedVal;
 		return this.send_test(arr_numberlist);
 	}
 	protected boolean send_test(ArrayList<String> arr_numberlist) {
@@ -567,9 +572,23 @@ public abstract class SendProperties extends Object {
 			//1 for voice
 			//2 for sms
 			if("voice".equals(sendTestType)) 
+			{
 				sending.setNSendChannels(1);
+				if(reshedVal==1)
+				{
+					sending.setNCanceldate(get_1try_schedprofile().get_canceldate());
+					sending.setNCanceltime(get_1try_schedprofile().get_canceltime());
+					sending.setNInterval(get_1try_schedprofile().get_interval());
+					sending.setNPauseinterval(get_1try_schedprofile().get_pauseinterval());
+					sending.setNPausetime(get_1try_schedprofile().get_pausetime());
+					sending.setNRetries(get_1try_schedprofile().get_retries());
+					sending.setNReschedpk(new Long(get_1try_schedprofile().get_reschedpk()).longValue());
+				}
+			}
 			else if("sms".equals(sendTestType)) 
+			{
 				sending.setNSendChannels(2);
+			}
 			
 			sending.setBResend(false);
 			sending.setNResendRefno(0);

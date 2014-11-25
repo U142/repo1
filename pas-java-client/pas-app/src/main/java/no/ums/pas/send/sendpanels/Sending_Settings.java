@@ -122,9 +122,11 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	protected JComboBox m_combo_schedprofiles;
 	protected BBProfile m_current_profile = null;
 	protected BBSchedProfile m_current_schedprofile = null;
+	protected BBSchedProfile m_1try_schedprofile = null;
 	protected OADC m_current_oadc = null;
 	public BBProfile get_current_profile() { return m_current_profile; }
 	public BBSchedProfile get_current_schedprofile() { return m_current_schedprofile; }
+	public BBSchedProfile get_1try_schedprofile() { return m_1try_schedprofile; }
 	public OADC get_current_oadc() { return m_current_oadc; }
 	public String get_sendingname() { return m_txt_sendname.getText(); }
 	public int get_current_validity() { return new Integer((String)m_combo_validity.getSelectedItem()).intValue(); }
@@ -563,6 +565,10 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		ArrayList<BBSchedProfile> schedprofiles = get_parent().get_settingsloader().get_schedprofiles();
 		for(int i=0; i < schedprofiles.size(); i++) {
 			BBSchedProfile sched = (BBSchedProfile)schedprofiles.get(i);
+			if(sched.get_retries()==1)
+			{
+				m_1try_schedprofile = sched;
+			}
 			m_combo_schedprofiles.addItem(sched);
 		}
 	}

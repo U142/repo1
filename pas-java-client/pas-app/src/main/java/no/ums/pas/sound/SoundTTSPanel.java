@@ -133,7 +133,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	public void actionPerformed(ActionEvent e) {
 		if("act_tts_convert".equals(e.getActionCommand())) {
 			//check for empty message before tts conversion
-			if(m_text.getText() == null || m_text.getText().length()==0)
+			if(m_text.getText() == null || m_text.getText().trim().length()==0)
 			{
 				JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_empty_message_warning"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			}

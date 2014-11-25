@@ -6,6 +6,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.send.RecipientChannel;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.sound.SoundFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -18,6 +19,7 @@ import no.ums.ws.pas.Pasws;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
@@ -63,6 +65,27 @@ public class Sending_Send extends DefaultPanel {
 	protected SendWindow get_parent() { return parent; }
 	
 	private String sendTestType="";
+	protected StdTextLabel m_lbl_test_recipient;
+	protected StdTextLabel m_lbl_voice_profile;
+	protected JComboBox schedProfileCombo;
+	class ReshedProfile
+	{
+		private int val;
+		private String label;
+
+		public ReshedProfile(String label,int val) {
+			this.label = label;
+			this.val = val;
+		}
+		public int getVal() {
+			return val;
+		}
+
+		@Override
+		public String toString() {
+			return this.label;
+		}
+	}
 	
 	public int get_refno() { return m_n_refno; }
 	//JButton btn_send;
@@ -98,6 +121,16 @@ public class Sending_Send extends DefaultPanel {
 		}
 		m_lbl_adrfile	= new JLabel(m_icon_indicator[INDICATOR_RED_]);
 		m_lbl_refno		= new JLabel(m_icon_indicator[INDICATOR_RED_]);
+
+		m_lbl_test_recipient = new StdTextLabel(Localization.l("main_sending_send_test_recipient"));
+		m_lbl_voice_profile = new StdTextLabel(Localization.l("main_sending_send_test_voice_resched_profile"));
+		schedProfileCombo = new JComboBox();
+		initReshedProfileList();
+		m_lbl_test_recipient.setPreferredSize(new Dimension(150, 30));
+		m_txt_sendtest.setPreferredSize(new Dimension(112, 17));
+		m_lbl_voice_profile.setPreferredSize(new Dimension(150, 30));
+		schedProfileCombo.setPreferredSize(new Dimension(112, 17));
+
 		m_btn_sendtest.setActionCommand("act_send_test");
 		m_btn_sendtest.addActionListener(this);
 		m_btn_sendtest.setPreferredSize(new Dimension(70, 17));
@@ -114,18 +147,38 @@ public class Sending_Send extends DefaultPanel {
         
 		add_controls();
 	}
+
+	private void initReshedProfileList()
+	{
+		ReshedProfile oneTry = new ReshedProfile(Localization.l("main_sending_send_test_voice_resched_profile_1try"), 1);
+		ReshedProfile alertUserProfile = new ReshedProfile(Localization.l("main_sending_send_test_voice_resched_profile_alert"), 0);
+		schedProfileCombo.addItem(oneTry);
+		schedProfileCombo.addItem(alertUserProfile);
+	}
 	public void add_controls() {
 		this.removeAll();
-		m_gridconst.ipadx = 20;
+		m_gridconst.ipadx = 25;
 		m_gridconst.ipady = 5;
 		int n_max = 6;
-		
-		set_gridconst(1, inc_panels(), 2, 1, GridBagConstraints.WEST);
+
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.WEST);
+		add(m_lbl_test_recipient, m_gridconst);
+		set_gridconst(4, get_panel(), 3, 1, GridBagConstraints.WEST);
 		add(m_txt_sendtest, m_gridconst);
+
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.WEST);
+		add(m_lbl_voice_profile, m_gridconst);
+		set_gridconst(4, get_panel(), 1, 1, GridBagConstraints.WEST);
+		add(schedProfileCombo, m_gridconst);
+
+//		set_gridconst(1, inc_panels(), 2, 1, GridBagConstraints.WEST);
+//		add(m_txt_sendtest, m_gridconst);
 //		set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.WEST);
 //		add(m_btn_sendtest, m_gridconst);
 		
-		set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.WEST);
+//		set_gridconst(1, inc_panels(), 2, 1, GridBagConstraints.WEST);
+//		add(m_txt_sendtest, m_gridconst);
+		set_gridconst(3, inc_panels(), 1, 1, GridBagConstraints.WEST);
 		add(m_btn_sendtest_voice, m_gridconst);
 		set_gridconst(4, get_panel(), 1, 1, GridBagConstraints.WEST);
 		add(m_btn_sendtest_sms, m_gridconst);
@@ -164,6 +217,7 @@ public class Sending_Send extends DefaultPanel {
 	public void init() {
 		m_btn_sendtest_voice.setEnabled(parent.hasVoice(parent.m_sendobject.get_toolbar().get_addresstypes()));
 		m_btn_sendtest_sms.setEnabled(parent.hasSMS(parent.m_sendobject.get_toolbar().get_addresstypes()));
+		schedProfileCombo.setEnabled(parent.hasVoice(parent.m_sendobject.get_toolbar().get_addresstypes()));
 	}
 	public void create_upload_indicators() {
 		m_txt_wav_upload = new StdTextLabel[parent.get_files().length];
@@ -478,6 +532,6 @@ public class Sending_Send extends DefaultPanel {
 	}
 	private boolean send_testadrfile(ArrayList<String> arr_numbers) {
 		parent.set_values();
-		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers,sendTestType);
+		return parent.get_sendobject().get_sendproperties().send_test(get_refno(), arr_numbers,sendTestType,((ReshedProfile)schedProfileCombo.getSelectedItem()).getVal());
 	}
 }
