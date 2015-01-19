@@ -231,6 +231,12 @@
                 <wsdl.base>https://beta.ums2.no/PAS/ws_pas/WS</wsdl.base>
             </properties>
         </profile>
+		<profile>
+            <id>pasqa</id>
+            <properties>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pas_qa/WS/</wsdl.base>
+            </properties>
+        </profile>
         <profile>
             <id>nlbeta</id>
             <properties>
