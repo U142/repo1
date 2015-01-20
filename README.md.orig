@@ -1,5 +1,8 @@
 # repo1
 edited by joshi142
 edited bu ankittest
+<<<<<<< HEAD
 master changes
+=======
 branch 1 changes
+>>>>>>> origin/branch1
