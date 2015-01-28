@@ -1,22 +1,22 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.JTextField;
-import javax.swing.JToolTip;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
-import javax.swing.ToolTipManager;
-
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
-import no.ums.pas.localization.Localization;
-
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 public class StdTextArea extends JTextField// JTextArea
 {
@@ -308,10 +308,18 @@ public class StdTextArea extends JTextField// JTextArea
 			super.processKeyEvent(e);
 			return;
 		}
+		// Handling special case of Paste as a part of Cltr+V key press
+        if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_V)) {
+            super.processKeyEvent(e);
+            this.setText(this.getText().substring(0, getStringLengthLimit()));
+            return;
+        }
 		if(getStringLengthLimit()>0) //check for string length
 		{
-			if(this.getText().length()>=getStringLengthLimit())
+			if(this.getText().length()>=getStringLengthLimit()){
+	             JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_oadc_warning"), "Message",JOptionPane.WARNING_MESSAGE);
 				return;
+			}
 		}
 		super.processKeyEvent(e);
 		

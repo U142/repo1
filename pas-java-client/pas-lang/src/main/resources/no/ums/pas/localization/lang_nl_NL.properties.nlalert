@@ -554,6 +554,7 @@ main_sending_lba_error_no_name		= Message has no name (NL-Alert: not in use)
 main_sending_lba_error_no_content	= Please type message content (NL-Alert: not in use)
 main_sending_lba_messagetextlabel   = is the maximum recommended number<br> of characters in a location based message,<br> more than this will at least double the load<br> and delivery time</html>
 main_sending_sms_messagetextlabel	= 
+main_sending_lba_oadc_warning       = Max characters reached!
 
 main_sending_text_template			= Tekst Template
 main_sending_text_template_tooltip  = 

@@ -1020,9 +1020,6 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		}  else if (e.getSource() == m_txt_messagetext)
 			set_size_label(m_txt_messagetext.getText(), m_lbl_messagesize);
 		
-		if(e.getSource() == m_txt_oadc_text && m_txt_oadc_text.getText().length()>11) {
-			m_txt_oadc_text.setText(m_txt_oadc_text.getText().substring(0,m_oadc_maxSize));
-		}
 	}
 	public void itemStateChanged(ItemEvent e) {
 //		if(e.getSource() == m_cbx_messages && e.getStateChange() == ItemEvent.SELECTED && 
