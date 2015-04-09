@@ -198,6 +198,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private JComboBox comboCompanyRecipientChannel = null;
 	private JLabel lblSelectArea = null;
 	private JComboBox comboAreaList = null;
+	private boolean enablePredefinedArea = false;
 
 	public JCheckBox getChkLocationBased() { return chkLocationBased; }
 	
@@ -1304,6 +1305,22 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		comboAreaList = new JComboBox();
 		log.debug("after creating areaListCombo 1");
+		
+		
+    	long storedareas = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_storedareas();
+    	int phonebook = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().getPhonebook();
+    	log.debug("in checkAccessRights storedareas=" + storedareas + ";phonebook="+phonebook);
+    	if((storedareas > 0) && (phonebook > PredefinedAreaConstants.NO_ACCESS)){
+    		enablePredefinedArea = true;
+    	}
+    	
+    	log.debug("enablePredefinedArea="+enablePredefinedArea);
+//    	comboAreaList.setEnabled(enablePredefinedArea);
+    	
+    	
+//    	if(!comboAreaList.isEnabled())
+//    	{
+    		
 		ArrayList<AreaVO> areaList = Variables.getAreaList();
 		if(areaList == null || areaList.size()==0)
 		{
@@ -1320,7 +1337,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		resetAreaList();
 		comboAreaList.setToolTipText(Localization.l("main_sending_adr_btn_select_area_tooltip"));
-		comboAreaList.setEditable(true);
+//		comboAreaList.setEditable(true);
 		comboAreaList.setSelectedItem("");
 		comboAreaList.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() { 
 			public void keyReleased(KeyEvent e) {
@@ -1380,6 +1397,15 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				}
 			}
 		});
+//		}
+		
+//		comboAreaList.setEditable(enablePredefinedArea);
+//		comboAreaList.setEnabled(enablePredefinedArea);
+//		comboAreaList.getEditor().getEditorComponent().setEnabled(enablePredefinedArea);
+		
+		comboAreaList.setVisible(enablePredefinedArea);
+		lblSelectArea.setVisible(enablePredefinedArea);
+		btnSaveArea.setVisible(enablePredefinedArea);
 
 		recipientTab = new JTabbedPane();
 		

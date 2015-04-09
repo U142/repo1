@@ -11,6 +11,7 @@ import no.ums.pas.core.themes.ThemeColorComponent;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapSite;
+import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
 import org.jvnet.substance.SubstanceImageCreator;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -474,6 +475,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 						log.debug("m_keep_sendings=" + PAS.get_pas().get_keep_sendings());
 					}
 					PAS.get_pas().actionPerformed(e);
+					PAS.get_pas().get_sendcontroller().get_sendings();
+					
 				}
 				else {
 					return;
