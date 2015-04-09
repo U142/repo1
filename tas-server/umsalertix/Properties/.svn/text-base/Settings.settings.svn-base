@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="umsalertix.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="umsalertix_alertix_internationalalert_InternationalAlertApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://10.250.17.77:8080/alertix/InternationalAlertApi</Value>
+    </Setting>
+    <Setting Name="umsalertix_alertix_status_StatusApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://10.250.17.77:8080/alertix/StatusApi</Value>
+    </Setting>
+    <Setting Name="umsalertix_alertix_statistics_StatisticsApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://10.250.17.77:8080/alertix/StatisticsApi</Value>
+    </Setting>
+    <Setting Name="umsalertix_alertix_admin_AdminApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://10.250.17.77:8080/alertix/AdminApi</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

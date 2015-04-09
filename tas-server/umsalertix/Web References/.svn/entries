@@ -1,0 +1,37 @@
+10
+
+dir
+38
+svn+ssh://eris/svn/alertix-server/trunk/umsalertix/Web%20References
+svn+ssh://eris/svn/alertix-server
+
+
+
+2010-05-20T12:16:06.812038Z
+29
+jone-l
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12f1efe4-9b1c-402e-8273-1c7eac53a115
+
+alertix.statistics
+dir
+
+alertix.internationalalert
+dir
+
+alertix.status
+dir
+

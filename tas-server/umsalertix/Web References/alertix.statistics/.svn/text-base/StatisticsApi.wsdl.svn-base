@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://api.alertix.cellvision" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://vo.api.alertix.cellvision" xmlns:ns1="http://api.domain.common.alertix.cellvision" targetNamespace="http://api.alertix.cellvision" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.alertix.cellvision">
+      <xsd:element name="getCountryDistributionByCc">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getCountryDistributionByCcResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:CountryDistributionByCcResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSubscriberCountByCc">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:CountryCodes" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSubscriberCountByCcResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:SubscriberCountResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.api.alertix.cellvision">
+      <xsd:complexType name="CountryDistributionByCcResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="countryDistributionByCc" nillable="true" type="ns1:ArrayOfCountByCc" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SubscriberCountResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="count" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.domain.common.alertix.cellvision">
+      <xsd:complexType name="ArrayOfCountByCc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountByCc" nillable="true" type="ns1:CountByCc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountByCc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="countryCode" type="xsd:int" />
+          <xsd:element minOccurs="0" name="count" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountryCodes">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="countryCodes" nillable="true" type="ns1:ArrayOfCountryCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountryCode" nillable="true" type="ns1:CountryCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getSubscriberCountByCcResponse">
+    <wsdl:part name="parameters" element="tns:getSubscriberCountByCcResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCountryDistributionByCcResponse">
+    <wsdl:part name="parameters" element="tns:getCountryDistributionByCcResponse" />
+  </wsdl:message>
+  <wsdl:message name="getSubscriberCountByCcRequest">
+    <wsdl:part name="parameters" element="tns:getSubscriberCountByCc" />
+  </wsdl:message>
+  <wsdl:message name="getCountryDistributionByCcRequest">
+    <wsdl:part name="parameters" element="tns:getCountryDistributionByCc" />
+  </wsdl:message>
+  <wsdl:portType name="StatisticsApiPortType">
+    <wsdl:operation name="getCountryDistributionByCc">
+      <wsdl:input name="getCountryDistributionByCcRequest" message="tns:getCountryDistributionByCcRequest" />
+      <wsdl:output name="getCountryDistributionByCcResponse" message="tns:getCountryDistributionByCcResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCc">
+      <wsdl:input name="getSubscriberCountByCcRequest" message="tns:getSubscriberCountByCcRequest" />
+      <wsdl:output name="getSubscriberCountByCcResponse" message="tns:getSubscriberCountByCcResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StatisticsApiHttpBinding" type="tns:StatisticsApiPortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getCountryDistributionByCc">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getCountryDistributionByCcRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getCountryDistributionByCcResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriberCountByCc">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getSubscriberCountByCcRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getSubscriberCountByCcResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StatisticsApi">
+    <wsdl:port name="StatisticsApiHttpPort" binding="tns:StatisticsApiHttpBinding">
+      <wsdlsoap:address location="http://10.250.17.77:8080/alertix/StatisticsApi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

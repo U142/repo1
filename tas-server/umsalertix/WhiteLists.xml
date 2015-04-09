@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<WhiteLists>
+  <UMS>
+    <TAS>
+    </TAS>
+    <INA>
+      <list name="UD" operator="2"/>
+      <list name="UMS"/>
+      <list name="CELLVISION"/>
+    </INA>
+  </UMS>
+</WhiteLists>

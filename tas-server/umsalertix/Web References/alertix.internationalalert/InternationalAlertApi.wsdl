@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://api.alertix.cellvision" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://api.domain.common.alertix.cellvision" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://domain.common.alertix.cellvision" xmlns:ns4="http://vo.common.alertix.cellvision" xmlns:ns3="http://vo.api.alertix.cellvision" targetNamespace="http://api.alertix.cellvision" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.domain.common.alertix.cellvision">
+      <xsd:complexType name="CountryCodes">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="countryCodes" nillable="true" type="ns1:ArrayOfCountryCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountryCode" nillable="true" type="ns1:CountryCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CountryCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="InternationalAlertMsg">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="message" nillable="true" type="ns1:TextMessage" />
+          <xsd:element minOccurs="0" name="expiryTime" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TextMessage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="oa" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WhiteLists">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="whiteLists" nillable="true" type="ns1:ArrayOfWhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfWhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="WhiteListName" nillable="true" type="ns1:WhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdditionalSubscribers">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="subscribers" nillable="true" type="ns1:ArrayOfMsisdn" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMsisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Msisdn" nillable="true" type="ns1:Msisdn" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Msisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="JobId">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://domain.common.alertix.cellvision">
+      <xsd:simpleType name="ExecuteMode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="UNKNOWN" />
+          <xsd:enumeration value="LIVE" />
+          <xsd:enumeration value="SIMULATE" />
+          <xsd:enumeration value="SILENT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.alertix.cellvision">
+      <xsd:element name="executeAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:CountryCodes" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:InternationalAlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:AdditionalSubscribers" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in4" nillable="true" type="ns2:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAdditionalAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:InternationalAlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns2:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executeAdditionalAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cancelPreparedAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cancelPreparedAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns4:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="prepareAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:CountryCodes" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:InternationalAlertMsg" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in2" nillable="true" type="ns1:WhiteLists" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in3" nillable="true" type="ns1:AdditionalSubscribers" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="prepareAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:AlertResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executePreparedAlert">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:JobId" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns2:ExecuteMode" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="executePreparedAlertResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns4:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.api.alertix.cellvision">
+      <xsd:complexType name="AlertResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="jobId" nillable="true" type="ns1:JobId" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.common.alertix.cellvision">
+      <xsd:complexType name="Response">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="cancelPreparedAlertResponse">
+    <wsdl:part name="parameters" element="tns:cancelPreparedAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executePreparedAlertRequest">
+    <wsdl:part name="parameters" element="tns:executePreparedAlert" />
+  </wsdl:message>
+  <wsdl:message name="executeAlertRequest">
+    <wsdl:part name="parameters" element="tns:executeAlert" />
+  </wsdl:message>
+  <wsdl:message name="executeAdditionalAlertResponse">
+    <wsdl:part name="parameters" element="tns:executeAdditionalAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="cancelPreparedAlertRequest">
+    <wsdl:part name="parameters" element="tns:cancelPreparedAlert" />
+  </wsdl:message>
+  <wsdl:message name="executeAlertResponse">
+    <wsdl:part name="parameters" element="tns:executeAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="prepareAlertRequest">
+    <wsdl:part name="parameters" element="tns:prepareAlert" />
+  </wsdl:message>
+  <wsdl:message name="executePreparedAlertResponse">
+    <wsdl:part name="parameters" element="tns:executePreparedAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="prepareAlertResponse">
+    <wsdl:part name="parameters" element="tns:prepareAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="executeAdditionalAlertRequest">
+    <wsdl:part name="parameters" element="tns:executeAdditionalAlert" />
+  </wsdl:message>
+  <wsdl:portType name="InternationalAlertApiPortType">
+    <wsdl:operation name="executeAlert">
+      <wsdl:input name="executeAlertRequest" message="tns:executeAlertRequest" />
+      <wsdl:output name="executeAlertResponse" message="tns:executeAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executeAdditionalAlert">
+      <wsdl:input name="executeAdditionalAlertRequest" message="tns:executeAdditionalAlertRequest" />
+      <wsdl:output name="executeAdditionalAlertResponse" message="tns:executeAdditionalAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelPreparedAlert">
+      <wsdl:input name="cancelPreparedAlertRequest" message="tns:cancelPreparedAlertRequest" />
+      <wsdl:output name="cancelPreparedAlertResponse" message="tns:cancelPreparedAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="prepareAlert">
+      <wsdl:input name="prepareAlertRequest" message="tns:prepareAlertRequest" />
+      <wsdl:output name="prepareAlertResponse" message="tns:prepareAlertResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="executePreparedAlert">
+      <wsdl:input name="executePreparedAlertRequest" message="tns:executePreparedAlertRequest" />
+      <wsdl:output name="executePreparedAlertResponse" message="tns:executePreparedAlertResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InternationalAlertApiHttpBinding" type="tns:InternationalAlertApiPortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="executeAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executeAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeAdditionalAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executeAdditionalAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executeAdditionalAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelPreparedAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="cancelPreparedAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="cancelPreparedAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="prepareAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="prepareAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="prepareAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executePreparedAlert">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="executePreparedAlertRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="executePreparedAlertResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InternationalAlertApi">
+    <wsdl:port name="InternationalAlertApiHttpPort" binding="tns:InternationalAlertApiHttpBinding">
+      <wsdlsoap:address location="http://10.250.17.77:8080/alertix/InternationalAlertApi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

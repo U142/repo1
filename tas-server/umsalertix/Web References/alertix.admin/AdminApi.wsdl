@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://api.alertix.cellvision" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://api.domain.common.alertix.cellvision" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://vo.api.alertix.cellvision" xmlns:ns3="http://vo.common.alertix.cellvision" targetNamespace="http://api.alertix.cellvision" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.domain.common.alertix.cellvision">
+      <xsd:complexType name="WhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMsisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Msisdn" nillable="true" type="ns1:Msisdn" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Msisdn">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfWhiteListName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="WhiteListName" nillable="true" type="ns1:WhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.alertix.cellvision">
+      <xsd:element name="getWhiteListSubscribers">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:WhiteListName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getWhiteListSubscribersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:SubscribersResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getWhiteLists">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getWhiteListsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:WhiteListsResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createWhiteList">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:WhiteListName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createWhiteListResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteWhiteList">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:WhiteListName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteWhiteListResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteWhiteListSubscribers">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:WhiteListName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:ArrayOfMsisdn" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteWhiteListSubscribersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:DeleteResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addWhiteListSubscribers">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns1:WhiteListName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns1:ArrayOfMsisdn" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addWhiteListSubscribersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns2:AddResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.api.alertix.cellvision">
+      <xsd:complexType name="SubscribersResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="msisdns" nillable="true" type="ns1:ArrayOfMsisdn" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WhiteListsResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="whiteLists" nillable="true" type="ns1:ArrayOfWhiteListName" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="deletedCount" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="addedCount" type="xsd:int" />
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.common.alertix.cellvision">
+      <xsd:complexType name="Response">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="deleteWhiteListSubscribersResponse">
+    <wsdl:part name="parameters" element="tns:deleteWhiteListSubscribersResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteWhiteListSubscribersRequest">
+    <wsdl:part name="parameters" element="tns:deleteWhiteListSubscribers" />
+  </wsdl:message>
+  <wsdl:message name="getWhiteListSubscribersResponse">
+    <wsdl:part name="parameters" element="tns:getWhiteListSubscribersResponse" />
+  </wsdl:message>
+  <wsdl:message name="getWhiteListsRequest">
+    <wsdl:part name="parameters" element="tns:getWhiteLists" />
+  </wsdl:message>
+  <wsdl:message name="createWhiteListRequest">
+    <wsdl:part name="parameters" element="tns:createWhiteList" />
+  </wsdl:message>
+  <wsdl:message name="getWhiteListSubscribersRequest">
+    <wsdl:part name="parameters" element="tns:getWhiteListSubscribers" />
+  </wsdl:message>
+  <wsdl:message name="createWhiteListResponse">
+    <wsdl:part name="parameters" element="tns:createWhiteListResponse" />
+  </wsdl:message>
+  <wsdl:message name="getWhiteListsResponse">
+    <wsdl:part name="parameters" element="tns:getWhiteListsResponse" />
+  </wsdl:message>
+  <wsdl:message name="addWhiteListSubscribersResponse">
+    <wsdl:part name="parameters" element="tns:addWhiteListSubscribersResponse" />
+  </wsdl:message>
+  <wsdl:message name="addWhiteListSubscribersRequest">
+    <wsdl:part name="parameters" element="tns:addWhiteListSubscribers" />
+  </wsdl:message>
+  <wsdl:message name="deleteWhiteListResponse">
+    <wsdl:part name="parameters" element="tns:deleteWhiteListResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteWhiteListRequest">
+    <wsdl:part name="parameters" element="tns:deleteWhiteList" />
+  </wsdl:message>
+  <wsdl:portType name="AdminApiPortType">
+    <wsdl:operation name="getWhiteListSubscribers">
+      <wsdl:input name="getWhiteListSubscribersRequest" message="tns:getWhiteListSubscribersRequest" />
+      <wsdl:output name="getWhiteListSubscribersResponse" message="tns:getWhiteListSubscribersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getWhiteLists">
+      <wsdl:input name="getWhiteListsRequest" message="tns:getWhiteListsRequest" />
+      <wsdl:output name="getWhiteListsResponse" message="tns:getWhiteListsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createWhiteList">
+      <wsdl:input name="createWhiteListRequest" message="tns:createWhiteListRequest" />
+      <wsdl:output name="createWhiteListResponse" message="tns:createWhiteListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteWhiteList">
+      <wsdl:input name="deleteWhiteListRequest" message="tns:deleteWhiteListRequest" />
+      <wsdl:output name="deleteWhiteListResponse" message="tns:deleteWhiteListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteWhiteListSubscribers">
+      <wsdl:input name="deleteWhiteListSubscribersRequest" message="tns:deleteWhiteListSubscribersRequest" />
+      <wsdl:output name="deleteWhiteListSubscribersResponse" message="tns:deleteWhiteListSubscribersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="addWhiteListSubscribers">
+      <wsdl:input name="addWhiteListSubscribersRequest" message="tns:addWhiteListSubscribersRequest" />
+      <wsdl:output name="addWhiteListSubscribersResponse" message="tns:addWhiteListSubscribersResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdminApiHttpBinding" type="tns:AdminApiPortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getWhiteListSubscribers">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getWhiteListSubscribersRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getWhiteListSubscribersResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWhiteLists">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getWhiteListsRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getWhiteListsResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createWhiteList">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="createWhiteListRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createWhiteListResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteWhiteList">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="deleteWhiteListRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteWhiteListResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteWhiteListSubscribers">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="deleteWhiteListSubscribersRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteWhiteListSubscribersResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addWhiteListSubscribers">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="addWhiteListSubscribersRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="addWhiteListSubscribersResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AdminApi">
+    <wsdl:port name="AdminApiHttpPort" binding="tns:AdminApiHttpBinding">
+      <wsdlsoap:address location="http://10.250.17.77:8080/alertix/AdminApi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
