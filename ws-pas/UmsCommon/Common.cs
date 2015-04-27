@@ -1024,7 +1024,7 @@ namespace com.ums.UmsCommon
         public Int64 l_userpk;
         public long l_profilepk;
         public int l_maxchannels; //initial max (voice)channels for a sending. When modified this will be returned in the l_maxalloc field
-
+        public List<AddressFilterInfo> filters;
 
         /*extra sending variables*/
         public long l_queuestatus;

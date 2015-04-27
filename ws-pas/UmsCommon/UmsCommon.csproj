@@ -145,6 +145,8 @@
     <Compile Include="CoorConvert\RDConvert.cs" />
     <Compile Include="CoorConvert\UTM.cs" />
     <Compile Include="EventLogger.cs" />
+    <Compile Include="Filter\AddressAssociatedWithFilter.cs" />
+    <Compile Include="Filter\AddressFilterInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UExceptions.cs" />
   </ItemGroup>

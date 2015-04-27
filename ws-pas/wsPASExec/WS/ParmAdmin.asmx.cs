@@ -2715,6 +2715,7 @@ namespace com.ums.ws.parm
                 long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), sz_description, false);
                 if (n_ret > 0) //ok
                 {
+                    HandleFiltersofAlert(operation, ref a);
                     a.l_alertpk = n_ret;
                     a.l_temppk = n_ret;
                     if (operation.ToString().ToLower().Equals("delete"))
@@ -2751,6 +2752,53 @@ namespace com.ums.ws.parm
             {
                 ULog.error("HandleAlertUpdate: SQL Error:\n" + sz_sql + "\n" + e.Message);
                 throw;
+            }
+        }
+
+        private bool HandleFiltersofAlert(PARMOPERATION operation, ref PAALERT alert)
+        {
+            try
+            {
+                switch (operation)
+                {
+                    case (PARMOPERATION.delete):
+                        {
+                            string sql = String.Format("delete from PAALERT_X_FILTERS where l_alertpk={0}", alert.l_alertpk);
+                            db.CreateCommand(sql, 1);
+                            db.ExecCommand();
+                            break;
+                        }
+                    case (PARMOPERATION.insert):
+                        {
+                            int count = alert.filters.Count;
+                            for (int i = 0; i < count; i++)
+                            {
+                                string sql = String.Format("INSERT INTO PAALERT_X_FILTERS VALUES({0},{1})", alert.l_alertpk, alert.filters[i].filterId);
+                                db.CreateCommand(sql, 1);
+                                db.ExecCommand();
+                            }
+                            break;
+                        }
+                    case (PARMOPERATION.update):
+                        {
+                            string sql = String.Format("delete from PAALERT_X_FILTERS where l_alertpk={0}", alert.l_alertpk);
+                            db.CreateCommand(sql, 1);
+                            db.ExecCommand();
+                            for (int i = 0; i < alert.filters.Count; i++)
+                            {
+                                sql = String.Format("INSERT INTO PAALERT_X_FILTERS VALUES({0},{1})", alert.l_alertpk, alert.filters[i].filterId);
+                                db.CreateCommand(sql, 1);
+                                db.ExecCommand();
+                            }
+                            break;
+                        }
+
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

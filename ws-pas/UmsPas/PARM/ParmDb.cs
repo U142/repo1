@@ -943,7 +943,7 @@ namespace com.ums.UmsParm
             m.f_dynacall = (a.n_function == UCommon.USENDING_LIVE ? 1 : 2);
             m.l_addresstypes = a.l_addresstypes;
             m.l_userpk = l.l_userpk;
-
+            
             return true;
         }
         public bool FillSendingInfo(ref ULOGONINFO l, ref UMAPSENDING s, ref MDVSENDINGINFO m, UDATETIME schedule)
@@ -1003,7 +1003,11 @@ namespace com.ums.UmsParm
                 m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING &&
                 m.l_group != UShape.SENDINGTYPE_MUNICIPAL && m.l_group != UShape.SENDINGTYPE_TAS)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
-
+            //for setting filters selected by user
+            if (s.filters != null)
+            {
+                m.filters = s.filters;
+            }
             return true;
         }
         public bool FillActionProfile(ref PAALERT a, ref BBACTIONPROFILESEND s)

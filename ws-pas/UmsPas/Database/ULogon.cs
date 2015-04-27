@@ -80,7 +80,22 @@ namespace com.ums.PAS.Database
                         b_ret = true;
                 }
                 rs.Close();
-
+                //for saving selected filters in user's setting 
+                if (ui.SelectedFilters.Count != 0)
+                {
+                    for (int i = 0; i < ui.SelectedFilters.Count; i++)
+                    {
+                        szSQL = string.Format("sp_pas_ins_ui_filters {0},{1}", l.l_userpk, ui.SelectedFilters[i].filterId);
+                        CreateCommand(szSQL, 1);
+                        int k = ExecCommand();
+                    }
+                }
+                else
+                {
+                    szSQL = string.Format("delete from BBUSER_PASUI_FILTER where l_userpk={0}", l.l_userpk);
+                    CreateCommand(szSQL, 1);
+                    ExecCommand();
+                }
                 return b_ret;
             }
             catch (Exception)
@@ -312,6 +327,7 @@ namespace com.ums.PAS.Database
                     }
                 }
                 rs.Close();
+                ret.SelectedFilters = getListofSelectedFilter(l_userpk);
 
                 return ret;
             }
@@ -321,6 +337,107 @@ namespace com.ums.PAS.Database
                     rs.Close();
             }
         }
+
+
+        private List<AddressFilterInfo> getListofSelectedFilter(long l_userpk)
+        {
+            try
+            {
+                List<AddressFilterInfo> filters = new List<AddressFilterInfo>();
+                string szSQL = String.Format("sp_pas_get_ui_filters {0}", l_userpk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    AddressFilterInfo info = new AddressFilterInfo();
+                    info.filterId = rs.GetInt32(rs.GetOrdinal("FilterId"));
+                    filters.Add(info);
+                }
+                rs.Close();
+                ULOGONINFO logon = new ULOGONINFO();
+                logon.l_userpk = l_userpk;
+                UmsDb db = getCorrespondingCountryDataBase(ref logon);
+                for (int i = 0; i < filters.Count; i++)
+                {
+                    szSQL = String.Format("select * from Address_Filters where FilterId={0}", filters[i].filterId);
+                    db.CreateCommand(szSQL, 1);
+                    rs = db.ExecCommandReader();
+                    if (rs.Read())
+                    {
+                        filters[i].filterName = rs.GetString(rs.GetOrdinal("FilterName"));
+                        filters[i].description = rs.GetString(rs.GetOrdinal("F_Description"));
+                        filters[i].lastupdatedDate = rs.GetDate(rs.GetOrdinal("CreatedOn"));
+                    }
+                    rs.Close();
+
+                }
+                return filters;
+            }
+            catch (Exception e)
+            {
+
+                e.ToString();
+                return new List<AddressFilterInfo>();
+            }
+        }
+
+        private static UmsDb getCorrespondingCountryDataBase(ref ULOGONINFO logon)
+        {
+            UmsDb db = new UmsDb();
+            ULOGONINFO logonInfo = new ULOGONINFO();
+
+
+            db = new UmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 20000);
+
+
+            string sql = string.Format("select distinct BC.sz_compid, distinct BD.sz_deptid FROM BBCOMPANY BC, BBDEPARTMENT BD ,BBUSER BU WHERE BC.l_comppk=BU.l_comppk and BD.l_deptpk=BU.l_deptpk and BU.l_userpk={0}", logon.l_userpk);
+            db.CreateCommand(sql, 1);
+            OdbcDataReader reader = db.ExecCommandReader();
+            while (reader.Read())
+            {
+                logon.sz_compid = reader.GetString(reader.GetOrdinal("sz_compid"));
+                logon.sz_deptid = reader.GetString(reader.GetOrdinal("sz_deptid"));
+
+
+            }
+            db.CheckDepartmentLogonLiteral(ref logon);
+
+
+            db = GetDatabaseInstance(logon.sz_stdcc, logon.l_deptpk, 2000);
+            return db;
+        }
+
+        private static UmsDb GetDatabaseInstance(string sz_stdcc, int n_deptpk, int timeout)
+        {
+            string sz_constring;
+            int m_n_pastype;    //0=no db rights, 1=normal address, 2=folkereg address         
+
+            if (!UCommon.USETTINGS.b_enable_adrdb)
+                throw new UServerDeniedAddressDatabaseException();
+
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                m_n_pastype = db.GetPasType(n_deptpk);
+                if (m_n_pastype <= 0)
+                    throw new ULogonFailedException();
+
+                String dsn = "address_" + sz_stdcc;
+                if (m_n_pastype == 2)
+                    dsn += "_reg";
+                sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
+                db.close();
+                UmsDb db1 = new PASUmsDb(sz_constring, 20000);
+                //OdbcConnection conn = new OdbcConnection(sz_constring);
+                //conn.Open();
+                //db1.SetConn(conn);
+                return db1;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         public bool Logoff(ref ULOGONINFO l)
         {

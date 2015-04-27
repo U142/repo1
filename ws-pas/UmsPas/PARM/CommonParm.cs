@@ -112,7 +112,7 @@ namespace com.ums.UmsParm
         public int l_lba_update_percent;
         public long l_sending_autochannel;
         public int l_sending_autoshape;
-
+        public List<AddressFilterInfo> SelectedFilters;
         public long l_addresstypes;
         public int l_deptcategory;
     }
@@ -1863,7 +1863,7 @@ namespace com.ums.UmsParm
         //public int n_nofax;
         public String sz_sms_oadc;
         public String sz_sms_message;
-
+        public List<AddressFilterInfo> filters;//list of filters user selceted at the time of alert creation
         public int getSendingType() { return n_sendingtype; }
 
         public void setAlertPk(Int64 s) { l_alertpk = s; }
@@ -1888,6 +1888,7 @@ namespace com.ums.UmsParm
         public void setSmsOadc(String s) { sz_sms_oadc = s; }
         public void setSmsMessage(String s) { sz_sms_message = s; }
         public void setExpiry(int n) { n_expiry = n; }
+        public void setFilter(List<AddressFilterInfo> list) { filters = list; }
         public bool hasValidAreaID()
         {
             if (sz_areaid == null)
@@ -2434,6 +2435,7 @@ namespace com.ums.UmsParm
         public String sz_sms_oadc;
         public int n_sms_expirytime_minutes;*/
         public int n_maxchannels;
+        public List<AddressFilterInfo> filters;
         protected int n_group;
         protected int n_function;
 
