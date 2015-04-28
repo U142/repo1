@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using com.ums.UmsCommon;
+using com.ums.UmsDbLib;
+using System.Data.Odbc;
+using com.ums.address;
+using System.Configuration;
+using com.ums.UmsParm;
 
-namespace wsPASExec.WS
+namespace com.ums.ws.addressfilters
 {
     [WebService(Namespace = "http://ums.no/ws/addressfilters/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -16,7 +22,7 @@ namespace wsPASExec.WS
         AddressFilterInfo info = new AddressFilterInfo();
 
         [WebMethod]
-        public AddressFilterInfo ExecUpdateAddressFilter(PARMOPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
+        public AddressFilterInfo ExecUpdateAddressFilter(FILTEROPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
         {
             return executeUpdateAddressFilter(operation, logon, info);
         }
@@ -126,7 +132,7 @@ namespace wsPASExec.WS
             return db;
         }
 
-        private AddressFilterInfo executeUpdateAddressFilter(PARMOPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
+        private AddressFilterInfo executeUpdateAddressFilter(FILTEROPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
         {
             UmsDb db = getCorrespondingCountryDataBase(ref logon);
             int check;
@@ -141,57 +147,75 @@ namespace wsPASExec.WS
                 {
                     info.description = ((info.description == null) ? temp : info.description);
                     info.addressType = ((info.addressType == null) ? AddressType.StreetAddress : info.addressType);
-                    info.lastupdatedDate = ((info.lastupdatedDate == null) ? System.DateTime.Now : info.lastupdatedDate);
+                   // info.lastupdatedDate = ((info.lastupdatedDate == null) ? System.DateTime.Now : info.lastupdatedDate);
 
                     switch (operation)
                     {
-                        case (PARMOPERATION.delete):
+                        case (FILTEROPERATION.delete):
                             {
                                 //  @operation, @deptId ,@filterId int,@filterName, @f_Description, @addressType varchar, @date ,@municipalId,@streetId,@houseNo,@sz_HouseLetter,@sz_ApartmentId,@gno,@bno,@fno,@sno,@se_CadId,@se_VaId  
                                 string sql = string.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
-                                  PARMOPERATION.delete.ToString(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, System.DateTime.Now, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+                                  FILTEROPERATION.delete.ToString(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, info.lastupdatedDate, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
                                 db.CreateCommand(sql, 1);
                                 check = db.ExecCommand();
                                 break;
                             }
 
-                        case (PARMOPERATION.insert):
+                        case (FILTEROPERATION.insert):
                             {
-                                for (int i = 0; i < info.addressForFilterlist.Count; i++)
-                                {
-
-
-                                    info.addressForFilterlist[i].szHouseLetter = ((info.addressForFilterlist[i].szHouseLetter == null) ? temp : info.addressForFilterlist[i].szApartmentId);
-                                    info.addressForFilterlist[i].szApartmentId = ((info.addressForFilterlist[i].szApartmentId == null) ? temp : info.addressForFilterlist[i].szApartmentId);
-
-
-                                    //  @operation, @deptId ,@filterId int,@filterName, @f_Description, @addressType varchar, @date ,@municipalId,@streetId,@houseNo,@sz_HouseLetter,@sz_ApartmentId,@gno,@bno,@fno,@sno,@se_CadId,@se_VaId  
-                                    string sql = String.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
-                                                             operation.ToString().ToLower(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, info.lastupdatedDate, info.addressForFilterlist[i].municipalId, info.addressForFilterlist[i].streetId,
-                                                             info.addressForFilterlist[i].houseNo, info.addressForFilterlist[i].szHouseLetter, info.addressForFilterlist[i].szApartmentId, info.addressForFilterlist[i].gnrNumber, info.addressForFilterlist[i].bnrNumber, info.addressForFilterlist[i].fnrNumber,
-                                                             info.addressForFilterlist[i].snrNumber, info.addressForFilterlist[i].seCadId, info.addressForFilterlist[i].seVaId);
-
-                                    db.CreateCommand(sql, 1);
-                                    db.ExecCommand();
-
-                                }
-                                check = info.addressForFilterlist.Count;
-                                break;
-                            }
-                        case (PARMOPERATION.update):
-                            {
-                                string sql = string.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
-                                   PARMOPERATION.update.ToString(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, System.DateTime.Now, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+                                string sql = String.Format("sp_Insert_Address_Filters '{0}', '{1}', '{2}' , '{3}'  , '{4}' ",
+                                                             logon.sz_deptid, info.filterName, info.description, info.addressType, info.lastupdatedDate);
                                 db.CreateCommand(sql, 1);
-                                int inserted = db.ExecCommand();
-                                if (inserted == 1)
+                                db.ExecCommand();
+
+                               
+                                int filterid=0;
+                                sql = string.Format(" select FilterId from Address_Filters  where DeptId='{0}' and FilterName='{1}'", info.deptId, info.filterName);
+                                db.CreateCommand(sql, 1);
+                                OdbcDataReader reader = db.ExecCommandReader();
+                                if (reader.Read())
+                                {
+                                    filterid = reader.GetInt32(reader.GetOrdinal("FilterId"));
+                                }
+                               // int filterid = db.ExecScalarcommand(sql);
+                                if (filterid != 0)
                                 {
                                     for (int i = 0; i < info.addressForFilterlist.Count; i++)
                                     {
-                                        sql = String.Format("sp_dml_Filters '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}', '{18}', {19}",
-                                                                 PARMOPERATION.insert.ToString(), info.deptId, info.filterName, info.description, info.addressType, info.addressForFilterlist[i].municipalId, info.addressForFilterlist[i].streetId,
-                                                             info.addressForFilterlist[i].houseNo, info.addressForFilterlist[i].szHouseLetter, info.addressForFilterlist[i].szApartmentId, info.addressForFilterlist[i].gnrNumber, info.addressForFilterlist[i].bnrNumber, info.addressForFilterlist[i].fnrNumber,
-                                                             info.addressForFilterlist[i].snrNumber, info.addressForFilterlist[i].seCadId, info.addressForFilterlist[i].seVaId);
+
+
+                                        info.addressForFilterlist[i].szHouseLetter = ((info.addressForFilterlist[i].szHouseLetter == null) ? temp : info.addressForFilterlist[i].szApartmentId);
+                                        info.addressForFilterlist[i].szApartmentId = ((info.addressForFilterlist[i].szApartmentId == null) ? temp : info.addressForFilterlist[i].szApartmentId);
+
+
+                                        //  @operation, @deptId ,@filterId int,@filterName, @f_Description, @addressType varchar, @date ,@municipalId,@streetId,@houseNo,@sz_HouseLetter,@sz_ApartmentId,@gno,@bno,@fno,@sno,@se_CadId,@se_VaId  
+                                        sql = String.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
+                                                                operation.ToString().ToLower(), logon.sz_deptid, filterid, info.filterName, info.description, info.addressType, info.lastupdatedDate, info.addressForFilterlist[i].municipalId, info.addressForFilterlist[i].streetId,
+                                                                info.addressForFilterlist[i].houseNo, info.addressForFilterlist[i].szHouseLetter, info.addressForFilterlist[i].szApartmentId, info.addressForFilterlist[i].gnrNumber, info.addressForFilterlist[i].bnrNumber, info.addressForFilterlist[i].fnrNumber,
+                                                                info.addressForFilterlist[i].snrNumber, info.addressForFilterlist[i].seCadId, info.addressForFilterlist[i].seVaId);
+
+                                        db.CreateCommand(sql, 1);
+                                        db.ExecCommand();
+
+                                    }
+                                    check = info.addressForFilterlist.Count;
+                                }
+                                break;
+                            }
+                        case (FILTEROPERATION.update):
+                            {
+                                string sql = string.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
+                                   FILTEROPERATION.update.ToString(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, System.DateTime.Now, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+                                db.CreateCommand(sql, 1);
+                                int inserted = db.ExecCommand();
+                                if (inserted!=0)
+                                {
+                                    for (int i = 0; i < info.addressForFilterlist.Count; i++)
+                                    {
+                                        sql = String.Format("sp_dml_Filters '{0}', '{1}', {2}         , '{3}'     , '{4}'         ,   '{5}'               ,'{6}' ,  {7}       , {8}     ,  {9}   , '{10}'        , '{11}'        ,{12},{13},{14},{15},  {16},  {17}",
+                                                                 FILTEROPERATION.insert.ToString().ToLower(), logon.sz_deptid, info.filterId, info.filterName, info.description, info.addressType, info.lastupdatedDate, info.addressForFilterlist[i].municipalId, info.addressForFilterlist[i].streetId,
+                                                                info.addressForFilterlist[i].houseNo, info.addressForFilterlist[i].szHouseLetter, info.addressForFilterlist[i].szApartmentId, info.addressForFilterlist[i].gnrNumber, info.addressForFilterlist[i].bnrNumber, info.addressForFilterlist[i].fnrNumber,
+                                                                info.addressForFilterlist[i].snrNumber, info.addressForFilterlist[i].seCadId, info.addressForFilterlist[i].seVaId);
 
                                         db.CreateCommand(sql, 1);
                                         db.ExecCommand();
@@ -231,6 +255,7 @@ namespace wsPASExec.WS
                 while (reader.Read())
                 {
                     AddressFilterInfo info = new AddressFilterInfo();
+                    info.filterId = reader.GetInt32(reader.GetOrdinal("FilterId"));
                     info.filterName = reader.GetString(reader.GetOrdinal("FilterName"));
                     info.lastupdatedDate = reader.GetDateTime(reader.GetOrdinal("LastUpdatedDate"));
                     info.description = reader.GetString(reader.GetOrdinal("F_Description"));

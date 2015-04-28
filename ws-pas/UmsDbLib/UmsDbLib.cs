@@ -1241,6 +1241,35 @@ WHERE BH.l_refno=?";
             }
         }
 
+        public int ExecScalarcommand(String s)
+        {
+            //try
+            //{
+            //    return (int)m_cmd.ExecuteScalar();
+            //}
+            //catch (Exception e)
+            //{
+            //    throw;
+            //}
+            int f_no = 0;
+            try
+            {
+                if (m_b_transaction_in_progress)
+                {
+                    m_cmd = new OdbcCommand(s, conn, m_odbc_transaction);
+                }
+                else
+                    m_cmd = new OdbcCommand(s, conn);
+                f_no=Convert.ToInt32(m_cmd.ExecuteScalar());
+                m_cmd.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return f_no;
+        }
         public OdbcDataReader ExecReader(String s, int OPENMODE)
         {
             return ExecReader(s, OPENMODE, false);

@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="C#" CodeBehind="AddressFilters.asmx.cs" Class="wsPASExec.WS.WebService1" %>
+﻿<%@ WebService Language="C#" CodeBehind="AddressFilters.asmx.cs" Class="com.ums.ws.addressfilters.AddressFilters" %>
