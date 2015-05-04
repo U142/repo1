@@ -103,8 +103,10 @@ public class AddressFilterInfoVO extends AlertVO implements Cloneable {
 
     
     public String toString() {
-		return this.getFilterName();
-	}
+        String dateString=this.getCreationTime().replace("T", " ");
+        return this.getFilterName() + " (" + dateString
+          + ")";
+       }
 
 	@Override
 	public boolean hasValidPk() {
