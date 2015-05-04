@@ -247,6 +247,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         //new menu created for predefined areas
         final JMenu libraries = menu.add(new JMenu(Localization.l("mainmenu_libraries")));
         libraries.add(OtherActions.PREDEFINED_AREAS);
+        libraries.add(OtherActions.ADDRESS_FILTER);
         checkAccessRights();
         
         final JMenu parm = menu.add(new JMenu(Localization.l("mainmenu_parm")));
@@ -1578,6 +1579,52 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				return Boolean.TRUE;
 			}			
 		}.execute();
+		return true;
+	}
+
+	@Override
+	public boolean onClosePredefinedFilter() {
+//		PAS.setPredefinedAreaOpen(false);
+		try
+		{
+			if(PAS.get_pas().getPredefinedFilterController().getFilterCtrl().isLock())
+				PAS.get_pas().getPredefinedFilterController().getFilterCtrl().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_cancel_predefined_filter"));
+		}
+		catch(NullPointerException npe)
+		{}
+		PAS.get_pas().closePredefinedFilter(true);
+		PAS.setPredefinedFilterOpen(false);
+		return true;
+	}
+
+	@Override
+	public boolean onOpenPredefinedFilter() {
+		new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                try {
+                    long start = System.currentTimeMillis();
+                    PAS.get_pas().waitForFirstMap();
+
+                    log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
+                    log.debug(String.format(Locale.ENGLISH, "Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
+                    if (PAS.get_pas().getPredefinedFilterController() != null) {
+                        return null;
+                    }
+                } catch (Exception err) {
+                    log.warn("Failed to Open Predefined areas list", err);
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                    log.debug("Opening Predefined filter list");
+	                PAS.get_pas().initPredefinedFilterController();
+	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PREDEFINED_FILTER_);
+	                PAS.setPredefinedFilterOpen(true);
+            }
+        }.execute();
 		return true;
 	}
 

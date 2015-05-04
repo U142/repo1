@@ -41,7 +41,7 @@ public class WSGisImport extends WSThread
     private static final Log log = UmsLog.getLogger(WSGisImport.class);
     private String m_encoding;
     private String m_importType;
-
+    private boolean isImportFilter= false;
     protected class GisColumnset
     {
         public int COL_MUNICIPAL;
@@ -218,10 +218,13 @@ public class WSGisImport extends WSThread
                     }
                     line++;
                 }
+                if(isImportFilter()){
+                }
+                else{
                 res = new Pasws(wsdl, service).getPaswsSoap12().getGisByStreetIdV2(logon, search);
                 m_gislist = new GISList(); //init array as l_totitem big
                 m_gislist.fill(res);
-
+                }
             }   else if("StreetApartment".equalsIgnoreCase(m_importType)){
                 ArrayOfUGisImportApartmentLine importlines = new ArrayOfUGisImportApartmentLine();
                 UGisImportApartmentList search = new UGisImportApartmentList();
@@ -296,6 +299,12 @@ public class WSGisImport extends WSThread
     public void onDownloadFinished() {
         m_callback.actionPerformed(new ActionEvent(m_gislist, ActionEvent.ACTION_PERFORMED, sz_cb_cmd));
     }
+	public boolean isImportFilter() {
+		return isImportFilter;
+	}
+	public void setImportFilter(boolean isImportFilter) {
+		this.isImportFilter = isImportFilter;
+	}
 }
 
 

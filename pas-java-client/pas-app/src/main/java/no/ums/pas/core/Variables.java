@@ -1,7 +1,9 @@
 package no.ums.pas.core;
 
 import no.ums.pas.Draw;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.area.voobjects.AreaVO;
+
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
@@ -31,9 +33,18 @@ public class Variables {
 	public static ArrayList<AreaVO> getAreaList() {
 		return areaList;
 	}
+    private static ArrayList<AddressFilterInfoVO> filterList;
+
+    public static ArrayList<AddressFilterInfoVO> getFilterList() {
+        return filterList;
+    }
 	public static void setAreaList(ArrayList<AreaVO> areaList) {
 		Variables.areaList = areaList;
 	}
+	public static void setFilterList(ArrayList<AddressFilterInfoVO> filterList) {
+		Variables.filterList = filterList;
+	}
+
 	private static float alpha = 0.01f;
 	
 	public static float getAlpha() {

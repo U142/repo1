@@ -82,7 +82,6 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
     int n_col_object = 7;
     int n_col_include = 12;
     boolean m_b_run_hittest = true;
-
     public GISResultPanel(PreviewPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim) {
         super(parent, new GISPercentColouredCellRenderer());
         m_gislist = gislist;
@@ -92,8 +91,27 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
         m_n_namefilter[1] = -1;
         init();
     }
-
     public GISResultPanel(PreviewPanel parent, GISFile gisfile, String [] sz_columns, int [] n_col_width, Dimension dim) {
+        //super(sz_columns, n_col_width, null, dim);//, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        super(parent, new GISPercentColouredCellRenderer());
+        m_gisfile = gisfile;
+        m_sz_cols = sz_columns;
+        m_n_width = n_col_width;
+        m_n_namefilter[0] = -1;
+        m_n_namefilter[1] = -1;
+        init();
+        //get_previewpanel().set
+    }
+    public GISResultPanel(PreviewAddressPanel parent, GISList gislist, String [] sz_columns, int [] n_col_width, Dimension dim) {
+        super(parent, new GISPercentColouredCellRenderer());
+        m_gislist = gislist;
+        m_sz_cols = sz_columns;
+        m_n_width = n_col_width;
+        m_n_namefilter[0] = -1;
+        m_n_namefilter[1] = -1;
+        init();
+    }
+    public GISResultPanel(PreviewAddressPanel parent, GISFile gisfile, String [] sz_columns, int [] n_col_width, Dimension dim) {
         //super(sz_columns, n_col_width, null, dim);//, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         super(parent, new GISPercentColouredCellRenderer());
         m_gisfile = gisfile;

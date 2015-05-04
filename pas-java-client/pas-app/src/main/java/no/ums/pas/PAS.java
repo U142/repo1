@@ -1,5 +1,39 @@
 package no.ums.pas;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.Timer;
+import javax.swing.ToolTipManager;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.log.swing.LogFrame;
@@ -7,13 +41,23 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.PredefinedAreaController;
+import no.ums.pas.core.controllers.PredefinedFilterController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.Logon;
 import no.ums.pas.core.logon.Logon.Holder;
+import no.ums.pas.core.logon.LogonInfo;
+import no.ums.pas.core.logon.RightsManagement;
+import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.mainui.*;
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.mainui.GPSFrame;
+import no.ums.pas.core.mainui.HouseEditorDlg;
+import no.ums.pas.core.mainui.InhabitantFrame;
+import no.ums.pas.core.mainui.LoadingFrame;
+import no.ums.pas.core.mainui.SouthContent;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.StatusActions;
 import no.ums.pas.core.menus.ViewOptions;
@@ -45,6 +89,7 @@ import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
 import no.ums.ws.common.parm.UPASUISETTINGS;
+
 import org.jvnet.substance.SubstanceLookAndFeel;
 import org.jvnet.substance.button.ButtonShaperChangeListener;
 import org.jvnet.substance.painter.GradientPainterChangeListener;
@@ -54,20 +99,6 @@ import org.jvnet.substance.theme.SubstanceTheme;
 import org.jvnet.substance.theme.ThemeChangeListener;
 import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 //substance 3.3
 
@@ -126,8 +157,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
     private String PAS_APP_SITE;
 	public String ADDRESSSEARCH_URL = "";
 	public String VB4_URL = "";
-	StatusController m_statuscontroller = null;
-	private PredefinedAreaController predefinedAreaController = null;
+    StatusController m_statuscontroller = null;
+    private PredefinedAreaController predefinedAreaController = null;
+    private PredefinedFilterController predefinedFilterController = null;
 	GPSController m_gpscontroller = null;
 	HouseController m_housecontroller = null;
 	InhabitantFrame m_inhabitantframe = null;
@@ -187,15 +219,23 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 
 	private static boolean m_b_predefinedArea_open = false;
-	public static void setPredefinedAreaOpen(boolean b)
- 	{
- 		m_b_predefinedArea_open = b;
- 	}
- 	public static boolean isPredefinedAreaOpen()
- 	{
- 		return m_b_predefinedArea_open;
- 	}
+	private static boolean m_b_predefinedFilter_open = false;
 
+    public static void setPredefinedAreaOpen(boolean b) {
+        m_b_predefinedArea_open = b;
+    }
+
+    public static void setPredefinedFilterOpen(boolean b) {
+        m_b_predefinedFilter_open = b;
+    }
+
+    public static boolean isPredefinedAreaOpen() {
+        return m_b_predefinedArea_open;
+    }
+
+    public static boolean isPredefinedFilterOpen() {
+        return m_b_predefinedFilter_open;
+    }
 	private LookAndFeel m_lookandfeel;
 	public LookAndFeel get_lookandfeel() { return m_lookandfeel; }
 	//public LookAndFeel get_lookandfeel() { return UIManager.getCrossPlatformLookAndFeelClassName(); }
@@ -214,6 +254,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
     public StatusController get_statuscontroller() { return m_statuscontroller; }
     public PredefinedAreaController getPredefinedAreaController() { return predefinedAreaController; }
+    public PredefinedFilterController getPredefinedFilterController() { return predefinedFilterController; }
 	public GPSController get_gpscontroller() { return m_gpscontroller; }
 	public HouseController get_housecontroller() { return m_housecontroller; }
 	public InhabitantFrame get_inhabitantframe() { return m_inhabitantframe; }
@@ -1463,6 +1504,52 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 
+    public void closePredefinedFilter(final boolean b_appexit) {
+        if (getPredefinedFilterController() != null) {
+
+//			(new File(ParmConstants.cleanExit)).delete();
+			new Thread("Predefined area Exit thread")
+			{
+				public void run()
+				{
+		            /*final LoadingFrame progress = new LoadingFrame(Localization.l("main_parm_closing_parm"), null);
+		            progress.set_totalitems(0, Localization.l("main_parm_closing_parm"));
+					progress.start_and_show();
+					try
+					{
+						new XmlWriter().writeTreeToFile(get_parmcontroller().getTreeCtrl().get_treegui().getTree(),get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel());
+					}
+					catch(Exception e)
+					{
+
+					}*/
+					log.debug("Closing Predefined area");
+					try
+					{
+						getPredefinedFilterController().endSession(true);
+					}
+					catch(Exception er) { }
+
+					if(b_appexit) { //also remove area tab
+						try
+						{
+							get_eastcontent().setIndexZero();
+							get_eastcontent().remove_tab(EastContent.PANEL_PREDEFINED_FILTER_);
+						}
+						catch(Exception e)
+						{
+							log.warn(e.getMessage(), e);
+						}
+					}
+
+					predefinedFilterController = null;
+//					progress.stop_and_hide();
+					get_pasactionlistener().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"act_set_predefinedfilter_closed"));
+				}
+			}.start();
+		}
+	}
+
 	public void close_parm(final boolean b_appexit) {
 		if(get_parmcontroller()!=null) {
 			
@@ -1663,6 +1750,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void initPredefinedAreaController() {
 		predefinedAreaController = new PredefinedAreaController(get_sitename(), get_userinfo());
 		predefinedAreaController.start();
+	}
+	public void initPredefinedFilterController() {
+		predefinedFilterController = new PredefinedFilterController(get_sitename(), get_userinfo());
+		predefinedFilterController.start();
 	}
 
 	public void initPredefinedAreaControllerSilently() {

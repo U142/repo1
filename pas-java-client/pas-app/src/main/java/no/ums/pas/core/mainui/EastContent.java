@@ -1,32 +1,5 @@
 package no.ums.pas.core.mainui;
 
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
-import no.ums.pas.PAS;
-import no.ums.pas.ParmPanel;
-import no.ums.pas.PredefinedAreaPanel;
-import no.ums.pas.core.Variables;
-import no.ums.pas.core.laf.ULookAndFeel;
-import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
-import no.ums.pas.localization.Localization;
-import no.ums.pas.localization.countrycodes.CountryCodes;
-import no.ums.pas.maps.MapFrame;
-import no.ums.pas.tas.TasPanel;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.ImageLoader;
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.theme.SubstanceTheme;
-
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.TabbedPaneUI;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -40,6 +13,36 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TabbedPaneUI;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
+
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.pas.PAS;
+import no.ums.pas.ParmPanel;
+import no.ums.pas.PredefinedAreaPanel;
+import no.ums.pas.PredefinedFilterPanel;
+import no.ums.pas.core.Variables;
+import no.ums.pas.core.laf.ULookAndFeel;
+import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
+import no.ums.pas.localization.Localization;
+import no.ums.pas.localization.countrycodes.CountryCodes;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.tas.TasPanel;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.ImageLoader;
+
+import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.theme.SubstanceTheme;
 
 //import org.jvnet.substance.api.SubstanceSkin;
 //Substance 3.3
@@ -62,6 +65,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public static final int PANEL_PARM_ = 7;
 	public static final int PANEL_TAS_ = 8;
 	public static final int PANEL_PREDEFINED_AREAS_ = 9;
+	public static final int PANEL_PREDEFINED_FILTER_ = 10;
 	
 	public static int CURRENT_PANEL = PANEL_INFO_;
 
@@ -118,6 +122,14 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			return null;
 	}
 	
+    public PredefinedFilterPanel getPredefinedFilter() {
+        if (PAS.get_pas().getPredefinedFilterController() != null)
+            return PAS.get_pas().getPredefinedFilterController()
+                    .getPredefinedFilterPanel();
+        else
+            return null;
+    }
+
 	public EastContent(PAS pas)
 	{
 		final int n_infopanel_height = 850; // Hardkodet pga layout og at scrollbaren skal fungere
@@ -298,6 +310,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		else if(c instanceof PredefinedAreaPanel)
 		{
 			CURRENT_PANEL = PANEL_PREDEFINED_AREAS_;
+		}
+		else if(c instanceof PredefinedFilterPanel)
+		{
+			CURRENT_PANEL = PANEL_PREDEFINED_FILTER_;
 		}
 		log.debug("Current panel = " + CURRENT_PANEL);
 
@@ -625,7 +641,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				case PANEL_PREDEFINED_AREAS_:
 					get_tabbedpane().setSelectedComponent(getPredefinedArea());
 					break;
-			}
+            case PANEL_PREDEFINED_FILTER_:
+                get_tabbedpane().setSelectedComponent(getPredefinedFilter());
+                break;
+            }
 		} catch(Exception e) {
 			log.debug(e.getMessage());
 			log.warn(e.getMessage(), e);
@@ -691,7 +710,21 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						getPredefinedArea().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
-			}
+            case PANEL_PREDEFINED_FILTER_:
+                if (find_component(getPredefinedFilter()) == -1) {
+                    get_tabbedpane()
+                            .addTab(Localization
+                                    .l("mainmenu_libraries_predefined_filters_tab"),
+                                    null,
+                                    getPredefinedFilter(),
+                                    Localization
+                                            .l("mainmenu_libraries_predefined_filters"));
+                    getPredefinedFilter().putClientProperty(
+                            ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
+                }
+                break;
+
+            }
 		}
 		catch(Exception e)
 		{
@@ -761,7 +794,6 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				break;
 			case PANEL_PREDEFINED_AREAS_:
 				tab = getPredefinedArea();
-				//componentResized(null);
 				break;
 		}
 		return tab;

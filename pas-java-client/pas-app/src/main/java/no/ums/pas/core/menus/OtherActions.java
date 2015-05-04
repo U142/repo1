@@ -123,7 +123,27 @@ public interface OtherActions {
         }
     };
 
-    // act_start_parm - mainmenu_parm_start
+    Action ADDRESS_FILTER = new UmsAction(
+            "mainmenu_libraries_predefined_filters") {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            log.debug("sub menu PREDEFINED_FILTERS called");
+            if ("act_close_predefined_filter".equals(e.getActionCommand())) {
+                PAS.pasplugin.onClosePredefinedFilter();
+            } else {
+                if (PAS.get_pas().getPredefinedFilterController() == null
+                        && !PAS.isPredefinedFilterOpen()) {
+                    PAS.setPredefinedFilterOpen(PAS.pasplugin
+                            .onOpenPredefinedFilter());
+                } else {
+                    PAS.get_pas().get_eastcontent()
+                            .flip_to(EastContent.PANEL_PREDEFINED_FILTER_);
+                }
+            }
+        }
+    };
+
+   // act_start_parm - mainmenu_parm_start
     Action PARM_START = new UmsAction("mainmenu_parm_start") {
         @Override
         public void actionPerformed(ActionEvent e) {

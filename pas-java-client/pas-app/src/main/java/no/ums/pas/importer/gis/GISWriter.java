@@ -327,6 +327,126 @@ public class GISWriter {
         }
         return null;
     }
+    //for Cadstral Unit Sweden
+    public File convertCus(int n_mun, int n_fgkl, int n_hou, int n_let,
+            int n_apartment, int skip, String encoding) {
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(
+                    new FileOutputStream(get_umsgis_file()), encoding);
+            LineData.Line line;
+            String sz_mun, sz_fgkl, sz_house, sz_letter, sz_apartment;
+            ArrayList<String> parameters;
+            for (int i = skip; i < data().get_lines().size(); i++) {
+                line = (LineData.Line) data().get_lines().get(i);
+                parameters = new ArrayList<String>();
+                try {
+                    sz_mun = line.get_row(n_mun);
+                } catch (Exception e) {
+                    sz_mun = "0";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_mun);
+                try {
+                    sz_fgkl = line.get_row(n_fgkl);
+                } catch (Exception e) {
+                    sz_fgkl = "0";
+                }
+                parameters.add(sz_fgkl);
+                try {
+                    sz_house = line.get_row(n_hou);
+                } catch (Exception e) {
+                    sz_house = "";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_house);
+                try {
+                    sz_letter = line.get_row(n_let); // ******* Her feiler den
+                } catch (Exception e) {
+                    sz_letter = "";
+                }
+                parameters.add(sz_letter);
+                try {
+                    sz_apartment = line.get_row(n_apartment); // ******* Her
+                                                              // feiler den
+                } catch (Exception e) {
+                    sz_apartment = "";
+                }
+                parameters.add(sz_apartment);
+                write_line(out, parameters);
+            }
+            out.close();
+            return get_umsgis_file();
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError()
+                    .addError("GISWriter", "Exception in convert", e, 1);
+        }
+        return null;
+    }
+    // for VA-banken Swden
+    public File convertVb(int n_mun, int n_vbn, int n_hou, int n_let,
+            int n_apartment, int skip, String encoding) {
+        try {
+
+            OutputStreamWriter out = new OutputStreamWriter(
+                    new FileOutputStream(get_umsgis_file()), encoding);
+
+            LineData.Line line;
+
+            String sz_mun, sz_vbn, sz_house, sz_letter, sz_apartment;
+            ArrayList<String> parameters;
+            for (int i = skip; i < data().get_lines().size(); i++) {
+                line = (LineData.Line) data().get_lines().get(i);
+                parameters = new ArrayList<String>();
+                try {
+                    sz_mun = line.get_row(n_mun);
+                } catch (Exception e) {
+                    sz_mun = "0";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_mun);
+                try {
+                    sz_vbn = line.get_row(n_vbn);
+                } catch (Exception e) {
+                    sz_vbn = "0";
+                }
+                parameters.add(sz_vbn);
+
+                try {
+                    sz_house = line.get_row(n_hou);
+                } catch (Exception e) {
+                    sz_house = "";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_house);
+                try {
+                    sz_letter = line.get_row(n_let); // ******* Her feiler den
+                } catch (Exception e) {
+                    sz_letter = "";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_letter);
+                try {
+                    sz_apartment = line.get_row(n_apartment); // ******* Her
+                                                              // feiler den
+                } catch (Exception e) {
+                    sz_apartment = "";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_apartment);
+                write_line(out, parameters);
+            }
+            out.close();
+            return get_umsgis_file();
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError()
+                    .addError("GISWriter", "Exception in convert", e, 1);
+        }
+        return null;
+    }
 
 	private boolean write_line(OutputStreamWriter w, String c1, String c2, String c3, String c4, String c5, String c6) {
 		try {
@@ -355,5 +475,86 @@ public class GISWriter {
         }
         return false;
     }
-	
+
+    public File convertCU(int n_mun, int n_col_gnr, int n_col_bnr,
+            int n_col_fnr, int n_col_snr, int n_col_unr, int n_col_apartment,
+            int n_skip, String m_encoding) {
+        try {
+
+            OutputStreamWriter out = new OutputStreamWriter(
+                    new FileOutputStream(get_umsgis_file()), m_encoding);
+
+            LineData.Line line;
+
+            String sz_mun, sz_gnr, sz_bnr, sz_fnr, sz_snr, sz_unr;
+            String sz_apartment;
+            ArrayList<String> parameters;
+            Set<String> uniqueParameters = new HashSet<String>();
+            for (int i = n_skip; i < data().get_lines().size(); i++) {
+                line = (LineData.Line) data().get_lines().get(i);
+                parameters = new ArrayList<String>();
+                try {
+                    sz_mun = line.get_row(n_mun);
+                } catch (Exception e) {
+                    sz_mun = "0";
+                    // Error.getError().addError("GISWriter","Exception in convert",e,1);
+                }
+                parameters.add(sz_mun);
+                try {
+                    sz_gnr = line.get_row(n_col_gnr);
+                } catch (Exception e) {
+                    sz_gnr = "0";
+                }
+                parameters.add(sz_gnr);
+                try {
+                    sz_bnr = line.get_row(n_col_bnr);
+                } catch (Exception e) {
+                    sz_bnr = "0";
+                    Error.getError().addError("GISWriter",
+                            "Exception in convert", e, 1);
+                }
+                parameters.add(sz_bnr);
+                try {
+                    sz_fnr = line.get_row(n_col_fnr); // ******* Her feiler den
+                } catch (Exception e) {
+                    sz_fnr = "";
+                }
+                parameters.add(sz_fnr);
+                try {
+                    sz_snr = line.get_row(n_col_snr); // ******* Her feiler den
+                } catch (Exception e) {
+                    sz_snr = "";
+                }
+                parameters.add(sz_snr);
+                try {
+                    sz_unr = line.get_row(n_col_unr); // ******* Her feiler den
+                } catch (Exception e) {
+                    sz_unr = "";
+                }
+                parameters.add(sz_unr);
+
+                try {
+                    sz_apartment = line.get_row(n_col_apartment); // ******* Her
+                                                                  // feiler den
+                } catch (Exception e) {
+                    sz_apartment = "";
+                }
+                parameters.add(sz_apartment);
+                if (uniqueParameters.add(parameters.toString())) {
+                    write_line(out, parameters);
+                }
+            }
+            out.close();
+            uniqueParameters.clear();
+            return get_umsgis_file();
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            log.warn(e.getMessage(), e);
+            Error.getError()
+                    .addError("GISWriter", "Exception in convert", e, 1);
+        }
+
+        return null;
+    }
+
 }
