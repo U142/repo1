@@ -43,7 +43,7 @@ namespace com.ums.ws.addressfilters
 
 
         [WebMethod]
-        public UAddressList GetActualAddressesOfFilter(ULOGONINFO logon, List <AddressFilterInfo> info)
+        public UAddressList GetActualAddressesOfFilter(ULOGONINFO logon, AddressFilterInfo info)
         {
             return GettActualAddressesOfFilter(logon, info);
         }
