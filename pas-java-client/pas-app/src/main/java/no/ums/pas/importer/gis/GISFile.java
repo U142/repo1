@@ -17,7 +17,9 @@ public class GISFile implements ActionListener {
 	private GISParser m_gisparser = null;
 	public GISParser get_parser() { return m_gisparser; }
 	private PreviewFrame m_preview;
+	private PreviewAddressFrame m_preview_addr;
 	public void set_preview(PreviewFrame preview) { m_preview = preview; }
+	public void set_preview_addr(PreviewAddressFrame previewAddr) { m_preview_addr = previewAddr; }
 	private ActionListener m_callback;
 	protected boolean m_b_is_alert = false;
 	public boolean getIsAlert() { return m_b_is_alert; }
@@ -27,8 +29,14 @@ public class GISFile implements ActionListener {
 	public File get_file() { return m_gisfile; }
 	public URL get_url() { return m_gisurl; }
 	private String encoding;
-
-    public void setImportType(String importType) {
+    private boolean isFilterPreview=false;
+    public boolean isFilterPreview() {
+		return isFilterPreview;
+	}
+	public void setFilterPreview(boolean isFilterPreview) {
+		this.isFilterPreview = isFilterPreview;
+	}
+	public void setImportType(String importType) {
         this.importType = importType;
     }
 
@@ -64,7 +72,11 @@ public class GISFile implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if("act_gis_imported_eof".equals(e.getActionCommand())) {
 			log.debug("show preview");
-			show_preview();
+			if(!isFilterPreview){
+				show_preview();
+			}else{
+				show_preview_addr();
+			}
 		}
 	}
 	public void show_preview() {
@@ -76,6 +88,16 @@ public class GISFile implements ActionListener {
 		m_preview.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(350, 400));
 		if(get_callback()!=null)
 			get_callback().actionPerformed(new ActionEvent(m_preview, ActionEvent.ACTION_PERFORMED, "act_register_gis_previewframe"));
+	}
+	public void show_preview_addr() {
+		if(m_preview_addr == null)
+			m_preview_addr = new PreviewAddressFrame(this);
+		else {
+			m_preview_addr.m_panel.get_previewlist().m_panel.start_search();
+		}
+		m_preview_addr.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(350, 400));
+		if(get_callback()!=null)
+			get_callback().actionPerformed(new ActionEvent(m_preview_addr, ActionEvent.ACTION_PERFORMED, "act_register_gis_previewframe"));
 	}
 
 	public class GISParser extends FileParser {

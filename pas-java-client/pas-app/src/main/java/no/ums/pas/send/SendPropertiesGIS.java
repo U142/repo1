@@ -1,16 +1,30 @@
 package no.ums.pas.send;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URL;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.area.AreaController;
+import no.ums.pas.area.FilterController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
-import no.ums.pas.maps.defines.Houses.LonLatComparator;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.maps.defines.PolySnapStruct;
@@ -23,20 +37,6 @@ import no.ums.ws.common.parm.ArrayOfUGisRecord;
 import no.ums.ws.common.parm.UGISSENDING;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.Parmws;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class SendPropertiesGIS extends SendProperties {
 
@@ -94,6 +94,9 @@ public class SendPropertiesGIS extends SendProperties {
 		super(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_, areaController, new Col(Color.black, Color.white));
 	}
 	
+	public SendPropertiesGIS(FilterController filterController) {
+		super(SendProperties.SENDING_TYPE_GEMINI_STREETCODE_, filterController, new Col(Color.black, Color.white));
+	}
 	public int get_adrcount(int n_type) {
 		int ret = 0;
 		HouseItem house;

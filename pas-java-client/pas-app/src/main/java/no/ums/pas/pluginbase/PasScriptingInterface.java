@@ -205,6 +205,8 @@ public interface PasScriptingInterface {
      * Function to start PARM
      * @return
      */
+    boolean onClosePredefinedFilter();
+    boolean onOpenPredefinedFilter();
     boolean onStartParm();
 	
     /**

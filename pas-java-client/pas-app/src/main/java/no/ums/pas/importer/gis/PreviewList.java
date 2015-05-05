@@ -42,20 +42,24 @@ class PreviewList extends DefaultPanel implements ComponentListener {
         public static final int FIELDID_APARTMENTID = 64;
         public static final int FIELDID_NAMEFILTER_INCLUSIVE_1 = 16;
         public static final int FIELDID_NAMEFILTER_INCLUSIVE_2 = 32;
-
+        public static final int FIELDID_NONAMEFILTER_INCLUSIVE_1 =0;
+        public static final int FIELDID_NONAMEFILTER_INCLUSIVE_2 =0;
         public static final int FIELDID_GNR	= 128;
         public static final int FIELDID_BNR		=256 ;
         public static final int FIELDID_FNR		= 512;
         public static final int FIELDID_SNR = 1024;
-
+        public static final int FIELDID_UNR = 645;
+        public static final int FIELDID_Fastighetsnyckel	= 158;
+        public static final int FIELDID_VB	= 228;
         //public static final int FIELDSUM_NEEDED_STREET		= FIELDID_MUNICIPALID | FIELDID_STREETID | FIELDID_HOUSENO | FIELDID_LETTER;
         public static final int FIELDSUM_NEEDED_STREET		= FIELDID_MUNICIPALID | FIELDID_STREETID ;//as per new specification only FIELDID_MUNICIPALID | FIELDID_STREETID are mandatory for street address import
         public static final int FIELDSUM_NEEDED_STREET_APARTMENT		= FIELDID_MUNICIPALID | FIELDID_STREETID | FIELDID_HOUSENO | FIELDID_LETTER|FIELDID_APARTMENTID;
 //        public static final int FIELDSUM_NEEDED_PROPERTY	= FIELDID_MUNICIPALID | FIELDID_GNR | FIELDID_BNR | FIELDID_FNR|FIELDID_SNR;
         public static final int FIELDSUM_NEEDED_PROPERTY	= FIELDID_MUNICIPALID | FIELDID_GNR | FIELDID_BNR;//as per new specification only FIELDID_MUNICIPALID | FIELDID_GNR | FIELDID_BNR are mandatory for property address import
-
-
-
+        public static final int FIELDSUM_NEEDED_STREET_ADDR		= FIELDID_MUNICIPALID | FIELDID_STREETID ;
+        public static final int FIELDSUM_NEEDED_CUN	= FIELDID_MUNICIPALID | FIELDID_GNR | FIELDID_BNR;
+        public static final int FIELDSUM_NEEDED_CUS	= FIELDID_MUNICIPALID | FIELDID_Fastighetsnyckel;
+        public static final int FIELDSUM_NEEDED_VB	= FIELDID_MUNICIPALID | FIELDID_VB;
         public final String HEADING_SEARCH_MUNICIPALID [] = new String [] { "KOMMUN","Kommune" };
         public final String HEADING_SEARCH_STREETID [] = new String [] { "VEJ", "GATENR" ,"GATEKODE"};
         public final String HEADING_SEARCH_HOUSENO [] = new String [] { "HUS" };
@@ -66,12 +70,10 @@ class PreviewList extends DefaultPanel implements ComponentListener {
         public final String HEADING_SEARCH_BNR [] = new String [] { "BNR" };
         public final String HEADING_SEARCH_FNR [] = new String [] { "FNR" };
         public final String HEADING_SEARCH_SNR [] = new String [] { "SNR" };
-
-
+        public final String HEADING_SEARCH_UNR [] = new String [] { "UNR" };
         //This actually comes in second screen after clicking on next button
         public final String HEADING_SEARCH_NAMEFILTER_INCLUSIVE_1 [] = new String [] { "FILTER1" };
         public final String HEADING_SEARCH_NAMEFILTER_INCLUSIVE_2 [] = new String [] { "FILTER2" };
-
         private String _sz_name;
         private int _n_id;
         private String [] _sz_search;
@@ -111,6 +113,9 @@ class PreviewList extends DefaultPanel implements ComponentListener {
                     break;
                 case FIELDID_SNR :
                     _sz_search = HEADING_SEARCH_SNR;
+                    break;
+                case FIELDID_UNR :
+                    _sz_search = HEADING_SEARCH_UNR;
                     break;
                 case FIELDID_APARTMENTID :
                     _sz_search = HEADING_SEARCH_APARTMENT;
@@ -158,9 +163,10 @@ class PreviewList extends DefaultPanel implements ComponentListener {
     }
 
     protected DefaultTableCellRenderer m_renderer = null;
-
     protected PreviewPanel m_parent;
+    protected PreviewAddressPanel m_parentAdr;
     protected PreviewSearchPanel m_panel;
+    protected PreviewAddressFrame m_prevAdr;
     public PreviewSearchPanel get_previewpanel() { return m_panel; }
     private GISFile m_gis;
     protected GISFile get_gis() { return m_gis; }
@@ -234,6 +240,33 @@ class PreviewList extends DefaultPanel implements ComponentListener {
         addComponentListener(this);
         setSize(400, 300);
     }
+    //changes
+    PreviewList(PreviewAddressPanel parent, GISFile gis, DefaultTableCellRenderer renderer) {
+        super();
+        if(renderer == null)
+            m_renderer = new DefaultTableCellRenderer();
+        else
+            m_renderer = renderer;
+        m_parentAdr = parent;
+        m_gis = gis;
+        init();
+        addComponentListener(this);
+        setSize(400, 300);
+
+    }
+    PreviewList(PreviewAddressPanel parent, DefaultTableCellRenderer renderer) {
+        super();
+        if(renderer == null)
+            m_renderer = new DefaultTableCellRenderer();
+        else
+            m_renderer = renderer;
+        m_parentAdr = parent;
+        m_gis = null;
+        addComponentListener(this);
+        setSize(400, 300);
+    }
+    //changes over
+
     public void add_controls() {
         set_gridconst(0, 0, 1, 1, GridBagConstraints.CENTER);
         add(m_panel, get_gridconst());
@@ -263,6 +296,8 @@ class PreviewList extends DefaultPanel implements ComponentListener {
      * @return
      */
     public boolean isValidFieldSum(int calculatedFieldSum) {
+       if(m_parent!=null)
+        {
         if("Street".equalsIgnoreCase(m_parent.getM_import_type())) {
             if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_STREET) == ComboField.FIELDSUM_NEEDED_STREET))
             {
@@ -286,9 +321,38 @@ class PreviewList extends DefaultPanel implements ComponentListener {
             if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_PROPERTY) == ComboField.FIELDSUM_NEEDED_PROPERTY)) {
                 return true;
             }
+            }
+            return false;
+
         }
+        else{
+              if(m_parentAdr!=null)
+            {
+       if("StreetAddr".equalsIgnoreCase(m_parentAdr.getM_import_street_address())) {
+                   if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_STREET_ADDR) == ComboField.FIELDSUM_NEEDED_STREET_ADDR)) {
+                   return true;
+                     }
+                 }
+               else if("CUNorway".equalsIgnoreCase(m_parentAdr.getM_import_CUN())) {
+                   if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_CUN) == ComboField.FIELDSUM_NEEDED_CUN)) {
+                return true;
+                 }
+             }
+               else if("CUSweden".equalsIgnoreCase(m_parentAdr.getM_import_CUS())) {
+                   if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_CUS) == ComboField.FIELDSUM_NEEDED_CUS)) {
+                return true;
+                    }
+              }
+               else if("Vbanken".equalsIgnoreCase(m_parentAdr.getM_import_Vb())) {
+                   if(((calculatedFieldSum &  ComboField.FIELDSUM_NEEDED_VB) == ComboField.FIELDSUM_NEEDED_VB)) {
+                   return true;
+                    }
+              }
+           }
+          }
         return false;
     }
+
     public void actionPerformed(ActionEvent e) {
         if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
             m_b_firstline_heading = ((Boolean)e.getSource()).booleanValue();
@@ -304,15 +368,19 @@ class PreviewList extends DefaultPanel implements ComponentListener {
                 b_goto_next = true;
             else
                 b_goto_next = false;
+            if(m_parent!=null)
             m_parent.actionPerformed(new ActionEvent(new Boolean(b_goto_next), ActionEvent.ACTION_PERFORMED, "act_goto_next_valid"));
+        }else if ("act_import_streetAddress".equals(e.getActionCommand())) {
+            initializeStreetCombos();
+        } else if ("act_import_propertyAddress".equals(e.getActionCommand())) {
+            initializePropertyCombos();
+        } else if ("act_import_CUN".equals(e.getActionCommand())) {
+            initializeCombosCUN();
+        } else if ("act_import_CUS".equals(e.getActionCommand())) {
+            initializeCombosCUS();
+        } else if ("act_import_VBS".equals(e.getActionCommand())) {
+            initializeCombosVBS();
         }
-        else if("act_import_streetAddress".equals(e.getActionCommand())) {
-        	initializeStreetCombos();
-        }
-        else if("act_import_propertyAddress".equals(e.getActionCommand())) {
-        	initializePropertyCombos();
-        }
-
     }
     public void init() {
         m_sz_cols = new String[get_gis().get_parser().get_max_columns()];
@@ -464,7 +532,6 @@ class PreviewList extends DefaultPanel implements ComponentListener {
         }
 
     }
-
     protected boolean editable(int row, int col) {
         if(row==0)
             return true;
@@ -494,18 +561,82 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 
         }
     }
-    private void initializeStreetCombos()
-    {
-    	m_fields = new ComboField[] {
+
+    private void initializeStreetCombos() {
+        m_fields = new ComboField[] {
                 new ComboField(ComboField.FIELDID_EMPTY, ""),
-                new ComboField(ComboField.FIELDID_MUNICIPALID, Localization.l("importpreview_municipalid")),
-                new ComboField(ComboField.FIELDID_STREETID, Localization.l("importpreview_streetid")),
-                new ComboField(ComboField.FIELDID_HOUSENO, Localization.l("importpreview_houseno")),
-                new ComboField(ComboField.FIELDID_LETTER, Localization.l("importpreview_letter")),
-                new ComboField(ComboField.FIELDID_APARTMENTID, Localization.l("importpreview_apartmentID")),
+                new ComboField(ComboField.FIELDID_MUNICIPALID,
+                        Localization.l("importpreview_municipalid")),
+                new ComboField(ComboField.FIELDID_STREETID,
+                        Localization.l("importpreview_streetid")),
+                new ComboField(ComboField.FIELDID_HOUSENO,
+                        Localization.l("importpreview_houseno")),
+                new ComboField(ComboField.FIELDID_LETTER,
+                        Localization.l("importpreview_letter")),
+                new ComboField(ComboField.FIELDID_APARTMENTID,
+                        Localization.l("importpreview_apartmentID")), };
+        initialize_combos();
+        set_columnnames();
+    }
+
+    private void initializeCombosCUN() {
+        m_fields = new ComboField[] {
+                new ComboField(ComboField.FIELDID_EMPTY, ""),
+                new ComboField(ComboField.FIELDID_MUNICIPALID,
+                        Localization.l("filter.col.mun")),
+                new ComboField(ComboField.FIELDID_GNR,
+                        Localization.l("filter.col.gnr")),
+                new ComboField(ComboField.FIELDID_BNR,
+                        Localization.l("filter.col.bnr")),
+                new ComboField(ComboField.FIELDID_FNR,
+                        Localization.l("filter.col.fnr")),
+                new ComboField(ComboField.FIELDID_SNR,
+                        Localization.l("filter.col.snr")),
+                new ComboField(ComboField.FIELDID_UNR,
+                        Localization.l("filter.col.unr")),
+
+                new ComboField(ComboField.FIELDID_APARTMENTID,
+                        Localization.l("filter.col.aprtid")), };
+        initialize_combos();
+        set_columnnames();
+    }
+
+    private void initializeCombosCUS() {
+        m_fields = new ComboField[] {
+                new ComboField(ComboField.FIELDID_EMPTY, ""),
+                new ComboField(ComboField.FIELDID_MUNICIPALID,
+                        Localization.l("filter.col.mun")),
+                new ComboField(ComboField.FIELDID_Fastighetsnyckel,
+                        Localization.l("filter.col.fastighetsnyckel")),
+                new ComboField(ComboField.FIELDID_HOUSENO,
+                        Localization.l("importpreview_houseno")),
+                new ComboField(ComboField.FIELDID_LETTER,
+                        Localization.l("importpreview_letter")),
+                new ComboField(ComboField.FIELDID_APARTMENTID,
+                        Localization.l("importpreview_apartmentID")),
+
         };
-    	
-    	initialize_combos();
+        initialize_combos();
+        set_columnnames();
+    }
+
+    private void initializeCombosVBS() {
+        m_fields = new ComboField[] {
+                new ComboField(ComboField.FIELDID_EMPTY, ""),
+                new ComboField(ComboField.FIELDID_MUNICIPALID,
+                        Localization.l("importpreview_municipalid")),
+                new ComboField(ComboField.FIELDID_VB,
+                        Localization.l("filter.col.bankid")),
+                new ComboField(ComboField.FIELDID_HOUSENO,
+                        Localization.l("importpreview_houseno")),
+                new ComboField(ComboField.FIELDID_LETTER,
+                        Localization.l("importpreview_letter")),
+                new ComboField(ComboField.FIELDID_APARTMENTID,
+                        Localization.l("importpreview_apartmentID")),
+
+        };
+
+        initialize_combos();
         set_columnnames();
     }
     private void initializePropertyCombos()

@@ -4,6 +4,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.area.AreaController;
+import no.ums.pas.area.FilterController;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
@@ -131,6 +132,7 @@ public abstract class SendProperties extends Object {
 	public int get_sendingtype() { return m_n_sendingtype; }
 	protected SendOptionToolbar parent;
 	protected AreaController parentAreaController;
+	protected FilterController parentFilterController;
 	protected SendObject get_sendobject() { return parent.get_parent(); }
 	public void set_simulation(int n) { m_n_simulation = n; }
 	public int get_simulation() { return m_n_simulation; }
@@ -249,9 +251,6 @@ public abstract class SendProperties extends Object {
 	private String sz_vals[];
 	public String [] get_params() { return sz_params; }
 	public String [] get_vals() { return sz_vals; }
-	//public void set_date(int n_date) { m_sched.set_date(n_date); }
-	//public void set_time(int n_time) { m_sched.set_time(n_time); }
-		
 	public SendProperties(int n_sendingtype, SendOptionToolbar parent, Col col_default) {
 		super();
 		this.parent = parent;
@@ -264,7 +263,6 @@ public abstract class SendProperties extends Object {
 		if(PAS.get_pas() != null)
 			m_n_maxchannels = PAS.get_pas().get_userinfo().get_current_department().get_maxalloc();
 	}
-	
 	public SendProperties(int n_sendingtype, AreaController parent, Col col_default) {
 		super();
 		this.parentAreaController = parent;
@@ -277,7 +275,18 @@ public abstract class SendProperties extends Object {
 		if(PAS.get_pas() != null)
 			m_n_maxchannels = PAS.get_pas().get_userinfo().get_current_department().get_maxalloc();
 	}
-
+	public SendProperties(int n_sendingtype, FilterController parent, Col col_default) {
+		super();
+		this.parentFilterController = parent;
+		m_col_default = col_default;
+		m_n_sendingtype = n_sendingtype;
+		m_soundfiles = new SoundFileArray();
+		m_sched = new SchedDateTime();
+		//m_sz_sms_oadc = PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber();
+		m_sz_sms_oadc = PAS.get_pas().get_userinfo().get_default_oadc();
+		if(PAS.get_pas() != null)
+			m_n_maxchannels = PAS.get_pas().get_userinfo().get_current_department().get_maxalloc();
+	}
 	public void CopyCommons(SendProperties sp)
 	{
 		m_arr_resend_status = sp.m_arr_resend_status;

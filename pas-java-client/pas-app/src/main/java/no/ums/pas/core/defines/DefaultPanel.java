@@ -135,7 +135,26 @@ public abstract class DefaultPanel extends JPanel implements ActionListener, Com
 
 	public final void set_gridconst(int n_x, int n_y, int n_width, int n_height) {
 		set_gridconst(n_x, n_y, n_width, n_height, GridBagConstraints.FIRST_LINE_START);
-	}	
+	}
+
+    public final void set_gridconstCenter(int n_x, int n_y, int n_width,
+            int n_height) {
+        set_gridconst(n_x, n_y, n_width, n_height, GridBagConstraints.CENTER);
+    }
+
+    public final void set_gridconstLast(int n_x, int n_y, int n_width,
+            int n_height) {
+        set_gridconst(n_x, n_y, n_width, n_height, GridBagConstraints.EAST);
+    }
+
+    public final void set_gridconstSouth(int n_x, int n_y, int n_width,
+            int n_height) {
+        set_gridconst(n_x, n_y, n_width, n_height,
+                GridBagConstraints.LAST_LINE_END);
+    }
+	public final void set_gridconstSouthWest(int n_x, int n_y, int n_width, int n_height) {
+		set_gridconst(n_x, n_y, n_width, n_height, GridBagConstraints.LAST_LINE_START);
+	}
 	public abstract void add_controls();
 	public abstract void init();
 	public abstract void actionPerformed(ActionEvent e);
