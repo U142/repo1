@@ -2019,6 +2019,7 @@ namespace com.ums.UmsParm
         public void setSimulation(bool b) { b_simulation = b; }
         public bool getSilent() { return b_silent; }
         public void setSilent(bool b) { b_silent = b; }
+        public List<AddressFilterInfo> SeletedFilters;
         //public 
 
         public bool createShape(ref UMAPSENDING s)

@@ -241,7 +241,7 @@ namespace com.ums.PAS.Database
                     UMapBounds bound = s._calcbounds();
                     UMapPoint[] points = s.polygonpoints;
 
-                    return _PolyCount(ref bound, ref s, n_adrtypes);
+                    return _PolyCountV2(ref bound, ref s, n_adrtypes);
                 }
                 else if (typeof(UELLIPSESENDING) == sending.GetType())
                 {
@@ -599,7 +599,229 @@ namespace com.ums.PAS.Database
             }
             return count;
         }
+      /* method with filters support*/
+        protected UAdrCount _PolyCountV2(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
+        {
+            if (sz_constring.ToLower().Contains("sweden"))
+            {
+                return _polyCountForSweden(ref b, ref p, adrtypes);
+            }
+            else 
+            {
+                return _PolyCountOtherThanSweden(ref b, ref p, adrtypes);
+            }
+           
+        }
 
+        private UAdrCount _polyCountForSweden(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
+        {
+            var xx = from x in p.filters
+                     select x.filterId;
+
+            string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+
+
+            int n_maxadr_polycount = 500000;
+            UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
+            try
+            {
+                String szSQL = "";
+                bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                bool bOnlyHeadOfHousehold = (adrtypes & (long)ADRTYPES.ONLY_HEAD_OF_HOUSEHOLD) > 0;
+                if (m_n_pastype == 1)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM"
+    + " ADR_KONSUM AK INNER JOIN Address_Filters AF ON"
+    + " AF.FilterId IN ({5})"
+    + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+        + " AF.FilterId = AAF.FilterId"
+        + " AND AK.KOMMUNENR = AAF.municipalId"
+        + " AND AK.GATEKODE = AAF.StreetId"
+        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
+        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+        + " WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
+                                             n_maxadr_polycount,
+                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo, FilterIds);
+                }
+                else if (m_n_pastype == 2)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
+        + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
+        + " AK.KOMMUNENR=DX.l_municipalid"
+        + " INNER JOIN Address_Filters AF ON"
+        + " AF.FilterId IN ({8})"
+        + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+        + " AF.FilterId = AAF.FilterId"
+        + " AND AK.KOMMUNENR = AAF.municipalId AND AK.GATEKODE = AAF.StreetId"
+        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
+        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+        + " WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                            n_maxadr_polycount,
+                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                            GetRecipientFilter(adrtypes), FilterIds);
+                }
+
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                UMapPoint cpoint = new UMapPoint();
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                //long nPrevFamilyno = 0;
+                while (rs.Read())
+                {
+                    c.lon = rs.GetDouble(1);
+                    c.lat = rs.GetDouble(0);
+                    c.bedrift = rs.GetInt32(2);
+                    c.hasfixed = (rs.GetByte(3) == 1 ? true : false);
+                    c.hasmobile = (rs.GetByte(4) == 1 ? true : false);
+
+                    /*
+                     * if we're sending to only head of household, only include the first person in the familylist
+                     * This may be inaccurate - if first person have no numbers registered, no numbers will be counted, but the next persons numbers may be included in the sending
+                     */
+                    /*if (bOnlyHeadOfHousehold)
+                    {
+                        long nFamilyNo = rs.GetInt64(5);
+                        int nPersonCode = rs.GetInt32(6);
+                        if (nFamilyNo > 0 && nFamilyNo == nPrevFamilyno)
+                        {
+                            continue;
+                        }
+                        nPrevFamilyno = nFamilyNo;
+                    }*/
+                    cpoint.lat = c.lat;
+                    cpoint.lon = c.lon;
+                    if (p._point_inside(ref cpoint))
+                    {
+                        //add this address to count
+                        _AddToAdrcount(ref count, ref c, adrtypes);
+                    }
+                }
+                rs.Close();
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return count;
+       
+        }
+        private UAdrCount _PolyCountOtherThanSweden(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes) 
+        {
+             var xx = from x in p.filters
+                     select x.filterId;
+            
+            string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+
+
+            int n_maxadr_polycount = 500000;
+            UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
+            try
+            {
+                String szSQL = "";
+                bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                bool bOnlyHeadOfHousehold = (adrtypes & (long)ADRTYPES.ONLY_HEAD_OF_HOUSEHOLD) > 0;
+                if (m_n_pastype == 1)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM"
+        + " ADR_KONSUM AK INNER JOIN Address_Filters AF ON"
+        + " AF.FilterId IN ({5})"
+        + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+        + " AF.FilterId = AAF.FilterId"
+        + " AND AK.KOMMUNENR = AAF.municipalId"
+        + " AND AK.GATEKODE = AAF.StreetId"
+        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
+        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+        + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
+        + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
+        + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
+        + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"
+        + " WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
+                                             n_maxadr_polycount,
+                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo,FilterIds);
+                }
+                else if (m_n_pastype == 2)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
+        +" FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
+        +" AK.KOMMUNENR=DX.l_municipalid"
+        +" INNER JOIN Address_Filters AF ON"
+        +" AF.FilterId IN ({8})" 
+        +" INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+		+" AF.FilterId = AAF.FilterId"
+		+" AND AK.KOMMUNENR = AAF.municipalId AND AK.GATEKODE = AAF.StreetId"
+		+" AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
+	    +" AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+        +" AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+        + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
+        + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
+        + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
+        + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"                                              
+        +" WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                            n_maxadr_polycount,
+                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                            GetRecipientFilter(adrtypes),FilterIds);
+                }
+
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                UMapPoint cpoint = new UMapPoint();
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                //long nPrevFamilyno = 0;
+                while (rs.Read())
+                {
+                    c.lon = rs.GetDouble(1);
+                    c.lat = rs.GetDouble(0);
+                    c.bedrift = rs.GetInt32(2);
+                    c.hasfixed = (rs.GetByte(3) == 1 ? true : false);
+                    c.hasmobile = (rs.GetByte(4) == 1 ? true : false);
+
+                    /*
+                     * if we're sending to only head of household, only include the first person in the familylist
+                     * This may be inaccurate - if first person have no numbers registered, no numbers will be counted, but the next persons numbers may be included in the sending
+                     */
+                    /*if (bOnlyHeadOfHousehold)
+                    {
+                        long nFamilyNo = rs.GetInt64(5);
+                        int nPersonCode = rs.GetInt32(6);
+                        if (nFamilyNo > 0 && nFamilyNo == nPrevFamilyno)
+                        {
+                            continue;
+                        }
+                        nPrevFamilyno = nFamilyNo;
+                    }*/
+                    cpoint.lat = c.lat;
+                    cpoint.lon = c.lon;
+                    if (p._point_inside(ref cpoint))
+                    {
+                        //add this address to count
+                        _AddToAdrcount(ref count, ref c, adrtypes);
+                    }
+                }
+                rs.Close();
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return count;
+        }
         public UAddressList GetAddresslistByQuality(ref ULOGONINFO logon, ref UMapAddressParamsByQuality param, PercentProgress.SetPercentDelegate percentCallback)
         {
             PercentResult percent = new PercentResult();
@@ -651,6 +873,9 @@ namespace com.ums.PAS.Database
                 percentCallback(ref logon, ProgressJobType.HOUSE_DOWNLOAD, percent);
             }
         }
+
+
+
 
         public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next, ref int skiplines, bool only_coors)
         {

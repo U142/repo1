@@ -19,8 +19,10 @@ namespace com.ums.UmsCommon
         public int bnrNumber { get; set; }
         public int fnrNumber { get; set; }
         public int snrNumber { get; set; }
+        public int unrNumber { get; set; }
         public int seCadId { get; set; }
         public int seVaId { get; set; }
+        
 
 
        

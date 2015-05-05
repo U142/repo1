@@ -1181,6 +1181,13 @@ namespace com.ums.UmsParm
             try
             {
                 ExecNonQuery(szSQL);
+                ///for saving filters associated with MVDSENDINGINFO
+                for (int i = 0; i < s.SeletedFilters.Count; i++)
+                {
+                    szSQL = String.Format("insert into MDMSENDINGINFO_X_FILTERS (l_refno,FilterId) VALUES ({0},{1})", s.l_refno, s.SeletedFilters[i].filterId);
+
+                    ExecNonQuery(szSQL);
+                }
                 return true;
             }
             catch (Exception e)
@@ -1188,6 +1195,9 @@ namespace com.ums.UmsParm
                 ULog.error(s.l_refno, szSQL, e.Message);
                 throw;
             }
+
+           
+
         }
 
         public bool InsertBBACTIONPROFILE(ref long l_refno, ref BBACTIONPROFILESEND ap)
