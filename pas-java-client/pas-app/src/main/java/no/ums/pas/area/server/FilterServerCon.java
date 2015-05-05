@@ -155,6 +155,7 @@ public class FilterServerCon extends Thread {
 					.getAddressFiltersSoap().execUpdateAddressFilter(save.getOperation(), logon, info);
 			 log.info("---------------Filter Operation Completed:"+save.getOperation()+"---------------"+res.getFilterId());
 			 filter.setFilterId(res.getFilterId());
+			 filter.setCreationTime(res.getLastupdatedDate().toString());
 		} catch (Exception err) {
 			Error.getError().addError("MainController",
 					"Exception saving Alert", err, Error.SEVERITY_ERROR);
