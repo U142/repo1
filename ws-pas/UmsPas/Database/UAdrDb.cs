@@ -247,7 +247,8 @@ namespace com.ums.PAS.Database
                 {
                     UELLIPSESENDING s = (UELLIPSESENDING)sending;
                     UEllipseDef ell = s.ellipse;
-                    return _EllipseCount(ref ell, n_adrtypes);
+                    List<AddressFilterInfo> Filters = s.filters;
+                    return _EllipseCountV2(ref ell, n_adrtypes,Filters);
                 }
                 else if (typeof(UGIS) == sending.GetType())
                 {
@@ -264,7 +265,8 @@ namespace com.ums.PAS.Database
                 {
                     UMUNICIPALSENDING s = (UMUNICIPALSENDING)sending;
                     List<UMunicipalDef> m = s.municipals;
-                    return _MunicipalCount(ref m, n_adrtypes);
+                    List<AddressFilterInfo> Filters = s.filters;
+                    return _MunicipalCountV2(ref m, n_adrtypes,Filters);
                 }
                 throw new NotImplementedException();
             }
@@ -408,7 +410,188 @@ namespace com.ums.PAS.Database
             }
             return count;
         }
+        /// <summary>
+        ///Municipal count with filters support
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="adrtypes"></param>
+        /// <param name="Filters"></param>
+        /// <returns></returns>
+        protected UAdrCount _MunicipalCountV2(ref List<UMunicipalDef> m, long adrtypes,List<AddressFilterInfo> Filters)
+        {
+            if (sz_constring.ToLower().Contains("sweden"))
+            {
+                return _MunicipalCountForSweden(ref m, adrtypes,Filters);
+            }
+            else
+            {
+                return _MunicipalCountOtherThanSweden(ref m, adrtypes,Filters);
+            }
 
+        }
+        private UAdrCount _MunicipalCountOtherThanSweden(ref List<UMunicipalDef> m, long adrtypes, List<AddressFilterInfo> Filters)
+        {
+            var xx = from x in Filters
+                     select x.filterId;
+
+            string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+           
+           UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
+            try
+            {
+                bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                String szSQL = "";
+                bool bfirst = true;
+                for (int i = 0; i < m.Count; i++)
+                {
+                    if (!bfirst)
+                        szSQL += " UNION ";
+                    if (m[i].sz_municipalid.Length > 0)
+                    {
+                        if (m_n_pastype == 1)
+                        {
+                            szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
+                                                    "FROM ADR_KONSUM WHERE KOMMUNENR={0}{1}",
+                                                    m[i].sz_municipalid,
+                                                    GetRecipientFilter(adrtypes));
+                        }
+                        else if (m_n_pastype == 2)
+                        {
+                            if (!FilterIds.Equals(""))
+                            {
+                                szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count "
+                                                        + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON AK.KOMMUNENR=DX.l_municipalid"
+                                                        + " INNER JOIN Address_Filters AF ON AF.FilterId IN ({4}) "
+                                                        + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON AF.FilterId = AAF.FilterId"
+                                                        + " AND AK.KOMMUNENR = AAF.municipalId "
+                                                        + " AND AK.GATEKODE = AAF.StreetId AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+                                                        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+                                                        + " AND AK.HUSNR = CASE WHEN(AAF.HouseNo=0) THEN AK.HUSNR ELSE AAF.HouseNo END"
+                                                        + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
+                                                        + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
+                                                        + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
+                                                        + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"
+                                                        + " WHERE DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}{3}",
+                                                          m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""), GetRecipientFilter(adrtypes),FilterIds);
+                            }
+                            else
+                            {
+                                szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
+                                                        "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}{3}",
+                                                        m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""), GetRecipientFilter(adrtypes));
+
+                            }
+                        }
+                        bfirst = false;
+                    }
+                    if (!bfirst)
+                        szSQL += " GROUP BY BEDRIFT, f_hasfixed, f_hasmobile";
+                }
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                while (rs.Read())
+                {
+                    c.bedrift = rs.GetInt32(0);
+                    c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
+                    c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
+                    c.add = rs.GetInt32(3);
+                    _AddToAdrcount(ref count, ref c, adrtypes);
+                }
+                rs.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return count;
+
+       }
+       private UAdrCount _MunicipalCountForSweden(ref List<UMunicipalDef> m,long adrtypes,List<AddressFilterInfo> Filters)
+       {
+           var xx = from x in Filters
+                    select x.filterId;
+
+           string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+           
+           UAdrCount count = new UAdrCount();
+           OdbcDataReader rs = null;
+           try
+           {
+               bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+               String szSQL = "";
+               bool bfirst = true;
+               for (int i = 0; i < m.Count; i++)
+               {
+                   if (!bfirst)
+                       szSQL += " UNION ";
+                   if (m[i].sz_municipalid.Length > 0)
+                   {
+                       if (m_n_pastype == 1)
+                       {
+                           szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
+                                                   "FROM ADR_KONSUM WHERE KOMMUNENR={0}{1}",
+                                                   m[i].sz_municipalid,
+                                                   GetRecipientFilter(adrtypes));
+                       }
+                       else if (m_n_pastype == 2)
+                       {
+                           if (!FilterIds.Equals(""))
+                           {
+                               szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count "
+                                                      + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON AK.KOMMUNENR=DX.l_municipalid"
+                                                      + " INNER JOIN Address_Filters AF ON AF.FilterId IN ({4}) "
+                                                      + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON AF.FilterId = AAF.FilterId"
+                                                      + " AND AK.KOMMUNENR = AAF.municipalId "
+                                                      + " AND AK.GATEKODE = CASE WHEN(AAF.Se_CadId=0) THEN  AK.GATEKODE ELSE AAF.Se_CadId END"
+                                                      + " AND  AK.GATEKODE = CASE WHEN(AAF.Se_VaId=0) THEN  AK.GATEKODE ELSE AAF.Se_VaId END"
+                                                      + " WHERE DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}{3}",
+                                                       m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""), GetRecipientFilter(adrtypes), FilterIds);
+                           }
+                           else
+                           {
+                               szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
+                                                       "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={1} AND AK.KOMMUNENR={0}{2}{3}",
+                                                       m[i].sz_municipalid, m_n_deptpk, (bVulnerableCitizensOnly ? " AND AK.f_hasdisabled=1" : ""), GetRecipientFilter(adrtypes));
+
+                           }
+                       }
+                      
+                       bfirst = false;
+                   }
+                   if (!bfirst)
+                       szSQL += " GROUP BY BEDRIFT, f_hasfixed, f_hasmobile";
+               }
+               rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+
+               UAdrcountCandidate c = new UAdrcountCandidate();
+               while (rs.Read())
+               {
+                   c.bedrift = rs.GetInt32(0);
+                   c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
+                   c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
+                   c.add = rs.GetInt32(3);
+                   _AddToAdrcount(ref count, ref c, adrtypes);
+               }
+               rs.Close();
+           }
+           catch (Exception)
+           {
+               throw;
+           }
+           finally
+           {
+               if (rs != null && !rs.IsClosed)
+                   rs.Close();
+           }
+           return count;
+       }
         private static string GetRecipientFilter(long adrtypes)
         {
             string recipientFilter = "";
@@ -521,8 +704,277 @@ namespace com.ums.PAS.Database
             }
             return count;
         }
+        /// <summary>
+        /// Ecllipse count with filters support
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="adrtypes"></param>
+        /// <param name="Filters"></param>
+        /// <returns></returns>
+        protected UAdrCount _EllipseCountV2(ref UEllipseDef e, long adrtypes,List<AddressFilterInfo> Filters)
+        {
+            if (sz_constring.ToLower().Contains("sweden"))
+            {
+                return _EllipseCountForSweden(ref e, adrtypes,Filters);
+            }
+            else
+            {
+                return _EllipseCountOtherThanSweden(ref e, adrtypes,Filters);
+            }
+ 
+        }
 
+        private UAdrCount _EllipseCountForSweden(ref UEllipseDef e, long adrtypes, List<AddressFilterInfo> Filters)
+        {
+            var xx = from x in Filters
+                     select x.filterId;
 
+            string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+             
+            UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
+            try
+            {
+                bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                string szSQL = "";
+
+                if (m_n_pastype == 1)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
+                                            e.center.lon, e.center.lat,
+                                            e.radius.lon, e.radius.lat,
+                                            (m_n_pastype == 2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "")) : ""));
+                }
+                else if (m_n_pastype == 2)
+                {
+                    if (!FilterIds.Equals(""))
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, @"select 
+                                                isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
+                                             ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX
+                                                ON AK.KOMMUNENR=DX.l_municipalid
+                                                INNER JOIN Address_Filters AF 
+ ON AF.FilterId IN ({11}) INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF 
+ ON AF.FilterId = AAF.FilterId AND AK.KOMMUNENR = AAF.municipalId 
+  AND AK.GATEKODE = CASE WHEN(AAF.Se_CadId=0) THEN  AK.GATEKODE ELSE AAF.Se_CadId END
+  AND  AK.GATEKODE = CASE WHEN(AAF.Se_VaId=0) THEN  AK.GATEKODE ELSE AAF.Se_VaId END                                      
+                                            WHERE
+                                                LAT >= {0} AND 
+                                                LAT <= {1} AND 
+                                                LON >= {2} AND 
+                                                LON <= {3} AND
+                                                ( ( (lat-{4})*(lat-{4}) / ({5}*{5}) ) + ( (lon-{6}) * (lon-{6}) / ({7}*{7}) ) < 1 ) AND
+                                                DX.l_deptpk={8} 
+                                                {9} 
+                                                {10}
+                                            GROUP BY 
+                                                BEDRIFT, f_hasfixed, f_hasmobile"
+                            , e.center.lon - e.radius.lon
+                            , e.center.lon + e.radius.lon
+                            , e.center.lat - e.radius.lat
+                            , e.center.lat + e.radius.lat
+                            , e.center.lon
+                            , e.radius.lon
+                            , e.center.lat
+                            , e.radius.lat
+                            , m_n_deptpk
+                            , (bVulnerableCitizensOnly ? "AND ISNULL(f_hasdisabled,0) IN (1)" : "")
+                            , GetRecipientFilter(adrtypes), FilterIds);
+                    }
+                    else 
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, @"select 
+                                                isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
+                                            FROM 
+                                                ADR_KONSUM, DEPARTMENT_X_MUNICIPAL DX 
+                                            WHERE
+                                                LAT >= {0} AND 
+                                                LAT <= {1} AND 
+                                                LON >= {2} AND 
+                                                LON <= {3} AND
+                                                ( ( (lat-{4})*(lat-{4}) / ({5}*{5}) ) + ( (lon-{6}) * (lon-{6}) / ({7}*{7}) ) < 1 ) AND
+                                                ADR_KONSUM.KOMMUNENR=DX.l_municipalid AND 
+                                                DX.l_deptpk={8} 
+                                                {9} 
+                                                {10}
+                                            GROUP BY 
+                                                BEDRIFT, f_hasfixed, f_hasmobile"
+                       , e.center.lon - e.radius.lon
+                       , e.center.lon + e.radius.lon
+                       , e.center.lat - e.radius.lat
+                       , e.center.lat + e.radius.lat
+                       , e.center.lon
+                       , e.radius.lon
+                       , e.center.lat
+                       , e.radius.lat
+                       , m_n_deptpk
+                       , (bVulnerableCitizensOnly ? "AND ISNULL(f_hasdisabled,0) IN (1)" : "")
+                       , GetRecipientFilter(adrtypes));
+                    }
+                }
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                while (rs.Read())
+                {
+                    c.bedrift = rs.GetInt16(0);
+                    object o1 = rs.GetValue(1);
+                    object o2 = rs.GetValue(2);
+                    if (rs.IsDBNull(1))
+                        c.hasfixed = false;
+                    else
+                        c.hasfixed = (rs.GetByte(1).Equals(1) ? true : false);
+                    if (rs.IsDBNull(2))
+                        c.hasmobile = false;
+                    else
+                        c.hasmobile = (rs.GetByte(2).Equals(1) ? true : false);
+                    if (rs.IsDBNull(3))
+                        c.add = 0;
+                    else
+                        c.add = rs.GetInt32(3);
+                    _AddToAdrcount(ref count, ref c, adrtypes);
+                }
+                rs.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return count;
+
+        }
+
+        private UAdrCount _EllipseCountOtherThanSweden(ref UEllipseDef e, long adrtypes, List<AddressFilterInfo> Filters)
+        {    var xx = from x in Filters
+                     select x.filterId;
+
+            string FilterIds = String.Join(",", new List<int>(xx.ToArray()).ConvertAll(i => i.ToString()).ToArray());
+             UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
+            try
+            {
+                bool bVulnerableCitizensOnly = (adrtypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0;
+                string szSQL = "";
+
+                if (m_n_pastype == 1)
+                {
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
+                                            e.center.lon, e.center.lat,
+                                            e.radius.lon, e.radius.lat,
+                                            (m_n_pastype == 2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "")) : ""));
+                }
+                else if (m_n_pastype == 2)
+                {
+                    if (!FilterIds.Equals(""))
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, @"select 
+                                                isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
+                                            FROM 
+                                                ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX
+                                                ON AK.KOMMUNENR=DX.l_municipalid
+                                                INNER JOIN Address_Filters AF 
+ ON AF.FilterId IN ({11}) INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF 
+ ON AF.FilterId = AAF.FilterId AND AK.KOMMUNENR = AAF.municipalId 
+ AND AK.GATEKODE = AAF.StreetId AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)
+ AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)
+ AND AK.HUSNR = CASE WHEN(AAF.HouseNo=0) THEN AK.HUSNR ELSE AAF.HouseNo END
+ AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END
+ AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END
+ AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END
+ AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END
+                                            WHERE
+                                                LAT >= {0} AND 
+                                                LAT <= {1} AND 
+                                                LON >= {2} AND 
+                                                LON <= {3} AND
+                                                ( ( (lat-{4})*(lat-{4}) / ({5}*{5}) ) + ( (lon-{6}) * (lon-{6}) / ({7}*{7}) ) < 1 ) AND
+                                                DX.l_deptpk={8} 
+                                                {9} 
+                                                {10}
+                                            GROUP BY 
+                                                BEDRIFT, f_hasfixed, f_hasmobile"
+                            , e.center.lon - e.radius.lon
+                            , e.center.lon + e.radius.lon
+                            , e.center.lat - e.radius.lat
+                            , e.center.lat + e.radius.lat
+                            , e.center.lon
+                            , e.radius.lon
+                            , e.center.lat
+                            , e.radius.lat
+                            , m_n_deptpk
+                            , (bVulnerableCitizensOnly ? "AND ISNULL(f_hasdisabled,0) IN (1)" : "")
+                            , GetRecipientFilter(adrtypes), FilterIds);
+                    }
+                    else 
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, @"select 
+                                                isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count 
+                                            FROM 
+                                                ADR_KONSUM, DEPARTMENT_X_MUNICIPAL DX 
+                                            WHERE
+                                                LAT >= {0} AND 
+                                                LAT <= {1} AND 
+                                                LON >= {2} AND 
+                                                LON <= {3} AND
+                                                ( ( (lat-{4})*(lat-{4}) / ({5}*{5}) ) + ( (lon-{6}) * (lon-{6}) / ({7}*{7}) ) < 1 ) AND
+                                                ADR_KONSUM.KOMMUNENR=DX.l_municipalid AND 
+                                                DX.l_deptpk={8} 
+                                                {9} 
+                                                {10}
+                                            GROUP BY 
+                                                BEDRIFT, f_hasfixed, f_hasmobile"
+                       , e.center.lon - e.radius.lon
+                       , e.center.lon + e.radius.lon
+                       , e.center.lat - e.radius.lat
+                       , e.center.lat + e.radius.lat
+                       , e.center.lon
+                       , e.radius.lon
+                       , e.center.lat
+                       , e.radius.lat
+                       , m_n_deptpk
+                       , (bVulnerableCitizensOnly ? "AND ISNULL(f_hasdisabled,0) IN (1)" : "")
+                       , GetRecipientFilter(adrtypes));
+
+                    }
+                }
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                while (rs.Read())
+                {
+                    c.bedrift = rs.GetInt16(0);
+                    object o1 = rs.GetValue(1);
+                    object o2 = rs.GetValue(2);
+                    if (rs.IsDBNull(1))
+                        c.hasfixed = false;
+                    else
+                        c.hasfixed = (rs.GetByte(1).Equals(1) ? true : false);
+                    if (rs.IsDBNull(2))
+                        c.hasmobile = false;
+                    else
+                        c.hasmobile = (rs.GetByte(2).Equals(1) ? true : false);
+                    if (rs.IsDBNull(3))
+                        c.add = 0;
+                    else
+                        c.add = rs.GetInt32(3);
+                    _AddToAdrcount(ref count, ref c, adrtypes);
+                }
+                rs.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+            return count;
+        }
         protected UAdrCount _PolyCount(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
         {
             int n_maxadr_polycount = 500000;
@@ -599,7 +1051,14 @@ namespace com.ums.PAS.Database
             }
             return count;
         }
-      /* method with filters support*/
+      
+        /// <summary>
+        /// polygon count with filters support
+        /// </summary>
+        /// <param name="b">object having lat and lon info</param>
+        /// <param name="p">polygon sending object also having list of filters</param>
+        /// <param name="adrtypes">used to determine alert recepients</param>
+        /// <returns>object having values with counts fo diffents receipents</returns>
         protected UAdrCount _PolyCountV2(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
         {
             if (sz_constring.ToLower().Contains("sweden"))
@@ -612,7 +1071,7 @@ namespace com.ums.PAS.Database
             }
            
         }
-
+        /* polygon count with filters support by comparing only Se_CadId and Se_VaId*/
         private UAdrCount _polyCountForSweden(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes)
         {
             var xx = from x in p.filters
@@ -631,37 +1090,40 @@ namespace com.ums.PAS.Database
                 bool bOnlyHeadOfHousehold = (adrtypes & (long)ADRTYPES.ONLY_HEAD_OF_HOUSEHOLD) > 0;
                 if (m_n_pastype == 1)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM"
-    + " ADR_KONSUM AK INNER JOIN Address_Filters AF ON"
-    + " AF.FilterId IN ({5})"
-    + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
-        + " AF.FilterId = AAF.FilterId"
-        + " AND AK.KOMMUNENR = AAF.municipalId"
-        + " AND AK.GATEKODE = AAF.StreetId"
-        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
-        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
-        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
-        + " WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM ADR_KONSUM " +
+                                        "WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                              n_maxadr_polycount,
-                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo, FilterIds);
+                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo);
                 }
                 else if (m_n_pastype == 2)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
-        + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
-        + " AK.KOMMUNENR=DX.l_municipalid"
-        + " INNER JOIN Address_Filters AF ON"
-        + " AF.FilterId IN ({8})"
-        + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
-        + " AF.FilterId = AAF.FilterId"
-        + " AND AK.KOMMUNENR = AAF.municipalId AND AK.GATEKODE = AAF.StreetId"
-        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
-        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
-        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
-        + " WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
-                                            n_maxadr_polycount,
-                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
-                                            GetRecipientFilter(adrtypes), FilterIds);
+                    if (!FilterIds.Equals(""))
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
+            + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
+            + " AK.KOMMUNENR=DX.l_municipalid"
+            + " INNER JOIN Address_Filters AF ON"
+            + " AF.FilterId IN ({8})"
+            + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+            + " AF.FilterId = AAF.FilterId"
+            + " AND AK.KOMMUNENR = AAF.municipalId "
+            + " AND AK.GATEKODE = CASE WHEN(AAF.Se_CadId=0) THEN  AK.GATEKODE ELSE AAF.Se_CadId END"
+            + " AND  AK.GATEKODE = CASE WHEN(AAF.Se_VaId=0) THEN  AK.GATEKODE ELSE AAF.Se_VaId END "
+            + " WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                                n_maxadr_polycount,
+                                                b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                                GetRecipientFilter(adrtypes), FilterIds);
+                    }
+                    else 
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0) FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
+                                                           "WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={5} " +
+                                                           "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                           n_maxadr_polycount,
+                                           b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                           GetRecipientFilter(adrtypes));
+                    }
+
                 }
 
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
@@ -714,6 +1176,7 @@ namespace com.ums.PAS.Database
             return count;
        
         }
+        /* polygon count with filters support by comparing all param except Se_CadId and Se_VaId*/
         private UAdrCount _PolyCountOtherThanSweden(ref UMapBounds b, ref UPOLYGONSENDING p, long adrtypes) 
         {
              var xx = from x in p.filters
@@ -732,45 +1195,44 @@ namespace com.ums.PAS.Database
                 bool bOnlyHeadOfHousehold = (adrtypes & (long)ADRTYPES.ONLY_HEAD_OF_HOUSEHOLD) > 0;
                 if (m_n_pastype == 1)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM"
-        + " ADR_KONSUM AK INNER JOIN Address_Filters AF ON"
-        + " AF.FilterId IN ({5})"
-        + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
-        + " AF.FilterId = AAF.FilterId"
-        + " AND AK.KOMMUNENR = AAF.municipalId"
-        + " AND AK.GATEKODE = AAF.StreetId"
-        + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
-        + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
-        + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
-        + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
-        + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
-        + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
-        + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"
-        + " WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
-                                             n_maxadr_polycount,
-                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo,FilterIds);
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, l_familyno=0, l_personcode=0 FROM ADR_KONSUM " +
+                                       "WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
+                                            n_maxadr_polycount,
+                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo);
                 }
                 else if (m_n_pastype == 2)
                 {
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
-        +" FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
-        +" AK.KOMMUNENR=DX.l_municipalid"
-        +" INNER JOIN Address_Filters AF ON"
-        +" AF.FilterId IN ({8})" 
-        +" INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
-		+" AF.FilterId = AAF.FilterId"
-		+" AND AK.KOMMUNENR = AAF.municipalId AND AK.GATEKODE = AAF.StreetId"
-		+" AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
-	    +" AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
-        +" AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
-        + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
-        + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
-        + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
-        + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"                                              
-        +" WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
-                                            n_maxadr_polycount,
-                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
-                                            GetRecipientFilter(adrtypes),FilterIds);
+                    if (!FilterIds.Equals(""))
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0)"
+            + " FROM ADR_KONSUM AK INNER JOIN DEPARTMENT_X_MUNICIPAL DX ON"
+            + " AK.KOMMUNENR=DX.l_municipalid"
+            + " INNER JOIN Address_Filters AF ON"
+            + " AF.FilterId IN ({8})"
+            + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+            + " AF.FilterId = AAF.FilterId"
+            + " AND AK.KOMMUNENR = AAF.municipalId AND AK.GATEKODE = AAF.StreetId"
+            + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+            + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+            + " AND AK.HUSNR = CASE WHEN(AAF.HouseNo=0) THEN AK.HUSNR ELSE AAF.HouseNo END"
+            + " AND AK.BNR = CASE WHEN (AAF.Bno=0) THEN AK.BNR ELSE AAF.Bno END"
+            + " AND AK.FNR = CASE WHEN (AAF.Fno=0) THEN AK.FNR ELSE AAF.Fno END"
+            + " AND AK.SNR = CASE WHEN (AAF.Sno=0) THEN AK.SNR ELSE AAF.Sno END"
+            + " AND AK.UNR = CASE WHEN (AAF.Uno=0) THEN AK.UNR ELSE AAF.Uno END"
+            + " WHERE DX.l_deptpk={5} AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                                n_maxadr_polycount,
+                                                b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                                GetRecipientFilter(adrtypes), FilterIds);
+                    }
+                    else 
+                    {
+                        szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile, ISNULL(l_familyno,0), ISNULL(l_personcode,0) FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
+                                                           "WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={5} " +
+                                                           "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) AND ISNULL(f_hasdisabled,0) in ({6}) {7}",
+                                           n_maxadr_polycount,
+                                           b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk, bVulnerableCitizensOnly ? "1" : "0,1",
+                                           GetRecipientFilter(adrtypes));
+                    }
                 }
 
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);

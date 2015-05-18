@@ -110,11 +110,11 @@ Global
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Nlbeta|Mixed Platforms.ActiveCfg = Nlbeta|Any CPU
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Nlbeta|Mixed Platforms.Build.0 = Nlbeta|Any CPU
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Nlbeta|x86.ActiveCfg = Nlbeta|Any CPU
-		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Any CPU.ActiveCfg = OldBeta|Any CPU
-		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Any CPU.Build.0 = OldBeta|Any CPU
-		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Mixed Platforms.ActiveCfg = OldBeta|Any CPU
-		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Mixed Platforms.Build.0 = OldBeta|Any CPU
-		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|x86.ActiveCfg = OldBeta|Any CPU		
+		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Any CPU.ActiveCfg = Beta|Any CPU
+		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Any CPU.Build.0 = Beta|Any CPU
+		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Mixed Platforms.ActiveCfg = Beta|Any CPU
+		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|Mixed Platforms.Build.0 = Beta|Any CPU
+		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.OldBeta|x86.ActiveCfg = Beta|Any CPU
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Orange_Prod|Any CPU.ActiveCfg = Orange_Prod|Any CPU
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Orange_Prod|Any CPU.Build.0 = Orange_Prod|Any CPU
 		{E7B727D0-451A-45A3-8C75-FA2FF881263B}.Orange_Prod|Mixed Platforms.ActiveCfg = Orange_Prod|Any CPU

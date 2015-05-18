@@ -21,33 +21,53 @@ namespace com.ums.ws.addressfilters
     public class AddressFilters : System.Web.Services.WebService
     {
         AddressFilterInfo info = new AddressFilterInfo();
-
+        /// <summary>
+        /// service is responsible for insert ,update,delete opration of filters
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <param name="logon"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
         [WebMethod]
         public AddressFilterInfo ExecUpdateAddressFilter(FILTEROPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
         {
             return executeUpdateAddressFilter(operation, logon, info);
         }
 
-
+        /// <summary>
+        /// this service is responsible for getting list of filters on the basis of user's DeptID and Stdcc
+        /// </summary>
+        /// <param name="logon"></param>
+        /// <returns></returns>
         [WebMethod]
         public List<AddressFilterInfo> GetListofAddressFilter(ULOGONINFO logon)
         {
 
             return GettListofAddressFilter(logon);
         }
-        [WebMethod]
-        public Boolean isAddressFilterNameExists(ULOGONINFO logon, AddressFilterInfo info)
-        {
-            return true;
-        }
 
-
+        /// <summary>
+        /// this method will retuen the actual list of address with full information form repective countries' database
+        /// </summary>
+        /// <param name="logon"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
         [WebMethod]
         public UAddressList GetActualAddressesOfFilter(ULOGONINFO logon, AddressFilterInfo info)
         {
             return GettActualAddressesOfFilter(logon, info);
         }
-
+        /// <summary>
+        /// this method will check if the filtername is already exist in DB in respective Dept. but this method is not used.
+        /// </summary>
+        /// <param name="logon"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [WebMethod]
+        public Boolean isAddressFilterNameExists(ULOGONINFO logon, AddressFilterInfo info)
+        {
+            return true;
+        }
         private int getaddresstype(AddressType type)
         {
             int check;
@@ -97,9 +117,6 @@ namespace com.ums.ws.addressfilters
                 sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
                 db.close();
                 UmsDb db1 = new PASUmsDb(sz_constring, 20000);
-                //OdbcConnection conn = new OdbcConnection(sz_constring);
-                //conn.Open();
-                //db1.SetConn(conn);
                 return db1;
             }
             catch (Exception)
@@ -110,27 +127,33 @@ namespace com.ums.ws.addressfilters
 
         private static UmsDb getCorrespondingCountryDataBase(ref ULOGONINFO logon)
         {
-            UmsDb db = new UmsDb();
-            ULOGONINFO logonInfo = new ULOGONINFO();
-
-
-            db = new UmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 20000);
-
-            string sql = string.Format("select distinct BC.sz_compid,BD.sz_deptid,BD.sz_password FROM BBCOMPANY BC, BBDEPARTMENT BD ,BBUSER BU WHERE BC.l_comppk=BU.l_comppk and BD.l_deptpk=BU.l_deptpk and BU.sz_userid='{0}' and BU.sz_hash_paspwd='{1}'", logon.sz_userid, logon.sz_password);
-            db.CreateCommand(sql, 1);
-            OdbcDataReader reader = db.ExecCommandReader();
-            while (reader.Read())
+            try
             {
-                logon.sz_compid = reader.GetString(reader.GetOrdinal("sz_compid"));
-                logon.sz_deptid = reader.GetString(reader.GetOrdinal("sz_deptid"));
-                logon.sz_password = reader.GetString(reader.GetOrdinal("sz_password"));
+                UmsDb db = new UmsDb();
+                ULOGONINFO logonInfo = new ULOGONINFO();
 
+
+                db = new UmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 20000);
+
+                string sql = string.Format("select distinct BC.sz_compid,BD.sz_deptid,BD.sz_password FROM BBCOMPANY BC, BBDEPARTMENT BD ,BBUSER BU WHERE BC.l_comppk=BU.l_comppk and BD.l_deptpk=BU.l_deptpk and BU.sz_userid='{0}' and BU.sz_hash_paspwd='{1}'", logon.sz_userid, logon.sz_password);
+                db.CreateCommand(sql, 1);
+                OdbcDataReader reader = db.ExecCommandReader();
+                while (reader.Read())
+                {
+                    logon.sz_compid = reader.GetString(reader.GetOrdinal("sz_compid"));
+                    logon.sz_deptid = reader.GetString(reader.GetOrdinal("sz_deptid"));
+                    logon.sz_password = reader.GetString(reader.GetOrdinal("sz_password"));
+
+                }
+                db.CheckDepartmentLogonLiteral(ref logon);
+
+
+                db = GetDatabaseInstance(logon.sz_stdcc, logon.l_deptpk, 2000);
+                return db;
+            }catch(Exception )
+            {
+                throw;
             }
-            db.CheckDepartmentLogonLiteral(ref logon);
-
-
-            db = GetDatabaseInstance(logon.sz_stdcc, logon.l_deptpk, 2000);
-            return db;
         }
 
         private AddressFilterInfo executeUpdateAddressFilter(FILTEROPERATION operation, ULOGONINFO logon, AddressFilterInfo info)
@@ -147,8 +170,8 @@ namespace com.ums.ws.addressfilters
                 if (info.filterName != null)
                 {
                     info.description = ((info.description == null) ? temp : info.description);
-                    info.addressType = ((info.addressType == null) ? AddressType.StreetAddress : info.addressType);
-                   // info.lastupdatedDate = ((info.lastupdatedDate == null) ? System.DateTime.Now : info.lastupdatedDate);
+                   
+                   
 
                     switch (operation)
                     {
@@ -180,7 +203,7 @@ namespace com.ums.ws.addressfilters
                                     filterid = reader.GetInt32(reader.GetOrdinal("FilterId"));
                                     date = reader.GetDateTime(reader.GetOrdinal("LastUpdatedDate"));
                                 }
-                               // int filterid = db.ExecScalarcommand(sql);
+                              
                                 if (filterid != 0)
                                 {
                                     for (int i = 0; i < info.addressForFilterlist.Count; i++)
@@ -236,7 +259,7 @@ namespace com.ums.ws.addressfilters
                 }
                 else
                 {
-                    throw new Exception("deptid and filtername must be provided");
+                    throw new Exception("filtername must be provided");
                 }
             }
             catch (Exception e)
@@ -292,43 +315,44 @@ namespace com.ums.ws.addressfilters
 
 
         private UAddressList GettActualAddressesOfFilter(ULOGONINFO logon, AddressFilterInfo info)
-        {    
-
+        {
+            UmsDb db = null;
+            OdbcDataReader reader = null;
          
  
             UAddressList list = new UAddressList();
             try
             {
-           
-            UmsDb db = getCorrespondingCountryDataBase(ref logon);
 
-            string sql = string.Format("SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' ') NAVN, isnull(ADRESSE, ' ')ADRESSE, isnull(HUSNR, 0) HUSNR, AK.sz_apartmentid,"
-+ " isnull(OPPGANG, '') OPPGANG, isnull(POSTNR, '0')POSTNR, isnull(POSTSTED, '')POSTSTED, isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0')FØDTÅR, isnull(TELEFON, '')TELEFON, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT,"
-+ " isnull(l_importid, -1) l_importid, isnull(MOBIL, '')MOBIL, isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') XY_KODE, isnull(f_hasfixed, 0)f_hasfixed, isnull(f_hasmobile,0)f_hasmobile, isnull(f_hasdisabled,0) f_hasdisabled  FROM"
-+ " ADR_KONSUM AK INNER JOIN Address_Filters AF ON AF.FilterId in({0})"
-+ " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
-+ " AF.FilterId = AAF.FilterId"
-+ " AND AK.KOMMUNENR = AAF.municipalId"
-+ " AND AK.GATEKODE = AAF.StreetId"
-+ " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
-+ " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
-+ " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
-+ " WHERE BEDRIFT IN (0,1) order by"
-+ " GATEKODE, HUSNR", info.filterId);
-               
-            db.CreateCommand(sql, 1);
-                OdbcDataReader reader = db.ExecCommandReader();
+                 db = getCorrespondingCountryDataBase(ref logon);
+
+                string sql = string.Format("SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' ') NAVN, isnull(ADRESSE, ' ')ADRESSE, isnull(HUSNR, 0) HUSNR, AK.sz_apartmentid,"
+    + " isnull(OPPGANG, '') OPPGANG, isnull(POSTNR, '0')POSTNR, isnull(POSTSTED, '')POSTSTED, isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0')FØDTÅR, isnull(TELEFON, '')TELEFON, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT,"
+    + " isnull(l_importid, -1) l_importid, isnull(MOBIL, '')MOBIL, isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') XY_KODE, isnull(f_hasfixed, 0)f_hasfixed, isnull(f_hasmobile,0)f_hasmobile, isnull(f_hasdisabled,0) f_hasdisabled  FROM"
+    + " ADR_KONSUM AK INNER JOIN Address_Filters AF ON AF.FilterId in({0})"
+    + " INNER JOIN ADDRESSASSOCIATEDwithFILTER AAF ON"
+    + " AF.FilterId = AAF.FilterId"
+    + " AND AK.KOMMUNENR = AAF.municipalId"
+    + " AND AK.GATEKODE = AAF.StreetId"
+    + " AND AK.HUSNR = isnull(AAF.HouseNo, AK.HUSNR)"
+    + " AND AK.sz_apartmentid = isnull(AAF.Sz_ApartmentId, AK.sz_apartmentid)"
+    + " AND AK.OPPGANG = isnull(AAF.Sz_HouseLetter, AK.OPPGANG)"
+    + " WHERE BEDRIFT IN (0,1) order by"
+    + " GATEKODE, HUSNR", info.filterId);
+
+                db.CreateCommand(sql, 1);
+                reader = db.ExecCommandReader();
                 while (reader.Read())
                 {
                     UAddress address = new UAddress();
-                    var r = reader["LAT"].GetType();
-                      address.address = reader.GetString(reader.GetOrdinal("ADRESSE"));
-                    
+
+                    address.address = reader.GetString(reader.GetOrdinal("ADRESSE"));
+
                     address.bedrift = reader.GetInt16(reader.GetOrdinal("BEDRIFT"));
                     address.bno = reader.GetInt32(reader.GetOrdinal("BNR"));
                     address.gno = reader.GetInt32(reader.GetOrdinal("GNR"));
                     address.hasfixed = reader.GetInt16(reader.GetOrdinal("f_hasfixed"));
-                    
+
                     address.hasmobile = reader.GetInt16(reader.GetOrdinal("f_hasmobile"));
                     address.mobile = reader.GetString(reader.GetOrdinal("MOBIL"));
                     address.municipalid = Convert.ToString(reader.GetInt32(reader.GetOrdinal("KOMMUNENR")));
@@ -344,13 +368,23 @@ namespace com.ums.ws.addressfilters
                     list.addLine(address);
                 }
 
-                
+               
             }
             catch (Exception ex)
             {
                 ex.ToString();
             }
+                
+            finally 
+            {
+                if (reader != null)
+                    reader.Close();
+                if (db != null)
+                    db.close();
+                 
+            }
             return list;
+            
         }
     }
 }

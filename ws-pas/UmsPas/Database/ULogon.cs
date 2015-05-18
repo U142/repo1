@@ -365,7 +365,7 @@ namespace com.ums.PAS.Database
                     {
                         filters[i].filterName = rs.GetString(rs.GetOrdinal("FilterName"));
                         filters[i].description = rs.GetString(rs.GetOrdinal("F_Description"));
-                        filters[i].lastupdatedDate = rs.GetDate(rs.GetOrdinal("CreatedOn"));
+                        filters[i].lastupdatedDate = rs.GetDate(rs.GetOrdinal("LastUpdatedDate"));
                     }
                     rs.Close();
 
@@ -389,14 +389,14 @@ namespace com.ums.PAS.Database
             db = new UmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 20000);
 
 
-            string sql = string.Format("select distinct BC.sz_compid, distinct BD.sz_deptid FROM BBCOMPANY BC, BBDEPARTMENT BD ,BBUSER BU WHERE BC.l_comppk=BU.l_comppk and BD.l_deptpk=BU.l_deptpk and BU.l_userpk={0}", logon.l_userpk);
+            string sql = string.Format("select distinct BC.sz_compid, BD.sz_deptid,BD.sz_password FROM BBCOMPANY BC, BBDEPARTMENT BD ,BBUSER BU WHERE BC.l_comppk=BU.l_comppk and BD.l_deptpk=BU.l_deptpk and BU.l_userpk={0}", logon.l_userpk);
             db.CreateCommand(sql, 1);
             OdbcDataReader reader = db.ExecCommandReader();
             while (reader.Read())
             {
                 logon.sz_compid = reader.GetString(reader.GetOrdinal("sz_compid"));
                 logon.sz_deptid = reader.GetString(reader.GetOrdinal("sz_deptid"));
-
+                logon.sz_password = reader.GetString(reader.GetOrdinal("sz_password"));
 
             }
             db.CheckDepartmentLogonLiteral(ref logon);

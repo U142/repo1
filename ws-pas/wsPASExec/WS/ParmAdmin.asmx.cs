@@ -2012,6 +2012,8 @@ namespace com.ums.ws.parm
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
                 String l_expiry, sz_sms_oadc, sz_sms_message, sz_shape_xml;
+                
+                List<AddressFilterInfo> Filters=new List<AddressFilterInfo>();
                 int l_deptpk = 0;
 
                 while (rs.Read())
@@ -2113,6 +2115,19 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("sz_sms_oadc", sz_sms_oadc);
                     outxml.insertAttribute("sz_sms_message", sz_sms_message);
 
+
+                    Filters = GetFilters(Convert.ToInt32(l_alertpk), ref m_logon);
+                    if (Filters.Count!=0) 
+                    {
+                        for (int i = 0; i < Filters.Count;i++)
+                        {
+                            outxml.insertStartElement("Filter");
+                            outxml.insertAttribute("FilterId", Filters[i].filterId.ToString());
+                            outxml.insertAttribute("FilterName", Filters[i].filterName);
+                            outxml.insertAttribute("LastUpdatedDate", Filters[i].lastupdatedDate.ToString());
+                            outxml.insertEndElement();
+                        }
+                   }
                     if (!sz_areaid.Equals("-1")) //assume we're preparing LBA, status for each operator is in PAALERT_LBA
                     {
                         outxml.insertStartElement("lbaoperators");
@@ -2171,6 +2186,106 @@ namespace com.ums.ws.parm
                     lba.Close();
             }
             return counter;
+        }
+
+        private List<AddressFilterInfo>GetFilters(int l_alertpk,ref ULOGONINFO m_logon)
+        {
+            OdbcDataReader reader = null;
+            List<AddressFilterInfo> Filters = new List<AddressFilterInfo>();
+            try
+            {   
+                String SQL = String.Format("select * from PAALERT_X_FILTERS where l_alertpk={0}", l_alertpk);
+                PASUmsDb db = new PASUmsDb(ConfigurationManager.ConnectionStrings["backbone"].ConnectionString, 120);
+                reader = db.ExecReader(SQL, UmsDb.UREADER_KEEPOPEN);
+               
+                while (reader.Read())
+                {
+                    AddressFilterInfo info = new AddressFilterInfo();
+                    info.filterId = reader.GetInt32(reader.GetOrdinal("FilterId"));
+                    Filters.Add(info);
+
+
+                }
+            }
+            catch(Exception e) 
+            {
+
+            }
+            finally
+            {
+                if (reader != null && !reader.IsClosed)
+                    reader.Close();
+                db.close();
+            }
+            if (Filters.Count != 0)
+            {
+                try
+                {
+                UmsDb db2 = GetDatabaseInstance(m_logon.sz_stdcc, m_logon.l_deptpk, 2000);
+
+                
+                   for (int i = 0; i < Filters.Count; i++)
+                    {
+                        String SQL = String.Format("select * from Address_Filters where FilterId={0}", Filters[i].filterId);
+                        db2.CreateCommand(SQL, 1);
+                        reader = db2.ExecCommandReader();
+                        if (reader.Read())
+                        {
+                            Filters[i].filterName = reader.GetString(reader.GetOrdinal("FilterName"));
+                            Filters[i].description = reader.GetString(reader.GetOrdinal("F_Description"));
+                            Filters[i].lastupdatedDate = reader.GetDate(reader.GetOrdinal("LastUpdatedDate"));
+                        }
+                        reader.Close();
+
+                    }
+                    
+                }
+                catch (Exception e)
+                {
+
+                    e.ToString();
+                    return new List<AddressFilterInfo>();
+                }
+                finally
+                {
+                    if (reader != null && !reader.IsClosed)
+                        reader.Close();
+
+                }
+            }
+            return Filters;
+        }
+
+        private static UmsDb GetDatabaseInstance(string sz_stdcc, int n_deptpk, int timeout)
+        {
+            string sz_constring;
+            int m_n_pastype;    //0=no db rights, 1=normal address, 2=folkereg address         
+
+            if (!UCommon.USETTINGS.b_enable_adrdb)
+                throw new UServerDeniedAddressDatabaseException();
+
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                m_n_pastype = db.GetPasType(n_deptpk);
+                if (m_n_pastype <= 0)
+                    throw new ULogonFailedException();
+
+                String dsn = "address_" + sz_stdcc;
+                if (m_n_pastype == 2)
+                    dsn += "_reg";
+                sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
+                db.close();
+                UmsDb db1 = new PASUmsDb(sz_constring, 20000);
+                //OdbcConnection conn = new OdbcConnection(sz_constring);
+                //conn.Open();
+                //db1.SetConn(conn);
+                return db1;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private int GetEvents()
@@ -2715,8 +2830,9 @@ namespace com.ums.ws.parm
                 long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), sz_description, false);
                 if (n_ret > 0) //ok
                 {
-                    HandleFiltersofAlert(operation, ref a);
                     a.l_alertpk = n_ret;
+                    //method to handle insert,update,delete opration of filters associated with filter
+                    HandleFiltersofAlert(operation, ref a);
                     a.l_temppk = n_ret;
                     if (operation.ToString().ToLower().Equals("delete"))
                     {
@@ -2887,7 +3003,7 @@ namespace com.ums.ws.parm
             {
                 if (l_parent.Length > 0)
                     l_parent = l_parent.Substring(1);
-                else
+                else  
                     l_parent = "-1";
             }
             else
