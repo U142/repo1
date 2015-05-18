@@ -1,5 +1,6 @@
 package no.ums.pas.core.controllers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -15,11 +16,15 @@ import no.ums.pas.PAS;
 import no.ums.pas.PredefinedFilterPanel;
 import no.ums.pas.area.FilterController;
 import no.ums.pas.area.main.MainFilterController;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.importer.gis.GISFilterList;
+import no.ums.pas.importer.gis.GISFilterRecord;
 import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -228,31 +233,27 @@ public class PredefinedFilterController extends MainFilterController{
 	}
 	public void gotoMap() {
 		Object object = getObjectFromTree();
-		if (checkObject(object, AreaVO.class)) {
+		//if (checkObject(object, AreaVO.class)) {
+		    if (checkObject(object, AddressFilterInfoVO.class)) {
 			//this.event = (EventVO) object;
 			try {
-				if(((AreaVO)object).getM_shape()!=null) {
-					ShapeStruct gisShape = null;
-					no.ums.pas.maps.defines.NavStruct nav = null;
-					if(((AreaVO)object).getM_shape() instanceof GISShape)
-					{
-						gisShape = ((AreaVO)object).getM_shape();
-						nav = ((GISShape) gisShape).get_gislist().GetBounds();
-					}
-					else
-					{
-						nav = ((AreaVO)object).getM_shape().calc_bounds();//((AlertVO)object).getM_polygon().calc_bounds();
-					}
-					if(nav!=null)
-						PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-				}
-			} catch(Exception e) {
-				log.debug(e.getMessage());
-				log.warn(e.getMessage(), e);
-				Error.getError().addError("PredefinedFilterController","Exception in gotoMap",e,1);
-			}
-		}
-	}
+			  //  if(((AddressFilterInfoVO)object).getM_shape()!=null) {
+                   ShapeStruct gisShape = null;
+             //no.ums.pas.maps.defines.NavStruct nav = null;
+                   GISShape gisshape=new GISShape(null);
+                   GISFilterList list= new GISFilterList();
+                   list.fill();
+                   gisshape.setM_gisfilterlist(list);
+                   NavStruct nav = new NavStruct(5.743427276611328, 5.743997097015381, 58.864227294921875, 58.86396026611328);
+	               gisshape.set_fill_color(new Color(0, 0, 200, 0));
+	      PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_filter"));
+                   } catch(Exception e) {
+                log.debug(e.getMessage());
+                log.warn(e.getMessage(), e);
+                Error.getError().addError("PredefinedFilterController","Exception in gotoMap",e,1);
+                }
+        }
+       }
 	
 	public void setDrawMode(ShapeStruct s) {
 		if(s!=null) {

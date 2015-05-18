@@ -8,6 +8,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
@@ -685,7 +686,21 @@ public class XmlReader {
 					addresstypes = -1;
 				name = eAttributes.getAttribute("sz_name");
 				description = eAttributes.getAttribute("sz_description");
-				oadc = eAttributes.getAttribute("sz_oadc");
+				NodeList fl =eAttributes.getElementsByTagName("Filter");
+				List<AddressFilterInfoVO> filters=new ArrayList<AddressFilterInfoVO>();
+				if(fl.getLength()>0) {
+                    Element el;
+                    for(int j=0;j<fl.getLength();++j) {
+                        el = (Element)fl.item(j);
+                        System.out.println(el);
+                        AddressFilterInfoVO addressFilterInfoVO=new AddressFilterInfoVO();
+                        addressFilterInfoVO.setFilterId(Integer.parseInt(el.getAttribute("filterId")));
+                        addressFilterInfoVO.setFilterName(el.getAttribute("filterName"));
+                        addressFilterInfoVO.setCreationTime((el.getAttribute("lastupdatedDate")));
+                        filters.add(addressFilterInfoVO);
+                    }
+                }
+                oadc = eAttributes.getAttribute("sz_oadc");
 				timestamp = eAttributes.getAttribute("l_timestamp");
 
 				AlertVO ao = new AlertVO(alertPk, parent, name, addresstypes/*
@@ -696,7 +711,7 @@ public class XmlReader {
 
 				if (eAttributes.hasAttribute("sz_operation"))
 					ao.setOperation(eAttributes.getAttribute("sz_operation"));
-
+				ao.setFilters(filters);
 				ao.setDescription(description);
 				ao.setTimestamp(timestamp);
 				ao.setOadc(oadc);

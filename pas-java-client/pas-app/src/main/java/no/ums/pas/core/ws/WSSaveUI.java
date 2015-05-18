@@ -1,21 +1,28 @@
 package no.ums.pas.core.ws;
 
+import java.awt.Frame;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.WmsLayer;
+
 import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.AddressFilterInfo;
+import no.ums.ws.common.parm.ArrayOfAddressFilterInfo;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
-
-import javax.xml.namespace.QName;
-import java.awt.Frame;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class WSSaveUI extends WSThread
 {
@@ -119,6 +126,24 @@ public class WSSaveUI extends WSThread
 			ui.setLSendingAutoshape(settings.getN_autoselect_shapetype());
 			ui.setLDeptcategory(settings.getDeptCategory());
 			ui.setLAddresstypes(settings.getAddressTypes());
+			ArrayOfAddressFilterInfo filters =new ArrayOfAddressFilterInfo();
+			for (int i = 0; i < PAS.get_pas().get_settings().getAddressFilters().size(); i++) {
+				AddressFilterInfo aFI1 = new AddressFilterInfo();
+				aFI1.setFilterId(PAS.get_pas().get_settings().getAddressFilters().get(i).getFilterId());
+				aFI1.setFilterName(PAS.get_pas().get_settings().getAddressFilters().get(i).getFilterName());
+				aFI1.setDescription("Test desc");
+				XMLGregorianCalendar calender;
+				try {
+					calender = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+					//aFI1.setLastupdatedDate(calender);
+				} catch (DatatypeConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				filters.getAddressFilterInfo().add(aFI1);//getAddressFilterInfo().add(aFI1);
+				//comboAddressFilterList.addItem(AddressFilterList.get(i));
+	        }
+			ui.setSelectedFilters(filters);
 			try
 			{
 				URL wsdl = new URL(vars.WSDL_PAS);

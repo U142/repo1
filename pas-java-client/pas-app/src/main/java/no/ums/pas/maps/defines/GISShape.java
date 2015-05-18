@@ -2,6 +2,7 @@ package no.ums.pas.maps.defines;
 
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
+import no.ums.pas.importer.gis.GISFilterList;
 import no.ums.pas.importer.gis.GISList;
 
 import java.awt.Color;
@@ -14,7 +15,17 @@ import java.util.List;
 
 public class GISShape extends ShapeStruct {
 	GISList m_gislist;
-	public GISList get_gislist() { return m_gislist; }
+	GISFilterList m_gisfilterlist;
+
+    public GISFilterList getM_gisfilterlist() {
+        return m_gisfilterlist;
+    }
+
+    public void setM_gisfilterlist(GISFilterList m_gisfilterlist) {
+        this.m_gisfilterlist = m_gisfilterlist;
+    }
+
+    public GISList get_gislist() { return m_gislist; }
 	protected NavStruct m_fullbounds = null;
 	
 	public GISShape(GISList list) {
@@ -22,8 +33,8 @@ public class GISShape extends ShapeStruct {
 		m_gislist = list;
 		this.set_fill_color(new Color(0, 0, 200));
 	}
-	
-	@Override
+
+    @Override
 	public boolean pointInsideShape(MapPointLL ll) {
 		return true;
 	}

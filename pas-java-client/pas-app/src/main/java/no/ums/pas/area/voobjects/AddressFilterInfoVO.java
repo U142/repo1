@@ -96,14 +96,11 @@ public class AddressFilterInfoVO extends AlertVO implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        AddressFilterInfoVO AddressFilterInfoVO = (AddressFilterInfoVO) o;
-        return !(getPk() != null ? !getPk().equals(AddressFilterInfoVO.getPk())
-                : AddressFilterInfoVO.getPk() != null);
+        AddressFilterInfoVO addressFilterInfoVO = (AddressFilterInfoVO) o;
+        return getFilterId() == addressFilterInfoVO.getFilterId();
     }
 
     @Override

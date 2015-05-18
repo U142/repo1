@@ -200,6 +200,7 @@ public class WSGisFilterImport extends WSThread
     protected GisVbBanken m_colsetVb;
     protected GISList m_gislist;
     protected GISFilterList m_gisfilterlist;
+    protected no.ums.pas.importer.gis.GISFilterList gisFilterList;
     protected LoadingPanel loader;
     public WSGisFilterImport(ActionListener callback, String sz_cmd)
     {
@@ -249,7 +250,7 @@ public class WSGisFilterImport extends WSThread
         logon.setLUserpk(new Long(u.get_userpk()));
         logon.setSzCompid(u.get_compid());
         logon.setSzDeptid(u.get_current_department().get_deptid());
-        logon.setSzPassword("sac@pas12014");
+        logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
         logon.setSzStdcc(u.get_current_department().get_stdcc());
         logon.setLDeptpk(u.get_current_department().get_deptpk());
         logon.setSessionid(u.get_sessionid());
@@ -351,6 +352,7 @@ public class WSGisFilterImport extends WSThread
                 m_gisfilterlist.fill(importlines.getAddressAssociatedWithFilter());
                // res = new AddressFilters(wsdl, service);
                // res.getAddressFiltersSoap().execUpdateAddressFilter(PARMOPERATION.INSERT, logon, info);
+                //gisFilterList.add(null);
 
             }   else if("import_addr_CUNorway".equalsIgnoreCase(m_importType)){
                 //ArrayOfUGisImportApartmentLine importlines = new ArrayOfUGisImportApartmentLine();

@@ -1,13 +1,19 @@
 package no.ums.pas.importer.gis;
 
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 class PreviewAddressOptions extends DefaultPanel {
@@ -118,7 +124,7 @@ class PreviewAddressOptions extends DefaultPanel {
 		
 		get_gridconst().insets=new Insets(3, 3, 3, 3);
 		
-		set_gridconst(0, 0, 6, 1);
+		set_gridconst(0, 0, 18, 1);
 		
 		add(m_lbl_msg, get_gridconst());
 		
@@ -168,12 +174,20 @@ class PreviewAddressOptions extends DefaultPanel {
 		m_lbl_street = new JLabel(Localization.l("import_addr_street_b"));
 		m_lbl_address_param = new JLabel(Localization.l("import_Street_details"));
 		
-		m_cbx_address = new JComboBox(new String[] {
-				Localization.l("import_addr_street"),
-				Localization.l("import_addr_CUNorway"),
-				Localization.l("import_addr_CUSweden"),
-				Localization.l("import_addr_VABanken"),
-				 });
+		String contryCode=Variables.getAddressDatabase();
+		  System.out.println("------------------------Country Code---------------> :"+contryCode);
+		  if(contryCode!=null && contryCode.equals("0047")){
+		   m_cbx_address = new JComboBox(new String[] {
+		     Localization.l("import_addr_street"),
+		     Localization.l("import_addr_CUNorway"),
+		      });
+		  }else if(contryCode.equals("0046")){
+		   m_cbx_address = new JComboBox(new String[] {
+		     Localization.l("import_addr_street"),
+		     Localization.l("import_addr_CUSweden"),
+		     Localization.l("import_addr_VABanken"),
+		      });
+		  }
 		m_parent.setAddressTypeSelected("import_addr_street");
 		m_cbx_address.setActionCommand("act_change_address_type");
 		m_cbx_address.addActionListener(this);

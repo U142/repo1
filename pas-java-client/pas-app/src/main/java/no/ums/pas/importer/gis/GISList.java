@@ -5,9 +5,11 @@ import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.maps.defines.NavStruct;
+
 import no.ums.ws.pas.UAddress;
 import no.ums.ws.pas.UAddressBasics;
 import no.ums.ws.pas.UGisImportResultLine;
+
 import no.ums.ws.pas.UGisImportResultsByStreetId;
 
 import java.util.ArrayList;

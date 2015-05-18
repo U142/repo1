@@ -1,17 +1,21 @@
 package no.ums.pas.core.logon.view;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.List;
+
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 
 import org.jdesktop.beansbinding.AbstractBean;
 
 public class SettingsModel extends AbstractBean {
 
+	private ArrayList<AddressFilterInfoVO> addressFilters;
+
 	public SettingsModel()
 	{ 
 		setMapSiteDefault(true);
 		setMapSiteWms(true);
+		this.addressFilters=new ArrayList<AddressFilterInfoVO>();
 	}
 	
 	private String username = "";
@@ -246,5 +250,10 @@ public class SettingsModel extends AbstractBean {
 	public void setDeptCategory(int deptCategory) {
 		this.deptCategory = deptCategory;
 	}
-
+	public List<AddressFilterInfoVO> getAddressFilters() {
+		return addressFilters;
+	}
+	public void setAddressFilters(ArrayList<AddressFilterInfoVO> addressFilters) {
+		this.addressFilters = addressFilters;
+	}
 }

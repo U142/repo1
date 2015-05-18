@@ -3,6 +3,7 @@ package no.ums.pas.parm.xml;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.storage.StorageController;
@@ -87,8 +88,9 @@ public class XmlWriter {
 	
 	private final String strAlert = "paalert";
 	private final String strAlertPK = "l_alertpk";
-	
-	private int returnValue = 0;
+    private final String filters = "Filter";
+	private final String filtersPK = "l_filterId";
+    private int returnValue = 0;
 	private String rootTimestamp = "0";
 	
 	public XmlWriter(){}
@@ -356,7 +358,7 @@ public class XmlWriter {
                     element = checkXMLElement(xmlDoc, strAlert, strAlertPK, alert);
                     if (element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
                         element = (Element) xmlDoc.createElement(strAlert);
-                    rootnd.appendChild(element);
+                      rootnd.appendChild(element);
                     // Legger til elementer
 //					 Må sjekke om det er temppk som blir lagt inn eller vanlig (temppk har ikke bokstav foran)
                     element.setAttribute("l_alertpk", alert.getAlertpk());
@@ -378,7 +380,15 @@ public class XmlWriter {
                     element.setAttribute("l_expiry", String.valueOf(alert.get_LBAExpiry()));
                     element.setAttribute("sz_sms_oadc", alert.get_sms_oadc());
                     element.setAttribute("sz_sms_message", alert.get_sms_message());
-                    if (alert.getShape() != null) {
+                    if(alert.getFilters()!=null && alert.getFilters().size()>0){
+                    for(AddressFilterInfoVO filterList : alert.getFilters()){
+                        Element filter = (Element) element.appendChild(xmlDoc.createElement("Filter"));
+                        filter.setAttribute("filterId", Integer.toString(filterList.getFilterId()));
+                        filter.setAttribute("filterName", filterList.getFilterName());
+                        filter.setAttribute("lastupdatedDate", filterList.getCreationTime());
+                    }
+                   }
+                     if (alert.getShape() != null) {
                     	// Fjerner evt shapes som er lagret fra før
                     	removeCurrentShape(element);
                         if (alert.getShape().getClass().equals(PolygonStruct.class)) {

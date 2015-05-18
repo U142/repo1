@@ -1,8 +1,28 @@
 package no.ums.pas.send;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
+import javax.xml.namespace.QName;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
 import no.ums.pas.core.defines.LightPanel;
@@ -20,7 +40,13 @@ import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.PolySnapStruct;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.TasStruct;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.sendpanels.SendWindow;
@@ -37,15 +63,6 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.Parmws;
-
-import javax.swing.*;
-import javax.xml.namespace.QName;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class SendController implements ActionListener {
@@ -112,9 +129,17 @@ public class SendController implements ActionListener {
 	 */
 	//public static final int SENDTO_MOBILE_PRIVATE_SMS_ALT_FIXED = 1 << 12; //send voicemsg to fixed phone if the recipient don't have a mobile phone
 	//public static final int SENDTO_MOBILE_COMPANY_SMS_ALT_FIXED = 1 << 13;
+	private boolean isFromPredifinedAlert=false;
 	
 	
-	public static final int SENDTO_ALL = SENDTO_NOPHONE_PRIVATE | SENDTO_NOPHONE_COMPANY | SENDTO_FIXED_PRIVATE | SENDTO_FIXED_COMPANY | SENDTO_MOBILE_PRIVATE | SENDTO_MOBILE_COMPANY; // | SENDTO_CELL_BROADCAST_TEXT | SENDTO_CELL_BROADCAST_VOICE; 
+	public boolean isFromPredifinedAlert() {
+        return isFromPredifinedAlert;
+    }
+    public void setFromPredifinedAlert(boolean isFromPredifinedAlert) {
+        this.isFromPredifinedAlert = isFromPredifinedAlert;
+    }
+
+    public static final int SENDTO_ALL = SENDTO_NOPHONE_PRIVATE | SENDTO_NOPHONE_COMPANY | SENDTO_FIXED_PRIVATE | SENDTO_FIXED_COMPANY | SENDTO_MOBILE_PRIVATE | SENDTO_MOBILE_COMPANY; // | SENDTO_CELL_BROADCAST_TEXT | SENDTO_CELL_BROADCAST_VOICE;
 	
 	public static final boolean HasType(int TYPES, int TYPE) {
 		if((TYPES & TYPE) == TYPE)
@@ -228,6 +253,14 @@ public class SendController implements ActionListener {
 	private void set_current_snappoint(PolySnapStruct p) { m_polysnapstruct = p; }
 	public PolySnapStruct get_current_snappoint() { return m_polysnapstruct; } */
 	private boolean m_b_ignore_project = false;
+	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
+	public void setAddressFilter(AddressFilterInfoVO filter) {
+		filters.clear();
+	    filters.add(filter);
+	}
+	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
+		return filters;
+	}
 	public void remove_all_sendings() {
 		for(int i=0; i < get_sendings().size(); i++) {
 			try {
@@ -331,7 +364,9 @@ public class SendController implements ActionListener {
 			//else if(alert.getM_shape().getClass().equals(UnknownShape.class))
 			//n_type = SendProperties.SENDING_TYPE_ADRLIST_;
 		//else if(alert.getM_shape().getClass().equals()) //GIS import
-		SendObject obj = new SendObject(alert.getName(), n_type, m_n_send_id, this, Variables.getNavigation());
+		Variables.setPredefinedAlertfilterList(alert.getFilters());
+		SendObject obj = new SendObject(alert.getName(), n_type, m_n_send_id, this, Variables.getNavigation(),isFromPredifinedAlert());
+		//obj.setFromPredefinedAlert(isFromPredifinedAlert());
 		//obj.set_sendwindow(new SendWindow(this));
 		
 		try {
@@ -367,6 +402,8 @@ public class SendController implements ActionListener {
 		obj.get_sendproperties().set_maxchannels(alert.getMaxChannels());
 		obj.get_sendproperties().set_sms_broadcast_message(alert.get_sms_message());
 		obj.get_sendproperties().set_sms_broadcast_oadc(alert.get_sms_oadc());
+		obj.setFilterList(alert.getFilters());
+		obj.get_toolbar().setSelectedAddressFilter(alert.getFilters().get(0));
 		
 		//obj.setLocked(true);
 
@@ -456,8 +493,10 @@ public class SendController implements ActionListener {
 
 			SendObject obj;
 			if(alert!=null) {
+			    setFromPredifinedAlert(true);
 				obj = createSendingFromAlert(alert);
 			} else {
+			    setFromPredifinedAlert(false);
 				obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, Variables.getNavigation());
 			}
 			m_n_send_id++;
@@ -567,6 +606,7 @@ public class SendController implements ActionListener {
 		else if("act_send_one".equals(e.getActionCommand())) { //send one single sending (not many in a project)
 			try {
 				SendObject obj = (SendObject)e.getSource();
+				obj.get_sendproperties().setSet_filters(filters);
 				this.set_activesending(obj); // Setter denne her pga expiry valgene skal bli lagt til for TAS
 				SendWindow win = new SendWindow(this, obj, obj.get_sendproperties().get_cell_broadcast_text(), obj.get_sendproperties().get_sms_broadcast_text());
 				win.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(350, 300));
@@ -633,6 +673,9 @@ public class SendController implements ActionListener {
 		}
 		else if("act_set_active_shape".equals(e.getActionCommand())) {
 			PAS.get_pas().actionPerformed(e); //send active shape to MapFrame
+		}
+		else if("act_set_address_filter".equals(e.getActionCommand())){
+			PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
 		}
 	}
 	

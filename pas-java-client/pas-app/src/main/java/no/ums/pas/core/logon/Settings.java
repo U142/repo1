@@ -4,6 +4,10 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
+
+
+
 public class Settings {
 	public enum MAPSERVER
 	{
@@ -45,7 +49,16 @@ public class Settings {
 	private int n_autoselect_shapetype = 0;
 	private long addressTypes;
 	private int deptCategory;
+	private List<AddressFilterInfoVO> addressFilters;
 	
+	public List<AddressFilterInfoVO> getAddressFilters() {
+		return addressFilters;
+	}
+
+	public void setAddressFilters(List<AddressFilterInfoVO> addressFilters) {
+		this.addressFilters = addressFilters;
+	}
+
 	public Settings() {
 		username = "";
 		company = "";

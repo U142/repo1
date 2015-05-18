@@ -4,16 +4,65 @@
 
 package no.ums.pas.core.logon.view;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.PAS;
+import no.ums.pas.area.constants.PredefinedAreaConstants;
+import no.ums.pas.area.server.FilterServerCon;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.ChannelType;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.RecipientChannel;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.send.SendOptionToolbar.ADRGROUPS;
 import no.ums.pas.send.ToggleAddresstype;
+
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
@@ -21,16 +70,6 @@ import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.converters.StringToInt;
 import org.jdesktop.beansbinding.validation.VisibleValidation;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * @author User #2
@@ -56,7 +95,7 @@ public class Settings extends JFrame implements ActionListener{
 		public void onNewSendingAutoShape(AbstractButton value);
 	}
 
-	final SendOptionToolbar sot = new SendOptionToolbar(null, null, 0);
+	final SendOptionToolbar sot = new SendOptionToolbar(null, null, 0,true);
 	ISettingsUpdate callback;
 	
 	private int addressTypes = 0;
@@ -104,6 +143,7 @@ public class Settings extends JFrame implements ActionListener{
 		chkResident.setActionCommand("act_set_addresstypes_new");
 		chkPropertyOwnerPrivate.setActionCommand("act_set_addresstypes_new");
 		chkPropertyOwnerVacation.setActionCommand("act_set_addresstypes_new");
+		comboAddressFilterList.setActionCommand("act_set_address_filter");
 
 
 		sot.setCallback(new ActionListener() {
@@ -318,6 +358,7 @@ public class Settings extends JFrame implements ActionListener{
 			TYPES |= SendController.RECIPTYPE_PRIVATE_OWNER_VACATION;
 		
 		settingsModel1.setAddressTypes(TYPES);
+		//settingsModel1.setAddressFilters(Variables.getFilterList());
 		return TYPES;
 	}
 	private void changeVisibilityOfABASPanel(boolean b)
@@ -784,6 +825,7 @@ public class Settings extends JFrame implements ActionListener{
 		comboCompanyRecipientChannel = new JComboBox();
 		chkLocationBased = new JCheckBox();
 		chkAddressBased = new JCheckBox();
+		comboAddressFilterList = new JComboBox();
 		settingsModel1 = new SettingsModel();
 		stringToInt1 = new StringToInt();
 		integerToObject1 = new IntegerToObject();
@@ -809,6 +851,86 @@ public class Settings extends JFrame implements ActionListener{
 				btnSaveActionPerformed(e);
 			}
 		});
+				long storedareasf = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_storedareas();
+                int phonebookf = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().getPhonebook();
+                log.debug("in checkAccessRights storedareas=" + storedareasf + ";phonebook="+phonebookf);
+                if((storedareasf > 0) && (phonebookf > PredefinedAreaConstants.NO_ACCESS)){
+                    enablePredefinedArea = true;
+                 }
+                log.debug("enablePredefinedArea="+enablePredefinedArea);
+                ArrayList<AddressFilterInfoVO> addressFilterList = Variables.getFilterList();
+                if(addressFilterList == null || addressFilterList.size()==0)
+				{
+                    FilterServerCon filterSyncUtility = new FilterServerCon();
+                    filterSyncUtility.execute(null, "fetch");
+                    try
+					{
+                        filterSyncUtility.join();
+						addressFilterList = filterSyncUtility.getFilterList();
+						log.debug("in sendoptiontollbar addressFilterList size="+addressFilterList.size());
+					}
+					catch(Exception ex)
+					{}
+				}
+				resetAddressFilterList();
+				//comboAddressFilterList.setSelectedItem("");
+				comboAddressFilterList.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+					public void keyReleased(KeyEvent e) {
+						log.debug("1key entered=" + e.getKeyCode());
+						if(e.getKeyChar()==KeyEvent.VK_ENTER)
+						{
+							comboAddressFilterList.hidePopup();
+							if(comboAddressFilterList.getSelectedItem() instanceof AddressFilterInfoVO)
+							{
+								AddressFilterInfoVO selectedFilter = (AddressFilterInfoVO) comboAddressFilterList.getSelectedItem();
+								log.debug("selected object is321 = "+selectedFilter);
+								autoSelectShapeFromPredefinedArea(selectedFilter.getM_shape());
+							}
+						}
+						else if(e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode()==KeyEvent.VK_RIGHT)
+						{
+							//do nothing when up or down keys are pressed
+						}
+						//add validation logic here, to decide which keys are allowed
+						else if (e.getKeyCode() != 38 && e.getKeyCode() != 40 && e.getKeyCode() != 10)
+						{
+			                String a = comboAddressFilterList.getEditor().getItem().toString();
+			                comboAddressFilterList.removeAllItems();
+			                int st = 0;
+			                ArrayList<AddressFilterInfoVO> addressFilterList = Variables.getFilterList();
+			                for (int i = 0; i < addressFilterList.size(); i++) {
+			                    if (addressFilterList.get(i).getFilterName().toUpperCase().startsWith(a.toUpperCase()))
+			                    {
+                                   comboAddressFilterList.addItem(addressFilterList.get(i));
+                                   st++;
+			                    }
+			                }
+			                comboAddressFilterList.getEditor().setItem(new String(a));
+			                comboAddressFilterList.hidePopup();
+			                if (st != 0) { comboAddressFilterList.showPopup(); }
+			                PAS.get_pas().kickRepaint();
+			            }
+		        }
+
+					private void autoSelectShapeFromPredefinedArea(
+							ShapeStruct m_shape) {
+						// TODO Auto-generated method stub
+                         }});
+
+				comboAddressFilterList.addItemListener(new ItemListener() {
+
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if(e.getStateChange()==ItemEvent.SELECTED)
+						{
+							if(comboAddressFilterList.getSelectedItem() instanceof AddressFilterInfoVO)
+							{
+								AddressFilterInfoVO selectedAddressFilterList = (AddressFilterInfoVO) comboAddressFilterList.getSelectedItem();
+								settingsModel1.getAddressFilters().add(selectedAddressFilterList);
+                             }
+                            }
+						}
+					});
 
 		//======== tabbedPane1 ========
 		{
@@ -1396,6 +1518,8 @@ public class Settings extends JFrame implements ActionListener{
 														.addComponent(toggleHeadOfHousehold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 													.addGroup(panel2Layout.createSequentialGroup()
 														.addComponent(chkAddressBased, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+														.addGap(18, 18, 18)
+														.addComponent(comboAddressFilterList, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 														.addGap(0, 0, Short.MAX_VALUE)))))
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 									.addGroup(panel2Layout.createSequentialGroup()
@@ -1439,10 +1563,12 @@ public class Settings extends JFrame implements ActionListener{
 										.addGap(159, 159, 159))
 									.addGroup(panel2Layout.createSequentialGroup()
 										.addGap(3, 3, 3)
-										.addComponent(chkAddressBased, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+											.addComponent(chkAddressBased, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(comboAddressFilterList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 										.addGap(18, 18, 18)
 										.addComponent(recipientTab, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap())))
+										.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
 					);
 				}
 
@@ -1595,6 +1721,28 @@ public class Settings extends JFrame implements ActionListener{
 		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
+	private void resetAddressFilterList() {
+        ArrayList<AddressFilterInfoVO> addressFilterList = Variables.getFilterList();
+        PAS.get_pas().get_sendcontroller().getAddressFilters().clear();
+        comboAddressFilterList.removeAllItems();
+        comboAddressFilterList.addItem(Localization.l("main_sending_default_filter"));
+			//CheckCombo cc =new CheckCombo();
+            for (int i = 0; i < addressFilterList.size(); i++) {
+               comboAddressFilterList.addItem(addressFilterList.get(i));
+              }
+             log.debug("in sendoptiontollbar AddressFilterListCombo size="+comboAddressFilterList.getItemCount());
+            if(PAS.get_pas().get_settings().getAddressFilters() !=null && PAS.get_pas().get_settings().getAddressFilters().size() > 0 )
+            comboAddressFilterList.setSelectedItem(PAS.get_pas().get_settings().getAddressFilters().get(0));
+            if(PAS.get_pas().getPredefinedFilterController() != null)
+               PAS.get_pas().getPredefinedFilterController().getFilterCtrl().resetEditShape();
+            }
+      public void refreshAddressFilterList()
+		{
+			this.resetAddressFilterList();
+		}
+      public void setAddressFilter(AddressFilterInfoVO filter){
+		get_callback().actionPerformed(new ActionEvent(filter, ActionEvent.ACTION_PERFORMED, "act_set_address_filter"));
+	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JButton btnCancel;
@@ -1662,9 +1810,14 @@ public class Settings extends JFrame implements ActionListener{
 	private JComboBox comboCompanyRecipientChannel;
 	private JCheckBox chkLocationBased;
 	private JCheckBox chkAddressBased;
+	private JComboBox comboAddressFilterList = null;
 	public SettingsModel settingsModel1;
 	private StringToInt stringToInt1;
 	private IntegerToObject integerToObject1;
 	private BindingGroup bindingGroup;
+	private boolean enablePredefinedArea = false;
+	ActionListener m_callback;
+    protected ActionListener get_callback() { return m_callback; }
+	public void setCallback(ActionListener c) { m_callback = c; }
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

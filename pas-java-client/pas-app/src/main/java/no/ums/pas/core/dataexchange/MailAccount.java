@@ -4,9 +4,9 @@ package no.ums.pas.core.dataexchange;
 
 public class MailAccount {
 	private String m_sz_account;
-	private String m_sz_mailserver;
+	private String m_sz_mailserver = "";
 	private String m_sz_displayname;
-	private String m_sz_mailaddress;
+	private String m_sz_mailaddress = "";
 	private String m_sz_helo;
 	private int m_n_port = 25;
 	private boolean m_b_autodetected = false;

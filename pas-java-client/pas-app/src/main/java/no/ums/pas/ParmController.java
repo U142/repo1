@@ -1,7 +1,17 @@
 package no.ums.pas;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
@@ -16,15 +26,6 @@ import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.ums.errorhandling.Error;
-
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class ParmController extends MainController {
@@ -43,6 +44,13 @@ public class ParmController extends MainController {
 	public ArrayList<ShapeStruct> get_shapelist() { return m_arr_shapes; }
 	public ShapeStruct get_shape() { return m_shape; }
 	public ShapeStruct get_shape_filled() { return m_shape_filled; }
+	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
+	public void setAddressFilter(AddressFilterInfoVO filter) {
+		filters.add(filter);
+	}
+	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
+		return filters;
+	}
 	
 	public ParmController(String sz_sitename, UserInfo userinfo) {
 		super(sz_sitename, userinfo);
@@ -305,6 +313,9 @@ public class ParmController extends MainController {
 			ShapeStruct s = (ShapeStruct)e.getSource();
 			setDrawMode(s);
 			
+		}
+		else if("act_set_address_filter".equals(e.getActionCommand())){
+			PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
 		}
 		super.actionPerformed(e);
 	}

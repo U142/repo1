@@ -1,5 +1,6 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Navigation;
@@ -13,6 +14,7 @@ import no.ums.pas.send.cellbroadcast.CBMessage;
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,6 +126,7 @@ public class AlertVO extends ParmVO implements Cloneable {
 	private String[] strLocalLanguage;
 	private String[] strInternationalLanguage;
 	private ArrayList<Object> CBMessages;
+	private List<AddressFilterInfoVO> filters;
 	private String strCBOadc;
 	private String m_sz_sms_oadc;
 	public String get_sms_oadc() { return m_sz_sms_oadc; }
@@ -304,6 +307,8 @@ public class AlertVO extends ParmVO implements Cloneable {
 	
 	public ArrayList<Object> getCBMessages() { return CBMessages; }
 	
+	public List<AddressFilterInfoVO> getFilters() {return filters;}
+    public void setFilters(List<AddressFilterInfoVO> filters) {this.filters = filters;}
 	public void setSMSOadc(String smsoadc) { m_sz_sms_oadc = smsoadc; }
 	public void setSMSMessage(String smsmessage) { m_sz_sms_message=smsmessage; }
 	

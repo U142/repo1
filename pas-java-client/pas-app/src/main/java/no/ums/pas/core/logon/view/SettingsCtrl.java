@@ -178,6 +178,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 		s.setPanByDrag(model.getPanByDrag());
 		s.setZoomFromCenter(model.getZoomFromCenter());
 		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
+		s.setAddressFilters(model.getAddressFilters());
 		try{
 			s.setDeptCategory((model.getDeptCategory()));
 		} catch(Exception e)	{
@@ -193,6 +194,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 		ma.set_displayname(model.getEmailDisplayName());
 		ma.set_mailaddress(model.getEmailAddress());
 		ma.set_mailserver(model.getEmailServer());
+		//PAS.get_pas().get_settings().setAddressFilters(model.getAddressFilters());
 		
 		List<String> selected_layers;
 		if(s.getMapServer()==MAPSERVER.WMS && tree.getModel().getRoot()!=null) // m_wms_list.m_tbl_list.getRowCount() > 0)

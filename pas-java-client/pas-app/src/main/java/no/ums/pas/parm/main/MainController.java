@@ -1,9 +1,45 @@
 package no.ums.pas.parm.main;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.measure.quantity.Force;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
@@ -44,10 +80,14 @@ import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.cellbroadcast.CBMessage;
 import no.ums.pas.ums.errorhandling.Error;
+
+
 import no.ums.ws.common.ArrayOfLBACCode;
 import no.ums.ws.common.LBACCode;
 import no.ums.ws.common.LBALanguage;
 import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.AddressFilterInfo;
+import no.ums.ws.common.parm.ArrayOfAddressFilterInfo;
 import no.ums.ws.common.parm.ArrayOfLBALanguage;
 import no.ums.ws.common.parm.ArrayOfPAALERT;
 import no.ums.ws.common.parm.ArrayOfUGisImportResultLine;
@@ -66,34 +106,6 @@ import no.ums.ws.parm.admin.ParmAdmin;
 import no.ums.ws.parm.admin.UPAALERTRESTULT;
 import no.ums.ws.parm.admin.UPAEVENTRESULT;
 import no.ums.ws.parm.admin.UPAOBJECTRESULT;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.xml.namespace.QName;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 public class MainController implements ActionListener, TreeModelListener,
 		TreeSelectionListener {
@@ -127,6 +139,13 @@ public class MainController implements ActionListener, TreeModelListener,
 	private ParmVO selectedObject = null;
 	public ParmVO getSelectedObject() { return selectedObject; }
 	
+	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
+	public void setAddressFilter(AddressFilterInfoVO filter) {
+		filters.add(filter);
+	}
+	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
+		return filters;
+	}
 	public class ScrollPane extends JScrollPane implements AdjustmentListener {
 		public static final long serialVersionUID = 1;
 		public ScrollPane(TreeGUI gui) {
@@ -594,7 +613,19 @@ public class MainController implements ActionListener, TreeModelListener,
 			save.setSzOadc(alert.getOadc());
 			save.setSzSmsMessage(alert.get_sms_message());
 			save.setSzSmsOadc(alert.get_sms_oadc());
-			if(alert.getOperation().equals("insert"))
+			if(alert.getFilters()!=null &&alert.getFilters().size()>0){
+			    ArrayOfAddressFilterInfo addressFilterInfo=new ArrayOfAddressFilterInfo();
+			    List<AddressFilterInfo> addressFilterInfolist=new ArrayList<AddressFilterInfo>();
+			    for (AddressFilterInfoVO infoVO : alert.getFilters()) {
+			        AddressFilterInfo info=new AddressFilterInfo();
+			        info.setFilterId(infoVO.getFilterId());
+			        info.setFilterName(infoVO.getFilterName());
+			        addressFilterInfolist.add(info);
+                }
+			    addressFilterInfo.setAddressFilterInfo(addressFilterInfolist);
+			    save.setFilters(addressFilterInfo);
+			}
+             if(alert.getOperation().equals("insert"))
 				save.setParmop(PARMOPERATION.INSERT);
 			else if(alert.getOperation().equals("update"))
 				save.setParmop(PARMOPERATION.UPDATE);
@@ -707,8 +738,27 @@ public class MainController implements ActionListener, TreeModelListener,
 			
 			save.setMShape(shape);
 			save.setMLbaShape(lbashape);
+			ArrayOfAddressFilterInfo filtersIDs =new ArrayOfAddressFilterInfo();
 			
-			URL wsdl = new URL(vars.WSDL_PARMADMIN); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
+			for (int i = 0; i < alert.getFilters().size(); i++) {
+				AddressFilterInfo aFI1 = new AddressFilterInfo();
+				aFI1.setFilterId(alert.getFilters().get(i).getFilterId());
+				aFI1.setFilterName(alert.getFilters().get(i).getFilterName());
+				aFI1.setDescription("Test desc");
+				XMLGregorianCalendar calender;
+				try {
+					calender = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+					//aFI1.setLastupdatedDate(calender.normalize());
+				} catch (DatatypeConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+              filtersIDs.getAddressFilterInfo().add(aFI1);
+				//comboAddressFilterList.addItem(AddressFilterList.get(i));
+	        }
+			//Set address filters in PAALERT
+            save.setFilters(filtersIDs);
+            URL wsdl = new URL("http://localhost:8080/WS/ParmAdmin.asmx?WSDL"); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/ParmAdmin.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/parm/admin/", "ParmAdmin");
 			UPAALERTRESTULT res = new ParmAdmin(wsdl, service).getParmAdminSoap12().execAlertUpdate(logon, save);
@@ -859,6 +909,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					else {
 						if (this.alertCtrl.deleteAlert(this.alert, (DefaultMutableTreeNode) remNode.getParent())) {
 							this.alert = this.alertCtrl.getAlert();
+							alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
 							if(isUpdateXMLReady()) {
 								if(PAS.g_n_parmversion < 2)
 									addToObjectList(this.alert); // bruk boolean?
@@ -968,6 +1019,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			alertCtrl = (AlertController)e.getSource();
 			alert = alertCtrl.getAlert();
 			DefaultMutableTreeNode parent;
+			alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
 			if (this.treeCtrl.getGui().getDelete().isEnabled()) { // if
 				// something
 				// is

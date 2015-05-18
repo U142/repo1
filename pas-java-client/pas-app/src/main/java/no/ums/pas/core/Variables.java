@@ -13,6 +13,7 @@ import no.ums.pas.send.SendController;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Variables {
 	
@@ -23,7 +24,13 @@ public class Variables {
 	private static MapFrame mapFrame = null;
 	private static Settings settings = null;
 	private static StatusController statusController = null;
-	
+	private static String addressDatabase = null;
+	 public static String getAddressDatabase() {
+	  return addressDatabase;
+	 }
+	 public static void setAddressDatabase(String addressDatabase) {
+	  Variables.addressDatabase = addressDatabase;
+	 }
 	private static String switchOverDate = "20140602000000";
 	public static String getSwitchOverDate() {
 		return switchOverDate;
@@ -34,7 +41,15 @@ public class Variables {
 		return areaList;
 	}
     private static ArrayList<AddressFilterInfoVO> filterList;
+    private static List<AddressFilterInfoVO> predefinedAlertfilterList;
 
+    public static List<AddressFilterInfoVO> getPredefinedAlertfilterList() {
+        return predefinedAlertfilterList;
+    }
+    public static void setPredefinedAlertfilterList(
+            List<AddressFilterInfoVO> predefinedAlertfilterList) {
+        Variables.predefinedAlertfilterList = predefinedAlertfilterList;
+    }
     public static ArrayList<AddressFilterInfoVO> getFilterList() {
         return filterList;
     }

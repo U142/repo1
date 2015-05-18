@@ -128,6 +128,7 @@ public class SendPropertiesEllipse extends SendProperties {
 			ObjectFactory factory = new ObjectFactory();
 			ULOGONINFO logon = new ULOGONINFO();
 			UELLIPSESENDING poly = new UELLIPSESENDING();
+            System.out.println("heloooo");
 			//UEllipseDef el = factory.createUEllipseDef();
 			UMapBounds bounds = new UMapBounds();
 			

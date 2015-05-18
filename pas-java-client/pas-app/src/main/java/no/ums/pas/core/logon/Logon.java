@@ -3,6 +3,7 @@ package no.ums.pas.core.logon;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.WSLogon;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.Timeout;
@@ -283,6 +284,7 @@ public class Logon implements ActionListener {
 			m_info = new UserInfo(Long.toString(l.getLUserpk()), l.getLComppk(), l.getSzUserid(),
 					l.getSzCompid(), l.getSzName(), l.getSzSurname(), l.getSessionid(), l.getSzOrganization(),
 					l.getDefaultOadc().getLType(), l.getDefaultOadc().getSzValue());
+			Variables.setAddressDatabase((l.getDepartments().getUDEPARTMENT().get(0).getSzStdcc()));
 			m_info.set_session_active(true);
 			m_pasui_settings = l.getUisettings();
 			if(!b_request_newsession)

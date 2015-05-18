@@ -3,6 +3,7 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -20,6 +21,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SendObject extends Object {
@@ -63,7 +66,21 @@ public class SendObject extends Object {
 	private Navigation m_navigation = null;
 	protected Navigation get_navigation() { return m_navigation; }
 	private Col m_default_color = new Col(new Color(1.0f, 0.0f, 0.0f, 0.2f), new Color(1.0f, 0.0f, 0.0f, 0.9f));
-	public void activate_sendwindow() {
+	private List<AddressFilterInfoVO> filterList = new ArrayList<AddressFilterInfoVO>() ;
+	private boolean isFromPredefinedAlert=false;
+    public boolean isFromPredefinedAlert() {
+        return isFromPredefinedAlert;
+    }
+    public void setFromPredefinedAlert(boolean isFromPredefinedAlert) {
+        this.isFromPredefinedAlert = isFromPredefinedAlert;
+    }
+    public List<AddressFilterInfoVO> getFilterList() {
+        return filterList;
+    }
+    public void setFilterList(List<AddressFilterInfoVO> filterList) {
+        this.filterList = filterList;
+    }
+    public void activate_sendwindow() {
 		if(m_sendwindow!=null) {
 			if(m_sendwindow.isVisible())
 				m_sendwindow.setVisible(true);
@@ -87,12 +104,15 @@ public class SendObject extends Object {
 			
 		}*/
 		//init(sz_name, sz_projectpk);
-		try {
-			if(PAS.get_pas() != null && PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 5)
-				m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
-			else
-				m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
-			if(PAS.pasplugin != null) // admin map
+        try {
+            if (PAS.get_pas() != null
+                    && PAS.get_pas().get_userinfo().get_current_department()
+                            .get_pas_rights() == 5) {
+                m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
+            } else {
+                m_toolbar = new SendOptionToolbar(this, callback, n_send_id,"SendObject");
+            }
+         if(PAS.pasplugin != null) // admin map
 				PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
 		} catch(Exception e) {
 			//PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);
@@ -100,6 +120,7 @@ public class SendObject extends Object {
 			Error.getError().addError("SendObject","Exception in SendObject",e,1);
 			log.warn(e.getMessage(), e);
 		}
+		//this.setFilterList(PAS.get_pas().get_settings().getAddressFilters());
 		//set_type(n_type);
 		switch(n_type) {
 		case SendProperties.SENDING_TYPE_POLYGON_:
@@ -123,6 +144,61 @@ public class SendObject extends Object {
 		}
 		//((BasicToolBarUI) m_toolbar.getUI()).setFloating(true, new Point(get_pas().get_mappane().get_dimension().width, 50));
 	}
+     public SendObject(String sz_name, int n_type, int n_send_id, ActionListener callback, Navigation nav,boolean isFromPredefinedAlert) { //SendController controller) {
+        super();
+         //m_pas = pas;
+        //m_sendcontroller = controller;
+        m_callback = callback;
+        m_navigation = nav;
+        /*try {
+            m_sendcontroller = PAS.get_pas().get_sendcontroller();
+        } catch(Exception e) {
+        }*/
+        //init(sz_name, sz_projectpk);
+        try {
+            if (PAS.get_pas() != null
+                    && PAS.get_pas().get_userinfo().get_current_department()
+                            .get_pas_rights() == 5) {
+                m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
+            } else {
+                if(isFromPredefinedAlert){
+                m_toolbar = new SendOptionToolbar(this, callback, n_send_id,"predefinedalert");
+                }else{
+                    m_toolbar = new SendOptionToolbar(this, callback, n_send_id,"newalert");
+                }
+            }
+             if(PAS.pasplugin != null) // admin map
+                PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
+        } catch(Exception e) {
+            //PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);
+            //PAS.get_pas().printStackTrace(e.getStackTrace());
+            Error.getError().addError("SendObject","Exception in SendObject",e,1);
+            log.warn(e.getMessage(), e);
+        }
+        //this.setFilterList(PAS.get_pas().get_settings().getAddressFilters());
+        //set_type(n_type);
+        switch(n_type) {
+        case SendProperties.SENDING_TYPE_POLYGON_:
+            //get_toolbar().m_radio_sendingtype_polygon.doClick();
+            get_toolbar().actionPerformed(new ActionEvent(this,Event.ACTION_EVENT,"act_sendingtype_polygon"));
+            break;
+        case SendProperties.SENDING_TYPE_CIRCLE_:
+            get_toolbar().m_radio_sendingtype_ellipse.doClick();
+            break;
+        case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
+            m_sendproperties = new SendPropertiesGIS(m_toolbar);
+            break;
+        case SendProperties.SENDING_TYPE_MUNICIPAL_:
+            get_toolbar().m_radio_sendingtype_municipal.doClick();
+            break;
+        }
+        try {
+            //PAS.get_pas().get_eastcontent().get_generalpanel().add(m_toolbar);
+        } catch(Exception e) {
+            Error.getError().addError("SendObject","Exception in SendObject",e,1);
+        }
+        //((BasicToolBarUI) m_toolbar.getUI()).setFloating(true, new Point(get_pas().get_mappane().get_dimension().width, 50));
+    }
 	public SendObject(PAS pas, ActionListener callback) {
 		//init("No name", "-1");
 		m_callback = callback;

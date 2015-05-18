@@ -17,6 +17,8 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -37,6 +39,7 @@ import javax.swing.ToolTipManager;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.log.swing.LogFrame;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
 import no.ums.pas.core.controllers.HouseController;
@@ -88,6 +91,7 @@ import no.ums.pas.ums.tools.PrintCtrl;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
+import no.ums.ws.common.parm.AddressFilterInfo;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -310,6 +314,17 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_settings.setWmsPassword(ui.getSzWmsPassword());
 		m_settings.setWmsEpsg(ui.getSzWmsEpsg());
 		pasplugin.onSetDefaultPanMode(m_settings);
+		List<AddressFilterInfo> list =ui.getSelectedFilters().getAddressFilterInfo();
+		List<AddressFilterInfoVO> listView= new ArrayList<AddressFilterInfoVO>();
+        for (AddressFilterInfo addressFilterInfo : list) {
+            AddressFilterInfoVO vo= new AddressFilterInfoVO();
+            vo.setFilterId(addressFilterInfo.getFilterId());
+            vo.setFilterName(addressFilterInfo.getFilterName());
+            vo.setDescription(addressFilterInfo.getDescription());
+            vo.setCreationTime(addressFilterInfo.getLastupdatedDate().toString());
+            listView.add(vo);
+        }
+		m_settings.setAddressFilters(listView);
 
 		try
 		{
@@ -319,6 +334,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			
 		}
+		//m_settings.setAddressFilters(ui.getSelectedFilters().getAddressFilterInfo());
 		m_settings.setSkinClassName(ui.getSzSkinClass());
 		m_settings.setThemeClassName(ui.getSzThemeClass());
 		m_settings.setTitlePainterClassname(ui.getSzTitleClass());

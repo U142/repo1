@@ -612,6 +612,12 @@ public class PASActions implements ActionListener {
 				sending.get_toolbar().refreshAreaList();
 			}
 		}
+		  else if("act_map_goto_filter".equals(e.getActionCommand())) {
+	            NavStruct nav = (NavStruct)e.getSource();
+	            if(Variables.getNavigation().setNavigation(nav))
+	                PAS.get_pas().get_mappane().load_map(true);
+	            PAS.get_pas().kickRepaint();
+	        }
 	}
 	
 	public void deptChanged() {

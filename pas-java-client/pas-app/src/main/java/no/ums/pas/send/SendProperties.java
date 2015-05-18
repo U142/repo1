@@ -1,10 +1,27 @@
 package no.ums.pas.send;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.area.AreaController;
 import no.ums.pas.area.FilterController;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
@@ -14,18 +31,20 @@ import no.ums.pas.core.ws.WSAdrcount;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.send.cap.CapConfigView;
 import no.ums.pas.send.cellbroadcast.CBMessage;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+
 import no.ums.ws.common.ArrayOfLBACCode;
 import no.ums.ws.common.LBACCode;
 import no.ums.ws.common.LBALanguage;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.parm.AddressFilterInfo;
+import no.ums.ws.common.parm.ArrayOfAddressFilterInfo;
 import no.ums.ws.common.parm.ArrayOfLBALanguage;
 import no.ums.ws.common.parm.ArrayOfLong;
 import no.ums.ws.common.parm.ArrayOfString;
@@ -36,20 +55,7 @@ import no.ums.ws.common.parm.UMapSendingCapFields;
 import no.ums.ws.common.parm.UTESTSENDING;
 import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UAdrCount;
-
-import javax.xml.namespace.QName;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 
 public abstract class SendProperties extends Object {
@@ -100,6 +106,7 @@ public abstract class SendProperties extends Object {
 	private String m_sz_sms_oadc;
 	private int m_n_duration; // centric
 	private int m_n_channel; // centric
+	private List <AddressFilterInfoVO> set_filters;
 	
 	private String sendTestType = null;
 	private int reshedVal = 0;
@@ -112,6 +119,12 @@ public abstract class SendProperties extends Object {
 	
 	public void addResendStatus(StatusCode sz_code) {
         m_arr_resend_status.add(sz_code);
+	}
+	public List<AddressFilterInfoVO> getSet_filters() {
+		return set_filters;
+	}
+	public void setSet_filters(List<AddressFilterInfoVO> set_filters) {
+		this.set_filters = set_filters;
 	}
 	public void remResendStatus(StatusCode sz_code) {
 		m_arr_resend_status.remove(sz_code);
@@ -436,8 +449,7 @@ public abstract class SendProperties extends Object {
 			s.setNPausetime(get_schedprofile().get_pausetime());
 			s.setNRetries(get_schedprofile().get_retries());
 			s.setNReschedpk(new Long(get_schedprofile().get_reschedpk()).longValue());
-			
-			if(get_bbprofile() != null) {				
+            if(get_bbprofile() != null) {
 				s.setNDynvoc(get_bbprofile().get_soundfiles().size());
 				s.setNProfilepk(get_bbprofile().get_profilepk());
 			}
@@ -453,6 +465,23 @@ public abstract class SendProperties extends Object {
 			s.setNSendChannels(get_sendchannels());
 		}
 		
+		ArrayOfAddressFilterInfo filters = new ArrayOfAddressFilterInfo();
+        for (int i = 0; i < getSet_filters().size(); i++) {
+            AddressFilterInfo aFI1 = new AddressFilterInfo();
+            aFI1.setFilterId(getSet_filters().get(i).getFilterId());
+            aFI1.setFilterName(getSet_filters().get(i).getFilterName());
+            aFI1.setDescription("Test desc");
+            XMLGregorianCalendar calender;
+            try {
+                calender = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+                //aFI1.setLastupdatedDate(calender);
+            } catch (DatatypeConfigurationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            filters.getAddressFilterInfo().add(aFI1);
+        }
+        s.setFilters(filters);
 		s.setNScheddate(get_sched().get_scheddate());
 		s.setNSchedtime(get_sched().get_schedtime());
 		s.setNValidity(get_validity());

@@ -35,7 +35,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
     private StdTextLabel m_lbl_adrcount_companynonumber  = new StdTextLabel(Localization.l("main_sending_adr_type_company_nonumber"), new Dimension(250, 16));
     private StdTextLabel m_lbl_adrcount_total   = new StdTextLabel(Localization.l("main_sending_adr_total_voice"), new Dimension(250,16));
     private StdTextLabel m_lbl_adrcount_total_sms = new StdTextLabel(Localization.l("main_sending_adr_total_sms"), new Dimension(250,16));
-
+	private StdTextLabel m_lbl_adrcount_filter_name = new StdTextLabel(Localization.l("mainmenu_libraries_predefined_filters"), new Dimension(250,16));
     private StdTextLabel m_lbl_adrcount_disclaimer = new StdTextLabel("tester", SIZING.DYNAMIC);
     
     private StdTextLabel m_txt_adrcount_private = new StdTextLabel("", SIZING.DYNAMIC); //new Dimension(250, 16));
@@ -49,6 +49,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	private StdTextLabel m_txt_adrcount_companynonumber  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
 	private StdTextLabel m_txt_adrcount_total   = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
 	private StdTextLabel m_txt_adrcount_total_sms = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_filter_name = new StdTextLabel("", SIZING.DYNAMIC);//logic?\
 	
 	protected SendWindow parent = null;
 	//private String m_sz_url = PAS.get_pas().get_sitename() + "PAS_getadrcount.asp";
@@ -111,6 +112,8 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		_add(m_txt_adrcount_total,	 n_width/2, get_panel(), n_width/2, 1);
 		_add(m_lbl_adrcount_total_sms,	 0, inc_panels(), n_width/2, 1);
 		_add(m_txt_adrcount_total_sms,	 n_width/2, get_panel(), n_width/2, 1);
+		_add(m_lbl_adrcount_filter_name,	 0, inc_panels(), n_width/2, 1);
+		_add(m_txt_adrcount_filter_name,	 n_width/2, get_panel(), n_width/2, 1);
 		init();
 
 	}
@@ -131,6 +134,10 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		for(int i=0;i<PAS.get_pas().get_sendcontroller().getAddressFilters().size();i++)
+		{
+			m_txt_adrcount_filter_name.setText(PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName());
+		}
 		if(ADRCOUNT_CALLBACK_ACTION_.equals(e.getActionCommand())) {
 			AddressCount c = (AddressCount)e.getSource();
 			set_addresscount(c);
@@ -151,6 +158,8 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		int n_addrtypes = get_parent().get_sendcontroller().get_activesending().get_toolbar().get_addresstypes();
 		boolean bVunerableOnly = (n_addrtypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0;
 		boolean bHeadOfHousehold = (n_addrtypes & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0;
+		m_lbl_adrcount_filter_name.setVisible(true);
+		m_txt_adrcount_filter_name.setVisible(true);
 		if(bHeadOfHousehold)
 		{
 			m_lbl_adrcount_disclaimer.setText(Localization.l("main_sending_adr_type_head_of_household"));

@@ -44,7 +44,7 @@ public class SendPropertiesGIS extends SendProperties {
 
 	private GISList m_gislist;
 	public GISList get_gislist() { return m_gislist; }
-	private Color m_col_housecolor = new Color(0, 0, 200);
+	private Color m_col_housecolor = new Color(0, 0, 0);
 	public void set_color(Color col) {
 		m_col_housecolor = col;
 	}
