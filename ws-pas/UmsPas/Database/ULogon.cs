@@ -82,10 +82,14 @@ namespace com.ums.PAS.Database
                 rs.Close();
                 //for saving selected filters in user's setting 
                 if (ui.SelectedFilters.Count != 0)
-                {
+                {   //deleting all old filters
+                    szSQL = string.Format("delete from BBUSER_PASUI_FILTER where l_userpk={0}", l.l_userpk);
+                    CreateCommand(szSQL, 1);
+                    ExecCommand();
+                    //saving new filters
                     for (int i = 0; i < ui.SelectedFilters.Count; i++)
                     {
-                        szSQL = string.Format("sp_pas_ins_ui_filters {0},{1}", l.l_userpk, ui.SelectedFilters[i].filterId);
+                        szSQL = string.Format("insert into BBUSER_PASUI_FILTER values({0},{1})", l.l_userpk, ui.SelectedFilters[i].filterId);
                         CreateCommand(szSQL, 1);
                         int k = ExecCommand();
                     }

@@ -2121,10 +2121,10 @@ namespace com.ums.ws.parm
                     {
                         for (int i = 0; i < Filters.Count;i++)
                         {
-                            outxml.insertStartElement("Filter");
-                            outxml.insertAttribute("FilterId", Filters[i].filterId.ToString());
-                            outxml.insertAttribute("FilterName", Filters[i].filterName);
-                            outxml.insertAttribute("LastUpdatedDate", Filters[i].lastupdatedDate.ToString());
+                            outxml.insertStartElement("filter");
+                            outxml.insertAttribute("filter_id", Filters[i].filterId.ToString());
+                            outxml.insertAttribute("filter_name", Filters[i].filterName);
+                            outxml.insertAttribute("last_updated_date", Filters[i].lastupdatedDate.ToString());
                             outxml.insertEndElement();
                         }
                    }
@@ -2277,9 +2277,6 @@ namespace com.ums.ws.parm
                 sz_constring = ConfigurationManager.ConnectionStrings[dsn].ConnectionString;
                 db.close();
                 UmsDb db1 = new PASUmsDb(sz_constring, 20000);
-                //OdbcConnection conn = new OdbcConnection(sz_constring);
-                //conn.Open();
-                //db1.SetConn(conn);
                 return db1;
             }
             catch (Exception)
