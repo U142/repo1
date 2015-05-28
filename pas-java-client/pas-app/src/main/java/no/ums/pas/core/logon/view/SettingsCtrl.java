@@ -179,6 +179,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 		s.setZoomFromCenter(model.getZoomFromCenter());
 		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
 		s.setAddressFilters(model.getAddressFilters());
+
 		try{
 			s.setDeptCategory((model.getDeptCategory()));
 		} catch(Exception e)	{

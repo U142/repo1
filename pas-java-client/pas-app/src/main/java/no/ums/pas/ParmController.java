@@ -317,6 +317,9 @@ public class ParmController extends MainController {
 		else if("act_set_address_filter".equals(e.getActionCommand())){
 			PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
 		}
+		else if("act_remove_address_filter".equals(e.getActionCommand())){
+            PAS.get_pas().get_sendcontroller().removeAddressFilter((AddressFilterInfoVO) e.getSource());
+        }
 		super.actionPerformed(e);
 	}
 	

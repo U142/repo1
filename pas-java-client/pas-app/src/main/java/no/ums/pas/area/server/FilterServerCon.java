@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -19,13 +20,17 @@ import no.ums.pas.core.ws.GISFilterList;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.addressfilters.AddressAssociatedWithFilter;
 import no.ums.ws.addressfilters.AddressFilterInfo;
 import no.ums.ws.addressfilters.ArrayOfAddressAssociatedWithFilter;
 import no.ums.ws.addressfilters.ArrayOfAddressFilterInfo;
+import no.ums.ws.addressfilters.ArrayOfUAddress;
 import no.ums.ws.addressfilters.ExecUpdateAddressFilter;
 import no.ums.ws.addressfilters.FILTEROPERATION;
+import no.ums.ws.addressfilters.UAddress;
+import no.ums.ws.addressfilters.UAddressList;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.UGisImportResultLine;
 import no.ums.ws.pas.ArrayOfUGisImportLine;
@@ -82,7 +87,7 @@ public class FilterServerCon extends Thread {
 				fetchFilterList();
 				Variables.setFilterList(filterList);
 			}
-			PAS.get_pas().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_predefined_areas_changed"));
+			PAS.get_pas().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_predefined_filters_changed"));
 		}
 	}
 	
@@ -116,10 +121,7 @@ public class FilterServerCon extends Thread {
 			String ts = filter.getTimestamp();
 			if (ts == null || ts.length() == 0)
 				ts = "0";
-
-	
-			
-		//	info.setAddressForFilterlist((ArrayOfAddressAssociatedWithFilter) filter.getAddressForFilterlist());
+       //	info.setAddressForFilterlist((ArrayOfAddressAssociatedWithFilter) filter.getAddressForFilterlist());
 			info.setAddressType(filter.getAddressType());
 			info.setLastupdatedDate(filter.getCreatTime());
 			info.setDeptId(String.valueOf(filter.getDeptId()));
@@ -131,8 +133,12 @@ public class FilterServerCon extends Thread {
 			GISFilterList gisList= filter.getGisFilterList();
 			List<AddressAssociatedWithFilter> list= gisList.subList(0, gisList.size());
 			info.setAddressForFilterlist(new ArrayOfAddressAssociatedWithFilter());
-			info.getAddressForFilterlist().setAddressAssociatedWithFilter(list);
-			}
+            for(Iterator<AddressAssociatedWithFilter> adr = list.iterator();
+                  adr.hasNext();)
+			   {
+                info.getAddressForFilterlist().getAddressAssociatedWithFilter().add(adr.next());
+			   }
+			   }
 
 			if (filter.getOperation().equals("insert"))
 				save.setOperation(FILTEROPERATION.INSERT); 
@@ -145,11 +151,8 @@ public class FilterServerCon extends Thread {
 				throw new Exception("Unknown operation " + filter.getOperation());
 			}
             log.info("---------------Filter Operation started:"+save.getOperation()+"---------------");
-			URL wsdl = new URL("http://localhost:8080/WS/AddressFilters.asmx?WSDL"); // PAS.get_pas().get_sitename()
-														// +
-														// "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
-			// URL wsdl = new URL("http://localhost/WS/ParmAdmin.asmx?WSDL");
-			QName service = new QName("http://ums.no/ws/addressfilters/",
+			URL wsdl = new URL(vars.WSDL_ADDRESSFILTERS); // PAS.get_pas().get_sitename()
+            QName service = new QName("http://ums.no/ws/addressfilters/",
 					"AddressFilters");
 			AddressFilterInfo res = new no.ums.ws.addressfilters.AddressFilters(wsdl, service)
 					.getAddressFiltersSoap().execUpdateAddressFilter(save.getOperation(), logon, info);
@@ -162,13 +165,12 @@ public class FilterServerCon extends Thread {
 		}
 	
 	}
-
-	private void fetchFilterList() {
+     private void fetchFilterList() {
 
 //		log.debug("calling webservice to fetch filter list from backend");
 		filterList = new ArrayList<AddressFilterInfoVO>();
 		Set<String> keySet = new HashSet<String>();
-		keySet.add("0");
+        keySet.add("0");
 		try {
 			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzUserid(PAS.get_pas().get_userinfo().get_userid());
@@ -183,26 +185,26 @@ public class FilterServerCon extends Thread {
 														// +
 														// "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
 			log.info("Filter Operation fetch all started");
-			URL wsdl = new URL("http://localhost:8080/WS/AddressFilters.asmx?WSDL");
+			URL wsdl = new URL(vars.WSDL_ADDRESSFILTERS);
 			QName service = new QName("http://ums.no/ws/addressfilters/",
 					"AddressFilters");
 			ArrayOfAddressFilterInfo res = new  no.ums.ws.addressfilters.AddressFilters(wsdl, service)
 					.getAddressFiltersSoap().getListofAddressFilter(logon);
-					//getFilterAdminSoap12().getListofAddressFilter(logon);
-
-			// res.getPAALERT();1212
-
-			//int col_r, col_g, col_b, col_a;
-			for (AddressFilterInfo filterObj : res.getAddressFilterInfo()) {
-				AddressFilterInfoVO filterVo = new AddressFilterInfoVO();
+               for (AddressFilterInfo filterObj : res.getAddressFilterInfo()) {
+                if(filterObj.getFilterName().equals("Lundegeilen")){
+			        System.out.println("Lundegeilen");
+			    }
+			    GISShape m_shape= new GISShape(fetchAddressForImportedPredefinedFilters(filterObj),true);
+			    m_shape.setM_gisfilterlist(fetchAddressForImportedPredefinedFilters(filterObj));
+                AddressFilterInfoVO filterVo = new AddressFilterInfoVO();
 				filterVo.setFilterId(filterObj.getFilterId());
 				filterVo.setFilterName(filterObj.getFilterName());
 				filterVo.setDescription(filterObj.getDescription());
 				filterVo.setCreationTime(filterObj.getLastupdatedDate().toString());
 				filterVo.setDeptId(filterObj.getDeptId());
+				filterVo.submitShape(m_shape);
 			    filterList.add(filterVo);
-				
-			}
+           }
 			log.info("---------------Filter Operation fetch all completed successfully---------------");
 		} catch (Exception err) {
 			System.out.println(err.toString());
@@ -211,12 +213,10 @@ public class FilterServerCon extends Thread {
 		}
 		keySet.clear();
 	}
-
-/*	public GISList fetchAddressForImportedPredefinedArea(List<UGisImportResultLine> lines)
-	{
-		GISList gisList = null;
-
-		ULOGONINFO logon = new ULOGONINFO();
+    public no.ums.pas.importer.gis.GISFilterList fetchAddressForImportedPredefinedFilters(AddressFilterInfo Filter)
+    {
+        no.ums.pas.importer.gis.GISFilterList gisFilterList =new no.ums.pas.importer.gis.GISFilterList();
+        ULOGONINFO logon = new ULOGONINFO();
         UserInfo u = PAS.get_pas().get_userinfo();
         logon.setLComppk(u.get_comppk());
         logon.setLDeptpk(u.get_current_department().get_deptpk());
@@ -228,78 +228,24 @@ public class FilterServerCon extends Thread {
         logon.setLDeptpk(u.get_current_department().get_deptpk());
         logon.setSessionid(u.get_sessionid());
         logon.setJobid(WSThread.GenJobId());
-
         try
         {
-	        URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
-	        QName service = new QName("http://ums.no/ws/pas/", "pasws");
-	        UGisImportResultsByStreetId res = null;
+            URL wsdl = new URL(vars.WSDL_ADDRESSFILTERS);      //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
+            QName service = new QName("http://ums.no/ws/addressfilters/", "AddressFilters");
 
-	        boolean propertyImport = false;
+          //  UAddress address = new UAddress();
+	      //  ArrayOfUAddress importaddresslines = new ArrayOfUAddress();
+           UAddressList res = new  no.ums.ws.addressfilters.AddressFilters(wsdl, service)
+            .getAddressFiltersSoap().getActualAddressesOfFilter(logon, Filter);
 
-	        //to determine the type of address import
-            if(lines!=null && lines.size()>0)
-            {
-            	no.ums.ws.common.parm.UGisImportResultLine line = lines.get(0);
-            	if(line.isPropertyField())
-            		propertyImport=true;
+            if(res!=null){
+                gisFilterList.fill(res);
             }
-
-            if(propertyImport)
-            {
-            	ArrayOfUGisImportPropertyLine importPropertyLines = new ArrayOfUGisImportPropertyLine();
-                UGisImportPropertyList propertySearch = new UGisImportPropertyList();
-                propertySearch.setList(importPropertyLines);
-                propertySearch.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
-                propertySearch.setSKIPLINES(0);
-
-            	for (no.ums.ws.common.parm.UGisImportResultLine rl : lines) {
-	        		UGisImportPropertyLine resline = new UGisImportPropertyLine();
-                        resline.setMunicipalid(rl.getMunicipalid());
-                        resline.setGnr(rl.getGnr());
-                        resline.setBnr(rl.getBnr());
-                        resline.setFnr(rl.getFnr());
-                        resline.setSnr(rl.getSnr());
-                        resline.setApartmentid(rl.getApartmentid());
-                        resline.setNamefilter1(rl.getNamefilter1());
-                        resline.setNamefilter2(rl.getNamefilter2());
-                        importPropertyLines.getUGisImportPropertyLine().add(resline);
-            	}
-
-            	res = new Pasws(wsdl, service).getPaswsSoap12().getGisByPropertyIdV3(logon, propertySearch);
-                gisList = new GISList();
-                gisList.fillProperty(res);
-            }
-            else
-            {
-            	ArrayOfUGisImportLine importStreetLines = new ArrayOfUGisImportLine();
-                UGisImportList streetSearch = new UGisImportList();
-                streetSearch.setList(importStreetLines);
-                streetSearch.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
-                streetSearch.setSKIPLINES(0);
-
-            	for (no.ums.ws.common.parm.UGisImportResultLine rl : lines) {
-	        		UGisImportLine resline = new UGisImportLine();
-	        		resline.setMunicipalid(rl.getMunicipalid());
-                    resline.setStreetid(rl.getStreetid());
-                    resline.setHouseno(rl.getHouseno());
-                    resline.setLetter(rl.getLetter());
-                    resline.setApartmentid(rl.getApartmentid());
-                    resline.setNamefilter1(rl.getNamefilter1());
-                    resline.setNamefilter2(rl.getNamefilter2());
-                    importStreetLines.getUGisImportLine().add(resline);
-            	}
-
-            	res = new Pasws(wsdl, service).getPaswsSoap12().getGisByStreetIdV2(logon, streetSearch);
-            	gisList = new GISList();
-            	gisList.fill(res);
-            }
-        }
+}
         catch(Exception e)
         {
-        	log.warn(e.getMessage(), e);
+            log.warn(e.getMessage(), e);
         }
-
-        return gisList;
-	}*/
+        return  gisFilterList;
+    }
 }

@@ -33,6 +33,11 @@ public class GISShape extends ShapeStruct {
 		m_gislist = list;
 		this.set_fill_color(new Color(0, 0, 200));
 	}
+      public GISShape(GISFilterList list, boolean isFilter) {
+        super();
+        m_gisfilterlist = list;
+        this.set_fill_color(new Color(0, 0, 200));
+    }
 
     @Override
 	public boolean pointInsideShape(MapPointLL ll) {

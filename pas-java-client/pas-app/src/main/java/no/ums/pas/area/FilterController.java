@@ -174,15 +174,9 @@ public class FilterController implements ActionListener{
 			m_sendproperties.typecast_gis().set_gislist(list);
 			m_sendproperties.set_shapestruct(gisShape);
 			m_sendproperties.goto_area();
+            this.setEditShape(gisShape);
 
-//			Col col_default = new Col(m_default_color);
-//			gisShape.set_fill_color(col_default.get_fill());
-
-			this.setEditShape(gisShape);
-
-			//PAS.get_pas().actionPerformed(new ActionEvent(m_edit_shape, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-
-			if(isEditMode())
+            if(isEditMode())
 				PAS.get_pas().getPredefinedFilterController().clearDrawQueue();
 		}
 		else if("act_save_predefined_area".equals(e.getActionCommand())){
@@ -229,8 +223,7 @@ public class FilterController implements ActionListener{
 			resetImportOption();
 		}
 		else if("act_cancel_predefined_area".equals(e.getActionCommand())){
-//			log.debug("inside FilterController Cancel btn from area gui clicked1");
-//			this.setEditShape(m_edit_shape_original);
+
 			if(editMode)
 				currentFilter.submitShape(m_old_shape);
 			this.getGui().dispose();
@@ -239,9 +232,7 @@ public class FilterController implements ActionListener{
 				clearMap();
 			else if(this.getSource().equals(FilterSource.NEW_ALERT) || this.getSource().equals(FilterSource.STATUS))
 			{
-				//sourceCallback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_cancel"));
-//				PAS.get_pas().get_sendcontroller().get_activesending().get_toolbar().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_save_predefined_area_complete"));
-			}
+             }
 			else if(this.getSource().equals(FilterSource.STATUS))
 			{
 //				//pas event back to statussending
@@ -297,7 +288,7 @@ public class FilterController implements ActionListener{
 		lock = true;
 	}
 	
-	public void editArea(DefaultMutableTreeNode currentNode, boolean editMode, FilterSource source) throws ParmException {
+	public void editFilter(DefaultMutableTreeNode currentNode, boolean editMode, FilterSource source) throws ParmException {
 		
 		this.setEditMode(editMode);
 		this.source = source;
@@ -321,9 +312,10 @@ public class FilterController implements ActionListener{
 	
 	}
 	
-	public void deleteFilter(AddressFilterInfoVO areaToBeDeleted, DefaultMutableTreeNode currentNode) throws ParmException {
+	public void deleteFilter(AddressFilterInfoVO filterToBeDeleted, DefaultMutableTreeNode currentNode) throws ParmException {
 		this.currentNode = currentNode;
-		main.getTreeCtrl().removeFilterFromTree(areaToBeDeleted,currentNode);
+		main.getTreeCtrl().removeFilterFromTree(filterToBeDeleted,currentNode);
+		
 	}
 
 	private void validate() {

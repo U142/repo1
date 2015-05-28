@@ -16,39 +16,27 @@ public class StatisticsAddressPanel  extends DefaultPanel{
 	private StdTextLabel m_output_data  = new StdTextLabel("", 150, fontsize, false);
 	
 	PreviewAddressPanel m_panel;
-	
-	
-	
-	
-	int n_filelines = 0;
-	
-	public StatisticsAddressPanel()
+    int n_filelines = 0;
+    public StatisticsAddressPanel()
 	{
 		super();
 		add_controls();
 	}
-	
-	
-	@Override
+    @Override
 	public void add_controls() {
-	      
-		
-		set_gridconst(0, 0, 1, 1);
+        set_gridconst(0, 0, 1, 1);
 		add(m_lbl_filelines1, get_gridconst());
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_filelines, get_gridconst());
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_output_data, get_gridconst());
-		
-		
-	}
+       }
 	
 	@Override
 	public void init() {
 		
 		setVisible(true);
- 
-	}
+    }
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -57,8 +45,7 @@ public class StatisticsAddressPanel  extends DefaultPanel{
 			GISFilterList m_gisfilterlist = (GISFilterList) e.getSource();
 			calCount(m_gisfilterlist);
 	   }
-
-	}
+    }
 	
 	protected void calCount(GISFilterList m_gisfilterlist){
 		  resetStats();

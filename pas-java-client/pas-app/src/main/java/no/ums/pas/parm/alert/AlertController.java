@@ -251,12 +251,12 @@ public class AlertController implements ActionListener {
         gui = new AlertGUI(Localization.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
         if (alert.getFilters() != null && alert.getFilters().size() > 0) {
             toolbarPanel.setSelectedAddressFilter(alert.getFilters().get(0));
-            }
+        }
 		toolbarPanel.set_addresstypes(alert.getAddresstypes());
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
 		toolbarPanel.populateABASPanelData(alert.getAddresstypes(),Utils.isOldPARM(Variables.getSwitchOverDate(),alert.getTimestamp()));//added to repopulate address selection for edit
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
-
+		toolbarPanel.setSelectedAddressFilter(alert.getFilters());
 		if(alert.getM_shape()==null) {
 			//default to polygon
 			m_edit_shape = (new PolygonStruct(main.getMapNavigation().getDimension()));

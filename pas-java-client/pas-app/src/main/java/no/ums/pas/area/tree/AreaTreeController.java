@@ -44,9 +44,6 @@ public class AreaTreeController {
 
 	private AreaTreeGUI gui;
 
-//	public AreaTreeGUI get_treegui() {
-//		return gui;
-//	}
 
 	private MouseListener museLytter;
 	private TreePath selPath;

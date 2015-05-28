@@ -88,8 +88,6 @@ public class XmlWriter {
 	
 	private final String strAlert = "paalert";
 	private final String strAlertPK = "l_alertpk";
-    private final String filters = "Filter";
-	private final String filtersPK = "l_filterId";
     private int returnValue = 0;
 	private String rootTimestamp = "0";
 	
@@ -382,10 +380,10 @@ public class XmlWriter {
                     element.setAttribute("sz_sms_message", alert.get_sms_message());
                     if(alert.getFilters()!=null && alert.getFilters().size()>0){
                     for(AddressFilterInfoVO filterList : alert.getFilters()){
-                        Element filter = (Element) element.appendChild(xmlDoc.createElement("Filter"));
-                        filter.setAttribute("filterId", Integer.toString(filterList.getFilterId()));
-                        filter.setAttribute("filterName", filterList.getFilterName());
-                        filter.setAttribute("lastupdatedDate", filterList.getCreationTime());
+                        Element filter = (Element) element.appendChild(xmlDoc.createElement("filter"));
+                        filter.setAttribute("filter_id", Integer.toString(filterList.getFilterId()));
+                        filter.setAttribute("filter_name", filterList.getFilterName());
+                        filter.setAttribute("last_updated_date", filterList.getCreationTime());
                     }
                    }
                      if (alert.getShape() != null) {

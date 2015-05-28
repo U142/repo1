@@ -1,5 +1,6 @@
 package no.ums.pas.plugins.centric.ws;
 
+import no.ums.pas.core.ws.vars;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.cb.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
@@ -31,7 +32,7 @@ public class WSCentricStatusTest {
         cbsreq.setLogon(l);
 
         //To change body of created methods use File | Settings | File Templates.
-        URL wsdl = new URL("http://localhost/ws_pas/ws/passtatus.asmx?wsdl");
+        URL wsdl = new URL(vars.WSDL_PASSTATUS);
         QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
 
         cbpres = new PasStatus(wsdl, service).getPasStatusSoap12().getCBStatus(cbsreq);

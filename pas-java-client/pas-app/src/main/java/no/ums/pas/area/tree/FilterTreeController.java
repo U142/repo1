@@ -42,9 +42,6 @@ public class FilterTreeController {
 
 	private FilterTreeGUI gui;
 
-//	public AreaTreeGUI get_treegui() {
-//		return gui;
-//	}
 
 	private MouseListener museLytter;
 	private TreePath selPath;
@@ -52,7 +49,7 @@ public class FilterTreeController {
 	public static ArrayList<Object> staticList = new ArrayList<Object>();
 	private MainFilterController main;
 
-//	private HashMap<, DefaultMutableTreeNode> areaNodeMap = new HashMap<FilterVO, DefaultMutableTreeNode>();
+
 	private HashMap<String, DefaultMutableTreeNode> filterNodeMap = new HashMap<String, DefaultMutableTreeNode>();;
 
 	public void SetInitializing(final boolean b) {
@@ -90,11 +87,7 @@ public class FilterTreeController {
 			//Substance 3.3
 			Color c = SubstanceLookAndFeel.getActiveColorScheme()
 					.getUltraLightColor();
-			
-			//Substance 5.2
-			//Color c = SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getUltraLightColor();
-			
-			Color ctrans = new Color(c.getRed(), c.getGreen(), c.getBlue(),
+            Color ctrans = new Color(c.getRed(), c.getGreen(), c.getBlue(),
 					Color.TRANSLUCENT);
 			dtcr.setBackground(ctrans); // new
 										// Color(255,255,255,Color.TRANSLUCENT));
@@ -130,10 +123,7 @@ public class FilterTreeController {
 
 	public DefaultMutableTreeNode addParentToTree(Object o,
 			DefaultMutableTreeNode parentNode) throws ParmException {
-		// if (parentNode == null) throw new
-		// IllegalArgumentException("parentNode in addParentToTree is null");
-		// log.debug("addParentToTree(" + o.toString() + ") start");
-		AddressFilterInfoVO newObject =null;
+      AddressFilterInfoVO newObject =null;
 		try
 		{
 			if (o instanceof AddressFilterInfoVO) {
@@ -174,11 +164,6 @@ public class FilterTreeController {
 		return newRootFolder;
 
 	}
-	
-	/*public void addElementToMap(FilterVO key,DefaultMutableTreeNode value)
-	{
-		areaNodeMap.put(key, value);
-	}*/
 
 	private boolean isParent(Object o) throws ParmException {
 		boolean parent = false;
@@ -189,11 +174,7 @@ public class FilterTreeController {
 
 	private void addChildrenToTree(DefaultMutableTreeNode parentNode)
 			throws ParmException { // method runs only if parent object
-		// contains a list of objects.
-		// log.debug("addChildrenToTree("
-		// + parentNode.getUserObject().toString() + ") start");
-
-		Object parentObject = parentNode.getUserObject();
+            Object parentObject = parentNode.getUserObject();
 
 		if (parentObject.getClass().equals(AddressFilterInfoVO.class)) {
 			AddressFilterInfoVO aVO = (AddressFilterInfoVO) parentObject;
@@ -244,10 +225,7 @@ public class FilterTreeController {
 		FilterServerCon filterSyncUtility = new FilterServerCon();
 		filter.setOperation("update");
 		filterSyncUtility.execute(filter,"update");
-//		log.debug("in updateAreaToTree nodePk="+nodePk +";newArea.pk="+newArea.getPk());
-//		newArea.setPk(nodePk);
-		
-		//logic to edit area
+        //logic to edit area
 		if (currentNode.getUserObject() instanceof AddressFilterInfoVO)
 		{
 			AddressFilterInfoVO addressFilter = (AddressFilterInfoVO) currentNode.getUserObject();
@@ -265,23 +243,14 @@ public class FilterTreeController {
 	public void removeFilterFromTree(AddressFilterInfoVO filterToBeDeleted, DefaultMutableTreeNode currentNode)
 	{
 		//call web service here to delete area from backend
-		FilterServerCon areaSyncUtility = new FilterServerCon();
+		FilterServerCon filterSyncUtility = new FilterServerCon();
 		filterToBeDeleted.setOperation("delete");
-		areaSyncUtility.execute(filterToBeDeleted,"delete");
-		
-		//logic to edit area
-//		DefaultMutableTreeNode treeNode = this.areaNodeMap.get(node);
-		
-		getGui().getTreeModel().removeNodeFromParent(currentNode);
+		filterSyncUtility.execute(filterToBeDeleted,"delete");
+        getGui().getTreeModel().removeNodeFromParent(currentNode);
 //		this.areaNodeMap.remove(node);
+        getGui().getTreeModel().reload();
 	}
-	
-	/*public DefaultMutableTreeNode getNodeFromTree(FilterVO parent)
-	{
-		return this.areaNodeMap.get(parent);
-	}*/
-
-	class PopupListener extends MouseAdapter {
+        class PopupListener extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
 			gui.revalidate();
 			// first we need to select the node that is clicked!
@@ -299,12 +268,7 @@ public class FilterTreeController {
 		}
 
 		private void maybeShowPopup(MouseEvent e) {
-//			if (e.isPopupTrigger()) {
-				// e.getX(), e.getY()
-				// gui.createPopupMenu();
-			
-//			log.debug("inside maybeShowPopup() e.getButton()="+e.getButton());//
-			try
+        try
 			{
 				if(PAS.get_pas().getPredefinedAreaController().getAreaCtrl().isLock())
 				{
@@ -402,23 +366,7 @@ public class FilterTreeController {
 		}
 		return selectedObject;
 	}
-	/*
-	public void selectNode(ParmVO node) {
-		
-		get_treegui().getTree().setSelectionPath(path)
-	}*/
-	/*
-	private TreePath findNode(TreePath current_path, ParmVO node) {
-		ParmVO vo;
-		for(int i=0; i<current_path.getPathCount(); i++)
-		{
-			vo = (ParmVO)current_path.getPathComponent(i);
-			if(vo.getPk().equals(node.getPk()))
-				return current_path.getPathComponent(i).
-		}
-	}*/
-	
-	public TreePath find(JTree tree, Object node) {
+       public TreePath find(JTree tree, Object node) {
 	    TreeNode root = (TreeNode)tree.getModel().getRoot();
 	    return find2(tree, new TreePath(root), node);
 	}

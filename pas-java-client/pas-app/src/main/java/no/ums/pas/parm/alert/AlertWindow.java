@@ -383,10 +383,12 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(m_alert.getAlert()==null)
 			return false;
 		boolean hasVoice = hasVoice(m_alert.getPanelToolbar().get_addresstypes());
+		if(m_alert_settings.get_current_profile()!=null){
 		boolean soundfiles = (m_alert_settings.get_current_profile().get_soundfiles().size()<=0);
 		return (hasVoice && soundfiles) || !hasVoice;
+		}
 		//return (!hasVoice(m_alert.getPanelToolbar().get_addresstypes()) || m_alert_settings.get_current_profile().get_soundfiles().size()>1);
-		
+		return false;
 	}
 	
 	private void verify_external_exec() {

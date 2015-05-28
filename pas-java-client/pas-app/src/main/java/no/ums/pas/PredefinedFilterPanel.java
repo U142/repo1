@@ -41,11 +41,8 @@ public class PredefinedFilterPanel extends DefaultPanel implements ComponentList
 		PredefinedFilterController = maincontroller;
 		treeCtrl = new FilterTreeController(maincontroller);
 		this.tempPK = 0;
-//		this.updXml = new UpdateXML(maincontroller, "temp");
-//		this.updXml.start();
-		setLayout(m_box);
-		
-		add_controls();
+        setLayout(m_box);
+        add_controls();
 		getPredefinedFilterController().getTreeScrollPane().addMouseListener(this);
 //		use above code to to enable mouselistener for entire area panel
 		init();
@@ -88,8 +85,7 @@ public class PredefinedFilterPanel extends DefaultPanel implements ComponentList
 	}
 	public void componentResized(ComponentEvent e) {
 		this.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		//this.setMinimumSize(new Dimension(getWidth(), getHeight()));
-		getPredefinedFilterController().getTreeScrollPane().revalidate();
+        getPredefinedFilterController().getTreeScrollPane().revalidate();
 		getPredefinedFilterController().getTreeCtrl().getGui().setMinimumSize(new Dimension(getWidth(), getHeight()));
 		getPredefinedFilterController().getTreeCtrl().getGui().revalidate();
 		getPredefinedFilterController().getTreeCtrl().getGui().setWidth(getWidth()-20);

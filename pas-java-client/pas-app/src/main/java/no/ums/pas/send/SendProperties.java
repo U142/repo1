@@ -145,7 +145,7 @@ public abstract class SendProperties extends Object {
 	public int get_sendingtype() { return m_n_sendingtype; }
 	protected SendOptionToolbar parent;
 	protected AreaController parentAreaController;
-	protected FilterController parentFilterController;
+	protected FilterController parentFilterController;	
 	protected SendObject get_sendobject() { return parent.get_parent(); }
 	public void set_simulation(int n) { m_n_simulation = n; }
 	public int get_simulation() { return m_n_simulation; }
@@ -449,7 +449,9 @@ public abstract class SendProperties extends Object {
 			s.setNPausetime(get_schedprofile().get_pausetime());
 			s.setNRetries(get_schedprofile().get_retries());
 			s.setNReschedpk(new Long(get_schedprofile().get_reschedpk()).longValue());
-            if(get_bbprofile() != null) {
+			
+			
+			if(get_bbprofile() != null) {				
 				s.setNDynvoc(get_bbprofile().get_soundfiles().size());
 				s.setNProfilepk(get_bbprofile().get_profilepk());
 			}
@@ -466,7 +468,7 @@ public abstract class SendProperties extends Object {
 		}
 		
 		ArrayOfAddressFilterInfo filters = new ArrayOfAddressFilterInfo();
-        for (int i = 0; i < getSet_filters().size(); i++) {
+         for (int i = 0; i < getSet_filters().size(); i++) {
             AddressFilterInfo aFI1 = new AddressFilterInfo();
             aFI1.setFilterId(getSet_filters().get(i).getFilterId());
             aFI1.setFilterName(getSet_filters().get(i).getFilterName());

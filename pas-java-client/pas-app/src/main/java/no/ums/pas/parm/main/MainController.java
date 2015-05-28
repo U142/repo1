@@ -756,9 +756,9 @@ public class MainController implements ActionListener, TreeModelListener,
               filtersIDs.getAddressFilterInfo().add(aFI1);
 				//comboAddressFilterList.addItem(AddressFilterList.get(i));
 	        }
-			//Set address filters in PAALERT
+			//Set address filters in PAALERTR
             save.setFilters(filtersIDs);
-            URL wsdl = new URL("http://localhost:8080/WS/ParmAdmin.asmx?WSDL"); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
+            URL wsdl = new URL(vars.WSDL_PARMADMIN); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ParmAdmin.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/ParmAdmin.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/parm/admin/", "ParmAdmin");
 			UPAALERTRESTULT res = new ParmAdmin(wsdl, service).getParmAdminSoap12().execAlertUpdate(logon, save);
@@ -984,7 +984,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				if (object.getClass().equals(AlertVO.class)) {
 					
 					this.alert = (AlertVO) object;
-					if (this.alertCtrl == null) {
+                    if (this.alertCtrl == null) {
 						this.alertCtrl = new AlertController(this, getMapNavigation());//map.getM_navigation());
 					}
 					alertCtrl.setAlert(alert);

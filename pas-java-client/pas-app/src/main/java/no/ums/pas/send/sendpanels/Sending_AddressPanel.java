@@ -134,10 +134,21 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		for(int i=0;i<PAS.get_pas().get_sendcontroller().getAddressFilters().size();i++)
-		{
-			m_txt_adrcount_filter_name.setText(PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName());
-		}
+		
+		String fName="";
+		int size=PAS.get_pas().get_sendcontroller().getAddressFilters().size();
+		for(int i=0;i<size;i++)
+        {
+            if(i==0){
+				fName =  fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
+			}else if(i==size-1){
+				fName =     fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() ;
+			}else{
+				fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
+			}
+        }
+		m_txt_adrcount_filter_name.setText(fName);
+		
 		if(ADRCOUNT_CALLBACK_ACTION_.equals(e.getActionCommand())) {
 			AddressCount c = (AddressCount)e.getSource();
 			set_addresscount(c);

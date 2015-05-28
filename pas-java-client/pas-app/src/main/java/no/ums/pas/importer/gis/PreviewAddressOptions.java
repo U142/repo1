@@ -51,17 +51,14 @@ class PreviewAddressOptions extends DefaultPanel {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
-		  //m_gis.actionPerformed(new ActionEvent(new Boolean(m_check_firstline_columnnames.isSelected()), ActionEvent.ACTION_PERFORMED, "act_first_row_has_columnnames"));
-			e.setSource(new Boolean(m_check_firstline_columnnames.isSelected()));
+         e.setSource(new Boolean(m_check_firstline_columnnames.isSelected()));
 			m_parent.actionPerformed(e);
 		}
         //next button
 		else if("act_fetch_addresses".equals(e.getActionCommand())) {
 			m_parent.actionPerformed(e);
 		}
-		/*else if("act_gis_finish".equals(e.getActionCommand())) {
-			m_parent.actionPerformed(e);
-		}*/
+
 		else if("frame_dispose".equals(e.getActionCommand())) {
 			m_parent.dispose();
 		}

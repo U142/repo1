@@ -22,6 +22,7 @@ import no.ums.pas.area.FilterController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.importer.gis.GISFilterList;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
@@ -44,13 +45,16 @@ public class SendPropertiesGIS extends SendProperties {
 
 	private GISList m_gislist;
 	public GISList get_gislist() { return m_gislist; }
-	private Color m_col_housecolor = new Color(0, 0, 0);
+	private Color m_col_housecolor = new Color(0, 0, 200);
 	public void set_color(Color col) {
 		m_col_housecolor = col;
 	}
 	public Color get_color() {
 		return m_col_housecolor;
 	}
+	
+	private GISFilterList m_gisFilterlist;
+    public GISFilterList get_gisfilterlist() { return m_gisFilterlist; }
 	
 	public void set_gislist(GISList list) {
 		m_gislist = list;
@@ -67,6 +71,23 @@ public class SendPropertiesGIS extends SendProperties {
 		m_houses.sort_houses(m_inhabitants, false);
 		m_houses.set_visible(true);
 	}
+	
+	public void set_gisFilterlist(GISFilterList list) {
+        m_gisFilterlist = list;
+        m_houses = new Houses(true);
+        m_houses.setJoinHouses(true, 10);
+        m_inhabitants = new TreeSet<Inhabitant>(m_houses.new Compare_lon());
+        m_inhabitants.clear();
+        for(int i=0; i < list.size(); i++) {
+            for(int j=0; j < list.get_gisrecord(i).get_inhabitantcount(); j++) {
+                Inhabitant bas = list.get_gisrecord(i).get_inhabitant(j).toInhabitant();
+                m_inhabitants.add(bas);
+            }
+        }
+        m_houses.sort_houses(m_inhabitants, false);
+        m_houses.set_visible(true);
+    }
+	
 	SortedSet<Inhabitant> m_inhabitants = new TreeSet<Inhabitant>(); 
 	private Houses m_houses;
 	public Houses get_houses() { return m_houses; }
@@ -135,8 +156,10 @@ public class SendPropertiesGIS extends SendProperties {
 				catch(NullPointerException npe)
 				{
 					if(parentAreaController!=null)
-					{
-						get_houses().draw_houses(g, 0, true, true, 10, 0, c);
+					{  
+					    get_houses().draw_houses(g, 0, true, true, 10, 0, c);
+					}else if (parentFilterController!=null){
+					    get_houses().draw_houses(g, 0, true, true, 10, 0, c);
 					}
 				}
 

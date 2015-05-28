@@ -342,10 +342,7 @@ public class Houses {
 			Point point = Variables.getMapFrame().getZoomLookup().getPoint(new LonLat(current.get_lon(), current.get_lat()));
 			Dimension p = new Dimension(point.x - topLeft.x, point.y - topLeft.y);
 			current.set_screencoords(p);
-			if(current.get_screencoords().width < -nJoinHousesPixelLimit*3 ||
-				current.get_screencoords().width > nJoinHousesPixelLimit*3+Variables.getMapFrame().getWidth() ||
-				current.get_screencoords().height < -nJoinHousesPixelLimit*3 ||
-				current.get_screencoords().height > nJoinHousesPixelLimit*3+Variables.getMapFrame().getHeight())
+			if(false)
 			{
 				current.set_visible(false);
 				continue;
@@ -435,7 +432,7 @@ public class Houses {
 		if(col_override!=null)
 			gfx.setColor(col_override);
 		else
-			gfx.setColor(house.get_active_color());
+			gfx.setColor(col_override);
 		//gfx.fillOval(house.get_screencoords().width - n_size/2, house.get_screencoords().height - n_size/2, n_size, n_size);
 		if(house.get_isselected())
 		{

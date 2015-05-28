@@ -611,7 +611,14 @@ public class PASActions implements ActionListener {
 			{
 				sending.get_toolbar().refreshAreaList();
 			}
-		}
+		}//act_predefined_filters_changed
+		else if("act_predefined_filters_changed".equals(e.getActionCommand()))
+        {
+            for(SendObject sending : PAS.get_pas().get_sendcontroller().get_sendings())
+            {
+                sending.get_toolbar().refreshAddressFilterList();
+            }
+        }
 		  else if("act_map_goto_filter".equals(e.getActionCommand())) {
 	            NavStruct nav = (NavStruct)e.getSource();
 	            if(Variables.getNavigation().setNavigation(nav))

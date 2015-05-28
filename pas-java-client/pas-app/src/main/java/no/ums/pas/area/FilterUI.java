@@ -75,15 +75,7 @@ public class FilterUI extends JFrame implements ActionListener, WindowListener{
 	public JButton getBtnCancel() {
 		return btnCancel;
 	}
-	
-	/*public JToggleButton getTbPolygon() {
-		return tbPolygon;
-	}*/
 
-	/*public JToggleButton getTbEllipse() {
-		return tbEllipse;
-	}*/
-	
 	public JToggleButton getTbImportPoly() {
 		return tbImportPoly;
 	}
@@ -160,28 +152,7 @@ public class FilterUI extends JFrame implements ActionListener, WindowListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		/*if(e.getActionCommand().equals("act_sendingtype_polygon"))
-		{
-			if(FilterController.getSource().equals(AreaSource.NEW_ALERT) || FilterController.getSource().equals(AreaSource.STATUS))
-				return;
-			log.debug("inside FilterUI act_sendingtype_polygon event called");
-			shape = new PolygonStruct(get_navigation().getDimension());
-//			shape.finalizeShape();
-			FilterController.setEditShape(shape);
-			updateShapeName();
-			FilterController.actionPerformed(e);
-		}
-		else if(e.getActionCommand().equals("act_sendingtype_ellipse") || FilterController.getSource().equals(AreaSource.STATUS))
-		{
-			if(FilterController.getSource().equals(AreaSource.NEW_ALERT))
-				return;
-			log.debug("inside FilterUI act_sendingtype_ellipse event called");
-			shape = new EllipseStruct();
-//			shape.finalizeShape();
-			FilterController.setEditShape(shape);
-			updateShapeName();
-			FilterController.actionPerformed(e);
-		}*/
+
 		if(e.getActionCommand().equals("act_preview_gislist"))
 		{
 			if(FilterController.getSource().equals(AreaSource.NEW_ALERT) || FilterController.getSource().equals(AreaSource.STATUS))
@@ -205,8 +176,7 @@ public class FilterUI extends JFrame implements ActionListener, WindowListener{
 	
 	private void close()
 	{
-		//FilterController.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_cancel_predefined_area"));
-	}
+     }
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -278,13 +248,7 @@ public class FilterUI extends JFrame implements ActionListener, WindowListener{
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 5, 5), 0, 0));
 
-		//---- lblAreaDefinition ----
-		/*lblAreaDefinition.setText("Area Definition:");
-		contentPane.add(lblAreaDefinition, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0,
-			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-			new Insets(0, 0, 5, 5), 0, 0));*/
-
-		//======== panel1 ========
+        //======== panel1 ========
 		{
 			panel1.setLayout(new GridBagLayout());
 			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0, 0, 0};
@@ -292,17 +256,6 @@ public class FilterUI extends JFrame implements ActionListener, WindowListener{
 			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 
-			//---- tbPolygon ----
-		/*	tbPolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
-			panel1.add(tbPolygon, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 0, 5), 0, 0));
-*/
-			//---- tbEllipse ----
-			/*tbEllipse.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_ellipse_24.png")));
-			panel1.add(tbEllipse, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 0, 5), 0, 0));*/
 
 			//---- tbImportPoly ----
 			tbImportPoly.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/folder2_24.png")));

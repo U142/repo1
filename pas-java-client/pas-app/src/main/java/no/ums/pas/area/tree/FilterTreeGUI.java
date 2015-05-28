@@ -223,13 +223,7 @@ public class FilterTreeGUI extends DefaultPanel implements ComponentListener {
 			   catch(Exception err) {
 			   }
 		}
-//		  private TreeNode getNodeForEvent(DropTargetDragEvent dtde) {
-//		    Point p = dtde.getLocation();
-//		    DropTargetContext dtc = dtde.getDropTargetContext();
-//		    JTree tree = (JTree) dtc.getComponent();
-//		    TreePath path = tree.getClosestPathForLocation(p.x, p.y);
-//		    return (TreeNode) path.getLastPathComponent();
-//		  }
+
 		  public void dragEnter(DropTargetDragEvent dtde) {
 
 		  }
@@ -288,9 +282,7 @@ public class FilterTreeGUI extends DefaultPanel implements ComponentListener {
 		}
 		@Override
 		public void valueChanged(TreeSelectionEvent e) {
-			//ParmVO vo = (ParmVO)this.get_selectednode().getUserObject();
-			//if(vo.getPk() != PAS.get_pas().get_parmcontroller().get_parmpanel()
-		}
+           }
 	}
 
 	private JPopupMenu popup;
@@ -418,12 +410,7 @@ public class FilterTreeGUI extends DefaultPanel implements ComponentListener {
 					add(tree);
 				}
 			});
-		//add(Box.createHorizontalGlue());
-		//add(Box.createVerticalGlue());
-		
-	
-	
-	}
+}
 	public StdTextLabel lbl_initializing;
 	public LoadingPanel loader;
 
@@ -443,10 +430,7 @@ public class FilterTreeGUI extends DefaultPanel implements ComponentListener {
         delete = new JMenuItem(Localization.l("common_delete"));
 		popup.add(delete);
 		popup.add(gotomap);
-		
-		//popup.addSeparator();
-		//popup.add(export_polygon);
-	}
+    }
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
@@ -460,13 +444,7 @@ public class FilterTreeGUI extends DefaultPanel implements ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		/*tree.setSize(new Dimension(getWidth(), getHeight()));
-		tree.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		tree.invalidate();*/
-		//tree.setPreferredSize(new Dimension(getWidth(), getMinimumSize().height));
-		//tree.setPreferredSize(new Dimension(getWidth(), tree.getMinimumSize().height));
-		//tree.revalidate();
-		loader.setPreferredSize(new Dimension(getWidth(), 30));
+    loader.setPreferredSize(new Dimension(getWidth(), 30));
 		
 	}
 

@@ -65,21 +65,19 @@ public class WSGisFilterImport extends WSThread
         public GisColumnsetStreetid()
         {
         }
-        public GisColumnsetStreetid(int municipal, int streetid, int houseno, int letter, int namefilter1, int namefilter2, int skiplines, String sep, File f)
+        public GisColumnsetStreetid(int municipal, int streetid, int houseno, int letter,  int skiplines, String sep, File f)
         {
             COL_MUNICIPAL = municipal;
             COL_STREETID = streetid;
             COL_HOUSENO = houseno;
             COL_LETTER = letter;
-            COL_NAMEFILTER1 = namefilter1;
-            COL_NAMEFILTER2 = namefilter2;
             SKIPLINES = skiplines;
             SEPARATOR = sep;
             FILE = f;
         }
-        public GisColumnsetStreetid(int municipal, int streetid, int houseno, int letter,int apartmentID, int namefilter1, int namefilter2, int skiplines, String sep, File f)
+        public GisColumnsetStreetid(int municipal, int streetid, int houseno, int letter,int apartmentID, int skiplines, String sep, File f)
         {
-            this(municipal,streetid,houseno,letter,namefilter1,namefilter2,skiplines,sep,f);
+            this(municipal,streetid,houseno,letter,skiplines,sep,f);
             COL_APARTMENTID = apartmentID;
 
         }
@@ -100,8 +98,6 @@ public class WSGisFilterImport extends WSThread
             COL_SNR = snr;
             COL_UNR = unr;
             COL_APARTMENTID = apartmentID;
-           // COL_NAMEFILTER1 = namefilter1;
-           // COL_NAMEFILTER2 = namefilter2;
             SKIPLINES = skiplines;
             SEPARATOR = sep;
             FILE = f;
@@ -123,11 +119,10 @@ public class WSGisFilterImport extends WSThread
     	 
     	 public GisCuSweden(int municipal, int Fastighetsnyckel, int houseno,int letter, int skiplines,String sep, File f){
     		 COL_MUNICIPAL= municipal;
-    		 COL_FGKL = Fastighetsnyckel; 
+             COL_FGKL = Fastighetsnyckel;
     		 COL_HOUSENO = houseno;
     		 COL_LETTER = letter;
-    		 //COL_APARTMENTID = apartmentId;
-    		 SKIPLINES = skiplines;
+             SKIPLINES = skiplines;
              SEPARATOR = sep;
              FILE = f;
     		 
@@ -153,9 +148,7 @@ public class WSGisFilterImport extends WSThread
     		 COL_VBID = Vbanken;
     		 COL_HOUSENO = houseno;
     		 COL_LETTER = letter;
-    		// COL_APARTMENTID = apartmentId;
-
-    		 SKIPLINES = skiplines;
+             SKIPLINES = skiplines;
              SEPARATOR = sep;
              FILE = f;
     		 
@@ -174,13 +167,9 @@ public class WSGisFilterImport extends WSThread
     {
         return new WSGisFilterImport.GisColumnsetStreetid();
     }
-   /* public GisColumnsetStreetid newGisColumnsetStreetid(int municipal, int streetid, int houseno, int letter, int namefilter1, int namefilter2, int skiplines, String sep, File f)
+    public GisColumnsetStreetid newGisColumnsetStreetid(int municipal, int streetid, int houseno, int letter,int apartmentId,int skiplines, String sep, File f)
     {
-        return new WSGisFilterImport.GisColumnsetStreetid(municipal, streetid, houseno, letter,namefilter1, namefilter2, skiplines, sep, f);
-    }*/
-    public GisColumnsetStreetid newGisColumnsetStreetid(int municipal, int streetid, int houseno, int letter,int apartmentId, int namefilter1, int namefilter2, int skiplines, String sep, File f)
-    {
-        return new WSGisFilterImport.GisColumnsetStreetid(municipal, streetid, houseno, letter, apartmentId,namefilter1, namefilter2, skiplines, sep, f);
+        return new WSGisFilterImport.GisColumnsetStreetid(municipal, streetid, houseno, letter, apartmentId,skiplines, sep, f);
     }
     public GisCuNorway newGisCuNorway(int municipal, int gnr, int bnr, int fnr, int snr,int unr,int apartmentId, int skiplines, String sep, File f)
     {
@@ -264,7 +253,7 @@ public class WSGisFilterImport extends WSThread
             progress.start();
              
             
-            FileInputStream fis=null;    
+            FileInputStream fis=null;
              
              if("import_addr_street".equals(m_importType)){
             	 fis = new FileInputStream(m_colset.FILE);
@@ -294,29 +283,15 @@ public class WSGisFilterImport extends WSThread
             String temp;
             int line=0;
 
-           /* URL wsdl = new URL(vars.WSDL_ADDRESSFILTERS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
-            QName service = new QName("http://ums.no/ws/addressfilters/",
-					"AddressFilters");*/
-           // UGisImportResultsByStreetId res = null;
             AddressFilters res=null;
             AddressFilterInfo info = new AddressFilterInfo();
 
             if("import_addr_street".equals(m_importType)){
-               // ArrayOfUGisImportLine importlines = new ArrayOfUGisImportLine();
-            	ArrayOfAddressAssociatedWithFilter importlines = new ArrayOfAddressAssociatedWithFilter();
-            	
-                /*UGisImportList search = new UGisImportList();
-                search.setList(importlines);
-                search.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
-                search.setSKIPLINES(0);*/ //editor has already made a new file
-            	
+             ArrayOfAddressAssociatedWithFilter importlines = new ArrayOfAddressAssociatedWithFilter();
                 while((temp = br.readLine()) != null) {
                     String[] ting = temp.split(m_colset.SEPARATOR);
-                   // UGisImportLine resline = new UGisImportLine();
-                    AddressAssociatedWithFilter resline = new AddressAssociatedWithFilter();
-                    
-                    
-                    if(ting.length>0)
+                 AddressAssociatedWithFilter resline = new AddressAssociatedWithFilter();
+                  if(ting.length>0)
                     {
                     	 String munId=ting[m_colset.COL_MUNICIPAL].trim();
                  	    if(munId.equals("")){
@@ -326,37 +301,31 @@ public class WSGisFilterImport extends WSThread
                	    }
                  	    
                  	   String strId=ting[m_colset.COL_STREETID].trim();
-               	    if(strId.equals("")){
+                       if(strId.equals("")){
                	    	 resline.setStreetId(0);
                        }else{
                   	    	resline.setStreetId(Integer.parseInt(strId));
                   	    }
-               	    
+                        if(ting.length-1>=m_colset.COL_HOUSENO){
                	  String houseNo=ting[m_colset.COL_HOUSENO].trim();
              	    if(houseNo.equals("")){
              	    	 resline.setHouseNo(0);
                      } else{
                 	    	resline.setHouseNo(Integer.parseInt(houseNo));
                 	    }  
-                      
+                       }else{
+                       resline.setHouseNo(0);
+                       }
                         resline.setSzHouseLetter(ting.length-1>=m_colset.COL_LETTER?(ting[m_colset.COL_LETTER]):"");
                         resline.setSzApartmentId(ting.length-1>=m_colset.COL_APARTMENTID?ting[m_colset.COL_APARTMENTID]:"");
-                        
-                        //resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-                        //resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
                         importlines.getAddressAssociatedWithFilter().add(resline);
                     }
                     
                     line++;
                 }
                 m_gisfilterlist.fill(importlines.getAddressAssociatedWithFilter());
-               // res = new AddressFilters(wsdl, service);
-               // res.getAddressFiltersSoap().execUpdateAddressFilter(PARMOPERATION.INSERT, logon, info);
-                //gisFilterList.add(null);
-
-            }   else if("import_addr_CUNorway".equalsIgnoreCase(m_importType)){
-                //ArrayOfUGisImportApartmentLine importlines = new ArrayOfUGisImportApartmentLine();
-                ArrayOfAddressAssociatedWithFilter importlines = new ArrayOfAddressAssociatedWithFilter();
+           }   else if("import_addr_CUNorway".equalsIgnoreCase(m_importType)){
+              ArrayOfAddressAssociatedWithFilter importlines = new ArrayOfAddressAssociatedWithFilter();
                // UGisImportApartmentList search = new UGisImportApartmentList();
                /* search.setList(importlines);
                 search.setDETAILTHRESHOLDLINES(PAS.get_pas().get_settings().getGisDownloadDetailThreshold());
@@ -414,9 +383,6 @@ public class WSGisFilterImport extends WSThread
                 	    	resline.setUnrNumber(Integer.parseInt(unr));
                 	    }
                         resline.setSzApartmentId(ting.length-1>=m_colsetNor.COL_APARTMENTID?ting[m_colsetNor.COL_APARTMENTID]:"");
-                       // resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-                       // resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
-                        //importlines.getUGisImportApartmentLine().add(resline);
                         importlines.getAddressAssociatedWithFilter().add(resline);
                         
                     }
@@ -464,20 +430,12 @@ public class WSGisFilterImport extends WSThread
            	    }               
           	           resline.setSzHouseLetter(ting.length-1>=m_colsetSwe.COL_LETTER?(ting[m_colsetSwe.COL_LETTER]):"");
                         resline.setSzApartmentId(ting.length-1>=m_colsetSwe.COL_APARTMENTID?ting[m_colsetSwe.COL_APARTMENTID]:"");
-                       
-                       // resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-                       // resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
-                        //importlines.getUGisImportApartmentLine().add(resline);
                         importlines.getAddressAssociatedWithFilter().add(resline);
-                        
-                    }
+                     }
                     line++;
                 }
                 m_gisfilterlist.fill(importlines.getAddressAssociatedWithFilter());
-               // res = new AddressFilters(wsdl, service);
-                //res.getAddressFiltersSoap().execUpdateAddressFilter(PARMOPERATION.INSERT, logon, info);
-                
-            } 
+             }
              
             else if("import_addr_VABanken".equalsIgnoreCase(m_importType)){
                 //ArrayOfUGisImportApartmentLine importlines = new ArrayOfUGisImportApartmentLine();
@@ -517,21 +475,13 @@ public class WSGisFilterImport extends WSThread
                	    
                	         resline.setSzHouseLetter(ting.length-1>=m_colsetVb.COL_LETTER?(ting[m_colsetVb.COL_LETTER]):"");
                         resline.setSzApartmentId(ting.length-1>=m_colsetVb.COL_APARTMENTID?ting[m_colsetVb.COL_APARTMENTID]:"");
-                       
-                       
-                       // resline.setNamefilter1(ting.length-1>=m_colset.COL_NAMEFILTER1?ting[m_colset.COL_NAMEFILTER1]:"");
-                       // resline.setNamefilter2(ting.length-1>=m_colset.COL_NAMEFILTER2?ting[m_colset.COL_NAMEFILTER2]:"");
-                        //importlines.getUGisImportApartmentLine().add(resline);
-                        importlines.getAddressAssociatedWithFilter().add(resline);
+                       importlines.getAddressAssociatedWithFilter().add(resline);
                         
                     }
                     line++;
                 }
                 m_gisfilterlist.fill(importlines.getAddressAssociatedWithFilter());
-               /* res = new AddressFilters(wsdl, service);
-                res.getAddressFiltersSoap().execUpdateAddressFilter(PARMOPERATION.INSERT, logon, info);*/
-                
-            }else{
+                 }else{
             	log.warn("NO Import selected");
             }
 

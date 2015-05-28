@@ -19,7 +19,7 @@ import no.ums.ws.addressfilters.FILTEROPERATION;
 import no.ums.ws.addressfilters.UAddressList;
 
 /**
- * @author sachinn
+ * @author abhinava
  */
 public class AddressFilterInfoVO extends AlertVO implements Cloneable {
 
@@ -34,9 +34,6 @@ public class AddressFilterInfoVO extends AlertVO implements Cloneable {
 
     protected XMLGregorianCalendar creatTime;
     protected int filterId;
-
-    // protected String filterDesc;
-
     public String getFilterName() {
         return filterName;
     }
@@ -44,14 +41,6 @@ public class AddressFilterInfoVO extends AlertVO implements Cloneable {
     public void setFilterName(String filterName) {
         this.filterName = filterName;
     }
-
-    /*
-     * public String getFilterDesc() { return filterDesc; }
-     * 
-     * public void setFilterDesc(String filterDesc) { this.filterDesc =
-     * filterDesc; }
-     */
-
     public UAddressList getAddresses() {
         return addresses;
     }

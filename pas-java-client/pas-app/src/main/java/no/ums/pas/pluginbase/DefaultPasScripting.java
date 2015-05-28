@@ -33,6 +33,8 @@ import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.icons.ImageFetcher;
+import no.ums.pas.importer.gis.GISFilterList;
+import no.ums.pas.importer.gis.GISFilterRecord;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
@@ -1182,7 +1184,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		if(ViewOptions.TOGGLE_HOUSES.isSelected())
 		{
 			p.get_housecontroller().calcHouseCoords();
-			p.get_housecontroller().drawItems(g);
+			//p.get_housecontroller().drawItems(g);
 		}
 
 		if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
@@ -1227,6 +1229,25 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 //				ex.printStackTrace();
 			}
 		}
+           if(EastContent.CURRENT_PANEL == EastContent.PANEL_PREDEFINED_FILTER_)
+        {
+            try
+            {
+                if(p.getPredefinedFilterController()!=null && p.getPredefinedFilterController().getFilterCtrl() !=null)
+                {
+                   if(p.getPredefinedFilterController().getFilterCtrl().get_m_edit_shape() instanceof GISShape)
+                    {
+                        p.getPredefinedFilterController().getFilterCtrl().getSendProperties().calc_coortopix();
+                        p.getPredefinedFilterController().getFilterCtrl().getSendProperties().draw(g, Variables.getMapFrame().get_current_mousepos());
+                        p.getPredefinedFilterController().getFilterCtrl().setGotoFlag(false);
+                    }
+                }
+             }
+            catch(Exception ex)
+            {
+//              ex.printStackTrace();
+            }
+        }
 		try {
 			if(EastContent.CURRENT_PANEL==EastContent.PANEL_PARM_ ||
 				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)

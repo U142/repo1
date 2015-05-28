@@ -686,7 +686,7 @@ public class XmlReader {
 					addresstypes = -1;
 				name = eAttributes.getAttribute("sz_name");
 				description = eAttributes.getAttribute("sz_description");
-				NodeList fl =eAttributes.getElementsByTagName("Filter");
+				NodeList fl =eAttributes.getElementsByTagName("filter");
 				List<AddressFilterInfoVO> filters=new ArrayList<AddressFilterInfoVO>();
 				if(fl.getLength()>0) {
                     Element el;
@@ -694,9 +694,9 @@ public class XmlReader {
                         el = (Element)fl.item(j);
                         System.out.println(el);
                         AddressFilterInfoVO addressFilterInfoVO=new AddressFilterInfoVO();
-                        addressFilterInfoVO.setFilterId(Integer.parseInt(el.getAttribute("filterId")));
-                        addressFilterInfoVO.setFilterName(el.getAttribute("filterName"));
-                        addressFilterInfoVO.setCreationTime((el.getAttribute("lastupdatedDate")));
+                        addressFilterInfoVO.setFilterId(Integer.parseInt(el.getAttribute("filter_id")));
+                        addressFilterInfoVO.setFilterName(el.getAttribute("filter_name"));
+                        addressFilterInfoVO.setCreationTime((el.getAttribute("last_updated_date")));
                         filters.add(addressFilterInfoVO);
                     }
                 }

@@ -33,15 +33,13 @@ import no.ums.pas.ums.tools.Utils;
  
 public class PreviewAddressFrame extends JDialog implements ComponentListener, ActionListener {
 	public static final long serialVersionUID = 1;
-    //private static final Log logger = UmsLog.getLogger(PreviewAddressFrame.class);
     PreviewAddressPanel m_panel;
     PreviewAddressFrame m_parent;
 	private JButton m_btn_finish;
 	PreviewAddressOptions m_options = null;
 	public PreviewAddressPanel get_previewpanel() { return m_panel; }
 	private StatisticsAddressPanel m_statisticspanel;
-	//private StatisticsAddressPanel m_statisticsaddrpanel;
-	public StatisticsAddressPanel get_statisticspanel() { return m_statisticspanel; }
+    public StatisticsAddressPanel get_statisticspanel() { return m_statisticspanel; }
 	//
 	
 	public String encoding = Localization.l("importpreview_encoding_iso_8859_15");
@@ -109,8 +107,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 	public PreviewAddressFrame(GISList list, SendObject so) {
 		try {
 			init_common();
-			//get_statisticspanel().n_filelines = list.size();
-			PreviewPanel pp = new PreviewPanel(so, false, this, encoding);
+            PreviewPanel pp = new PreviewPanel(so, false, this, encoding);
 			GISRecord gisr;
 			File gistemp = new File(StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + PAS.get_pas().get_parmcontroller().getHighestTemp() + ".txt");
 			try
@@ -178,8 +175,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 		setBounds(Utils.screendlg_upperleft(x, y).width, Utils.screendlg_upperleft(x, y).height, x, y);
 		
 		setLayout(new BorderLayout());
-		//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_options_view"));
-		getContentPane().add(m_panel, BorderLayout.CENTER);
+        getContentPane().add(m_panel, BorderLayout.CENTER);
 		actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_statistics_view"));
 		setVisible(true);
 		addComponentListener(this);
@@ -257,8 +253,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 		else if("act_set_statistics_view".equals(e.getActionCommand())) {
 			   if(m_options!=null) {
 			    getContentPane().remove(m_options);
-			    //getContentPane().remove(null);
-			   }
+              }
 			   if(m_statisticspanel!=null)
 			    m_statisticspanel.actionPerformed(new ActionEvent(PAS.get_pas().getPredefinedFilterController().getFilterCtrl().getCurrentFilter().getGisFilterList(), ActionEvent.ACTION_PERFORMED, "act_gis_imported"));
 			    getContentPane().add(m_statisticspanel, BorderLayout.NORTH);      
@@ -278,12 +273,9 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 			repaint();
 		}
 		else if("act_update_statistics".equals(e.getActionCommand())) {
-			//if(get_statisticspanel()!=null) {
-				//if(m_btn_finish!=null)
-					m_btn_finish.setEnabled(true);
+                m_btn_finish.setEnabled(true);
 				get_statisticspanel().actionPerformed(e);
-			//}
-		}
+             }
 		else if("act_goto_next_valid".equals(e.getActionCommand())) {
 			if(m_options!=null) {
 				m_options.actionPerformed(e);
@@ -297,8 +289,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 				try
 				{
 					FilterController filterController = PAS.get_pas().getPredefinedFilterController().getFilterCtrl();
-			//		if(filterController.isLock() && filterController.getSendProperties()!=null)
-						if(filterController.isLock())
+                   if(filterController.isLock())
 					{
 						filterController.setImportMore(true);
 						new ImportAddressFile(filterController, "act_address_file_imported", false, PAS.get_pas());
@@ -322,14 +313,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 		else if( "act_import_streetAddress".equals(e.getActionCommand())||
                 "act_import_propertyAddress".equals(e.getActionCommand())){
         	m_panel.get_previewlist().actionPerformed(e);//pass import type change event to previewlist
-//        	if(is_valid_toPerform_action())   {
-//                m_panel.actionPerformed(e);
-//                enableControls(false);
-//            }
-//            else
-//                JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify"),
-//                        Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-        }
+             }
 		else if( "act_import_CUN".equals(e.getActionCommand())){
 			m_panel.get_previewlist().actionPerformed(e);
 		}
@@ -348,10 +332,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
         {
             if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
                     get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 
-//                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
-//                    get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1
-                    //as per new specification only municipal id and street id are mandatory
-            		) {
+                  ) {
             	if((get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1 || 
             			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_APARTMENTID) !=-1) && 
             			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) == -1)

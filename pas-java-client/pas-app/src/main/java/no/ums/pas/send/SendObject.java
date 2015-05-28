@@ -80,7 +80,7 @@ public class SendObject extends Object {
     public void setFilterList(List<AddressFilterInfoVO> filterList) {
         this.filterList = filterList;
     }
-    public void activate_sendwindow() {
+     public void activate_sendwindow() {
 		if(m_sendwindow!=null) {
 			if(m_sendwindow.isVisible())
 				m_sendwindow.setVisible(true);
@@ -101,8 +101,7 @@ public class SendObject extends Object {
 		/*try {
 			m_sendcontroller = PAS.get_pas().get_sendcontroller();
 		} catch(Exception e) {
-			
-		}*/
+         }*/
 		//init(sz_name, sz_projectpk);
         try {
             if (PAS.get_pas() != null
@@ -112,7 +111,7 @@ public class SendObject extends Object {
             } else {
                 m_toolbar = new SendOptionToolbar(this, callback, n_send_id,"SendObject");
             }
-         if(PAS.pasplugin != null) // admin map
+            if(PAS.pasplugin != null) // admin map
 				PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
 		} catch(Exception e) {
 			//PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);
@@ -144,9 +143,9 @@ public class SendObject extends Object {
 		}
 		//((BasicToolBarUI) m_toolbar.getUI()).setFloating(true, new Point(get_pas().get_mappane().get_dimension().width, 50));
 	}
-     public SendObject(String sz_name, int n_type, int n_send_id, ActionListener callback, Navigation nav,boolean isFromPredefinedAlert) { //SendController controller) {
+        public SendObject(String sz_name, int n_type, int n_send_id, ActionListener callback, Navigation nav,boolean isFromPredefinedAlert) { //SendController controller) {
         super();
-         //m_pas = pas;
+          //m_pas = pas;
         //m_sendcontroller = controller;
         m_callback = callback;
         m_navigation = nav;
@@ -167,7 +166,7 @@ public class SendObject extends Object {
                     m_toolbar = new SendOptionToolbar(this, callback, n_send_id,"newalert");
                 }
             }
-             if(PAS.pasplugin != null) // admin map
+            if(PAS.pasplugin != null) // admin map
                 PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
         } catch(Exception e) {
             //PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);

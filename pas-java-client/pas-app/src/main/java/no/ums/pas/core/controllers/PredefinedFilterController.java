@@ -28,10 +28,11 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.errorhandling.Error;
 
 /**
- * @author sachinn
+ * @author abhinava
  */
 public class PredefinedFilterController extends MainFilterController{
 	
@@ -57,8 +58,7 @@ public class PredefinedFilterController extends MainFilterController{
 	public PredefinedFilterController(String sz_sitename, UserInfo userinfo, boolean inBackground) {
 		super(sz_sitename, userinfo,inBackground);
 		this.inBackground = inBackground;
-//		PredefinedFilterPanel = new PredefinedFilterPanel(this);
-		m_shape = null;//new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mapsize());
+        m_shape = null;//new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mapsize());
 	}
 	
 	public void createGUI() {
@@ -68,22 +68,7 @@ public class PredefinedFilterController extends MainFilterController{
 		} catch(IOException e) {
 			Error.getError().addError("PredefinedFilterController","IOException in StorageController.create_path",e,1);
 		}
-		/*PredefinedAreaConstants.init(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PREDEFINEDAREA_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + File.separator));
-		File cleanExit = new File(PredefinedAreaConstants.cleanExit);
-		if(cleanExit.exists()) {
-			File dir = new File(PredefinedAreaConstants.homePath);
-			if(dir.isDirectory()){
-				String[] children = dir.list();
-				for(int i=0;i<children.length;i++){
-					(new File(dir,children[i])).delete();
-				}
-			}
-		}
-		try {
-			cleanExit.createNewFile();
-		} catch(IOException e) {
-			Error.getError().addError("PredefinedFilterController","IOException in createGUI",e,Error.SEVERITY_ERROR);
-		}*/
+
 		initGUI();
 	}
 	
@@ -92,19 +77,7 @@ public class PredefinedFilterController extends MainFilterController{
 	}
 	protected void showAlertShape(AreaVO e) { //to be overridden
 		log.debug("Area shapes " + e.getName());
-		/*Iterator it = e.getAlertListe().iterator();
-		//clearDrawQueue();
-		while(it.hasNext()){
-			AlertVO a = (AlertVO)it.next();
-			ShapeStruct s = a.getM_shape();
-			
-			try {
-				addShapeToDrawQueue(s);
-			} catch(Exception err) {
-				
-			}
-		}*/
-//		**check
+
 		mapRedraw();
 
 	}
@@ -124,10 +97,8 @@ public class PredefinedFilterController extends MainFilterController{
 		
 	}
 	public void drawLayers(Graphics g) {
-//		log.debug("inside predefined area controller drawLayers(Graphics g) called");
-		
-		try {				
-			FilterController ac = getFilterCtrl();
+      try{
+      FilterController ac = getFilterCtrl();
             final ShapeStruct originalShape = ac != null ? ac.get_m_edit_shape_original() : null;
             final ShapeStruct editShape = ac !=null ? ac.get_m_edit_shape() : null;
             for (ShapeStruct shapeStruct : get_shapelist()) {
@@ -232,22 +203,19 @@ public class PredefinedFilterController extends MainFilterController{
 		return m_shape;
 	}
 	public void gotoMap() {
+	    SendPropertiesGIS m_gis = null;
 		Object object = getObjectFromTree();
 		//if (checkObject(object, AreaVO.class)) {
 		    if (checkObject(object, AddressFilterInfoVO.class)) {
 			//this.event = (EventVO) object;
 			try {
-			  //  if(((AddressFilterInfoVO)object).getM_shape()!=null) {
-                   ShapeStruct gisShape = null;
-             //no.ums.pas.maps.defines.NavStruct nav = null;
-                   GISShape gisshape=new GISShape(null);
-                   GISFilterList list= new GISFilterList();
-                   list.fill();
-                   gisshape.setM_gisfilterlist(list);
-                   NavStruct nav = new NavStruct(5.743427276611328, 5.743997097015381, 58.864227294921875, 58.86396026611328);
-	               gisshape.set_fill_color(new Color(0, 0, 200, 0));
-	      PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_filter"));
-                   } catch(Exception e) {
+              if(((AddressFilterInfoVO)object).getM_shape()!=null) {
+			        ShapeStruct gisShape = ((AddressFilterInfoVO)object).getM_shape();
+                    NavStruct nav; //= new NavStruct(5.743427276611328, 5.743997097015381, 58.864227294921875, 58.86396026611328);
+                    nav= ((GISShape) gisShape).getM_gisfilterlist().GetBounds();
+                    PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_filter"));
+			    }
+                } catch(Exception e) {
                 log.debug(e.getMessage());
                 log.warn(e.getMessage(), e);
                 Error.getError().addError("PredefinedFilterController","Exception in gotoMap",e,1);
@@ -266,13 +234,9 @@ public class PredefinedFilterController extends MainFilterController{
 	}
 	
 	public void setFilled(ShapeStruct s) {
-//		if(s!=null) {
-			updateShape(null);
+            updateShape(null);
 			updateShapeFilled(s);
-//		}
-//		else
-//			log.debug("ShapeStruct == null");
-	}
+         }
 	
 	public void actionPerformed(ActionEvent e) {
 		if("act_set_active_shape".equals(e.getActionCommand())) {

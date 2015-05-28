@@ -70,8 +70,6 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
     private String m_import_type = "Street";
     
     //test start
-    //private String m_import_address = "Street Address";
-    
     private String m_import_street_address = "StreetAddr";
     private String m_import_CUN = "CUNorway";
     private String m_import_CUS = "CUSweden";
@@ -299,7 +297,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
                 gis.setImportFilter(true);
                 
                 if("import_addr_street".equals(getAddressType())){
-                	GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, 6, 7, sz_separator, f_post);
+                    GisColumnsetStreetid colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, sz_separator, f_post);
                     gis.setColSet(colset);
                 }  else if("import_addr_CUNorway".equalsIgnoreCase(getAddressType())){
                 	GisCuNorway colset = gis.newGisCuNorway(0, 1, 2, 3, 4, 5, 6, 7, sz_separator, f_post);
@@ -331,16 +329,6 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
                 File f_post = (File)e.getSource();
 
                 WSGisFilterImport gis = new WSGisFilterImport(this, "act_gis_imported", m_loader, m_encoding, getAddressType());
-
-               /* GisColumnsetStreetid colset ;
-                if(isProperty()){
-                    colset = gis.newGisColumnsetPropertyId(0, 1, 2, 3, 4, 5, 6, 7, 0, "	", f_post);
-                }
-                else{
-                    colset = gis.newGisColumnsetStreetid(0, 1, 2, 3, 4, 5, 6, 0, "	", f_post);
-                }
-
-                gis.setColSet(colset);*/
                 gis.start();
 
             } catch(Exception err) {
@@ -384,70 +372,6 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
             	addressfilterVO.setAddressType(AddressType.VA_BANKEN_SWEDEN);
             }
             
-            
-            /* if(get_resultpanel() == null)
-            {
-                CreateGISResultPanel((GISList)e2.getSource());
-
-
-                b_dofill_results = true;
-            }
-            try
-            {
-
-                m_tab.addTab(Localization.l("importresults_results"), null,
-                        m_resultpanel,
-                        Localization.l("importresults_results_tooltip"));
-                final boolean dofill = b_dofill_results;
-                //SwingUtilities.invokeLater(new Runnable()
-                {
-                    //	public void run()
-                    {
-                        if(m_loader!=null)
-                        {
-                            try
-                            {    //Try here to find why it is stuck
-                                get_resultpanel().fill((GISList)e2.getSource(),getM_import_type(), dofill);
-                                if(get_previewlist()!=null)
-                                    get_previewlist().get_gis().get_callback().actionPerformed(e2);
-                                m_tab.setSelectedComponent(get_resultpanel());
-                                if(m_sendobject!=null)
-                                {
-                                    m_sendobject.get_toolbar().hideLoader(m_loader);
-                                    m_sendobject.get_toolbar().set_sendingtype();
-                                    if(dofill)
-                                        m_sendobject.get_toolbar().get_import_callback().actionPerformed(e);
-                                }
-                                get_resultpanel().componentResized(null);
-                            }
-                            catch(Exception err)
-                            {
-                                log.warn(err.getMessage(), err);
-                                if(m_sendobject == null)
-                                    log.debug("Error on GIS Import: m_sendobject was null " + err.getMessage() + " \n" + err.getStackTrace().toString());
-                                else
-                                    log.debug("Error on GIS Import: " + err.getMessage() + " \n" + err.getStackTrace().toString());
-                            }
-                        }
-                    }
-                }
-                //});
-                //if(get_resultpanel().get_previewpanel().get_tablelist().getRowCount() == 0)
-                //	JOptionPane.showMessageDialog(this, "No results, are you on the right department?", "No results", JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch(Exception err)
-            {
-                log.warn(err.getMessage(), err);
-            }*/
-			/*else {
-				//m_sendobject.get_toolbar().remove(m_loader);
-				if(m_loader!=null)
-				{
-					m_sendobject.get_toolbar().hideLoader(m_loader);
-				}
-				m_sendobject.get_toolbar().set_sendingtype();
-				m_sendobject.get_toolbar().get_import_callback().actionPerformed(e);
-			}*/
         }
         else if("act_gis_finish".equals(e.getActionCommand())) { //no results (for alert only)
             File f_post = create_file();
@@ -467,7 +391,6 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
                     "GIS Import results");
             get_resultpanel().fill((GISList)e.getSource(),getM_import_type(), true);
             get_resultpanel().componentResized(null);
-            //get_previewlist().get_gis().get_callback().actionPerformed(e);
             m_tab.setSelectedComponent(get_resultpanel());
         }
         else if("act_update_statistics".equals(e.getActionCommand())) {
@@ -535,13 +458,9 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
                         n_col_municipal, n_col_vbanken,n_col_houseno,n_col_letter,n_col_apartment, n_skiplines,sz_separator);
             }
             else
-            {/*
-                f_post = create_umsgisfile(filename,
-                        get_previewlist().get_gis().get_parser().get_linedata(),
-                        n_col_municipal, n_col_gnr, n_col_bnr, n_col_fnr,n_col_snr,n_col_apartment, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
-            */}
-
-        } catch(Exception err) {
+            {
+             }
+          } catch(Exception err) {
             log.debug(err.getMessage());
             log.warn(err.getMessage(), err);
             Error.getError().addError("PreviewAddressPanel","Exception in actionPerformed",err,1);
@@ -583,13 +502,11 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
         try {
             f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
         } catch(Exception e) {
-            //f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
-            Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
+          Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
             return null;
         }
         try {
             GISWriter writer = new GISWriter(linedata, f_ums);
-            //return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip, m_encoding);
             return writer.convert(n_mun, n_str, n_hou, n_let, n_apartment, n_skip, m_encoding);
         } catch(Exception e) {
             log.debug(e.getMessage());
@@ -605,13 +522,12 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
         try {
             f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
         } catch(Exception e) {
-            //f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
-            Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
+         Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
             return null;
         }
         try {
             GISWriter writer = new GISWriter(linedata, f_ums);
-            //return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip, m_encoding);
+
             return writer.convert(n_mun, n_str, n_hou, n_let, n_apartment, n_skip, m_encoding);
         } catch(Exception e) {
             log.debug(e.getMessage());
@@ -626,7 +542,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
         try {
             f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
         } catch(Exception e) {
-            //f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+
             Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
             return null;
         }
@@ -647,7 +563,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
         try {
             f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
         } catch(Exception e) {
-            //f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+
             Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
             return null;
         }
@@ -671,7 +587,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
       try {
       f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
        } catch(Exception e) {
-//f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+
       Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
       return null;
       }
@@ -694,7 +610,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
       try {
       f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
        } catch(Exception e) {
-//f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+
       Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
       return null;
       }
@@ -716,7 +632,7 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
       try {
       f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
        } catch(Exception e) {
-//f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+
       Error.getError().addError("PreviewAddressPanel","Exception in create_umsgisfile",e,1);
       return null;
       }
@@ -735,21 +651,8 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
     
     
     public void add_controls() {
-    	/* //try
-         set_gridconstSouth(10, 10, 1, 1);
-         add(m_btn_import, get_gridconst());
-         m_btn_cancel = new JButton("Cancle");
-         set_gridconstSouth(9, 10, 1, 1);
-         add(m_btn_cancel, get_gridconst());
-         
-         //try end
-          * 
-*/   
-    	
-    	m_tab.addChangeListener(this);
-       
-		
-        if(m_sendobject==null) {
+        m_tab.addChangeListener(this);
+       if(m_sendobject==null) {
             m_tab.addTab(Localization.l("importpreview_file_content"), null,
                     m_previewlist,
                     Localization.l("importpreview_file_content_tooltip"));
@@ -766,16 +669,8 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
                     Localization.l("importresults_results_tooltip"));
             set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
             add(m_tab, get_gridconst());
-            
-           
-
-        }
-        
-        
-
-
-		
-    }
+           }
+         }
 
     public void stateChanged(ChangeEvent e) {
         JTabbedPane pane = (JTabbedPane)e.getSource();

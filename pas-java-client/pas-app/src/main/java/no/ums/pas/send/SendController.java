@@ -255,9 +255,12 @@ public class SendController implements ActionListener {
 	private boolean m_b_ignore_project = false;
 	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
 	public void setAddressFilter(AddressFilterInfoVO filter) {
-		filters.clear();
-	    filters.add(filter);
-	}
+            filters.add(filter);
+      }
+	public void removeAddressFilter(AddressFilterInfoVO filter) {
+        if(filter!=null)
+	    filters.remove(filter);
+      }
 	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
 		return filters;
 	}
@@ -676,6 +679,9 @@ public class SendController implements ActionListener {
 		}
 		else if("act_set_address_filter".equals(e.getActionCommand())){
 			PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
+             }
+		else if("act_remove_address_filter".equals(e.getActionCommand())){
+			PAS.get_pas().get_sendcontroller().removeAddressFilter((AddressFilterInfoVO) e.getSource());
 		}
 	}
 	

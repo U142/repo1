@@ -91,7 +91,7 @@ TreeSelectionListener{
 	}
 
 	public MainFilterController(String sz_sitename, UserInfo userinfo) {
-//		initMap(new String [] { sz_sitename } );
+
 		this.tempPK = 0;
 		this.userinfo = userinfo;
 		try {
@@ -134,10 +134,7 @@ TreeSelectionListener{
 			log.warn(e.getMessage(), e);
 			//Error.getError().addError("MainController","Exception in initGUI",e,1);
 		}
-		
-//		gui = new MainGUI();
-		
-		// instansiating the tree-ScrollPane..
+       // instansiating the tree-ScrollPane..
 		treeScrollPane = new ScrollPane(treeCtrl.getGui());
 		treeScrollPane.setMinimumSize((new Dimension(200, 200)));
 
@@ -202,9 +199,7 @@ public void actionPerformed(ActionEvent e) {
 					{
 					}
 					
-//					if (this.areaCtrl == null) {
-//						this.areaCtrl = new AreaController(this, getMapNavigation());
-//					}
+
 					this.getFilterCtrl().createNewFilter(this,remNode,false,FilterSource.LIBRARY);
 				}
 				catch(Exception ex)
@@ -220,13 +215,11 @@ public void actionPerformed(ActionEvent e) {
 					DefaultMutableTreeNode remNode = (DefaultMutableTreeNode) treeCtrl.getSelPath().getLastPathComponent();
 					Object object = remNode.getUserObject();
 					if (object.getClass().equals(AddressFilterInfoVO.class)) {
-						AddressFilterInfoVO area = (AddressFilterInfoVO) object;
-						log.debug("area details; name="+area.getFilterName()+";description="+area.getDescription());
+						AddressFilterInfoVO filter = (AddressFilterInfoVO) object;
+						log.debug("area details; name="+filter.getFilterName()+";description="+filter.getDescription());
 						
-//						if (this.areaCtrl == null) {
-//							this.areaCtrl = new AreaController(this, getMapNavigation());
-//						}
-						this.getFilterCtrl().editArea(remNode, true, FilterSource.LIBRARY);
+
+						this.getFilterCtrl().editFilter(remNode, true, FilterSource.LIBRARY);
 					}
 				}
 				catch(Exception ex)
@@ -243,17 +236,16 @@ public void actionPerformed(ActionEvent e) {
 					Object object = remNode.getUserObject();
 					if (object.getClass().equals(AddressFilterInfoVO.class)) 
 					{
-						AddressFilterInfoVO area = (AddressFilterInfoVO) object;
-						log.debug("area details; name="+area.getName()+";pk="+area.getPk());
-						String warningMessage = Localization.l("common_delete_are_you_sure") + " '" + area.getFilterName() + "'?";
+						AddressFilterInfoVO filter = (AddressFilterInfoVO) object;
+						log.debug("filter details; name="+filter.getFilterName()+";filterID="+filter.getFilterId());
+						String warningMessage = Localization.l("common_delete_are_you_sure") + " '" + filter.getFilterName() + "'?";
 //						log.debug("remNode.getChildCount()="+remNode.getChildCount());
 						if(remNode.getChildCount() > 0)
 							warningMessage = warningMessage + "\n" + Localization.l("common_subnodes") + " " + Localization.l("common_will_be_deleted");
 						if(JOptionPane.showConfirmDialog(null, warningMessage, Localization.l("mainmenu_libraries_predefined_filters_delete"), JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) 
 						{
-//							if (this.areaCtrl == null)
-//								this.areaCtrl = new AreaController(this, getMapNavigation());
-							this.getFilterCtrl().deleteFilter(area,remNode);
+
+							this.getFilterCtrl().deleteFilter(filter,remNode);
 						}
 					}
 				}
@@ -307,9 +299,7 @@ public void actionPerformed(ActionEvent e) {
 				log.debug("Updating... no new elements!");
 
 			if (c.size() > 0 && c != null) {
-				//xmlreader.sortListAscending((ArrayList) c);
-//				ListSorter ls = new ListSorter();
-//				Collections.sort((ArrayList<Object>)c,ls);
+
 //				**check
 				log.debug("Updating... " + c.size() + " new elements!");
 				updatedObjects = (ArrayList<Object>) c;
@@ -339,8 +329,8 @@ public void actionPerformed(ActionEvent e) {
 								break;
 							}
 						}
-						/*else { // new element.
-*/							String parent = aVO.getParent();
+
+						String parent = aVO.getParent();
 							DefaultMutableTreeNode parentNode = getParentNode(parent, this.treeCtrl.getGui().getTree());
 							if(parentNode==null)
 							{
@@ -348,8 +338,7 @@ public void actionPerformed(ActionEvent e) {
 							}
 
 							this.treeCtrl.addParentToTree(aVO, parentNode);
-					/*	}*/
-					}
+                           }
 
 				}
 			}
@@ -479,17 +468,9 @@ public void actionPerformed(ActionEvent e) {
 		return this.tempPK;
 	}
 
-	/*public MapPanel getMap() {
-		return map;
-	}*/
-	
-
-	public void valueChanged(TreeSelectionEvent e) { // fires when selecting
+      public void valueChanged(TreeSelectionEvent e) { // fires when selecting
 														// new nodes.
-		// clear map
-		/*mapClear(); // På alert må jeg finne parent og tegne opp alle for så å sette den valgte til filled
-		updateShape(null);
-		updateShapeFilled(null);*/
+
 		PAS.get_pas().getPredefinedFilterController().clearMap();
 		
 		PAS.get_pas().kickRepaint();
@@ -503,27 +484,13 @@ public void actionPerformed(ActionEvent e) {
 		if (path != null) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 			Object o = node.getUserObject();
-			/*gui.getEdit().setEnabled(true);*/
-
-			//PolygonStruct p = null;
-
-			if(o.getClass().equals(AddressFilterInfoVO.class)) {
+            if(o.getClass().equals(AddressFilterInfoVO.class)) {
 				setSelectedAlert(o);				
 			}
-			// register the event invoker with map-panel..
-
-			// enable/disable the correct menu-items..
-
-			/*gui.getEdit().setEnabled(true);
-			gui.getDelete().setEnabled(true);*/
-			if (o.getClass().equals(AddressFilterInfoVO.class)) { // if user right
+         if (o.getClass().equals(AddressFilterInfoVO.class)) { // if user right
 																// clicks Alert
-//				gui.getMenuNew().setEnabled(false);
-			}
-
-	
-			//mapRedraw();
-			PAS.get_pas().kickRepaint();
+         }
+        PAS.get_pas().kickRepaint();
 			//hihi tiss tass
 		}
 	}
@@ -549,21 +516,14 @@ public void actionPerformed(ActionEvent e) {
 
 				if(alert.getM_shape() instanceof GISShape)
 				{
-					shape = (ShapeStruct)alert.getM_shape().clone();
+					shape = (ShapeStruct)alert.getM_shape();
 					alert.getM_shape().calc_coortopix(getMapNavigation());
-
-					SendProperties m_sendproperties = this.getFilterCtrl().getSendProperties(true);
-
-					m_sendproperties.typecast_gis().set_gislist(((GISShape) shape).get_gislist());
+                    SendProperties m_sendproperties = this.getFilterCtrl().getSendProperties(true);
+                    m_sendproperties.typecast_gis().set_gisFilterlist(((GISShape) shape).getM_gisfilterlist());
 					m_sendproperties.set_shapestruct(shape);
-//					m_sendproperties.goto_area();
-
-					this.getFilterCtrl().setEditShape(shape);
-
-					PAS.get_pas().kickRepaint();
-//					PAS.get_pas().actionPerformed(new ActionEvent(gisShape, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-//					PAS.get_pas().kickRepaint();
-				}
+                    this.getFilterCtrl().setEditShape(shape);
+                    PAS.get_pas().kickRepaint();
+                }
 				else
 				{
 					shape = (ShapeStruct)alert.getM_shape().clone();
@@ -572,18 +532,7 @@ public void actionPerformed(ActionEvent e) {
 				}
 				PAS.get_pas().getPredefinedFilterController().addShapeToDrawQueue(alert.getM_shape());
 			}
-
-//			DefaultMutableTreeNode dmt = findNodeByPk(((AreaVO)o).getParent());
-//			**check
-			/*DefaultMutableTreeNode dmt = this.getTreeCtrl().getNodeFromTree((AreaVO)o);
-			if(dmt == null) { // Denne er dersom det har skjedd en refresh mot databasen og parent har fått oppdatert pk
-				dmt = findNodeByPk(((AreaVO)o).getAlertpk());
-				dmt = (DefaultMutableTreeNode)dmt.getParent();
-			}*/
-			
-			// Her må jeg legge til objektet i edit
-			// Dette må gjøres i send option toolbar egentlig
-		} catch(Exception ex) {
+       } catch(Exception ex) {
 			Error.getError().addError("MainFilterController","Exception in valueChanged, error finding parentnode",ex,Error.SEVERITY_ERROR);
 		}
 	}
@@ -609,10 +558,7 @@ public void actionPerformed(ActionEvent e) {
 	}
 
 	public void treeNodesRemoved(TreeModelEvent e) {
-//		DefaultMutableTreeNode[] parentList = (DefaultMutableTreeNode[]) e.getPath();
-//		DefaultMutableTreeNode parent = parentList[0];
-//		log.debug("Deleted node parent: " + parent.getUserObject());
-	}
+}
 
 	public void treeStructureChanged(TreeModelEvent e) {
 	
