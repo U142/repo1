@@ -139,13 +139,13 @@ public class MainController implements ActionListener, TreeModelListener,
 	private ParmVO selectedObject = null;
 	public ParmVO getSelectedObject() { return selectedObject; }
 	
-	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
+/*	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
 	public void setAddressFilter(AddressFilterInfoVO filter) {
 		filters.add(filter);
 	}
 	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
 		return filters;
-	}
+	}*/
 	public class ScrollPane extends JScrollPane implements AdjustmentListener {
 		public static final long serialVersionUID = 1;
 		public ScrollPane(TreeGUI gui) {
@@ -613,17 +613,18 @@ public class MainController implements ActionListener, TreeModelListener,
 			save.setSzOadc(alert.getOadc());
 			save.setSzSmsMessage(alert.get_sms_message());
 			save.setSzSmsOadc(alert.get_sms_oadc());
-			if(alert.getFilters()!=null &&alert.getFilters().size()>0){
+			if(alert.getFilters()!=null && alert.getFilters().size()>0){
 			    ArrayOfAddressFilterInfo addressFilterInfo=new ArrayOfAddressFilterInfo();
-			    List<AddressFilterInfo> addressFilterInfolist=new ArrayList<AddressFilterInfo>();
+			  //  List<AddressFilterInfo> addressFilterInfolist=new ArrayList<AddressFilterInfo>();
 			    for (AddressFilterInfoVO infoVO : alert.getFilters()) {
 			        AddressFilterInfo info=new AddressFilterInfo();
 			        info.setFilterId(infoVO.getFilterId());
 			        info.setFilterName(infoVO.getFilterName());
-			        addressFilterInfolist.add(info);
+			    //    addressFilterInfolist.add(info);
+			        addressFilterInfo.getAddressFilterInfo().add(info);
                 }
-			    addressFilterInfo.setAddressFilterInfo(addressFilterInfolist);
-			    save.setFilters(addressFilterInfo);
+			    //addressFilterInfo.setAddressFilterInfo(addressFilterInfolist);
+                save.setFilters(addressFilterInfo);
 			}
              if(alert.getOperation().equals("insert"))
 				save.setParmop(PARMOPERATION.INSERT);
@@ -909,7 +910,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					else {
 						if (this.alertCtrl.deleteAlert(this.alert, (DefaultMutableTreeNode) remNode.getParent())) {
 							this.alert = this.alertCtrl.getAlert();
-							alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
+						//	alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
 							if(isUpdateXMLReady()) {
 								if(PAS.g_n_parmversion < 2)
 									addToObjectList(this.alert); // bruk boolean?
@@ -986,10 +987,10 @@ public class MainController implements ActionListener, TreeModelListener,
 					this.alert = (AlertVO) object;
                     if (this.alertCtrl == null) {
 						this.alertCtrl = new AlertController(this, getMapNavigation());//map.getM_navigation());
-					}
-					alertCtrl.setAlert(alert);
-					
-					//if(this.alert.getLocked() == 1)
+					}else{
+                     }
+                 alertCtrl.setAlert(alert);
+                     //if(this.alert.getLocked() == 1)
 						//JOptionPane.showMessageDialog(gui,"This alert is locked and can't be edited.");
 					//else {
 						new AlertWindow(new SendObject(PAS.get_pas(), this), alertCtrl);
@@ -1019,7 +1020,9 @@ public class MainController implements ActionListener, TreeModelListener,
 			alertCtrl = (AlertController)e.getSource();
 			alert = alertCtrl.getAlert();
 			DefaultMutableTreeNode parent;
-			alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
+			if(alert.getFilters()==null ){
+		    alert.setFilters(PAS.get_pas().get_sendcontroller().getAddressFilters());
+			}
 			if (this.treeCtrl.getGui().getDelete().isEnabled()) { // if
 				// something
 				// is

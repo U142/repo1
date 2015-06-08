@@ -175,6 +175,11 @@ public class JComboCheckBox extends JComboBox {
 
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
+            if(index == -1)
+            {
+             defaultLabel = new JLabel("-- Select Filter --");
+             return defaultLabel;
+            }
             if (value instanceof Component) {
                 Component c = (Component) value;
                 if (isSelected) {

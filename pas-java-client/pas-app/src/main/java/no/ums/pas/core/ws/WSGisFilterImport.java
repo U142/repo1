@@ -361,27 +361,39 @@ public class WSGisFilterImport extends WSThread
                 	    	resline.setBnrNumber(Integer.parseInt(bnr));
                 	    }
                        
+                        if(ting.length-1>=m_colsetNor.COL_FNR){
                         String fnr=ting[m_colsetNor.COL_FNR].trim();
                         if(fnr.equals("")){
                         	 resline.setFnrNumber(0);
                         } else{
                 	    	resline.setFnrNumber(Integer.parseInt(fnr));
                 	    }
+                        }else{
+                            resline.setFnrNumber(0);
+                        }
                        
                        
+                        if(ting.length-1>=m_colsetNor.COL_SNR){
                         String snr=ting[m_colsetNor.COL_SNR].trim();
                         if(snr.equals("")){
                         	resline.setSnrNumber(0);
                         }else{
                 	    	resline.setSnrNumber(Integer.parseInt(snr));
                 	    }
+                        }else{
+                            resline.setSnrNumber(0);
+                        }
                         
+                        if(ting.length-1>=m_colsetNor.COL_UNR){
                         String unr=ting[m_colsetNor.COL_UNR].trim();
                         if(unr.equals("")){
                         	resline.setUnrNumber(0);
                         }else{
                 	    	resline.setUnrNumber(Integer.parseInt(unr));
                 	    }
+                        }else{
+                            resline.setUnrNumber(0);
+                        }
                         resline.setSzApartmentId(ting.length-1>=m_colsetNor.COL_APARTMENTID?ting[m_colsetNor.COL_APARTMENTID]:"");
                         importlines.getAddressAssociatedWithFilter().add(resline);
                         
@@ -421,14 +433,17 @@ public class WSGisFilterImport extends WSThread
                        }else{
                  	    	resline.setSeCadId(Integer.parseInt(fgkl));
                  	    }
-                      
+                 if(ting.length-1>=m_colsetSwe.COL_HOUSENO){
                	 String houseNo=ting[m_colsetSwe.COL_HOUSENO].trim();
           	    if(houseNo.equals("")){
           	    	 resline.setHouseNo(0);
                   } else{
            	    	resline.setHouseNo(Integer.parseInt(houseNo));
-           	    }               
-          	           resline.setSzHouseLetter(ting.length-1>=m_colsetSwe.COL_LETTER?(ting[m_colsetSwe.COL_LETTER]):"");
+                 }
+                }else{
+                     resline.setHouseNo(0);
+                  }
+                     resline.setSzHouseLetter(ting.length-1>=m_colsetSwe.COL_LETTER?(ting[m_colsetSwe.COL_LETTER]):"");
                         resline.setSzApartmentId(ting.length-1>=m_colsetSwe.COL_APARTMENTID?ting[m_colsetSwe.COL_APARTMENTID]:"");
                         importlines.getAddressAssociatedWithFilter().add(resline);
                      }
@@ -436,8 +451,7 @@ public class WSGisFilterImport extends WSThread
                 }
                 m_gisfilterlist.fill(importlines.getAddressAssociatedWithFilter());
              }
-             
-            else if("import_addr_VABanken".equalsIgnoreCase(m_importType)){
+             else if("import_addr_VABanken".equalsIgnoreCase(m_importType)){
                 //ArrayOfUGisImportApartmentLine importlines = new ArrayOfUGisImportApartmentLine();
                 ArrayOfAddressAssociatedWithFilter importlines = new ArrayOfAddressAssociatedWithFilter();
                // UGisImportApartmentList search = new UGisImportApartmentList();
@@ -465,17 +479,19 @@ public class WSGisFilterImport extends WSThread
                	    	resline.setSeVaId(Integer.parseInt(vbId));
                	    } 
                       
+                  if(ting.length-1>=m_colsetVb.COL_HOUSENO){
              	 	 String houseNo=ting[m_colsetVb.COL_HOUSENO].trim();
                	    if(houseNo.equals("")){
                	    	 resline.setHouseNo(0);
                        } else{
                   	    	resline.setHouseNo(Integer.parseInt(houseNo));
-                  	    }  
-               	
-               	    
-               	         resline.setSzHouseLetter(ting.length-1>=m_colsetVb.COL_LETTER?(ting[m_colsetVb.COL_LETTER]):"");
-                        resline.setSzApartmentId(ting.length-1>=m_colsetVb.COL_APARTMENTID?ting[m_colsetVb.COL_APARTMENTID]:"");
-                       importlines.getAddressAssociatedWithFilter().add(resline);
+                      }
+                    }else{
+                     resline.setHouseNo(0);
+                    }
+                    resline.setSzHouseLetter(ting.length-1>=m_colsetVb.COL_LETTER?(ting[m_colsetVb.COL_LETTER]):"");
+                    resline.setSzApartmentId(ting.length-1>=m_colsetVb.COL_APARTMENTID?ting[m_colsetVb.COL_APARTMENTID]:"");
+                    importlines.getAddressAssociatedWithFilter().add(resline);
                         
                     }
                     line++;

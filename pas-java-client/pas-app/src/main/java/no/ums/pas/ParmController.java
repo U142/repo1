@@ -44,14 +44,7 @@ public class ParmController extends MainController {
 	public ArrayList<ShapeStruct> get_shapelist() { return m_arr_shapes; }
 	public ShapeStruct get_shape() { return m_shape; }
 	public ShapeStruct get_shape_filled() { return m_shape_filled; }
-	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
-	public void setAddressFilter(AddressFilterInfoVO filter) {
-		filters.add(filter);
-	}
-	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
-		return filters;
-	}
-	
+
 	public ParmController(String sz_sitename, UserInfo userinfo) {
 		super(sz_sitename, userinfo);
 		m_parmpanel = new ParmPanel(this);
@@ -315,12 +308,24 @@ public class ParmController extends MainController {
 			
 		}
 		else if("act_set_address_filter".equals(e.getActionCommand())){
-			PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
+			boolean isExist=false;
+		    if (PAS.get_pas().get_parmcontroller() != null && PAS.get_pas().get_parmcontroller().getObjectFromTree() != null && PAS.get_pas().get_parmcontroller().getObjectFromTree() instanceof AlertVO){
+                AlertVO selectedAlert = (AlertVO) PAS.get_pas().get_parmcontroller().getObjectFromTree();
+                AddressFilterInfoVO selected = (AddressFilterInfoVO) e.getSource();
+                if(!isExist){
+                    selectedAlert.getFilters().add((AddressFilterInfoVO) e.getSource());
+                }
+              }else{
+		        PAS.get_pas().get_sendcontroller().setAddressFilter((AddressFilterInfoVO) e.getSource());
+		    }
 		}
 		else if("act_remove_address_filter".equals(e.getActionCommand())){
-            PAS.get_pas().get_sendcontroller().removeAddressFilter((AddressFilterInfoVO) e.getSource());
+          if (PAS.get_pas().get_parmcontroller() != null && PAS.get_pas().get_parmcontroller().getObjectFromTree() != null && PAS.get_pas().get_parmcontroller().getObjectFromTree() instanceof AlertVO){
+                AlertVO selectedAlert = (AlertVO) PAS.get_pas().get_parmcontroller().getObjectFromTree();
+                selectedAlert.getFilters().remove((AddressFilterInfoVO) e.getSource());
+            }
         }
 		super.actionPerformed(e);
 	}
-	
+
 }

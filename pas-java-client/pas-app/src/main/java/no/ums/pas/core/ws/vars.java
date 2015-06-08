@@ -31,5 +31,6 @@ public class vars
 		WSDL_TAS				= sz_base + "TAS.asmx?WSDL";
 		WSDL_VB					= sz_base + "VB.asmx?WSDL";
 		WSDL_VOICE				= sz_base + "Voice.asmx?WSDL";
+		WSDL_VOICE				= sz_base + "Voice.asmx?WSDL";
 	}
 }

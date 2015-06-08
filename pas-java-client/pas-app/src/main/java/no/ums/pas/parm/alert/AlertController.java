@@ -256,7 +256,7 @@ public class AlertController implements ActionListener {
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
 		toolbarPanel.populateABASPanelData(alert.getAddresstypes(),Utils.isOldPARM(Variables.getSwitchOverDate(),alert.getTimestamp()));//added to repopulate address selection for edit
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
-		toolbarPanel.setSelectedAddressFilter(alert.getFilters());
+		toolbarPanel.setSelectAddressFilter(alert);
 		if(alert.getM_shape()==null) {
 			//default to polygon
 			m_edit_shape = (new PolygonStruct(main.getMapNavigation().getDimension()));
@@ -364,8 +364,7 @@ public class AlertController implements ActionListener {
 		alert.setSMSMessage(parent.get_sms_broadcast_text().get_txt_messagetext().getText());
 		alert.setSMSOadc(parent.get_sms_broadcast_text().get_txt_oadc_text().getText());
 		// Need to do something about expiry
-		
-		// log.debug("adressetype value " +
+        // log.debug("adressetype value " +
 		// this.getPanelToolbar().get_addresstypes() +" set");
 		
 		//m_edit_polygon.set_fill_color(toolbarPanel.get_colorpicker().get_selected_color());
@@ -412,8 +411,7 @@ public class AlertController implements ActionListener {
 		}
 		return b;
 	}
-
-	// DefaultMutableTreeNode eventNode =
+    // DefaultMutableTreeNode eventNode =
 	// (DefaultMutableTreeNode)remNode.getParent();
 	// EventVO tempEvent = (EventVO)eventNode.getUserObject();
 	// tempEvent.removeAlerts(this.alert);

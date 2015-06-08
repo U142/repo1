@@ -713,7 +713,7 @@ TreeSelectionListener{
 
 					this.getAreaCtrl().setEditShape(shape);
 
-					PAS.get_pas().kickRepaint();
+					//PAS.get_pas().kickRepaint();
 //					PAS.get_pas().actionPerformed(new ActionEvent(gisShape, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 //					PAS.get_pas().kickRepaint();
 				}

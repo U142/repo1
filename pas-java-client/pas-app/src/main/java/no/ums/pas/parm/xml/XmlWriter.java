@@ -378,6 +378,15 @@ public class XmlWriter {
                     element.setAttribute("l_expiry", String.valueOf(alert.get_LBAExpiry()));
                     element.setAttribute("sz_sms_oadc", alert.get_sms_oadc());
                     element.setAttribute("sz_sms_message", alert.get_sms_message());
+                    if (element.getChildNodes() != null && element.getChildNodes().getLength() > 0 ) {
+                        NodeList list = element.getChildNodes();
+                       int length=list.getLength();
+                    for (int i=length;i>0;i--)  {
+                    if(list.item(i-1) != null && "filter".equals(list.item(i-1).getNodeName())){
+                       element.removeChild(list.item(i-1));
+                      }
+                    }
+                    }
                     if(alert.getFilters()!=null && alert.getFilters().size()>0){
                     for(AddressFilterInfoVO filterList : alert.getFilters()){
                         Element filter = (Element) element.appendChild(xmlDoc.createElement("filter"));

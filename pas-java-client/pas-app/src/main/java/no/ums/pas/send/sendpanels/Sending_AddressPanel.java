@@ -139,10 +139,10 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		int size=PAS.get_pas().get_sendcontroller().getAddressFilters().size();
 		for(int i=0;i<size;i++)
         {
-            if(i==0){
-				fName =  fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
-			}else if(i==size-1){
-				fName =     fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() ;
+            if(i==size-1){
+				fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() ;
+			}else if(i==0){
+				fName =  fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", "   ;
 			}else{
 				fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
 			}

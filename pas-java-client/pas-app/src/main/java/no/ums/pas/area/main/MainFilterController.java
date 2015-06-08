@@ -520,9 +520,9 @@ public void actionPerformed(ActionEvent e) {
 					alert.getM_shape().calc_coortopix(getMapNavigation());
                     SendProperties m_sendproperties = this.getFilterCtrl().getSendProperties(true);
                     m_sendproperties.typecast_gis().set_gisFilterlist(((GISShape) shape).getM_gisfilterlist());
-					m_sendproperties.set_shapestruct(shape);
+                    m_sendproperties.set_shapestruct(shape);
                     this.getFilterCtrl().setEditShape(shape);
-                    PAS.get_pas().kickRepaint();
+                    //PAS.get_pas().kickRepaint();
                 }
 				else
 				{

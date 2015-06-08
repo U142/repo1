@@ -254,12 +254,13 @@ public class SendController implements ActionListener {
 	public PolySnapStruct get_current_snappoint() { return m_polysnapstruct; } */
 	private boolean m_b_ignore_project = false;
 	private java.util.List<AddressFilterInfoVO> filters = new ArrayList<AddressFilterInfoVO>();
-	public void setAddressFilter(AddressFilterInfoVO filter) {
+    public void setAddressFilter(AddressFilterInfoVO filter) {
             filters.add(filter);
       }
 	public void removeAddressFilter(AddressFilterInfoVO filter) {
         if(filter!=null)
 	    filters.remove(filter);
+        System.out.println("filters:" + filters);
       }
 	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
 		return filters;
@@ -406,7 +407,7 @@ public class SendController implements ActionListener {
 		obj.get_sendproperties().set_sms_broadcast_message(alert.get_sms_message());
 		obj.get_sendproperties().set_sms_broadcast_oadc(alert.get_sms_oadc());
 		obj.setFilterList(alert.getFilters());
-		obj.get_toolbar().setSelectedAddressFilter(alert.getFilters().get(0));
+		//obj.get_toolbar().setSelectedAddressFilter(alert.getFilters().get(0));
 		
 		//obj.setLocked(true);
 

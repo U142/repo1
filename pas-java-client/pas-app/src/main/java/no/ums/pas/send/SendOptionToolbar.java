@@ -26,7 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +34,7 @@ import java.util.Set;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -1426,7 +1427,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
             {}
         }
         resetAddressFilterList();
-        comboAddressFilterList.setToolTipText(Localization.l("main_sending_adr_btn_select_area_tooltip"));
+        comboAddressFilterList.setToolTipText(Localization.l("main_sending_adr_btn_select_filter_tooltip"));
         comboAddressFilterList.setSelectedItem("");
         comboAddressFilterList.setCallBackActionListner(get_callback());
         comboAreaList.setVisible(enablePredefinedArea);
@@ -1703,7 +1704,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
               else if (Variables.getFilterList() != null
                             && Variables.getFilterList().size() > 0) {
                    
-                        java.util.List<AddressFilterInfoVO> addressFilterList = Variables.getFilterList();
+                        java.util.List<AddressFilterInfoVO> addressFilterList = PAS.get_pas().get_settings().getAddressFilters();
                         for(int i=0; i< addressFilterList.size(); i++){
             	            if(filterName.equals(addressFilterList.get(i).getFilterName())){
             				return true;
@@ -1751,25 +1752,32 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
           
     }
 	 
-	 public void setSelectedAddressFilter (List<AddressFilterInfoVO> filters) {
+	public void setSelectAddressFilter (AlertVO alert) {
+	     List<AddressFilterInfoVO> filters= alert.getFilters();
 	     Set<JCheckBox> chkSet;
-	     for (AddressFilterInfoVO filter : filters) {
-	        
-	         chkSet = comboAddressFilterList.getSelectedItems();
-	                 Iterator<JCheckBox> itr=chkSet.iterator();
-	         while(itr.hasNext())
-	          {
-                 JCheckBox chk=itr.next();
+         ComboBoxModel<JCheckBox>  combomodel=comboAddressFilterList.getModel();
+         int size= combomodel.getSize();
+         ArrayList<AddressFilterInfoVO> filtersNew = new ArrayList<AddressFilterInfoVO>();
+         for (AddressFilterInfoVO buffer : filters) {
+             filtersNew.add(buffer);
+          }
+         for(int i=0;i<size;i++) {
+             JCheckBox chk =combomodel.getElementAt(i);
+              chk.setSelected(false);
+            }
+          alert.getFilters().clear();
+	     for (AddressFilterInfoVO filter : filtersNew) {
+	         for(int i=0;i<size;i++) {
+	             JCheckBox chk = combomodel.getElementAt(i);
 	             if (chk.getText().equals(filter.getFilterName())) {
-                 chk.setSelected(true);
-	             } else {
-	                 chk.setSelected(false);
-	             }
-	         }
+                     chk.setSelected(true);
+	                 alert.getFilters().add(filter);
+                  }
+             }
 	     }
 	     
 	 }
-    public void refreshAddressFilterList()
+     public void refreshAddressFilterList()
     {
         this.resetAddressFilterList();
     }
@@ -2075,12 +2083,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
         inc_xpanels2();
         
-        //v
-                set_gridconst(7, get_panel(), 60, 1, GridBagConstraints.NORTHWEST);
-                comboAddressFilterList.setPreferredSize(new Dimension(300, 23));
+        set_gridconst(7, get_panel(), 60, 1, GridBagConstraints.NORTHWEST);
+        comboAddressFilterList.setPreferredSize(new Dimension(300, 23));
                 add(comboAddressFilterList,m_gridconst);
                 inc_xpanels2();
-                //v
         add_spacing(DIR_VERTICAL, 15);
         add_spacing(DIR_VERTICAL, 15);
         

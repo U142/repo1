@@ -688,7 +688,7 @@ public class XmlReader {
 				description = eAttributes.getAttribute("sz_description");
 				NodeList fl =eAttributes.getElementsByTagName("filter");
 				List<AddressFilterInfoVO> filters=new ArrayList<AddressFilterInfoVO>();
-				if(fl.getLength()>0) {
+                if(fl.getLength()>0) {
                     Element el;
                     for(int j=0;j<fl.getLength();++j) {
                         el = (Element)fl.item(j);
