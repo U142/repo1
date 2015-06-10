@@ -4,6 +4,8 @@ package no.ums.pas.importer.gis;
 //import no.ums.log.UmsLog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -17,7 +19,9 @@ import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
 import no.ums.pas.PAS;
 import no.ums.pas.area.FilterController;
@@ -34,6 +38,7 @@ import no.ums.pas.ums.tools.Utils;
 public class PreviewAddressFrame extends JDialog implements ComponentListener, ActionListener {
 	public static final long serialVersionUID = 1;
     PreviewAddressPanel m_panel;
+    PreviewAddressFinish m_finish_panel;
     PreviewAddressFrame m_parent;
 	private JButton m_btn_finish;
 	PreviewAddressOptions m_options = null;
@@ -53,6 +58,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 	public void setFinishBtnEnable(boolean enabled) {
 		finishEnabled = enabled;
 		m_btn_finish.setEnabled(finishEnabled);
+		m_finish_panel.m_btn_finish.setEnabled(finishEnabled);
 	}
 
 	private boolean finishEnabled = false;
@@ -87,13 +93,16 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 		m_panel = new PreviewAddressPanel(gis, this);
 		m_panel.setM_parent(this);
 		m_btn_finish = new JButton(Localization.l("common_finish"));
+		m_finish_panel=new PreviewAddressFinish(this,gis.getIsAlert());
 		//setSize(620, 500);
 		int x = 1000;
 		int y = 800;
 		setBounds(Utils.screendlg_upperleft(x, y).width, Utils.screendlg_upperleft(x, y).height, x, y);
 		setLayout(new BorderLayout());
+		//m_panel.setBorder(new LineBorder(Color.GREEN));
+		getContentPane().add(new JButton("north"),BorderLayout.NORTH);
 		getContentPane().add(m_panel, BorderLayout.CENTER);
-		getContentPane().add(m_btn_finish, BorderLayout.SOUTH);
+		getContentPane().add(m_finish_panel, BorderLayout.SOUTH);
 		m_btn_finish.setEnabled(false);
 		m_btn_finish.setActionCommand("act_finish");
 		m_btn_finish.addActionListener(this);
@@ -175,8 +184,9 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 		setBounds(Utils.screendlg_upperleft(x, y).width, Utils.screendlg_upperleft(x, y).height, x, y);
 		
 		setLayout(new BorderLayout());
+//		m_panel.setBorder(new LineBorder(Color.BLUE));
         getContentPane().add(m_panel, BorderLayout.CENTER);
-		actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_statistics_view"));
+        actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_statistics_view"));
 		setVisible(true);
 		addComponentListener(this);
 		resize();
@@ -256,6 +266,7 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
               }
 			   if(m_statisticspanel!=null)
 			    m_statisticspanel.actionPerformed(new ActionEvent(PAS.get_pas().getPredefinedFilterController().getFilterCtrl().getCurrentFilter().getGisFilterList(), ActionEvent.ACTION_PERFORMED, "act_gis_imported"));
+//			   m_statisticspanel.setBorder(new LineBorder(Color.RED));
 			    getContentPane().add(m_statisticspanel, BorderLayout.NORTH);      
 			   this.doLayout();
 			   resize();
@@ -267,7 +278,11 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 			if(m_statisticspanel!=null)
 				getContentPane().remove(m_statisticspanel);
 			if(m_options!=null)
+			{
+				//m_options.setBorder(new LineBorder(Color.BLUE));
+				//m_options.setPreferredSize(new Dimension(300, 400));
 				getContentPane().add(m_options, BorderLayout.NORTH);
+			}
 			this.doLayout();
 			resize();
 			repaint();
@@ -385,8 +400,9 @@ public class PreviewAddressFrame extends JDialog implements ComponentListener, A
 			{
 				m_options.m_btn_import.setEnabled(b);
 				m_options.m_check_firstline_columnnames.setEnabled(b);
-				m_panel.setEnabled(b);		
-			}
+				m_panel.setEnabled(b);
+                m_finish_panel.m_btn_import.setEnabled(b);
+            }
 		});
 	}
 

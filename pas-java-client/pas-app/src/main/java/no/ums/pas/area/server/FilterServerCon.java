@@ -159,6 +159,9 @@ public class FilterServerCon extends Thread {
 			 log.info("---------------Filter Operation Completed:"+save.getOperation()+"---------------"+res.getFilterId());
 			 filter.setFilterId(res.getFilterId());
 			 filter.setCreationTime(res.getLastupdatedDate().toString());
+			 GISShape m_shape= new GISShape(fetchAddressForImportedPredefinedFilters(res),true);
+             m_shape.setM_gisfilterlist(fetchAddressForImportedPredefinedFilters(res));
+            //  filterVo.submitShape(m_shape);
 		} catch (Exception err) {
 			Error.getError().addError("MainController",
 					"Exception saving Alert", err, Error.SEVERITY_ERROR);
@@ -191,10 +194,7 @@ public class FilterServerCon extends Thread {
 			ArrayOfAddressFilterInfo res = new  no.ums.ws.addressfilters.AddressFilters(wsdl, service)
 					.getAddressFiltersSoap().getListofAddressFilter(logon);
                for (AddressFilterInfo filterObj : res.getAddressFilterInfo()) {
-                if(filterObj.getFilterName().equals("Lundegeilen")){
-			        System.out.println("Lundegeilen");
-			    }
-			    GISShape m_shape= new GISShape(fetchAddressForImportedPredefinedFilters(filterObj),true);
+                GISShape m_shape= new GISShape(fetchAddressForImportedPredefinedFilters(filterObj),true);
 			    m_shape.setM_gisfilterlist(fetchAddressForImportedPredefinedFilters(filterObj));
                 AddressFilterInfoVO filterVo = new AddressFilterInfoVO();
 				filterVo.setFilterId(filterObj.getFilterId());

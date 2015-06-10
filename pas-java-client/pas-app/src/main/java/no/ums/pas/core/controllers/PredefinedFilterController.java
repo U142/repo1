@@ -16,6 +16,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.PredefinedFilterPanel;
 import no.ums.pas.area.FilterController;
 import no.ums.pas.area.main.MainFilterController;
+import no.ums.pas.area.server.FilterServerCon;
 import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.area.voobjects.AreaVO;
 import no.ums.pas.core.Variables;
@@ -30,6 +31,7 @@ import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.addressfilters.AddressFilterInfo;
 
 /**
  * @author abhinava
@@ -203,15 +205,13 @@ public class PredefinedFilterController extends MainFilterController{
 		return m_shape;
 	}
 	public void gotoMap() {
-	    SendPropertiesGIS m_gis = null;
+        SendPropertiesGIS m_gis = null;
 		Object object = getObjectFromTree();
-		//if (checkObject(object, AreaVO.class)) {
-		    if (checkObject(object, AddressFilterInfoVO.class)) {
-			//this.event = (EventVO) object;
-			try {
+        if (checkObject(object, AddressFilterInfoVO.class)) {
+            try {
               if(((AddressFilterInfoVO)object).getM_shape()!=null) {
 			        ShapeStruct gisShape = ((AddressFilterInfoVO)object).getM_shape();
-                    NavStruct nav; //= new NavStruct(5.743427276611328, 5.743997097015381, 58.864227294921875, 58.86396026611328);
+                    NavStruct nav; //= new NavStruct(5.743427276611328, 5.743997097015381, 58.8f64227294921875, 58.86396026611328);
                     nav= ((GISShape) gisShape).getM_gisfilterlist().GetBounds();
                     PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_filter"));
 			    }

@@ -418,9 +418,9 @@ public class Houses {
 						 b_showtext, n_fontsize, n_addresstypes, col_override, current.HasVulnerable() ? Color.red : Color.black, current.HasVulnerable() ? 2 : 1);
 				n_houses++;
 			}
-			System.out.println(n_houses);
+		//	System.out.println(n_houses);
 		}
-		System.out.println(n_houses);
+	//	System.out.println(n_houses);
 	}
 	public void drawItem(HouseItem house, Graphics gfx, int n_size, boolean b_border, int n_alertborder, boolean b_showtext,
 						 int n_fontsize, int n_addresstypes, Color col_override, Color col_border_override, int borderWidth)

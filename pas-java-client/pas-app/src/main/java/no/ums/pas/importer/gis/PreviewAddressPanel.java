@@ -1,7 +1,11 @@
 package no.ums.pas.importer.gis;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -15,6 +19,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -652,23 +657,32 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
     
     public void add_controls() {
         m_tab.addChangeListener(this);
+
        if(m_sendobject==null) {
             m_tab.addTab(Localization.l("importpreview_file_content"), null,
                     m_previewlist,
                     Localization.l("importpreview_file_content_tooltip"));
             set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
-            add(m_tab, get_gridconst());
-         
-            set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTH);
+            get_gridconst().weighty = 1;
+            get_gridconst().weightx = 1;
+            add(m_tab,get_gridconst());
+            get_gridconst().weighty = 0;
+            get_gridconst().weightx = 0;
+
+            set_gridconst(0, 1, 1, 1, GridBagConstraints.CENTER);
          if(m_loader!=null)
-                add(m_loader, get_gridconst());
-       
-         } else {
+
+         add(m_loader, get_gridconst());
+           } else {
             m_tab.addTab(Localization.l("importresults_results"), null,
                     m_resultpanel,
                     Localization.l("importresults_results_tooltip"));
-            set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
+            set_gridconst(0, 0, 1, 1, GridBagConstraints.CENTER);
+            get_gridconst().weighty = 1;
+            get_gridconst().weightx = 1;
             add(m_tab, get_gridconst());
+            get_gridconst().weighty = 0;
+            get_gridconst().weightx = 0;
            }
          }
 
@@ -729,15 +743,15 @@ public class PreviewAddressPanel extends DefaultPanel implements ComponentListen
         return false;
     }
     public void componentResized(ComponentEvent e) {
-        m_tab.setPreferredSize(new Dimension(getWidth(), getHeight()-200));
+        m_tab.setPreferredSize(new Dimension(getWidth(), getHeight()-40));
         if(m_previewlist!=null) {
-            m_previewlist.setPreferredSize(new Dimension(getWidth(), getHeight()-200));
+            m_previewlist.setPreferredSize(new Dimension(getWidth(), getHeight()-40));
             m_previewlist.revalidate();
         }
         if(m_loader!=null)
             m_loader.setPreferredSize(new Dimension(getWidth(), 0));
         if(get_resultpanel()!=null) {
-            m_resultpanel.setPreferredSize(new Dimension(getWidth(), getHeight()-200));
+            m_resultpanel.setPreferredSize(new Dimension(getWidth(), getHeight()-40));
             m_resultpanel.revalidate();
         }
         revalidate();

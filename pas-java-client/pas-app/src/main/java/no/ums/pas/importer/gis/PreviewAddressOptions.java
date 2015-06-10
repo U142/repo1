@@ -1,6 +1,8 @@
 package no.ums.pas.importer.gis;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
@@ -10,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.border.LineBorder;
 
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -47,7 +50,7 @@ class PreviewAddressOptions extends DefaultPanel {
 		m_b_is_alert = bIsAlert;
 		m_parent = parent;
         init();
-        setPreferredSize(new Dimension(300,150));
+        setPreferredSize(new Dimension(300,200));
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
@@ -119,39 +122,53 @@ class PreviewAddressOptions extends DefaultPanel {
 	
 	public void add_controls() {
 		
-		get_gridconst().insets=new Insets(3, 3, 3, 3);
+		get_gridconst().insets=new Insets(3, 5, 3, 5);
 		
-		set_gridconst(0, 0, 18, 1);
+		set_gridconst(0, 0, 18, 2);
 		
+//		get_gridconst().weighty = 1;
+//		get_gridconst().weightx = 1;
+		//get_gridconst().fill = GridBagConstraints.HORIZONTAL;
+		get_gridconst().anchor = GridBagConstraints.NORTHWEST;
 		add(m_lbl_msg, get_gridconst());
 		
 		set_gridconst(0, 3, 1, 1);
+		//get_gridconst().anchor = GridBagConstraints.NORTHWEST;
 		add(m_lbl_msg2, get_gridconst());
 		
-		set_gridconst(2, 3, 1, 1);
+		set_gridconst(1, 3, 2, 1);
+		get_gridconst().fill=GridBagConstraints.HORIZONTAL;
 		add(m_lbl_street, get_gridconst());
-		
-		set_gridconst(0, 4, 6, 6);
+        set_gridconst(0,4, 3, 6);
+        get_gridconst().anchor = GridBagConstraints.NORTHWEST;
 		add(m_lbl_address_param, get_gridconst());
-		
-	    //lable address type
-		set_gridconstLast(5, 3, 1, 1);
+        set_gridconst(1,4, 2, 6);
+		get_gridconst().anchor = GridBagConstraints.NORTHWEST;
+        set_gridconstLast(8, 3, 1, 1);
+		//m_lbl_msg3.setBorder(new LineBorder(Color.red));
 		add(m_lbl_msg3, get_gridconst());
-		 //dropdowns
-		set_gridconstLast(6, 3, 1, 1);
+         //dropdowns
+		set_gridconstLast(9, 3, 1, 1);
+		get_gridconst().anchor = GridBagConstraints.WEST;
+		get_gridconst().fill=GridBagConstraints.NONE;
 		add(m_cbx_address, get_gridconst());
-		
-		set_gridconstLast(6, 4, 1, 1);
-		add(m_cbx_encoding, get_gridconst());
-		
-		set_gridconstSouthWest(0, 18, 2, 1);
+        set_gridconst(0,10, 3, 1);
+		get_gridconst().weightx = 1;
+		get_gridconst().anchor = GridBagConstraints.SOUTHWEST;
 		add(m_check_firstline_columnnames, get_gridconst());
 		
-		set_gridconstSouth(10, 10, 1, 1);
-		add(m_btn_import, get_gridconst());
+		set_gridconstLast(20, 10, 1, 1);
+		get_gridconst().weighty = 1;
+		get_gridconst().weightx = 0;
+		get_gridconst().anchor = GridBagConstraints.SOUTHEAST;
+		//get_gridconst().fill=GridBagConstraints.NONE;
+		add(m_cbx_encoding, get_gridconst());
 		
-		set_gridconstSouth(9, 10, 1, 1);
-		add(m_btn_cancel, get_gridconst());
+		set_gridconstLast(19, 10, 1, 1);
+		get_gridconst().weightx = 0;
+		get_gridconst().anchor = GridBagConstraints.SOUTHWEST;
+		//get_gridconst().fill=GridBagConstraints.NONE;
+		add(new JLabel("Encoding:"), get_gridconst());
 
 }
 	
@@ -212,8 +229,7 @@ class PreviewAddressOptions extends DefaultPanel {
 		 
     
         m_group_importOption =  new ButtonGroup();
-
-		add_controls();
+        add_controls();
 	}
 
 

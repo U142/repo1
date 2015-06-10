@@ -61,7 +61,7 @@ public class GISFilterList extends ArrayList<GISFilterRecord> {
                     r1.getAddress(), Integer.toString(r1.getHouseno()),
                     r1.getLetter(), r1.getPostno(), r1.getPostarea(),
                     Integer.toString(r1.getRegion()), r1.getBday(),
-                    r1.getNumber(), r1.getMobile(), r1.getLon(), r1.getLat(),
+                    r1.getNumber(), r1.getMobile(), r1.getLat(), r1.getLon(),
                     r1.getGno(), r1.getBno(), r1.getFno(), r1.getSno(),
                     r1.getBedrift(), -1, r1.getStreetid(), r1.getXycode(),
                     r1.getHasfixed(), r1.getHasmobile(), r1.getHasdisabled());
@@ -80,11 +80,9 @@ public class GISFilterList extends ArrayList<GISFilterRecord> {
                 .getUAddressBasics();
         for (UAddressBasics a1 : basicList) {
             InhabitantBasics inhab = new InhabitantBasics(a1.getKondmid(),
-                    a1.getLon(), a1.getLat(), a1.getHasfixed(),
+                    a1.getLat(), a1.getLon(), a1.getHasfixed(),
                     a1.getHasmobile(), a1.getBedrift(), a1.getArrayindex(),
                     a1.getHasdisabled());
-            // (a1.getKondmid(), a1.getLon(), a1.getLat(), a1.getHasfixed(),
-            // a1.getHasmobile(), a1.getBedrift(), a1.getArrayindex(), a1.get)
             gr.add_inhabitant(inhab);
             if (a1.getLat() < m_bounds._lbo)
                 m_bounds._lbo = a1.getLat();
@@ -97,56 +95,7 @@ public class GISFilterList extends ArrayList<GISFilterRecord> {
         }
         add_gisrecord(gr);
     }
-           /*        public void fill()
-        {
-         // List<UGisImportResultLine> lines = r.getList().getUGisImportResultLine();
-        //if(r.getList().getUGisImportResultLine().size() > 500)
-        //  return;
-       // for (UGisImportResultLine rl : lines) {
-         //   GISFilterRecord gr = new GISFilterRecord(rl.getMunicipalid(), rl.getStreetid(), rl.getHouseno(), rl.getLetter());
-       GISFilterRecord gr= new GISFilterRecord("1102", "1100", "4", "");
         
-         //   List<UAddress> al = rl.getList().getList().getUAddress();
-         //   for (UAddress a : al) {
-            Inhabitant in = new Inhabitant("11058092", "Siam Thai Massage & Spa AS", "A.O. Anfindsens gate 4",
-                      Integer.toString(4) , "", "4307", "Sandnes",
-                        Integer.toString(1102), "0", "97946764", "97946764", 5.74345064163208,
-                                58.86420822143555, 111, 9, 1, -1,
-                        1100, "O", 1, 1, 0);
-                gr.add_inhabitant(in);
-                if (5.74345064163208 < m_bounds._lbo)
-                    m_bounds._lbo = 5.74345064163208;
-                if (5.74345064163208 > m_bounds._rbo)
-                    m_bounds._rbo = 5.74345064163208;
-                if (58.86420822143555 < m_bounds._bbo)
-                    m_bounds._bbo = 58.86420822143555;
-                if (58.86420822143555 > m_bounds._ubo)
-                    m_bounds._ubo = 58.86420822143555;
-            // Inhabitant in = new Inhabitant(a.getKondmid(), a.getName(), a.getAddress(),
-        Integer.toString(a.getHouseno()), a.getLetter(), a.getPostno(), a.getPostarea(),
-        Integer.toString(a.getRegion()), a.getBday(), a.getNumber(), a.getMobile(), a.getLat(),
-        a.getLon(), a.getGno(), a.getBno(), a.getBedrift(), -1,
-        a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile(),
-        a.getHasdisabled());
-gr.add_inhabitant(in);
-
-            //List<UAddressBasics> bl = rl.getList().getListBasics().getUAddressBasics();
-            //for (UAddressBasics a : bl) {
-                InhabitantBasics inhab = new InhabitantBasics(a.getKondmid(), a.getLat(), a.getLon(), a.getHasfixed(), a.getHasmobile(), a.getBedrift(), a.getArrayindex(), a.getHasdisabled());
-                //inhab.init(a.getKondmid(), null, null, null, null, null, null, null, null, null, null, a.getLat(), a.getLon(), 0, 0, a.getBedrift(), 0, 0, null, a.getHasfixed(), a.getHasmobile());
-                gr.add_inhabitant(inhab);
-                if (a.getLat() < m_bounds._lbo)
-                    m_bounds._lbo = a.getLat();
-                if (a.getLat() > m_bounds._rbo)
-                    m_bounds._rbo = a.getLat();
-                if (a.getLon() < m_bounds._bbo)
-                    m_bounds._bbo = a.getLon();
-                if (a.getLon() > m_bounds._ubo)
-                    m_bounds._ubo = a.getLon();
-            
-                add_gisrecord(gr);
-
-        } */
     /**
      * @Todo :Change inhabitantList
      * @param r
