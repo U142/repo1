@@ -129,17 +129,17 @@ public class JComboCheckBox extends JComboBox {
     public void addSelectedItem(JCheckBox jcb)
     {
         this.selectedItems.add(jcb);
-        printSelected();
+       // printSelected();
     }
     
    //for debugging purpose
     public void removeSelectedItem(JCheckBox jcb)
     {
         this.selectedItems.remove(jcb);
-        printSelected();
+      // printSelected();
     }
     
-    public void printSelected()
+/*    public void printSelected()
     {
         System.out.println("");
         System.out.print("[");
@@ -148,7 +148,7 @@ public class JComboCheckBox extends JComboBox {
             System.out.print(item.getText() + " ");
         }
         System.out.print("]");
-    }
+    }*/
     
     public String getCheckBoxText() {
         JCheckBox jcb = (JCheckBox) getSelectedItem();

@@ -54,9 +54,11 @@ public class GISFilterList extends ArrayList<GISFilterRecord> {
         List<UAddress> addList = list.getList().getUAddress();
         GISFilterRecord gr = new GISFilterRecord();
         for (UAddress r1 : addList) {
-           gr = new GISFilterRecord(r1.getMunicipalid(), Integer.toString(r1
+            gr = new GISFilterRecord(r1.getMunicipalid(), Integer.toString(r1
                     .getStreetid()), Integer.toString(r1.getHouseno()),
                     r1.getLetter());
+            // lat & lon values are interchanged in order to point to correct
+            // location
             Inhabitant in = new Inhabitant(r1.getKondmid(), r1.getName(),
                     r1.getAddress(), Integer.toString(r1.getHouseno()),
                     r1.getLetter(), r1.getPostno(), r1.getPostarea(),

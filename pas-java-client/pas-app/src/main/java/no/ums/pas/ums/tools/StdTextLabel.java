@@ -52,7 +52,7 @@ public class StdTextLabel extends JLabel
 	public StdTextLabel(String sz_text, Dimension d) {
 		super(sz_text);
 		m_dim = new Dimension(d);
-		init(true);
+        init(true);
 	}
 	public StdTextLabel(String sz_text, boolean bIsHeading, Dimension d) {
 		super(sz_text);

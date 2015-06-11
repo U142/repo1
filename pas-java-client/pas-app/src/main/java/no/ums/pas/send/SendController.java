@@ -260,7 +260,7 @@ public class SendController implements ActionListener {
 	public void removeAddressFilter(AddressFilterInfoVO filter) {
         if(filter!=null)
 	    filters.remove(filter);
-        System.out.println("filters:" + filters);
+      //  System.out.println("filters:" + filters);
       }
 	public java.util.List<AddressFilterInfoVO> getAddressFilters(){
 		return filters;

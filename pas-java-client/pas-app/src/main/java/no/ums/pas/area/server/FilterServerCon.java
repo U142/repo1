@@ -161,8 +161,8 @@ public class FilterServerCon extends Thread {
 			 filter.setCreationTime(res.getLastupdatedDate().toString());
 			 GISShape m_shape= new GISShape(fetchAddressForImportedPredefinedFilters(res),true);
              m_shape.setM_gisfilterlist(fetchAddressForImportedPredefinedFilters(res));
-            //  filterVo.submitShape(m_shape);
-		} catch (Exception err) {
+             filter.submitShape(m_shape);
+           } catch (Exception err) {
 			Error.getError().addError("MainController",
 					"Exception saving Alert", err, Error.SEVERITY_ERROR);
 		}

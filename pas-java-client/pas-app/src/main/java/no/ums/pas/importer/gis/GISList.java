@@ -53,16 +53,21 @@ public class GISList extends ArrayList<GISRecord> {
 		//if(r.getList().getUGisImportResultLine().size() > 500)
 		//	return;
         for (UGisImportResultLine rl : lines) {
-            GISRecord gr = new GISRecord(rl.getMunicipalid(), rl.getStreetid(), rl.getHouseno(), rl.getLetter(),
-                    rl.getNamefilter1(), rl.getNamefilter2(), rl.getNLinenumber());
+            GISRecord gr = new GISRecord(rl.getMunicipalid(), rl.getStreetid(),
+                    rl.getHouseno(), rl.getLetter(), rl.getNamefilter1(),
+                    rl.getNamefilter2(), rl.getNLinenumber());
             List<UAddress> al = rl.getList().getList().getUAddress();
             for (UAddress a : al) {
-                Inhabitant in = new Inhabitant(a.getKondmid(), a.getName(), a.getAddress(),
-                        Integer.toString(a.getHouseno()), a.getLetter(), a.getPostno(), a.getPostarea(),
-                        Integer.toString(a.getRegion()), a.getBday(), a.getNumber(), a.getMobile(), a.getLat(),
-                        a.getLon(), a.getGno(), a.getBno(), a.getBedrift(), -1,
-                        a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile(),
-                        a.getHasdisabled());
+                // lat & lon values are interchanged in order to point to
+                // correct location
+                Inhabitant in = new Inhabitant(a.getKondmid(), a.getName(),
+                        a.getAddress(), Integer.toString(a.getHouseno()),
+                        a.getLetter(), a.getPostno(), a.getPostarea(),
+                        Integer.toString(a.getRegion()), a.getBday(),
+                        a.getNumber(), a.getMobile(), a.getLat(), a.getLon(),
+                        a.getGno(), a.getBno(), a.getBedrift(), -1,
+                        a.getStreetid(), a.getXycode(), a.getHasfixed(),
+                        a.getHasmobile(), a.getHasdisabled());
                 gr.add_inhabitant(in);
                 if (a.getLat() < m_bounds._lbo)
                     m_bounds._lbo = a.getLat();

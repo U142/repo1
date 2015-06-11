@@ -18,8 +18,7 @@ public class vars
 		/**
 		 * ULOVLIG Å ENDRE TIL LOCALHOST
 		 */
-	    sz_base="http://localhost:8080/WS/";
-		WSDL_CONFERENCE 		= sz_base + "Conference.asmx?WSDL";
+        WSDL_CONFERENCE 		= sz_base + "Conference.asmx?WSDL";
 		WSDL_EXTERNALEXEC 		= sz_base + "ExternalExec.asmx?WSDL";
 		WSDL_INFOSENTRAL		= sz_base + "Infosentral.asmx?WSDL";
 		WSDL_PARMADMIN 			= sz_base + "ParmAdmin.asmx?WSDL";

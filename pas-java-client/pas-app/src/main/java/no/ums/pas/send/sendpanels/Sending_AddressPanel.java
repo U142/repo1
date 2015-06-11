@@ -112,11 +112,12 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		_add(m_txt_adrcount_total,	 n_width/2, get_panel(), n_width/2, 1);
 		_add(m_lbl_adrcount_total_sms,	 0, inc_panels(), n_width/2, 1);
 		_add(m_txt_adrcount_total_sms,	 n_width/2, get_panel(), n_width/2, 1);
-		_add(m_lbl_adrcount_filter_name,	 0, inc_panels(), n_width/2, 1);
-		_add(m_txt_adrcount_filter_name,	 n_width/2, get_panel(), n_width/2, 1);
+        //for wrapping of filters and setting label in northWest dir
+		set_gridconst(0, inc_panels(), n_width/2, 1, GridBagConstraints.NORTHWEST);
+         add(m_lbl_adrcount_filter_name, get_gridconst() );
+        _add(m_txt_adrcount_filter_name,	 n_width/2, get_panel(), n_width/2, 1);
 		init();
-
-	}
+       }
 	protected final void _add(Component c, int x, int y, int w, int h) {
 		set_gridconst(x, y, w, h, GridBagConstraints.WEST);
 		add(c, m_gridconst);
@@ -134,22 +135,21 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		
-		String fName="";
-		int size=PAS.get_pas().get_sendcontroller().getAddressFilters().size();
-		for(int i=0;i<size;i++)
+	    String fName="";
+        int size=PAS.get_pas().get_sendcontroller().getAddressFilters().size();
+	    for(int i=0;i<size;i++)
         {
             if(i==size-1){
-				fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() ;
-			}else if(i==0){
-				fName =  fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", "   ;
-			}else{
-				fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
-			}
-        }
-		m_txt_adrcount_filter_name.setText(fName);
-		
-		if(ADRCOUNT_CALLBACK_ACTION_.equals(e.getActionCommand())) {
+	      fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() ;
+	     }else if(i==0){
+	      fName =  fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", "   ;
+	     }else{
+	      fName =   fName+PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName() + ", " ;
+	     }
+       }
+	    fName = String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 250, fName);
+	    m_txt_adrcount_filter_name.setText(fName);
+       if(ADRCOUNT_CALLBACK_ACTION_.equals(e.getActionCommand())) {
 			AddressCount c = (AddressCount)e.getSource();
 			set_addresscount(c);
 			get_parent().actionPerformed(e);

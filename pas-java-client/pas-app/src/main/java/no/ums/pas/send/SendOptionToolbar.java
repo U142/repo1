@@ -1607,43 +1607,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         
         lock_sending(false);
     }
-//    class MyActionListener implements ActionListener
-//    {
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            comboAddressFilterList.getSelectedObjects();
-//            
-//        }
-//        
-//    }
-//	
-//	class MyItemListener implements ItemListener
-//	{
-//
-//        @Override
-//        public void itemStateChanged(ItemEvent e) {
-//            if(e.getStateChange()==ItemEvent.SELECTED)
-//            {
-//                if(comboAddressFilterList != null)
-//                {
-//                    if(comboAddressFilterList.isCheckBoxSelected()) {
-//                        no.ums.pas.area.voobjects.AddressFilterInfoVO selectedAddressFilterList = new no.ums.pas.area.voobjects.AddressFilterInfoVO();
-//                        selectedAddressFilterList.setName(comboAddressFilterList.getCheckBoxText());
-//                        //FilterVO selectedAddressFilterList = (FilterVO) comboAddressFilterList.getSelectedItem();
-//                        //log.debug("comboAreaList item changed="+selectedArea + ";e.getStateChange()=" + e.getStateChange());
-//                        setAddressFilter(selectedAddressFilterList);
-//                        
-//                    }
-//                    
-//                }
-//            }
-//            
-//        }
-//	    
-//	}
-	
-    
+
     private void resetAreaList()
     {
         shapeFromLibrary = false;
@@ -1660,7 +1624,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         if(PAS.get_pas().getPredefinedAreaController() != null)
             PAS.get_pas().getPredefinedAreaController().getAreaCtrl().resetEditShape();
     }
-//v
+
     
 	public boolean isSelected(String filterName){
 		 if (getEventSourceForFilter() != null)
