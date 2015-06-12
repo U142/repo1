@@ -3,6 +3,7 @@ package no.ums.pas.send;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.area.voobjects.AddressFilterInfoVO;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -15,11 +16,16 @@ import no.ums.ws.common.UEllipseDef;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.UMapPoint;
+import no.ums.ws.common.parm.AddressFilterInfo;
+import no.ums.ws.common.parm.ArrayOfAddressFilterInfo;
 import no.ums.ws.common.parm.UELLIPSESENDING;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.Color;
@@ -186,8 +192,15 @@ public class SendPropertiesEllipse extends SendProperties {
 	public boolean PerformAdrCount(ActionListener l, String act) {
 		UEllipseDef ell = createWSEllipse();
 		UELLIPSESENDING ms = new UELLIPSESENDING();
-		ms.setEllipse(ell);
-
+        ArrayOfAddressFilterInfo filters = new ArrayOfAddressFilterInfo();
+        for (int i = 0; i < PAS.get_pas().get_sendcontroller().getAddressFilters().size(); i++) {
+		     AddressFilterInfo addrFilter = new AddressFilterInfo();
+		     addrFilter.setFilterName(PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterName());
+		     addrFilter.setFilterId((PAS.get_pas().get_sendcontroller().getAddressFilters().get(i).getFilterId()));
+		     filters.getAddressFilterInfo().add(addrFilter);
+		 }
+        ms.setEllipse(ell);
+        ms.setFilters(filters);
 		return super._ExecAdrCount(ms, l, act);
 	
 	}
