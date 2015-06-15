@@ -12,6 +12,7 @@ public class Abhinav {
 	public String firstName;
 	public static void main(String[] args) {
 		Abhinav a1=new Abhinav();
+		Abhinav a2= new Abhinav("TESTING");
     }
 
 }
