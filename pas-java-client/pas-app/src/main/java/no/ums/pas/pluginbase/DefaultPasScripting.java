@@ -1184,7 +1184,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		if(ViewOptions.TOGGLE_HOUSES.isSelected())
 		{
 			p.get_housecontroller().calcHouseCoords();
-			//p.get_housecontroller().drawItems(g);
+			p.get_housecontroller().drawItems(g);
 		}
 
 		if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
